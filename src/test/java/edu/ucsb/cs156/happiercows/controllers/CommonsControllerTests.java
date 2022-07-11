@@ -714,4 +714,40 @@ public class CommonsControllerTests extends ControllerTestCase {
     }
   }
 
+  
+
+  @WithMockUser(roles = { "USER" })
+  @Test
+  public void getCommonsPlusTest() throws Exception {
+    List<Commons> expectedCommons = new ArrayList<Commons>();
+    Commons Commons1 = Commons.builder().name("TestCommons1").id(1L).build();
+    expectedCommons.add(Commons1);
+
+    List<CommonsPlus> expectedCommonsPlus = new ArrayList<CommonsPlus>();
+    List<CommonsPlus> dummy = new ArrayList<CommonsPlus>();
+    CommonsPlus CommonsPlus1 = CommonsPlus.builder()
+          .commons(Commons1)
+          .totalCows(50)
+          .totalUsers(20)
+          .build();
+
+    expectedCommonsPlus.add(CommonsPlus1);
+    when(commonsRepository.findAll()).thenReturn(expectedCommons);
+    when(commonsRepository.getNumCows(1L)).thenReturn(Optional.of(50));
+    when(commonsRepository.getNumUsers(1L)).thenReturn(Optional.of(20));
+
+    MvcResult response = mockMvc.perform(get("/api/commons/allplus").contentType("application/json"))
+        .andExpect(status().isOk()).andReturn();
+
+    //verify(commonsRepository, times(1)).findAll();
+    verify(commonsRepository, times(1)).findAll();
+    verify(commonsRepository, times(1)).getNumCows(1L);
+    verify(commonsRepository, times(1)).getNumUsers(1L);
+
+    String responseString = response.getResponse().getContentAsString();
+    List<CommonsPlus> actualCommonsPlus = objectMapper.readValue(responseString, new TypeReference<List<CommonsPlus>>() {
+    });
+    assertEquals(actualCommonsPlus, expectedCommonsPlus);
+  }
+
 }
