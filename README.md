@@ -5,23 +5,17 @@
 
 # Storybook
 
-* [QA](https://ucsb-cs156-s22.github.io/s22-6pm-happycows-docs-qa/)
-* [Docs](https://ucsb-cs156-s22.github.io/s22-6pm-happycows-docs/)
+* Prod: <https://ucsb-cs156.github.io/proj-happycows-docs/>
+* QA: <https://ucsb-cs156.github.io/proj-happycows-docs-qa/>
 
 # Heroku
-* [Production](https://s22-6pm-happycows.herokuapp.com/)
-* [Dashboard](https://dashboard.heroku.com/apps/s22-6pm-happycows)
 
-6pm-3:
-* [QA](https://s22-6pm-3-happycows-qa.herokuapp.com/)
-* [QA Dashboard](https://dashboard.heroku.com/apps/s22-6pm-3-happycows-qa)
+* Prod: <https://f22-proj-happycows.herokuapp.com/>
+* Dashboard: <https://dashboard.heroku.com/apps/f22-proj-happycows>
 
-6pm-4:
-* [QA](https://s22-6pm-4-happycows-qa.herokuapp.com/)
-* [QA-Dashboard](https://dashboard.heroku.com/apps/s22-6pm-4-happycows-qa)
+* QA: <https://f22-proj-happycows-qa.herokuapp.com/>
+* Dashboard: <https://dashboard.heroku.com/apps/f22-proj-happycows-qa>
 
-# Heroku Dashboard
-https://dashboard.heroku.com/apps/s22-6pm-happycows
 
 # Description
 
@@ -36,10 +30,6 @@ This rewrite uses the new tech stack being developed for [CMPSC 156](https://ucs
 * Spring Security plus Google OAuth for authentication/authorization
   - This last point is what distinguishes this tech stack from the one currently in use (as S21) for the three legacy code apps in
     CMPSC 156: the current apps use Auth0 with JWTs as the authentication/authorization mechanism.
-
-Storybook is here:
-* Production: <https://happycows.github.io/HappierCows-docs/>
-* QA: <https://happycows.github.io/HappierCows-docs-qa/>
 
 
 The GitHub actions script to deploy the Storybook to QA requires some configuration; see [docs/github-actions.md](docs/github-actions.md) for details.
