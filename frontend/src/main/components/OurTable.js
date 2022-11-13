@@ -1,6 +1,7 @@
 import React from "react";
 import { useTable, useSortBy } from 'react-table'
 import { Table, Button } from "react-bootstrap";
+import Plaintext from "main/components/Utils/Plaintext";
 
 export default function OurTable({ columns, data, testid = "testid" }) {
 
@@ -96,6 +97,36 @@ export function ButtonColumn(label, variant, callback, testid) {
         {label}
       </Button>
     )
+  }
+  return column;
+}
+
+export function PlaintextColumn(label, getText) {
+  const column = {
+    Header: label,
+    id: label,
+    Cell: ({ cell }) => (
+      <Plaintext text={getText(cell)}  />
+    )
+  }
+  return column;
+}
+
+export function DateColumn(label, getDate) {
+  const options = {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    hour12: false,
+    timeZone: 'America/Los_Angeles'
+  };
+  const column = {
+    Header: label,
+    id: label,
+    Cell: ({ cell }) => {
+      const date = new Date(getDate(cell));
+      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+      return (<>{formattedDate}</>)
+    }
   }
   return column;
 }
