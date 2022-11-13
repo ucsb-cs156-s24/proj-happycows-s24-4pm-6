@@ -25,4 +25,4 @@ export default function JobsTable({ jobs }) {
         columns={columns}
         testid={testid}
     />;
-};
+}; 
