@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -20,9 +21,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +30,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.entities.Commons;
-import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -64,46 +61,45 @@ public class CommonsControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
-  public void createCommonsTest() throws Exception
-  {
+  public void createCommonsTest() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
     LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     Commons commons = Commons.builder()
-      .name("Jackson's Commons")
-      .cowPrice(500.99)
-      .milkPrice(8.99)
-      .startingBalance(1020.10)
-      .startingDate(someTime)
-      .endingDate(someOtherTime)
-      .degradationRate(50.0)
-      .showLeaderboard(false)
-      .build();
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .endingDate(someOtherTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
-      .name("Jackson's Commons")
-      .cowPrice(500.99)
-      .milkPrice(8.99)
-      .startingBalance(1020.10)
-      .startingDate(someTime)
-      .endingDate(someOtherTime)
-      .degradationRate(50.0)
-      .showLeaderboard(false)
-      .build();
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .endingDate(someOtherTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
     String expectedResponse = objectMapper.writeValueAsString(commons);
 
     when(commonsRepository.save(commons))
-      .thenReturn(commons);
+        .thenReturn(commons);
 
     MvcResult response = mockMvc
-      .perform(post("/api/commons/new").with(csrf())
-        .contentType(MediaType.APPLICATION_JSON)
-        .characterEncoding("utf-8")
-        .content(requestBody))
-      .andExpect(status().isOk())
-      .andReturn();
+        .perform(post("/api/commons/new").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isOk())
+        .andReturn();
 
     verify(commonsRepository, times(1)).save(commons);
 
@@ -113,51 +109,93 @@ public class CommonsControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
-  public void createCommonsTest_invalid() throws Exception
-  {
+  public void createCommonsTest_zeroDegradation() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
     LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     Commons commons = Commons.builder()
-      .name("Jackson's Commons")
-      .cowPrice(500.99)
-      .milkPrice(8.99)
-      .startingBalance(1020.10)
-      .startingDate(someTime)
-      .endingDate(someOtherTime)
-      .degradationRate(1.0)
-      .showLeaderboard(false)
-      .build();
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(0)
+        .endingDate(someOtherTime)
+        .showLeaderboard(false)
+        .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
-      .name("Jackson's Commons")
-      .cowPrice(500.99)
-      .milkPrice(8.99)
-      .startingBalance(1020.10)
-      .startingDate(someTime)
-      .endingDate(someOtherTime)
-      .degradationRate(-1.0)
-      .showLeaderboard(false)
-      .build();
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(0)
+        .endingDate(someOtherTime)
+        .showLeaderboard(false)
+        .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
     String expectedResponse = objectMapper.writeValueAsString(commons);
 
     when(commonsRepository.save(commons))
-      .thenReturn(commons);
+        .thenReturn(commons);
 
     MvcResult response = mockMvc
-      .perform(post("/api/commons/new").with(csrf())
-        .contentType(MediaType.APPLICATION_JSON)
-        .characterEncoding("utf-8")
-        .content(requestBody))
-      .andExpect(status().isOk())
-      .andReturn();
+        .perform(post("/api/commons/new").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isOk())
+        .andReturn();
 
     verify(commonsRepository, times(1)).save(commons);
 
     String actualResponse = response.getResponse().getContentAsString();
     assertEquals(expectedResponse, actualResponse);
+  }
+
+  @WithMockUser(roles = { "ADMIN" })
+  @Test
+  public void createCommonsTest_withIllegalDegradationRate() throws Exception {
+    LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+
+    Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(-8.49)
+        .build();
+
+    CreateCommonsParams parameters = CreateCommonsParams.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(-8.49)
+        .build();
+
+    String requestBody = objectMapper.writeValueAsString(parameters);
+    String expectedResponse = objectMapper.writeValueAsString(commons);
+
+    when(commonsRepository.save(commons))
+        .thenReturn(commons);
+
+    MvcResult response = mockMvc
+        .perform(post("/api/commons/new").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isBadRequest()).andReturn();
+
+    Optional<IllegalArgumentException> someException = Optional
+        .ofNullable((IllegalArgumentException) response.getResolvedException());
+
+    assertNotNull(someException.get());
+    assertTrue(someException.get() instanceof IllegalArgumentException);
   }
 
   @WithMockUser(roles = { "USER" })
@@ -181,140 +219,206 @@ public class CommonsControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
-  public void updateCommonsTest() throws Exception
-  {
+  public void updateCommonsTest() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
     LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
-      .name("Jackson's Commons")
-      .cowPrice(500.99)
-      .milkPrice(8.99)
-      .startingBalance(1020.10)
-      .startingDate(someTime)
-      .endingDate(someOtherTime)
-      .degradationRate(50.0)
-      .showLeaderboard(false)
-      .build();
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .endingDate(someOtherTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .build();
 
     Commons commons = Commons.builder()
-      .name("Jackson's Commons")
-      .cowPrice(500.99)
-      .milkPrice(8.99)
-      .startingBalance(1020.10)
-      .startingDate(someTime)
-      .endingDate(someOtherTime)
-      .degradationRate(50.0)
-      .showLeaderboard(false)
-      .build();
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .endingDate(someOtherTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
 
     when(commonsRepository.save(commons))
-      .thenReturn(commons);
+        .thenReturn(commons);
 
     mockMvc
-      .perform(put("/api/commons/update?id=0").with(csrf())
-        .contentType(MediaType.APPLICATION_JSON)
-        .characterEncoding("utf-8")
-        .content(requestBody))
-      .andExpect(status().isCreated());
+        .perform(put("/api/commons/update?id=0").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isCreated());
 
     verify(commonsRepository, times(1)).save(commons);
 
     parameters.setMilkPrice(parameters.getMilkPrice() + 3.00);
     commons.setMilkPrice(parameters.getMilkPrice());
+    parameters.setDegradationRate(parameters.getDegradationRate() + 1.00);
+    commons.setDegradationRate(parameters.getDegradationRate());
 
     requestBody = objectMapper.writeValueAsString(parameters);
 
     when(commonsRepository.findById(0L))
-      .thenReturn(Optional.of(commons));
+        .thenReturn(Optional.of(commons));
 
     when(commonsRepository.save(commons))
-      .thenReturn(commons);
+        .thenReturn(commons);
 
     mockMvc
-      .perform(put("/api/commons/update?id=0").with(csrf())
-        .contentType(MediaType.APPLICATION_JSON)
-        .characterEncoding("utf-8")
-        .content(requestBody))
-      .andExpect(status().isNoContent());
+        .perform(put("/api/commons/update?id=0").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isNoContent());
 
     verify(commonsRepository, times(1)).save(commons);
   }
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
-  public void updateCommonsTest_invalid() throws Exception
-  {
+  public void updateCommonsTest_withDegradationRate_Zero() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
     LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
-      .name("Jackson's Commons")
-      .cowPrice(500.99)
-      .milkPrice(8.99)
-      .startingBalance(1020.10)
-      .startingDate(someTime)
-      .endingDate(someOtherTime)
-      .degradationRate(-1.0)
-      .showLeaderboard(false)
-      .build();
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(8.49)
+        .endingDate(someOtherTime)
+        .showLeaderboard(false)
+        .build();
 
     Commons commons = Commons.builder()
-      .name("Jackson's Commons")
-      .cowPrice(500.99)
-      .milkPrice(8.99)
-      .startingBalance(1020.10)
-      .startingDate(someTime)
-      .endingDate(someOtherTime)
-      .degradationRate(1.0)
-      .showLeaderboard(false)
-      .build();
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(8.49)
+        .endingDate(someOtherTime)
+        .showLeaderboard(false)
+        .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
 
     when(commonsRepository.save(commons))
-      .thenReturn(commons);
+        .thenReturn(commons);
 
     mockMvc
-      .perform(put("/api/commons/update?id=0").with(csrf())
-        .contentType(MediaType.APPLICATION_JSON)
-        .characterEncoding("utf-8")
-        .content(requestBody))
-      .andExpect(status().isCreated());
+        .perform(put("/api/commons/update?id=0").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isCreated());
 
     verify(commonsRepository, times(1)).save(commons);
 
     parameters.setMilkPrice(parameters.getMilkPrice() + 3.00);
     commons.setMilkPrice(parameters.getMilkPrice());
+    parameters.setDegradationRate(0);
+    commons.setDegradationRate(parameters.getDegradationRate());
 
     requestBody = objectMapper.writeValueAsString(parameters);
 
     when(commonsRepository.findById(0L))
-      .thenReturn(Optional.of(commons));
+        .thenReturn(Optional.of(commons));
 
     when(commonsRepository.save(commons))
-      .thenReturn(commons);
+        .thenReturn(commons);
 
     mockMvc
-      .perform(put("/api/commons/update?id=0").with(csrf())
-        .contentType(MediaType.APPLICATION_JSON)
-        .characterEncoding("utf-8")
-        .content(requestBody))
-      .andExpect(status().isNoContent());
+        .perform(put("/api/commons/update?id=0").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isNoContent());
 
     verify(commonsRepository, times(1)).save(commons);
   }
 
-  //This common SHOULD be in the repository
+  @WithMockUser(roles = { "ADMIN" })
+  @Test
+  public void updateCommonsTest_withIllegalDegradationRate() throws Exception {
+    LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+
+    CreateCommonsParams parameters = CreateCommonsParams.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(8.49)
+        .showLeaderboard(false)
+        .build();
+
+    Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(8.49)
+        .showLeaderboard(false)
+        .build();
+
+    String requestBody = objectMapper.writeValueAsString(parameters);
+
+    when(commonsRepository.save(commons))
+        .thenReturn(commons);
+
+    mockMvc
+        .perform(put("/api/commons/update?id=0").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isCreated());
+
+    verify(commonsRepository, times(1)).save(commons);
+
+    parameters.setDegradationRate(-10);
+    commons.setDegradationRate(parameters.getDegradationRate());
+
+    requestBody = objectMapper.writeValueAsString(parameters);
+
+    when(commonsRepository.findById(0L))
+        .thenReturn(Optional.of(commons));
+
+    when(commonsRepository.save(commons))
+        .thenReturn(commons);
+
+    MvcResult response = mockMvc
+        .perform(put("/api/commons/update?id=0").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .characterEncoding("utf-8")
+            .content(requestBody))
+        .andExpect(status().isBadRequest()).andReturn();
+
+    Optional<IllegalArgumentException> someException = Optional
+        .ofNullable((IllegalArgumentException) response.getResolvedException());
+
+    assertNotNull(someException.get());
+    assertTrue(someException.get() instanceof IllegalArgumentException);
+  }
+
+  // This common SHOULD be in the repository
   @WithMockUser(roles = { "USER" })
   @Test
   public void getCommonsByIdTest_valid() throws Exception {
     Commons Commons1 = Commons.builder()
-      .name("TestCommons2")
-      .id(18L)
-      .build();
+        .name("TestCommons2")
+        .id(18L)
+        .build();
 
     when(commonsRepository.findById(eq(18L))).thenReturn(Optional.of(Commons1));
 
@@ -327,7 +431,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     assertEquals(expectedJson, responseString);
   }
 
-  //This common SHOULD NOT be in the repository
+  // This common SHOULD NOT be in the repository
   @WithMockUser(roles = { "USER" })
   @Test
   public void getCommonsByIdTest_invalid() throws Exception {
@@ -345,14 +449,14 @@ public class CommonsControllerTests extends ControllerTestCase {
     assertEquals(responseMap.get("type"), "EntityNotFoundException");
   }
 
-  @WithMockUser(roles = { "USER"})
+  @WithMockUser(roles = { "USER" })
   @Test
   public void joinCommonsTest() throws Exception {
 
     Commons c = Commons.builder()
-      .id(2L)
-      .name("Example Commons")
-      .build();
+        .id(2L)
+        .name("Example Commons")
+        .build();
 
     UserCommons uc = UserCommons.builder()
         .userId(1L)
@@ -371,7 +475,7 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     String requestBody = mapper.writeValueAsString(uc);
 
-    when(userCommonsRepository.findByCommonsIdAndUserId(anyLong(),anyLong())).thenReturn(Optional.empty());
+    when(userCommonsRepository.findByCommonsIdAndUserId(anyLong(), anyLong())).thenReturn(Optional.empty());
     when(userCommonsRepository.save(eq(uc))).thenReturn(ucSaved);
     when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
 
@@ -389,14 +493,14 @@ public class CommonsControllerTests extends ControllerTestCase {
     assertEquals(responseString, cAsJson);
   }
 
-  @WithMockUser(roles = { "USER"})
+  @WithMockUser(roles = { "USER" })
   @Test
   public void already_joined_common_test() throws Exception {
 
     Commons c = Commons.builder()
-      .id(2L)
-      .name("Example Commons")
-      .build();
+        .id(2L)
+        .name("Example Commons")
+        .build();
 
     UserCommons uc = UserCommons.builder()
         .userId(1L)
@@ -407,8 +511,9 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     String requestBody = mapper.writeValueAsString(uc);
 
-    //Instead of returning empty, we instead say that it already exists. We shouldn't create a new entry.
-    when(userCommonsRepository.findByCommonsIdAndUserId(2L,1L)).thenReturn(Optional.of(uc));
+    // Instead of returning empty, we instead say that it already exists. We
+    // shouldn't create a new entry.
+    when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(uc));
     when(userCommonsRepository.save(eq(uc))).thenReturn(uc);
 
     when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
@@ -437,7 +542,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .build();
 
     String requestBody = mapper.writeValueAsString(uc);
-    
+
     when(commonsRepository.findById(eq(2L))).thenReturn(Optional.empty());
 
     MvcResult response = mockMvc
@@ -446,7 +551,6 @@ public class CommonsControllerTests extends ControllerTestCase {
         .andExpect(status().is(404)).andReturn();
 
     verify(commonsRepository, times(1)).findById(eq(2L));
-
 
     Map<String, Object> responseMap = responseToJson(response);
 
@@ -489,13 +593,13 @@ public class CommonsControllerTests extends ControllerTestCase {
     assertEquals(responseMap.get("type"), "EntityNotFoundException");
   }
 
-    @WithMockUser(roles = { "ADMIN" })
+  @WithMockUser(roles = { "ADMIN" })
   @Test
   public void deleteCommons_test_admin_exists() throws Exception {
-      LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-      LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
+    LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
-      Commons c = Commons.builder()
+    Commons c = Commons.builder()
         .name("Jackson's Commons")
         .cowPrice(500.99)
         .milkPrice(8.99)
@@ -506,25 +610,24 @@ public class CommonsControllerTests extends ControllerTestCase {
         .showLeaderboard(false)
         .build();
 
-      when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
-      doNothing().when(commonsRepository).deleteById(2L);
-      doNothing().when(userCommonsRepository).deleteAllByCommonsId(2L);
+    when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
+    doNothing().when(commonsRepository).deleteById(2L);
+    doNothing().when(userCommonsRepository).deleteAllByCommonsId(2L);
 
+    MvcResult response = mockMvc.perform(
+        delete("/api/commons?id=2")
+            .with(csrf()))
+        .andExpect(status().is(200)).andReturn();
 
-      MvcResult response = mockMvc.perform(
-              delete("/api/commons?id=2")
-                      .with(csrf()))
-              .andExpect(status().is(200)).andReturn();
+    verify(commonsRepository, times(1)).findById(2L);
+    verify(commonsRepository, times(1)).deleteById(2L);
+    verify(userCommonsRepository, times(1)).deleteAllByCommonsId(2L);
 
-      verify(commonsRepository, times(1)).findById(2L);
-      verify(commonsRepository, times(1)).deleteById(2L);
-      verify(userCommonsRepository, times(1)).deleteAllByCommonsId(2L);
+    String responseString = response.getResponse().getContentAsString();
 
-      String responseString = response.getResponse().getContentAsString();
+    String expectedString = "{\"message\":\"commons with id 2 deleted\"}";
 
-      String expectedString = "{\"message\":\"commons with id 2 deleted\"}";
-
-      assertEquals(expectedString, responseString);
+    assertEquals(expectedString, responseString);
   }
 
   @WithMockUser(roles = { "ADMIN" })
@@ -550,8 +653,7 @@ public class CommonsControllerTests extends ControllerTestCase {
       assertEquals(expectedJson, jsonResponse);
   }
 
-
-  @WithMockUser(roles = {"ADMIN"})
+  @WithMockUser(roles = { "ADMIN" })
   @Test
   public void deleteUserFromCommonsTest() throws Exception {
     UserCommons uc = UserCommons.builder()
@@ -564,7 +666,7 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     String requestBody = mapper.writeValueAsString(uc);
 
-    when(userCommonsRepository.findByCommonsIdAndUserId(2L,1L)).thenReturn(Optional.of(uc));
+    when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(uc));
 
     MvcResult response = mockMvc
         .perform(delete("/api/commons/2/users/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
@@ -579,7 +681,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     assertEquals(responseString, "");
   }
 
-  @WithMockUser(roles = {"ADMIN"})
+  @WithMockUser(roles = { "ADMIN" })
   @Test
   public void deleteUserFromCommonsTest_nonexistent_userCommons() throws Exception {
     UserCommons uc = UserCommons.builder()
@@ -592,20 +694,21 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     String requestBody = mapper.writeValueAsString(uc);
 
-    when(userCommonsRepository.findByCommonsIdAndUserId(2L,1L)).thenReturn(Optional.empty());
+    when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.empty());
 
     MvcResult response;
-    try{
+    try {
       response = mockMvc
-        .perform(delete("/api/commons/2/users/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8").content(requestBody))
-        .andExpect(status().is(204)).andReturn();
+          .perform(delete("/api/commons/2/users/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+              .characterEncoding("utf-8").content(requestBody))
+          .andExpect(status().is(204)).andReturn();
 
-    //The way this works is very interesting. The error message is sent as the value of a nested exception.
-    }catch(Exception e){
+      // The way this works is very interesting. The error message is sent as the
+      // value of a nested exception.
+    } catch (Exception e) {
       assertEquals(e.toString(),
-      "org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.Exception: UserCommons with commonsId=2 and userId=1 not found.");
+          "org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.Exception: UserCommons with commonsId=2 and userId=1 not found.");
     }
   }
-  
+
 }
