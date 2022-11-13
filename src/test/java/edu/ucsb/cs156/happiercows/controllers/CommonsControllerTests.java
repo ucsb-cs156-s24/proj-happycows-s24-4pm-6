@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 import java.util.Map;
 
@@ -39,7 +39,6 @@ import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 
 import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
-import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -714,8 +713,6 @@ public class CommonsControllerTests extends ControllerTestCase {
     }
   }
 
-  
-
   @WithMockUser(roles = { "USER" })
   @Test
   public void getCommonsPlusTest() throws Exception {
@@ -726,10 +723,10 @@ public class CommonsControllerTests extends ControllerTestCase {
     List<CommonsPlus> expectedCommonsPlus = new ArrayList<CommonsPlus>();
     List<CommonsPlus> dummy = new ArrayList<CommonsPlus>();
     CommonsPlus CommonsPlus1 = CommonsPlus.builder()
-          .commons(Commons1)
-          .totalCows(50)
-          .totalUsers(20)
-          .build();
+        .commons(Commons1)
+        .totalCows(50)
+        .totalUsers(20)
+        .build();
 
     expectedCommonsPlus.add(CommonsPlus1);
     when(commonsRepository.findAll()).thenReturn(expectedCommons);
@@ -742,8 +739,9 @@ public class CommonsControllerTests extends ControllerTestCase {
     verify(commonsRepository, times(1)).findAll();
 
     String responseString = response.getResponse().getContentAsString();
-    List<CommonsPlus> actualCommonsPlus = objectMapper.readValue(responseString, new TypeReference<List<CommonsPlus>>() {
-    });
+    List<CommonsPlus> actualCommonsPlus = objectMapper.readValue(responseString,
+        new TypeReference<List<CommonsPlus>>() {
+        });
     assertEquals(actualCommonsPlus, expectedCommonsPlus);
   }
 
