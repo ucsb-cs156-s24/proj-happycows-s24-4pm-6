@@ -31,43 +31,42 @@ export default function CommonsTable({ commons, currentUser }) {
     const columns = [
         {
             Header: 'id',
-            accessor: 'commons.id', // accessor is the "key" in the data
+            accessor: 'id', // accessor is the "key" in the data
 
         },
         {
             Header:'Name',
-            accessor: 'commons.name',
+            accessor: 'name',
         },
         {
             Header:'Cow Price',
-            accessor: row => String(row.commons.cowPrice),
+            accessor: row => row.cowPrice,
             id: 'cowPrice'
         },
         {
             Header:'Milk Price',
-            accessor: row => String(row.commons.milkPrice),
+            accessor: row => row.milkPrice,
             id: 'milkPrice'
         },
         {
             Header:'Starting Balance',
-            accessor: row => String(row.commons.startingBalance),
+            accessor: row => row.startingBalance,
             id: 'startingBalance'
         },
         {
             Header:'Starting Date',
-            accessor: row => String(row.commons.startingDate).slice(0,10),
+            accessor: row => String(row.startingDate).slice(0,10),
             id: 'startingDate'
         },
         {
             Header:'Degradation Rate',
-            //accessor: row => row.startingDate.toString(),
-            accessor: row => String(row.commons.degradationRate),
+            accessor: row => row.degradationRate,
             id: 'degradationRate'
         },
         {
             Header:'Show Leaderboard?',
             id: 'showLeaderboard', // needed for tests
-            accessor: (row, _rowIndex) => String(row.commons.showLeaderboard) // hack needed for boolean values to show up
+            accessor: (row, _rowIndex) => String(row.showLeaderboard) // hack needed for boolean values to show up
         },
         {
             Header: 'Cows',
