@@ -1,12 +1,23 @@
 import React from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
+import JobsTable from "main/components/Jobs/JobsTable";
+import { useBackend } from "main/utils/useBackend";
 
 const AdminJobsPage = () => {
+
+    // Stryker disable  all 
+    const { data: jobs, error: _error, status: _status } =
+        useBackend(
+            ["/api/jobs/all"],
+            { method: "GET", url: "/api/jobs/all" },
+            []
+        );
+    // Stryker enable  all 
 
     return (
         <BasicLayout>
             <h2>Manage Jobs (Admins)</h2>
-            <p>Coming Soon; for now, you may use the Swagger endpoints to manage jobs.</p>
+            <JobsTable jobs={jobs} />
         </BasicLayout>
     );
 };
