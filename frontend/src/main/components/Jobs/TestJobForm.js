@@ -6,7 +6,7 @@ function TestJobForm({ submitAction }) {
  const defaultValues = {
     fail: false,
     sleepMs: 1000
- };
+};
 
   // Stryker disable all
   const {

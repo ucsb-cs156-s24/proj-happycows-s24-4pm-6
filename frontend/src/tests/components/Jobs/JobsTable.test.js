@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import JobsTable from "main/components/Jobs/JobsTable";
 import jobsFixtures from "fixtures/jobsFixtures";
 
-describe("LeaderboardTable tests", () => {
+describe("JobsTable tests", () => {
   const queryClient = new QueryClient();
 
   test("renders without crashing for empty table", () => {
@@ -50,6 +50,9 @@ describe("LeaderboardTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Updated`)).toHaveTextContent("11/13/2022, 19:49:59");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-status`)).toHaveTextContent("complete");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Log`)).toHaveTextContent("Hello World! from test job!Goodbye from test job!");
+
+    expect(screen.getByTestId(`JobsTable-header-id-sort-carets`)).toHaveTextContent("🔽");
+
 
   });
 

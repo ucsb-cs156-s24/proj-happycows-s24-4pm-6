@@ -77,6 +77,8 @@ describe("AdminJobsPage tests", () => {
         submitButton.click();
 
         await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
+
+        expect(axiosMock.history.post[0].url).toBe("/api/jobs/launch/testjob?fail=false&sleepMs=0");
 });
 
 
