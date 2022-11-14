@@ -9,7 +9,7 @@ export default function JobsTable({ jobs }) {
         {
             Header: 'id',
             accessor: 'id', // accessor is the "key" in the data
-
+            sortDescFirst: true
         },
         DateColumn('Created', (cell)=>cell.row.original.createdAt),
         DateColumn('Updated', (cell)=>cell.row.original.updatedAt),
@@ -19,10 +19,21 @@ export default function JobsTable({ jobs }) {
         },
         PlaintextColumn('Log', (cell)=>cell.row.original.log),
     ];
+    
+    const sortees = React.useMemo(
+        () => [
+          {
+            id: "id",
+            desc: true
+          }
+        ],
+        []
+      );
 
     return <OurTable
         data={jobs}
         columns={columns}
         testid={testid}
+        initialState={{ sortBy: sortees }}
     />;
 }; 

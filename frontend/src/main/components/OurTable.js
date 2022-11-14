@@ -3,7 +3,7 @@ import { useTable, useSortBy } from 'react-table'
 import { Table, Button } from "react-bootstrap";
 import Plaintext from "main/components/Utils/Plaintext";
 
-export default function OurTable({ columns, data, testid = "testid" }) {
+export default function OurTable({ columns, data, testid = "testid", ...rest }) {
 
   const {
     getTableProps,
@@ -11,7 +11,13 @@ export default function OurTable({ columns, data, testid = "testid" }) {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data }, useSortBy)
+  } = useTable({
+    columns,
+    data,
+    ...(rest.initialState && {
+      initialState: rest.initialState
+    })
+  }, useSortBy)
 
   return (
     <Table {...getTableProps()} striped bordered hover >
@@ -106,7 +112,7 @@ export function PlaintextColumn(label, getText) {
     Header: label,
     id: label,
     Cell: ({ cell }) => (
-      <Plaintext text={getText(cell)}  />
+      <Plaintext text={getText(cell)} />
     )
   }
   return column;

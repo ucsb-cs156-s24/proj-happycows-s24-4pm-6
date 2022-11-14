@@ -63,7 +63,15 @@ const jobsFixtures = {
         "status": "error",
         "log": "Hello World! from test job!\nFail!"
       }
-    ]
+    ],
+    testJobFailFalseSleepMs1000: {
+      "fail": false,
+      "sleepMs": 1000
+    },
+    testJobFailTrueSleepMs1000: {
+      "fail": false,
+      "sleepMs": 1000
+    },
 };
 
 export default jobsFixtures;
