@@ -8,7 +8,6 @@ describe("LeaderboardTable tests", () => {
   const queryClient = new QueryClient();
 
   test("renders without crashing for empty table", () => {
-    const currentUser = null;
 
     render(
       <QueryClientProvider client={queryClient}>
