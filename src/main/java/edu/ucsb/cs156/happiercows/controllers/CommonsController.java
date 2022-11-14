@@ -2,6 +2,11 @@ package edu.ucsb.cs156.happiercows.controllers;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+import java.util.*;
+import java.util.stream.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
@@ -54,8 +60,30 @@ public class CommonsController extends ApiController {
   @GetMapping("/all")
   public ResponseEntity<String> getCommons() throws JsonProcessingException {
     log.info("getCommons()...");
-    Iterable<Commons> users = commonsRepository.findAll();
-    String body = mapper.writeValueAsString(users);
+    Iterable<Commons> commons = commonsRepository.findAll();
+    String body = mapper.writeValueAsString(commons);
+    return ResponseEntity.ok().body(body);
+  }
+
+  @ApiOperation(value = "Get a list of all commons and number of cows/users")
+  @GetMapping("/allplus")
+  public ResponseEntity<String> getCommonsPlus() throws JsonProcessingException {
+    log.info("getCommonsPlus()...");
+    Iterable<Commons> commonsListIter = commonsRepository.findAll();
+    
+    // convert Iterable to List for the purposes of using a Java Stream & lambda below
+    List<Commons> commonsList = new ArrayList<Commons>();
+    commonsListIter.forEach(commonsList::add);
+
+    List<CommonsPlus> commonsPlusList1 = commonsList.stream()
+      .filter(c -> (commonsRepository.getNumCows(c.getId())).isPresent())
+      .filter(c -> (commonsRepository.getNumUsers(c.getId())).isPresent())
+      .map(c -> new CommonsPlus(c, (commonsRepository.getNumCows(c.getId())).get(), (commonsRepository.getNumUsers(c.getId())).get()))
+      .collect(Collectors.toList());
+
+    ArrayList<CommonsPlus> commonsPlusList = new ArrayList<CommonsPlus>(commonsPlusList1);
+
+    String body = mapper.writeValueAsString(commonsPlusList);
     return ResponseEntity.ok().body(body);
   }
 

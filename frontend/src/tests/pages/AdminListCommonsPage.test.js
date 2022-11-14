@@ -49,7 +49,7 @@ describe("AdminListCommonPage tests", () => {
     test("renders without crashing for regular user", () => {
         setupUserOnly();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/commons/all").reply(200, []);
+        axiosMock.onGet("/api/commons/allplus").reply(200, []);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -63,7 +63,7 @@ describe("AdminListCommonPage tests", () => {
     test("renders without crashing for admin user", () => {
         setupAdminUser();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/commons/all").reply(200, []);
+        axiosMock.onGet("/api/commons/allplus").reply(200, []);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -77,7 +77,7 @@ describe("AdminListCommonPage tests", () => {
     test("renders three commons without crashing for admin user", async () => {
         setupAdminUser();
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+        axiosMock.onGet("/api/commons/allplus").reply(200, commonsFixtures.threeCommons);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -96,7 +96,7 @@ describe("AdminListCommonPage tests", () => {
         setupUserOnly();
 
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/commons/all").timeout();
+        axiosMock.onGet("/api/commons/allplus").timeout();
 
         const restoreConsole = mockConsole();
 
@@ -118,7 +118,7 @@ describe("AdminListCommonPage tests", () => {
         setupAdminUser();
 
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+        axiosMock.onGet("/api/commons/allplus").reply(200, commonsFixtures.threeCommons);
         axiosMock.onDelete("/api/commons", {params: {id: 5}}).reply(200, "Commons with id 5 was deleted");
 
         render(
@@ -144,7 +144,7 @@ describe("AdminListCommonPage tests", () => {
         setupAdminUser();
 
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+        axiosMock.onGet("/api/commons/allplus").reply(200, commonsFixtures.threeCommons);
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -168,7 +168,7 @@ describe("AdminListCommonPage tests", () => {
         setupAdminUser();
 
         const queryClient = new QueryClient();
-        axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+        axiosMock.onGet("/api/commons/allplus").reply(200, commonsFixtures.threeCommons);
 
         render(
             <QueryClientProvider client={queryClient}>

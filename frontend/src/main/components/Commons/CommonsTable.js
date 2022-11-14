@@ -17,7 +17,7 @@ export default function CommonsTable({ commons, currentUser }) {
     const deleteMutation = useBackendMutation(
         cellToAxiosParamsDelete,
         { onSuccess: onDeleteSuccess },
-        ["/api/commons/all"]
+        ["/api/commons/allplus"]
     );
     // Stryker enable all
 
@@ -40,17 +40,17 @@ export default function CommonsTable({ commons, currentUser }) {
         },
         {
             Header:'Cow Price',
-            accessor: row => String(row.cowPrice),
+            accessor: row => row.cowPrice,
             id: 'cowPrice'
         },
         {
             Header:'Milk Price',
-            accessor: row => String(row.milkPrice),
+            accessor: row => row.milkPrice,
             id: 'milkPrice'
         },
         {
             Header:'Starting Balance',
-            accessor: row => String(row.startingBalance),
+            accessor: row => row.startingBalance,
             id: 'startingBalance'
         },
         {
@@ -60,14 +60,17 @@ export default function CommonsTable({ commons, currentUser }) {
         },
         {
             Header:'Degradation Rate',
-            //accessor: row => row.startingDate.toString(),
-            accessor: row => String(row.degradationRate),
+            accessor: row => row.degradationRate,
             id: 'degradationRate'
         },
         {
             Header:'Show Leaderboard?',
             id: 'showLeaderboard', // needed for tests
             accessor: (row, _rowIndex) => String(row.showLeaderboard) // hack needed for boolean values to show up
+        },
+        {
+            Header: 'Cows',
+            accessor: 'totalCows'
         }
     ];
 
