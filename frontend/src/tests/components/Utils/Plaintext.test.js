@@ -19,4 +19,33 @@ describe("Plaintext tests", () => {
             expect(screen.getByText(line.trim())).toBeInTheDocument();
         });
     });
+
+    test("works on null parameter", async () => {
+        // Arrange
+      
+        // Act
+        render(
+            <Plaintext text={null}  />
+        );
+
+        // Assert
+        expect(await screen.findByTestId("plaintext-empty")).toBeInTheDocument();
+        const pre = screen.getByTestId("plaintext-empty");
+        expect(pre).toHaveTextContent("");
+    });
+
+
+    test("works on non-text types", async () => {
+        // Arrange
+      
+        // Act
+        render(
+            <Plaintext text={[30, "foo", true]}  />
+        );
+
+        // Assert
+        expect(await screen.findByTestId("plaintext")).toBeInTheDocument();
+        const pre = screen.getByTestId("plaintext");
+        expect(pre).toHaveTextContent('[ 30, "foo", true]');
+    });
 });
