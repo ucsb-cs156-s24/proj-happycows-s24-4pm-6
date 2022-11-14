@@ -11,8 +11,8 @@ export default function JobsTable({ jobs }) {
             accessor: 'id', // accessor is the "key" in the data
 
         },
-        DateColumn('Created At', (cell)=>cell.row.original.createdAt),
-        DateColumn('Updated At', (cell)=>cell.row.original.updatedAt),
+        DateColumn('Created', (cell)=>cell.row.original.createdAt),
+        DateColumn('Updated', (cell)=>cell.row.original.updatedAt),
         {
             Header:'Status',
             accessor: 'status'

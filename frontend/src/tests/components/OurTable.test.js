@@ -1,19 +1,26 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import OurTable, { ButtonColumn } from "main/components/OurTable";
+import OurTable, { ButtonColumn, DateColumn, PlaintextColumn} from "main/components/OurTable";
 
 describe("OurTable tests", () => {
     const threeRows = [
         {
             col1: 'Hello',
             col2: 'World',
+            createdAt: '2021-04-01T04:00:00.000',
+            log: "foo\nbar\n  baz",
         },
         {
             col1: 'react-table',
             col2: 'rocks',
+            createdAt: '2022-01-04T14:00:00.000',
+            log: "foo\nbar",
+
         },
         {
             col1: 'whatever',
             col2: 'you want',
+            createdAt: '2023-04-01T23:00:00.000',
+            log: "bar\n  baz",
         }
     ];
     const clickMeCallback = jest.fn();
@@ -28,6 +35,8 @@ describe("OurTable tests", () => {
             accessor: 'col2',
         },
         ButtonColumn("Click", "primary", clickMeCallback, "testId"),
+        DateColumn("Date", (cell) => cell.row.original.createdAt),
+        PlaintextColumn("Log", (cell) => cell.row.original.log),
     ];
 
     test("renders an empty table without crashing", () => {

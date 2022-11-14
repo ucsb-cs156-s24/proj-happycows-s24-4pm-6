@@ -4,12 +4,12 @@ export default function Plaintext({text}) {
   const [firstLine, ...rest] = text.split('\n')
   return (
     <pre>
-      { firstLine }
+      <span>{ firstLine }</span>
       {
-        rest.map(line => (
+        rest.map((line) => (
           <>
             <br />
-            { line }
+            <span>{ line }</span>
           </>
         ))
       }
