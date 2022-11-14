@@ -1,7 +1,6 @@
 package edu.ucsb.cs156.happiercows.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,6 +28,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.entities.User;
@@ -111,7 +112,7 @@ public class JobsControllerTests extends ControllerTestCase {
     when(jobsRepository.save(any(Job.class))).thenReturn(jobStarted).thenReturn(jobCompleted);
 
     // act
-    MvcResult response = mockMvc.perform(get("/api/jobs/launch/testjob?fail=false&sleepMs=2000"))
+    MvcResult response = mockMvc.perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=2000").with(csrf()))
         .andExpect(status().isOk()).andReturn();
 
     // assert
@@ -155,7 +156,7 @@ public class JobsControllerTests extends ControllerTestCase {
     when(jobsRepository.save(any(Job.class))).thenReturn(jobStarted).thenReturn(jobFailed);
 
     // act
-    MvcResult response = mockMvc.perform(get("/api/jobs/launch/testjob?fail=true&sleepMs=4000"))
+    MvcResult response = mockMvc.perform(post("/api/jobs/launch/testjob?fail=true&sleepMs=4000").with(csrf()))
         .andExpect(status().isOk()).andReturn();
 
     String responseString = response.getResponse().getContentAsString();
