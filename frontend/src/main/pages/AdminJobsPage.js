@@ -5,7 +5,7 @@ import { useBackend } from "main/utils/useBackend";
 import Accordion from 'react-bootstrap/Accordion';
 import TestJobForm from "main/components/Jobs/TestJobForm";
 import JobComingSoon from "main/components/Jobs/JobComingSoon";
-import MilkCowsJob from "main/components/Jobs/JobMilkCows";
+import MilkCowsJob from "main/components/Jobs/MilkCowsJob";
 
 import { useBackendMutation } from "main/utils/useBackend";
 
