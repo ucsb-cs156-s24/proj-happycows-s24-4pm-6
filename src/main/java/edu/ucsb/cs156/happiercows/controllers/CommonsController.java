@@ -70,16 +70,15 @@ public class CommonsController extends ApiController {
   public ResponseEntity<String> getCommonsPlus() throws JsonProcessingException {
     log.info("getCommonsPlus()...");
     Iterable<Commons> commonsListIter = commonsRepository.findAll();
-    
-    // convert Iterable to List for the purposes of using a Java Stream & lambda below
+
+    // convert Iterable to List for the purposes of using a Java Stream & lambda
+    // below
     List<Commons> commonsList = new ArrayList<Commons>();
     commonsListIter.forEach(commonsList::add);
 
     List<CommonsPlus> commonsPlusList1 = commonsList.stream()
-      .filter(c -> (commonsRepository.getNumCows(c.getId())).isPresent())
-      .filter(c -> (commonsRepository.getNumUsers(c.getId())).isPresent())
-      .map(c -> new CommonsPlus(c, (commonsRepository.getNumCows(c.getId())).get(), (commonsRepository.getNumUsers(c.getId())).get()))
-      .collect(Collectors.toList());
+        .map(c -> toCommonsPlus(c))
+        .collect(Collectors.toList());
 
     ArrayList<CommonsPlus> commonsPlusList = new ArrayList<CommonsPlus>(commonsPlusList1);
 
@@ -113,12 +112,11 @@ public class CommonsController extends ApiController {
     updated.setStartingDate(params.getStartingDate());
     updated.setEndingDate(params.getEndingDate());
     updated.setShowLeaderboard(params.getShowLeaderboard());
-    updated.setDegradationRate(params.getDegradationRate()); 
+    updated.setDegradationRate(params.getDegradationRate());
 
-    if(params.getDegradationRate() < 0){
+    if (params.getDegradationRate() < 0) {
       throw new IllegalArgumentException("Degradation Rate cannot be negative");
     }
-    
 
     commonsRepository.save(updated);
 
@@ -141,24 +139,24 @@ public class CommonsController extends ApiController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PostMapping(value = "/new", produces = "application/json")
   public ResponseEntity<String> createCommons(
-  
+
       @ApiParam("request body") @RequestBody CreateCommonsParams params) throws JsonProcessingException {
     Commons commons = Commons.builder()
-      .name(params.getName())
-      .cowPrice(params.getCowPrice())
-      .milkPrice(params.getMilkPrice())
-      .startingBalance(params.getStartingBalance())
-      .startingDate(params.getStartingDate())
-      .endingDate(params.getEndingDate())
-      .degradationRate(params.getDegradationRate())
-      .showLeaderboard(params.getShowLeaderboard())
-      .build();
-   
-    //throw exception for degradation rate 
-    if(params.getDegradationRate() < 0){
+        .name(params.getName())
+        .cowPrice(params.getCowPrice())
+        .milkPrice(params.getMilkPrice())
+        .startingBalance(params.getStartingBalance())
+        .startingDate(params.getStartingDate())
+        .endingDate(params.getEndingDate())
+        .degradationRate(params.getDegradationRate())
+        .showLeaderboard(params.getShowLeaderboard())
+        .build();
+
+    // throw exception for degradation rate
+    if (params.getDegradationRate() < 0) {
       throw new IllegalArgumentException("Degradation Rate cannot be negative");
     }
-    
+
     Commons saved = commonsRepository.save(commons);
     String body = mapper.writeValueAsString(saved);
 
@@ -227,5 +225,16 @@ public class CommonsController extends ApiController {
 
     userCommonsRepository.deleteById(userCommons.getId());
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  public CommonsPlus toCommonsPlus(Commons c) {
+    Optional<Integer> numCows = commonsRepository.getNumCows(c.getId());
+    Optional<Integer> numUsers = commonsRepository.getNumUsers(c.getId());
+
+    return CommonsPlus.builder()
+        .commons(c)
+        .totalCows(numCows.orElse(0))
+        .totalUsers(numUsers.orElse(0))
+        .build();
   }
 }
