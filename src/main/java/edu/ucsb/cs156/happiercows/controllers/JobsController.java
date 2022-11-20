@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
+import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
+import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJob;
+import edu.ucsb.cs156.happiercows.jobs.TestJob;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJob;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 
@@ -53,27 +57,21 @@ public class JobsController extends ApiController {
         @ApiParam("fail") @RequestParam Boolean fail, 
         @ApiParam("sleepMs") @RequestParam Integer sleepMs
     ) {
+        TestJob testJob = TestJob.builder()
+        .fail(fail)
+        .sleepMs(sleepMs)
+        .build();
 
-        return jobService.runAsJob(ctx -> {
-            ctx.log("Hello World! from test job!");
-            Thread.sleep(sleepMs);
-            if (fail) {
-                throw new Exception("Fail!");
-            }
-            ctx.log("Goodbye from test job!");
-          });
+        return jobService.runAsJob(testJob);
     }
 
-    @ApiOperation(value = "Launch Job to Milk the Cows")
+    @ApiOperation(value = "Launch Job to Milk the Cows (click fail if you want to test exception handling)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/launch/milkcows")
-    public Job jobMilkCows() 
-    {
-        return jobService.runAsJob(ctx -> {
-            ctx.log("Starting to milk the cows");
-            ctx.log("This is where the code to milk the cows will go.");
-            ctx.log("Cows have been milked!");
-          });
+    @PostMapping("/launch/milkthecowjob")
+    public Job launchTestJob(
+    ) {
+        MilkTheCowsJob milkTheCowsJob = MilkTheCowsJob.builder().build();
+        return jobService.runAsJob(milkTheCowsJob);
     }
 
     @ApiOperation(value = "Launch Job to Update Cow Health")
@@ -81,11 +79,8 @@ public class JobsController extends ApiController {
     @PostMapping("/launch/updatecowhealth")
     public Job updateCowHealth(
     ) { 
-        return jobService.runAsJob(ctx -> {
-            ctx.log("Updating cow health");
-            ctx.log("This is where the code to update the cow health will go.");
-            ctx.log("Cow health has been updated!");
-          });
+        UpdateCowHealthJob updateCowHealthJob = UpdateCowHealthJob.builder().build();
+        return jobService.runAsJob(updateCowHealthJob);
     }
 
     @ApiOperation(value = "Launch Job to Produce Instructor Report")
@@ -93,11 +88,9 @@ public class JobsController extends ApiController {
     @PostMapping("/launch/instructorreport")
     public Job instructorReport(
     ) { 
-        return jobService.runAsJob(ctx -> {
-            ctx.log("Producing instructor report");
-            ctx.log("This is where the code to producing instructor report will go.");
-            ctx.log("Instructor report has been produced!");
-          });
+        InstructorReportJob instructorReportJob = 
+            InstructorReportJob.builder().build();
+       
+        return jobService.runAsJob(instructorReportJob);
     }
-
 }
