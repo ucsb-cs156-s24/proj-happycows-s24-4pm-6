@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
+import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
+import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJob;
+import edu.ucsb.cs156.happiercows.jobs.TestJob;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJob;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 
@@ -53,15 +57,40 @@ public class JobsController extends ApiController {
         @ApiParam("fail") @RequestParam Boolean fail, 
         @ApiParam("sleepMs") @RequestParam Integer sleepMs
     ) {
+        TestJob testJob = TestJob.builder()
+        .fail(fail)
+        .sleepMs(sleepMs)
+        .build();
 
-        return jobService.runAsJob(ctx -> {
-            ctx.log("Hello World! from test job!");
-            Thread.sleep(sleepMs);
-            if (fail) {
-                throw new Exception("Fail!");
-            }
-            ctx.log("Goodbye from test job!");
-          });
+        return jobService.runAsJob(testJob);
     }
 
+    @ApiOperation(value = "Launch Job to Milk the Cows (click fail if you want to test exception handling)")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/milkthecowjob")
+    public Job launchTestJob(
+    ) {
+        MilkTheCowsJob milkTheCowsJob = MilkTheCowsJob.builder().build();
+        return jobService.runAsJob(milkTheCowsJob);
+    }
+
+    @ApiOperation(value = "Launch Job to Update Cow Health")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/updatecowhealth")
+    public Job updateCowHealth(
+    ) { 
+        UpdateCowHealthJob updateCowHealthJob = UpdateCowHealthJob.builder().build();
+        return jobService.runAsJob(updateCowHealthJob);
+    }
+
+    @ApiOperation(value = "Launch Job to Produce Instructor Report")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/instructorreport")
+    public Job instructorReport(
+    ) { 
+        InstructorReportJob instructorReportJob = 
+            InstructorReportJob.builder().build();
+       
+        return jobService.runAsJob(instructorReportJob);
+    }
 }
