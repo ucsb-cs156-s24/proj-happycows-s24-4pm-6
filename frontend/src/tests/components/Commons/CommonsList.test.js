@@ -5,13 +5,13 @@ import commonsFixtures from "fixtures/commonsFixtures";
 describe("CommonsList tests", () => {
     test("renders without crashing when button text is set", () => {
         render(
-            <CommonsList commonList = {commonsFixtures.threeCommons} buttonText = {"Join"} title="Join A Commons"/>
+            <CommonsList commonList = {commonsFixtures.threeCommons} buttonText = {"Join"} title="Join A New Commons"/>
         );
 
         const title = screen.getByTestId("commonsList-title");
         expect(title).toBeInTheDocument();
         expect(typeof(title.textContent)).toBe('string');
-        expect(title.textContent).toEqual('Join A Commons');
+        expect(title.textContent).toEqual('Join A New Commons');
 
         const subtitle_name = screen.getByTestId("commonsList-subtitle-name");
         expect(subtitle_name).toBeInTheDocument();
