@@ -20,12 +20,9 @@ import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import edu.ucsb.cs156.happiercows.errors.NoCowsException;
 import edu.ucsb.cs156.happiercows.errors.NotEnoughMoneyException;
 
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-
-
 
 import org.springframework.http.ResponseEntity;
 import javax.validation.Valid;
@@ -38,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/usercommons")
 @RestController
 public class UserCommonsController extends ApiController {
-
 
   @Autowired
   private UserCommonsRepository userCommonsRepository;
@@ -98,7 +94,6 @@ public class UserCommonsController extends ApiController {
         else{
           throw new NotEnoughMoneyException("You need more money!");
         }
-
         userCommonsRepository.save(userCommons);
 
         String body = mapper.writeValueAsString(userCommons);
