@@ -10,6 +10,10 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
             accessor: 'userId', 
         },
         {
+            Header: 'Username',
+            accessor: 'username', 
+        },
+        {
             Header: 'Total Wealth',
             accessor: 'totalWealth',
         },
