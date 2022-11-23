@@ -5,6 +5,7 @@ import { useBackend } from "main/utils/useBackend";
 import Accordion from 'react-bootstrap/Accordion';
 import TestJobForm from "main/components/Jobs/TestJobForm";
 import JobComingSoon from "main/components/Jobs/JobComingSoon";
+import MilkCowsJobForm from "main/components/Jobs/MilkCowsJobForm";
 
 import { useBackendMutation } from "main/utils/useBackend";
 
@@ -52,7 +53,7 @@ const AdminJobsPage = () => {
         },
         {
             name: "Milk The Cows",
-            form: <JobComingSoon />
+            form: <MilkCowsJobForm />
         },
         {
             name: "Instructor Report",
