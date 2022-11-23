@@ -17,9 +17,15 @@ import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
+import edu.ucsb.cs156.happiercows.errors.NoCowsException;
+import edu.ucsb.cs156.happiercows.errors.NotEnoughMoneyException;
+
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+
 
 import org.springframework.http.ResponseEntity;
 import javax.validation.Valid;
@@ -32,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/usercommons")
 @RestController
 public class UserCommonsController extends ApiController {
+
 
   @Autowired
   private UserCommonsRepository userCommonsRepository;
@@ -73,7 +80,7 @@ public class UserCommonsController extends ApiController {
   @PreAuthorize("hasRole('ROLE_USER')")
   @PutMapping("/buy")
   public ResponseEntity<String> putUserCommonsByIdBuy(
-          @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
+          @ApiParam("commonsId") @RequestParam Long commonsId) throws NotEnoughMoneyException, JsonProcessingException{
 
         User u = getCurrentUser().getUser();
         Long userId = u.getId();
@@ -88,6 +95,10 @@ public class UserCommonsController extends ApiController {
           userCommons.setTotalWealth(userCommons.getTotalWealth() - commons.getCowPrice());
           userCommons.setNumOfCows(userCommons.getNumOfCows() + 1);
         }
+        else{
+          throw new NotEnoughMoneyException("You need more money!");
+        }
+
         userCommonsRepository.save(userCommons);
 
         String body = mapper.writeValueAsString(userCommons);
@@ -98,7 +109,7 @@ public class UserCommonsController extends ApiController {
   @PreAuthorize("hasRole('ROLE_USER')")
   @PutMapping("/sell")
   public ResponseEntity<String> putUserCommonsByIdSell(
-          @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
+          @ApiParam("commonsId") @RequestParam Long commonsId) throws NoCowsException, JsonProcessingException {
         User u = getCurrentUser().getUser();
         Long userId = u.getId();
 
@@ -112,6 +123,9 @@ public class UserCommonsController extends ApiController {
         if(userCommons.getNumOfCows() >= 1 ){
           userCommons.setTotalWealth(userCommons.getTotalWealth() + commons.getCowPrice());
           userCommons.setNumOfCows(userCommons.getNumOfCows() - 1);
+        }
+        else{
+          throw new NoCowsException("You have no cows to sell!");
         }
         userCommonsRepository.save(userCommons);
 
