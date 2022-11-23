@@ -130,14 +130,8 @@ export function DateColumn(label, getDate) {
     id: label,
     Cell: ({ cell }) => {
       const date = new Date(getDate(cell));
-      console.log("____________________________________________")
-      console.log("date= ", date)
       const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
-      console.log("formattedDate= ", formattedDate)
-      console.log("____________________________________________")
       return (<>{formattedDate}</>)
-      //OLD: 2022-11-13T19:49:58.097465
-      //NEW: 2022-11-13T19:49:58.097465-800
     }
   }
   return column;
