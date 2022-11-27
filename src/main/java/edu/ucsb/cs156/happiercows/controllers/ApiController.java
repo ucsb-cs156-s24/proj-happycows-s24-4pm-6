@@ -1,6 +1,8 @@
 package edu.ucsb.cs156.happiercows.controllers;
 
 import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
+import edu.ucsb.cs156.happiercows.errors.NoCowsException;
+import edu.ucsb.cs156.happiercows.errors.NotEnoughMoneyException;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,6 +32,15 @@ public abstract class ApiController {
   @ExceptionHandler({ EntityNotFoundException.class })
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public Object handleGenericException(Throwable e) {
+    return Map.of(
+      "type", e.getClass().getSimpleName(),
+      "message", e.getMessage()
+    );
+  }
+
+  @ExceptionHandler({ NoCowsException.class, NotEnoughMoneyException.class})
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Object handleBadRequest(Throwable e) {
     return Map.of(
       "type", e.getClass().getSimpleName(),
       "message", e.getMessage()
