@@ -4,8 +4,9 @@ import JobsTable from "main/components/Jobs/JobsTable";
 import { useBackend } from "main/utils/useBackend";
 import Accordion from 'react-bootstrap/Accordion';
 import TestJobForm from "main/components/Jobs/TestJobForm";
-import JobComingSoon from "main/components/Jobs/JobComingSoon";
+import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
 import MilkCowsJobForm from "main/components/Jobs/MilkCowsJobForm";
+import InstructorReportForm from "main/components/Jobs/InstructorReportForm";
 
 import { useBackendMutation } from "main/utils/useBackend";
 
@@ -49,7 +50,7 @@ const AdminJobsPage = () => {
     const jobLaunchers = [
         {
             name: "Update Cow Health",
-            form: <JobComingSoon />
+            form: <UpdateCowHealthForm />
         },
         {
             name: "Milk The Cows",
@@ -57,7 +58,7 @@ const AdminJobsPage = () => {
         },
         {
             name: "Instructor Report",
-            form: <JobComingSoon />
+            form: <InstructorReportForm />
         },
     ]
 
