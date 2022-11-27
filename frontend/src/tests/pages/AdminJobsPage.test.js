@@ -43,7 +43,7 @@ describe("AdminJobsPage tests", () => {
         const testId = "JobsTable";
 
         expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-        expect(screen.getByTestId(`${testId}-cell-row-0-col-Created`)).toHaveTextContent("1");
+        expect(screen.getByTestId(`${testId}-cell-row-0-col-Created`)).toHaveTextContent("11/13/2022, 19:49:58");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-Updated`)).toHaveTextContent("11/13/2022, 19:49:59");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-status`)).toHaveTextContent("complete");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-Log`)).toHaveTextContent("Hello World! from test job!Goodbye from test job!");

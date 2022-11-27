@@ -78,7 +78,7 @@ public class JobsControllerTests extends ControllerTestCase {
 
         // // assert
 
-        verify(jobsRepository, times(1)).findAll();
+        verify(jobsRepository).findAll();
         String expectedJson = mapper.writeValueAsString(expectedJobs);
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
