@@ -46,9 +46,11 @@ export default function LeaderboardPage() {
     );
   // Stryker enable all 
 
+  <div test={{backgroundSize: 'cover', backgroundImage: `url(${Background})`, opacity: 0.75}}></div>
+
   const showLeaderboard = (hasRole(currentUser, "ROLE_ADMIN") || commons.showLeaderboard );
   return (
-    <div style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})`, opacity: 0.6 }}>
+    <div style={{ backgroundSize: 'cover', backgroundImage: test}}>
         <BasicLayout>
             <div className="pt-2">
                 <h1>Leaderboard</h1>
