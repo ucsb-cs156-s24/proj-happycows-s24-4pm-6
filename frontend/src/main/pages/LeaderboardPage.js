@@ -50,7 +50,7 @@ export default function LeaderboardPage() {
 
   const showLeaderboard = (hasRole(currentUser, "ROLE_ADMIN") || commons.showLeaderboard );
   return (
-    <div style={{backgroundSize: 'cover', backgroundImage: `url(${Background})`, opacity: 0.75}}>
+    <div style={{backgroundSize: 'cover', backgroundImage: `url(${Background})`, opacity: 0.8}}>
         <BasicLayout>
             <div className="pt-2">
               <div style={{opactiy: 1.00}}>
