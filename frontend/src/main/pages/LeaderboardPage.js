@@ -46,14 +46,11 @@ export default function LeaderboardPage() {
     );
   // Stryker enable all 
 
- //<div test={{backgroundSize: 'cover', backgroundImage: `url(${Background})`, opacity: 0.75}}></div>
-
   const showLeaderboard = (hasRole(currentUser, "ROLE_ADMIN") || commons.showLeaderboard );
   return (
     <div style={{backgroundSize: 'cover', backgroundImage: `url(${Background})`, opacity: 0.8}}>
         <BasicLayout>
             <div className="pt-2">
-              <div style={{opactiy: 1.00}}>
                 <h1>Leaderboard</h1>
                 {
                   showLeaderboard?
@@ -61,7 +58,6 @@ export default function LeaderboardPage() {
                   (<p>You're not authorized to see the leaderboard.</p>)
                 }
                 </div>
-            </div>
         </BasicLayout>
     </div>
   )
