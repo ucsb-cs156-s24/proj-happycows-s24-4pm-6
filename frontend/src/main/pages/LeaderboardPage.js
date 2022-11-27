@@ -50,7 +50,7 @@ export default function LeaderboardPage() {
 
   const showLeaderboard = (hasRole(currentUser, "ROLE_ADMIN") || commons.showLeaderboard );
   return (
-    <div style={{ backgroundSize: 'cover', backgroundImage: test}}>
+    <div style={{test}}>
         <BasicLayout>
             <div className="pt-2">
                 <h1>Leaderboard</h1>
