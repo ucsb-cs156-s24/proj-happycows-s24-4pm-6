@@ -3,6 +3,10 @@ import { useTable, useSortBy } from 'react-table'
 import { Table, Button } from "react-bootstrap";
 import Plaintext from "main/components/Utils/Plaintext";
 
+var tableStyle = {
+  "backround": "white"
+};
+
 export default function OurTable({ columns, data, testid = "testid", ...rest }) {
 
   const {
@@ -20,7 +24,7 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
   }, useSortBy)
 
   return (
-    <Table {...getTableProps()} striped bordered hover >
+    <Table style={tableStyle} {...getTableProps()} striped bordered hover >
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
