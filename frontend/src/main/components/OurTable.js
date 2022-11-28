@@ -4,7 +4,7 @@ import { Table, Button } from "react-bootstrap";
 import Plaintext from "main/components/Utils/Plaintext";
 
 var tableStyle = {
-  "backround": "white"
+  "background": "white"
 };
 
 export default function OurTable({ columns, data, testid = "testid", ...rest }) {
