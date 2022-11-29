@@ -122,9 +122,6 @@ public class UserCommonsController extends ApiController {
           if (userCommons.getNumOfCows() == 0) {
             userCommons.setCowHealth(0);
           }
-          else {
-            userCommons.setCowHealth((userCommons.getCowHealth()*(userCommons.getNumOfCows()+1) - 100) / (userCommons.getNumOfCows()));
-          }
         }
         else{
           throw new NoCowsException("You have no cows to sell!");
