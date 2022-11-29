@@ -12,6 +12,7 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 100,
         },
         {
             "id": 4,
@@ -25,6 +26,7 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 123,
         },
         {
             "id": 1,
@@ -38,6 +40,7 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 42,
         }
     ],
     oneCommons:
@@ -54,6 +57,7 @@ const commonsFixtures = {
                 "milkPrice": 10,
                 "degradationRate": .5,
                 "showLeaderboard": true,
+                "carryingCapacity": 314,
             }
         ],
 
@@ -67,6 +71,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 100,
         },
         {
             "id": 8,
@@ -77,6 +82,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 100,
         },
         {
             "id": 6,
@@ -87,6 +93,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 100,
         },
         {
             "id": 5,
@@ -97,6 +104,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 100,
         },
         {
             "id": 4,
@@ -107,6 +115,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 100,
         },
         {
             "id": 3,
@@ -117,6 +126,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 100,
         },
         {
             "id": 2,
@@ -127,6 +137,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "carryingCapacity": 100,
         }
     ],
 }
