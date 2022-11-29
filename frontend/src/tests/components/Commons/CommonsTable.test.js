@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import CommonsTable from "main/components/Commons/CommonsTable"
 import { currentUserFixtures } from "fixtures/currentUserFixtures";
-import commonsFixtures from "fixtures/commonsFixtures";
+import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
 
 const mockedNavigate = jest.fn();
 
@@ -59,7 +59,7 @@ describe("UserTable tests", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <CommonsTable commons={commonsFixtures.threeCommons} currentUser={currentUser} />
+          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
         </MemoryRouter>
       </QueryClientProvider>
 
@@ -75,11 +75,11 @@ describe("UserTable tests", () => {
     });
 
     expectedFields.forEach((field) => {
-      const header = screen.getByTestId(`${testId}-cell-row-0-col-${field}`);
+      const header = screen.getByTestId(`${testId}-cell-row-0-col-commons.${field}`);
       expect(header).toBeInTheDocument();
     });
 
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("5");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("4");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-commons.id`)).toHaveTextContent("1");
+    expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.id`)).toHaveTextContent("2");
   });
 });
