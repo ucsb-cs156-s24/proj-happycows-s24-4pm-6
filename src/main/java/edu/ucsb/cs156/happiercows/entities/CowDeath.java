@@ -26,7 +26,7 @@ public class CowDeath {
   private long commonsId;
   private long userId;
   private LocalDateTime zonedDateTime;
-  private int cowsKilled; 
+  private Integer cowsKilled; 
   private double avgHealth; 
 
 }
