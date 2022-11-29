@@ -43,7 +43,7 @@ describe("AppNavbar tests", () => {
 
     test("renders H2Console and Swagger links correctly", async () => {
         const currentUser = currentUserFixtures.adminUser;
-        const systemInfo = systemInfoFixtures.showingBoth;
+        const systemInfo = systemInfoFixtures.showingAll;
 
         const doLogin = jest.fn();
 
@@ -62,7 +62,7 @@ describe("AppNavbar tests", () => {
 
     test("renders the AppNavbarLocalhost when on http://localhost:3000", async () => {
         const currentUser = currentUserFixtures.userOnly;
-        const systemInfo = systemInfoFixtures.showingBoth;
+        const systemInfo = systemInfoFixtures.showingAll;
         const doLogin = jest.fn();
 
         delete window.location
@@ -81,7 +81,7 @@ describe("AppNavbar tests", () => {
 
     test("renders the AppNavbarLocalhost when on http://127.0.0.1:3000", async () => {
         const currentUser = currentUserFixtures.userOnly;
-        const systemInfo = systemInfoFixtures.showingBoth;
+        const systemInfo = systemInfoFixtures.showingAll;
         const doLogin = jest.fn();
 
         delete window.location
@@ -100,7 +100,7 @@ describe("AppNavbar tests", () => {
 
     test("does NOT render the AppNavbarLocalhost when on localhost:8080", async () => {
         const currentUser = currentUserFixtures.userOnly;
-        const systemInfo = systemInfoFixtures.showingBoth;
+        const systemInfo = systemInfoFixtures.showingAll;
         const doLogin = jest.fn();
 
         delete window.location

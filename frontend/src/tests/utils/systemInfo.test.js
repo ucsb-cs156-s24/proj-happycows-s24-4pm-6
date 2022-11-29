@@ -55,13 +55,13 @@ describe("utils/systemInfo tests", () => {
             );
 
             var axiosMock = new AxiosMockAdapter(axios);
-            axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingBoth);
+            axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingAll);
 
             const { result, waitFor } = renderHook(() => useSystemInfo(), { wrapper });
 
             await waitFor(() => result.current.isFetched);
 
-            expect(result.current.data).toEqual(systemInfoFixtures.showingBoth);
+            expect(result.current.data).toEqual(systemInfoFixtures.showingAll);
             queryClient.clear();
         });
 
