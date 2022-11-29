@@ -12,7 +12,7 @@ export default {
 
 const Template = () => {
     return (
-        <Footer systemInfo={systemInfoFixtures.showingBoth}/>
+        <Footer systemInfo={systemInfoFixtures.showingAll}/>
     )
 };
 

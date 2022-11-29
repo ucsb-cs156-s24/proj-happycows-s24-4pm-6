@@ -57,7 +57,7 @@ extraLinks_SwaggerOnly.args = {
 export const extraLinks_bothH2AndSwagger = Template.bind({});
 extraLinks_bothH2AndSwagger.args = {
     currentUser: currentUserFixtures.userOnly,
-    systemInfo: systemInfoFixtures.showingBoth
+    systemInfo: systemInfoFixtures.showingAll
 };
 
 

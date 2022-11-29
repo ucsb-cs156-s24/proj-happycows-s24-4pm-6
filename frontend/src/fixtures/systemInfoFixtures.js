@@ -1,5 +1,5 @@
 const systemInfoFixtures = {
-    showingBoth:
+    showingAll:
     {
         "springH2ConsoleEnabled": true,
         "showSwaggerUILink": true,
@@ -9,7 +9,7 @@ const systemInfoFixtures = {
     {
         "springH2ConsoleEnabled": false,
         "showSwaggerUILink": false,
-        "sourceRepo": "https://github.com/ucsb-cs156-f22/f22-5pm-happycows"
+        "sourceRepo": ""
     }
 };
 
