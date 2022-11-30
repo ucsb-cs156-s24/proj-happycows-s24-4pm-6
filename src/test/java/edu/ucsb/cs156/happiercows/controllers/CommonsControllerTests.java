@@ -74,6 +74,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -84,6 +85,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -119,6 +121,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -129,6 +132,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -163,6 +167,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(-8.49)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -172,6 +177,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(-8.49)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -225,6 +231,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(50.0)
         .showLeaderboard(true)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -235,6 +242,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(50.0)
         .showLeaderboard(true)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -257,6 +265,8 @@ public class CommonsControllerTests extends ControllerTestCase {
     commons.setDegradationRate(parameters.getDegradationRate());
     parameters.setShowLeaderboard(false);
     commons.setShowLeaderboard(parameters.getShowLeaderboard());
+    parameters.setCarryingCapacity(123);
+    commons.setCarryingCapacity(parameters.getCarryingCapacity());
 
     requestBody = objectMapper.writeValueAsString(parameters);
 
@@ -289,6 +299,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(8.49)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -299,6 +310,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(8.49)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -319,6 +331,8 @@ public class CommonsControllerTests extends ControllerTestCase {
     commons.setMilkPrice(parameters.getMilkPrice());
     parameters.setDegradationRate(0);
     commons.setDegradationRate(parameters.getDegradationRate());
+    parameters.setCarryingCapacity(123);
+    commons.setCarryingCapacity(parameters.getCarryingCapacity());
 
     requestBody = objectMapper.writeValueAsString(parameters);
 
@@ -351,6 +365,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(8.49)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -361,6 +376,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(8.49)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -603,6 +619,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));

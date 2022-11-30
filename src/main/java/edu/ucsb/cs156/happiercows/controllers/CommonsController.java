@@ -112,6 +112,7 @@ public class CommonsController extends ApiController {
     updated.setStartingDate(params.getStartingDate());
     updated.setShowLeaderboard(params.getShowLeaderboard());
     updated.setDegradationRate(params.getDegradationRate());
+    updated.setCarryingCapacity(params.getCarryingCapacity());
 
     if (params.getDegradationRate() < 0) {
       throw new IllegalArgumentException("Degradation Rate cannot be negative");
@@ -148,6 +149,7 @@ public class CommonsController extends ApiController {
         .startingDate(params.getStartingDate())
         .degradationRate(params.getDegradationRate())
         .showLeaderboard(params.getShowLeaderboard())
+        .carryingCapacity(params.getCarryingCapacity())
         .build();
 
     // throw exception for degradation rate

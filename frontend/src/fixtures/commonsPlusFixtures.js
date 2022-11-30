@@ -10,7 +10,8 @@ const commonsPlusFixtures = {
                 "startingDate": "2022-11-22T00:00:00",
                 "endingDate": null,
                 "degradationRate": 0.01,
-                "showLeaderboard": false
+                "showLeaderboard": false,
+                "carryingCapacity": 100,
             },
             "totalCows": 10,
             "totalUsers": 2
@@ -26,7 +27,8 @@ const commonsPlusFixtures = {
                 "startingDate": "2022-11-22T00:00:00",
                 "endingDate": null,
                 "degradationRate": 0.01,
-                "showLeaderboard": true
+                "showLeaderboard": true,
+                "carryingCapacity": 42,
             },
             "totalCows": 0,
             "totalUsers": 1
@@ -42,7 +44,8 @@ const commonsPlusFixtures = {
                 "startingDate": "2022-11-26T00:00:00",
                 "endingDate": null,
                 "degradationRate": 5.0,
-                "showLeaderboard": true
+                "showLeaderboard": true,
+                "carryingCapacity": 123,
             },
             "totalCows": 0,
             "totalUsers": 1
@@ -61,7 +64,8 @@ const commonsPlusFixtures = {
                 "startingDate": "2022-11-11T00:00:00",
                 "endingDate": null,
                 "degradationRate": 3.0,
-                "showLeaderboard": false
+                "showLeaderboard": false,
+                "carryingCapacity": 23,
             },
             "totalCows": 0,
             "totalUsers": 0
