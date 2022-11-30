@@ -23,6 +23,7 @@ import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJob;
 import edu.ucsb.cs156.happiercows.jobs.TestJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJob;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 
@@ -41,6 +42,9 @@ public class JobsController extends ApiController {
 
     @Autowired
     ObjectMapper mapper;
+
+    @Autowired
+    UpdateCowHealthJobFactory updateCowHealthJobFactory;
 
     @ApiOperation(value = "List all jobs")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -79,7 +83,7 @@ public class JobsController extends ApiController {
     @PostMapping("/launch/updatecowhealth")
     public Job updateCowHealth(
     ) { 
-        UpdateCowHealthJob updateCowHealthJob = UpdateCowHealthJob.builder().build();
+        UpdateCowHealthJob updateCowHealthJob = updateCowHealthJobFactory.create();
         return jobService.runAsJob(updateCowHealthJob);
     }
 

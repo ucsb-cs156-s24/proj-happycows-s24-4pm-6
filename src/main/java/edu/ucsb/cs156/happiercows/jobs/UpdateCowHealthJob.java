@@ -1,15 +1,20 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
+import java.util.Optional;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
-import lombok.Getter;
-import lombok.Builder;
 
-@Builder
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+@Slf4j
 public class UpdateCowHealthJob implements JobContextConsumer {
 
     @Getter private CommonsRepository commonsRepository;
@@ -19,7 +24,6 @@ public class UpdateCowHealthJob implements JobContextConsumer {
     public void accept(JobContext ctx) throws Exception {
         ctx.log("Updating cow health");
 
-        int carryingCapacity = 100;
         double threshold = 0.01;
     //  for each commons that exists in the database:
     //      totalCows = get the total number of cows in that commons
@@ -34,9 +38,13 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
         for (Commons commons : allCommons) {
             try {
+                int carryingCapacity = commons.getCarryingCapacity();
                 Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
                 // get totalCows
-                Integer totalCows = commons.getTotalCows();
+                // Integer totalCows = commons.getTotalCows();       
+                Optional<Integer> numCows = commonsRepository.getNumCows(commons.getId());
+                CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalCows(numCows.orElse(0)).build();
+                Integer totalCows = commonsPlus.getTotalCows();
                 for (UserCommons userCommons : allUserCommons) {
                     if (totalCows <= carryingCapacity) {
                         try {
@@ -63,4 +71,5 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
         ctx.log("Cow health has been updated!");
     }
+    
 }
