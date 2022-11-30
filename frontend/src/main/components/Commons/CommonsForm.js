@@ -140,6 +140,25 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
       </Form.Group>
 
       <Form.Group className="mb-3">
+        <Form.Label htmlFor="carryingCapacity">Carrying Capacity</Form.Label>
+        <Form.Control
+          data-testid={`${testid}-carryingCapacity`}
+          id="carryingCapacity"
+          type="number"
+          step="1"
+          isInvalid={!!errors.carryingCapacity}
+          {...register("carryingCapacity", {
+            valueAsNumber: true,
+            required: "Carrying capacity is required",
+            min: { value: 1, message: "Carrying Capacity must be greater than 0" },
+          })}
+        />
+        <Form.Control.Feedback type="invalid">
+          {errors.carryingCapacity?.message}
+        </Form.Control.Feedback>
+      </Form.Group>
+
+      <Form.Group className="mb-3">
         <Form.Label htmlFor="showLeaderboard">Show Leaderboard?</Form.Label>
         <Form.Check 
           data-testid={`${testid}-showLeaderboard`}
