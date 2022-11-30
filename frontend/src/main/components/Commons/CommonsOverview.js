@@ -15,7 +15,7 @@ export default function CommonsOverview({ commons, currentUser }) {
             <Card.Body>
                 <Row>
                     <Col>
-                        <Card.Title>Today is day {commons.day}! This game will end on {commons.endDate}.</Card.Title>
+                        <Card.Title>Today is day {commons.day}! </Card.Title>
                         <Card.Text>Total Players: {commons.totalPlayers}</Card.Text>
                     </Col>
                     <Col>
