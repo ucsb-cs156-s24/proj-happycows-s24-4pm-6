@@ -48,7 +48,7 @@ export default function LeaderboardPage() {
 
   const showLeaderboard = (hasRole(currentUser, "ROLE_ADMIN") || commons.showLeaderboard );
   return (
-    <div style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
+    <div style={{backgroundSize: 'cover', backgroundImage: `url(${Background})`}}>
         <BasicLayout>
             <div className="pt-2">
                 <h1>Leaderboard</h1>
@@ -57,7 +57,7 @@ export default function LeaderboardPage() {
                   (<LeaderboardTable leaderboardUsers={userCommons} currentUser={currentUser} />) :
                   (<p>You're not authorized to see the leaderboard.</p>)
                 }
-            </div>
+                </div>
         </BasicLayout>
     </div>
   )
