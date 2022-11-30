@@ -72,7 +72,7 @@ public class UserCommonsController extends ApiController {
     return userCommons;
   }
 
-  @ApiOperation(value = "Buy a cow, totalWealth and cowHealth updated")
+  @ApiOperation(value = "Buy a cow, totalWealth updated")
   @PreAuthorize("hasRole('ROLE_USER')")
   @PutMapping("/buy")
   public ResponseEntity<String> putUserCommonsByIdBuy(
@@ -89,7 +89,6 @@ public class UserCommonsController extends ApiController {
 
         if(userCommons.getTotalWealth() >= commons.getCowPrice() ){
           userCommons.setTotalWealth(userCommons.getTotalWealth() - commons.getCowPrice());
-          userCommons.setCowHealth((userCommons.getCowHealth()*userCommons.getNumOfCows() + 100) / (userCommons.getNumOfCows() + 1));
           userCommons.setNumOfCows(userCommons.getNumOfCows() + 1);
         }
         else{
@@ -101,7 +100,7 @@ public class UserCommonsController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
-  @ApiOperation(value = "Sell a cow, totalWealth and cowHealth updated")
+  @ApiOperation(value = "Sell a cow, totalWealth updated")
   @PreAuthorize("hasRole('ROLE_USER')")
   @PutMapping("/sell")
   public ResponseEntity<String> putUserCommonsByIdSell(
@@ -119,9 +118,6 @@ public class UserCommonsController extends ApiController {
         if(userCommons.getNumOfCows() >= 1 ){
           userCommons.setTotalWealth(userCommons.getTotalWealth() + commons.getCowPrice());
           userCommons.setNumOfCows(userCommons.getNumOfCows() - 1);
-          if (userCommons.getNumOfCows() == 0) {
-            userCommons.setCowHealth(0);
-          }
         }
         else{
           throw new NoCowsException("You have no cows to sell!");
