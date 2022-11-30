@@ -66,7 +66,7 @@ describe("UserTable tests", () => {
     );
 
     const expectedHeaders = ["id", "Name", "Cow Price", 'Milk Price', 'Starting Balance', 'Starting Date', 'Degradation Rate', 'Carrying Capacity'];
-    const expectedFields = ["id", "name", "cowPrice", "milkPrice", "startingBalance", "startingDate", "carryingCapacity"];
+    const expectedFields = ["id", "name", "cowPrice", "milkPrice", "startingBalance", "startingDate", "degradationRate", "carryingCapacity"];
     const testId = "CommonsTable";
 
     expectedHeaders.forEach((headerText) => {
