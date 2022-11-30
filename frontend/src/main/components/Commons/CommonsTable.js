@@ -74,6 +74,11 @@ export default function CommonsTable({ commons, currentUser }) {
         {
             Header: 'Cows',
             accessor: 'totalCows'
+        },
+        {
+            Header: 'Carrying Capacity',
+            accessor: row => row.commons.carryingCapacity,
+            id: 'commons.carryingCapacity'
         }
     ];
 
