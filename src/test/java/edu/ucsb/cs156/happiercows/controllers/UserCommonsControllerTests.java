@@ -141,7 +141,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       // arrange
   
       UserCommons origUserCommons = UserCommons
-      .builder()
+            .builder()
       .id(1L)
       .userId(1L)
       .commonsId(1L)
