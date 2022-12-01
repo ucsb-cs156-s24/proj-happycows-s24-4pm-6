@@ -167,7 +167,7 @@ public class CommonsController extends ApiController {
   @PreAuthorize("hasRole('ROLE_USER')")
   @PostMapping(value = "/join", produces = "application/json")
   public ResponseEntity<String> joinCommon(
-      @ApiParam("commonsId") @RequestParam Long commonsId) throws Exception {
+    @ApiParam("commonsId") @RequestParam Long commonsId) throws Exception {
 
     User u = getCurrentUser().getUser();
     Long userId = u.getId();
@@ -189,6 +189,7 @@ public class CommonsController extends ApiController {
         .username(username)
         .totalWealth(joinedCommons.getStartingBalance())
         .numOfCows(0)
+        .cowHealth(100)
         .build();
 
     userCommonsRepository.save(uc);
