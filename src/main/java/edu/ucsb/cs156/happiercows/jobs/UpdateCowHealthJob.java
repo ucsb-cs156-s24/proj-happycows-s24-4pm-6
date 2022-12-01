@@ -25,12 +25,11 @@ public class UpdateCowHealthJob implements JobContextConsumer {
     public void accept(JobContext ctx) throws Exception {
         ctx.log("Updating cow health");
 
-        double threshold = 0.01;
-
         Iterable<Commons> allCommons = commonsRepository.findAll();
 
         for (Commons commons : allCommons) {
             int carryingCapacity = commons.getCarryingCapacity();
+            double threshold = commons.getDegradationRate();
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
 
             // get totalCows  

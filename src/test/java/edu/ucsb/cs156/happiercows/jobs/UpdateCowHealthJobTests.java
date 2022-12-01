@@ -92,6 +92,7 @@ public class UpdateCowHealthJobTests {
         .startingBalance(300)
         .startingDate(LocalDateTime.now())
         .carryingCapacity(100)
+        .degradationRate(0.01)
         .build();
 
         UserCommons userCommonsToSend = UserCommons
@@ -159,6 +160,7 @@ public class UpdateCowHealthJobTests {
         .startingBalance(300)
         .startingDate(LocalDateTime.now())
         .carryingCapacity(100)
+        .degradationRate(0.01)
         .build();
 
         UserCommons userCommonsToSend = UserCommons
@@ -226,6 +228,7 @@ public class UpdateCowHealthJobTests {
         .startingBalance(300)
         .startingDate(LocalDateTime.now())
         .carryingCapacity(100)
+        .degradationRate(0.01)
         .build();
 
         UserCommons userCommonsToSend = UserCommons
@@ -293,6 +296,7 @@ public class UpdateCowHealthJobTests {
         .startingBalance(300)
         .startingDate(LocalDateTime.now())
         .carryingCapacity(100)
+        .degradationRate(0.01)
         .build();
 
         UserCommons userCommonsToSend = UserCommons
@@ -360,6 +364,7 @@ public class UpdateCowHealthJobTests {
         .startingBalance(300)
         .startingDate(LocalDateTime.now())
         .carryingCapacity(100)
+        .degradationRate(0.01)
         .build();
 
         UserCommons userCommonsToSend = UserCommons
@@ -401,5 +406,96 @@ public class UpdateCowHealthJobTests {
         assertEquals(expected, jobStarted.getLog());
         assertEquals(origUserCommons.getCowHealth(), newUserCommons.getCowHealth());
     }
+
+    @Test
+    void test_updating_to_new_values_for_multiple() throws Exception {
+
+        // Arrange
+        Job jobStarted = Job.builder().build();
+        JobContext ctx = new JobContext(null, jobStarted);
+
+        UserCommons origUserCommons1 = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(5)
+        .cowHealth(50)
+        .build();
+
+        UserCommons origUserCommons2 = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(5)
+        .cowHealth(50)
+        .build();
+
+        UserCommons origUserCommons3 = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(5)
+        .cowHealth(50)
+        .build();
+
+        Commons testCommons = Commons
+        .builder()
+        .name("test commons")
+        .cowPrice(10)
+        .milkPrice(2)
+        .startingBalance(300)
+        .startingDate(LocalDateTime.now())
+        .carryingCapacity(10)
+        .degradationRate(0.01)
+        .build();
+
+        UserCommons userCommonsToSend = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(5)
+        .cowHealth(50)
+        .build();
+
+        UserCommons newUserCommons = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300-testCommons.getCowPrice())
+        .numOfCows(5)
+        .cowHealth(50.01)
+        .build();
+
+        Commons commonsTemp[] = {testCommons};
+        UserCommons userCommonsTemp[] = {origUserCommons1, origUserCommons2, origUserCommons3};
+        when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
+        when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
+        when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
+
+        // Act
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        updateCowHealthJob.accept(ctx);
+
+        // Assert
+
+        String expected = """
+            Updating cow health
+            Cow health has been updated!""";
+
+        assertEquals(expected, jobStarted.getLog());
+        assertEquals(origUserCommons1.getCowHealth(), newUserCommons.getCowHealth());
+        assertEquals(origUserCommons2.getCowHealth(), newUserCommons.getCowHealth());
+        assertEquals(origUserCommons3.getCowHealth(), newUserCommons.getCowHealth());
+    }
+
 
 }
