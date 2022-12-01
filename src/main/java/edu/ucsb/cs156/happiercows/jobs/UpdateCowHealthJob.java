@@ -30,7 +30,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
         Iterable<Commons> allCommons = commonsRepository.findAll();
 
         for (Commons commons : allCommons) {
-            int carryingCapacity = 100;
+            int carryingCapacity = commons.getCarryingCapacity();
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
 
             // get totalCows  
@@ -41,7 +41,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
             for (UserCommons userCommons : allUserCommons) {
                 if (totalCows <= carryingCapacity) {
                     // increase cow health but do not exceed 100
-                    userCommons.setCowHealth(Math.min(100, userCommons.getCowHealth() + (threshold*(carryingCapacity-totalCows))));
+                    userCommons.setCowHealth(Math.min(100, userCommons.getCowHealth() + (threshold)));
                     userCommonsRepository.save(userCommons);
                 }
                 else {

@@ -91,6 +91,7 @@ public class UpdateCowHealthJobTests {
         .milkPrice(2)
         .startingBalance(300)
         .startingDate(LocalDateTime.now())
+        .carryingCapacity(100)
         .build();
 
         UserCommons userCommonsToSend = UserCommons
@@ -110,7 +111,7 @@ public class UpdateCowHealthJobTests {
         .commonsId(1L)
         .totalWealth(300-testCommons.getCowPrice())
         .numOfCows(1)
-        .cowHealth(10.99)
+        .cowHealth(10.01)
         .build();
 
         Commons commonsTemp[] = {testCommons};
@@ -157,6 +158,7 @@ public class UpdateCowHealthJobTests {
         .milkPrice(2)
         .startingBalance(300)
         .startingDate(LocalDateTime.now())
+        .carryingCapacity(100)
         .build();
 
         UserCommons userCommonsToSend = UserCommons
@@ -184,6 +186,207 @@ public class UpdateCowHealthJobTests {
         when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
         when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(101)));
+
+        // Act
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        updateCowHealthJob.accept(ctx);
+
+        // Assert
+
+        String expected = """
+            Updating cow health
+            Cow health has been updated!""";
+
+        assertEquals(expected, jobStarted.getLog());
+        assertEquals(origUserCommons.getCowHealth(), newUserCommons.getCowHealth());
+    }
+
+    @Test
+    void test_updating_to_new_values_if_equal_to_carrying_capacity() throws Exception {
+
+        // Arrange
+        Job jobStarted = Job.builder().build();
+        JobContext ctx = new JobContext(null, jobStarted);
+
+        UserCommons origUserCommons = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(100)
+        .cowHealth(50)
+        .build();
+
+        Commons testCommons = Commons
+        .builder()
+        .name("test commons")
+        .cowPrice(10)
+        .milkPrice(2)
+        .startingBalance(300)
+        .startingDate(LocalDateTime.now())
+        .carryingCapacity(100)
+        .build();
+
+        UserCommons userCommonsToSend = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(100)
+        .cowHealth(50)
+        .build();
+
+        UserCommons newUserCommons = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300-testCommons.getCowPrice())
+        .numOfCows(100)
+        .cowHealth(50.01)
+        .build();
+
+        Commons commonsTemp[] = {testCommons};
+        UserCommons userCommonsTemp[] = {origUserCommons};
+        when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
+        when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
+        when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(100)));
+
+        // Act
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        updateCowHealthJob.accept(ctx);
+
+        // Assert
+
+        String expected = """
+            Updating cow health
+            Cow health has been updated!""";
+
+        assertEquals(expected, jobStarted.getLog());
+        assertEquals(origUserCommons.getCowHealth(), newUserCommons.getCowHealth());
+    }
+
+    @Test
+    void test_updating_to_new_values_health_lower_than_zero() throws Exception {
+
+        // Arrange
+        Job jobStarted = Job.builder().build();
+        JobContext ctx = new JobContext(null, jobStarted);
+
+        UserCommons origUserCommons = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(150)
+        .cowHealth(0)
+        .build();
+
+        Commons testCommons = Commons
+        .builder()
+        .name("test commons")
+        .cowPrice(10)
+        .milkPrice(2)
+        .startingBalance(300)
+        .startingDate(LocalDateTime.now())
+        .carryingCapacity(100)
+        .build();
+
+        UserCommons userCommonsToSend = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(150)
+        .cowHealth(0)
+        .build();
+
+        UserCommons newUserCommons = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300-testCommons.getCowPrice())
+        .numOfCows(150)
+        .cowHealth(0)
+        .build();
+
+        Commons commonsTemp[] = {testCommons};
+        UserCommons userCommonsTemp[] = {origUserCommons};
+        when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
+        when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
+        when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(150)));
+
+        // Act
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        updateCowHealthJob.accept(ctx);
+
+        // Assert
+
+        String expected = """
+            Updating cow health
+            Cow health has been updated!""";
+
+        assertEquals(expected, jobStarted.getLog());
+        assertEquals(origUserCommons.getCowHealth(), newUserCommons.getCowHealth());
+    }
+
+    @Test
+    void test_updating_to_new_values_health_greater_than_100() throws Exception {
+
+        // Arrange
+        Job jobStarted = Job.builder().build();
+        JobContext ctx = new JobContext(null, jobStarted);
+
+        UserCommons origUserCommons = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(1)
+        .cowHealth(100)
+        .build();
+
+        Commons testCommons = Commons
+        .builder()
+        .name("test commons")
+        .cowPrice(10)
+        .milkPrice(2)
+        .startingBalance(300)
+        .startingDate(LocalDateTime.now())
+        .carryingCapacity(100)
+        .build();
+
+        UserCommons userCommonsToSend = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(1)
+        .cowHealth(100)
+        .build();
+
+        UserCommons newUserCommons = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300-testCommons.getCowPrice())
+        .numOfCows(1)
+        .cowHealth(100)
+        .build();
+
+        Commons commonsTemp[] = {testCommons};
+        UserCommons userCommonsTemp[] = {origUserCommons};
+        when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
+        when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
+        when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
 
         // Act
         UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
