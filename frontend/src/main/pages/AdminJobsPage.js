@@ -1,5 +1,3 @@
-// adminjobspage
-
 import React from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import JobsTable from "main/components/Jobs/JobsTable";
@@ -15,8 +13,6 @@ import { useBackendMutation } from "main/utils/useBackend";
 const AdminJobsPage = () => {
 
     const refreshJobsIntervalMilliseconds = 5000;
-
-    // test job
 
     const objectToAxiosParamsTestJob = (data) => ({
         url: `/api/jobs/launch/testjob?fail=${data.fail}&sleepMs=${data.sleepMs}`,
@@ -81,7 +77,6 @@ const AdminJobsPage = () => {
             form: <InstructorReportForm />
         },
     ]
-
 
     return (
         <BasicLayout>
