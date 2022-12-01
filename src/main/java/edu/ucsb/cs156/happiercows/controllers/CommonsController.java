@@ -110,9 +110,9 @@ public class CommonsController extends ApiController {
     updated.setMilkPrice(params.getMilkPrice());
     updated.setStartingBalance(params.getStartingBalance());
     updated.setStartingDate(params.getStartingDate());
-    updated.setEndingDate(params.getEndingDate());
     updated.setShowLeaderboard(params.getShowLeaderboard());
     updated.setDegradationRate(params.getDegradationRate());
+    updated.setCarryingCapacity(params.getCarryingCapacity());
 
     if (params.getDegradationRate() < 0) {
       throw new IllegalArgumentException("Degradation Rate cannot be negative");
@@ -147,9 +147,9 @@ public class CommonsController extends ApiController {
         .milkPrice(params.getMilkPrice())
         .startingBalance(params.getStartingBalance())
         .startingDate(params.getStartingDate())
-        .endingDate(params.getEndingDate())
         .degradationRate(params.getDegradationRate())
         .showLeaderboard(params.getShowLeaderboard())
+        .carryingCapacity(params.getCarryingCapacity())
         .build();
 
     // throw exception for degradation rate
@@ -167,7 +167,7 @@ public class CommonsController extends ApiController {
   @PreAuthorize("hasRole('ROLE_USER')")
   @PostMapping(value = "/join", produces = "application/json")
   public ResponseEntity<String> joinCommon(
-      @ApiParam("commonsId") @RequestParam Long commonsId) throws Exception {
+    @ApiParam("commonsId") @RequestParam Long commonsId) throws Exception {
 
     User u = getCurrentUser().getUser();
     Long userId = u.getId();
@@ -189,6 +189,7 @@ public class CommonsController extends ApiController {
         .username(username)
         .totalWealth(joinedCommons.getStartingBalance())
         .numOfCows(0)
+        .cowHealth(100)
         .build();
 
     userCommonsRepository.save(uc);

@@ -65,7 +65,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void createCommonsTest() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     Commons commons = Commons.builder()
         .name("Jackson's Commons")
@@ -73,9 +72,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -84,9 +83,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -113,7 +112,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void createCommonsTest_zeroDegradation() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     Commons commons = Commons.builder()
         .name("Jackson's Commons")
@@ -122,8 +120,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(0)
-        .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -133,8 +131,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(0)
-        .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -169,6 +167,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(-8.49)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -178,6 +177,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(-8.49)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -222,7 +222,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void updateCommonsTest() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
         .name("Jackson's Commons")
@@ -230,9 +229,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(true)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -241,9 +240,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(true)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -266,6 +265,8 @@ public class CommonsControllerTests extends ControllerTestCase {
     commons.setDegradationRate(parameters.getDegradationRate());
     parameters.setShowLeaderboard(false);
     commons.setShowLeaderboard(parameters.getShowLeaderboard());
+    parameters.setCarryingCapacity(123);
+    commons.setCarryingCapacity(parameters.getCarryingCapacity());
 
     requestBody = objectMapper.writeValueAsString(parameters);
 
@@ -289,7 +290,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void updateCommonsTest_withDegradationRate_Zero() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
         .name("Jackson's Commons")
@@ -298,8 +298,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(8.49)
-        .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -309,8 +309,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(8.49)
-        .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -331,6 +331,8 @@ public class CommonsControllerTests extends ControllerTestCase {
     commons.setMilkPrice(parameters.getMilkPrice());
     parameters.setDegradationRate(0);
     commons.setDegradationRate(parameters.getDegradationRate());
+    parameters.setCarryingCapacity(123);
+    commons.setCarryingCapacity(parameters.getCarryingCapacity());
 
     requestBody = objectMapper.writeValueAsString(parameters);
 
@@ -363,6 +365,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(8.49)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -373,6 +376,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(8.49)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -467,6 +471,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(0)
+        .cowHealth(100)
         .build();
 
     UserCommons ucSaved = UserCommons.builder()
@@ -476,6 +481,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(0)
+        .cowHealth(100)
         .build();
 
     String requestBody = mapper.writeValueAsString(uc);
@@ -606,7 +612,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void deleteCommons_test_admin_exists() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     Commons c = Commons.builder()
         .name("Jackson's Commons")
@@ -614,9 +619,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));

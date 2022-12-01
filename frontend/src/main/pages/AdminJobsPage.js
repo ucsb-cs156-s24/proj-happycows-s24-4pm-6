@@ -14,8 +14,6 @@ const AdminJobsPage = () => {
 
     const refreshJobsIntervalMilliseconds = 5000;
 
-    // test job 
-
     const objectToAxiosParamsTestJob = (data) => ({
         url: `/api/jobs/launch/testjob?fail=${data.fail}&sleepMs=${data.sleepMs}`,
         method: "POST"
@@ -34,7 +32,7 @@ const AdminJobsPage = () => {
         testJobMutation.mutate(data);
     }
 
-    // Stryker disable all 
+    // Stryker disable all
     const { data: jobs, error: _error, status: _status } =
         useBackend(
             ["/api/jobs/all"],
@@ -45,12 +43,30 @@ const AdminJobsPage = () => {
             [],
             { refetchInterval: refreshJobsIntervalMilliseconds }
         );
-    // Stryker enable  all 
+    // Stryker enable  all
+
+    const objectToAxiosParamsUpdateCowHealthJob = () => ({
+        url: `/api/jobs/launch/updatecowhealth`,
+        method: "POST"
+    });
+
+    // Stryker disable all
+    const UpdateCowHealthMutation = useBackendMutation(
+        objectToAxiosParamsUpdateCowHealthJob,
+        {  },
+        ["/api/jobs/all"]
+    );
+    // Stryker enable all
+
+    const submitUpdateCowHealthJob = async () => {
+        console.log("submitUpdateCowHealthJob")
+        UpdateCowHealthMutation.mutate();
+    }
 
     const jobLaunchers = [
         {
             name: "Update Cow Health",
-            form: <UpdateCowHealthForm />
+            form: <UpdateCowHealthForm submitAction={submitUpdateCowHealthJob}/>
         },
         {
             name: "Milk The Cows",
@@ -61,7 +77,6 @@ const AdminJobsPage = () => {
             form: <InstructorReportForm />
         },
     ]
-
 
     return (
         <BasicLayout>

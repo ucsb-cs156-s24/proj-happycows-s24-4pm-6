@@ -81,5 +81,30 @@ describe("AdminJobsPage tests", () => {
         expect(axiosMock.history.post[0].url).toBe("/api/jobs/launch/testjob?fail=false&sleepMs=0");
 });
 
+test("user can update cow healath", async () => {
+    render(
+        <QueryClientProvider client={queryClient}>
+            <MemoryRouter>
+                <AdminJobsPage />
+            </MemoryRouter>
+        </QueryClientProvider>
+    );
+
+    expect(await screen.findByText("Update Cow Health")).toBeInTheDocument();
+
+    const UpdateCowHealthJobButton = screen.getByText("Update Cow Health");
+    expect(UpdateCowHealthJobButton).toBeInTheDocument();
+    UpdateCowHealthJobButton.click();
+
+    const submitButton = screen.getByTestId("UpdateCowHealthForm-Submit-Button");
+
+    expect(submitButton).toBeInTheDocument();
+    submitButton.click();
+
+    await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
+
+    expect(axiosMock.history.post[0].url).toBe("/api/jobs/launch/updatecowhealth");
+});
+
 
 });
