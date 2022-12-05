@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 
 @RestClientTest(UpdateCowHealthJobFactory.class)
 @AutoConfigureDataJpa
@@ -23,6 +24,9 @@ public class UpdateCowHealthJobFactoryTests {
 
     @MockBean
     UserCommonsRepository userCommonsRepository;
+
+    @MockBean
+    UserRepository userRepository;
 
     @Autowired
     UpdateCowHealthJobFactory updateCowHealthJobFactory;
@@ -36,6 +40,7 @@ public class UpdateCowHealthJobFactoryTests {
         // Assert
         assertEquals(commonsRepository,updateCowHealthJob.getCommonsRepository());
         assertEquals(userCommonsRepository,updateCowHealthJob.getUserCommonsRepository());
+        assertEquals(userRepository,updateCowHealthJob.getUserRepository());
 
     }
 }

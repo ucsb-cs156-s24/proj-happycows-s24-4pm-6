@@ -32,9 +32,12 @@ import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 import lombok.extern.slf4j.Slf4j;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
+import edu.ucsb.cs156.happiercows.entities.User;
+
 import java.time.LocalDateTime;
 
 
@@ -47,6 +50,16 @@ public class UpdateCowHealthJobTests {
     @Mock
     UserCommonsRepository userCommonsRepository;
 
+    @Mock
+    UserRepository userRepository;
+
+    private User user = User
+    .builder()
+    .id(1L)
+    .fullName("Chris Gaucho")
+    .email("cgaucho@example.org")
+    .build();
+
     @Test
     void test_log_output_success() throws Exception {
 
@@ -56,12 +69,12 @@ public class UpdateCowHealthJobTests {
         JobContext ctx = new JobContext(null, jobStarted);
 
         // Act
-        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository, userRepository);
         updateCowHealthJob.accept(ctx);
 
         // Assert
         String expected = """
-            Updating cow health
+            Updating cow health...
             Cow health has been updated!""";
 
         assertEquals(expected, jobStarted.getLog());
@@ -115,20 +128,26 @@ public class UpdateCowHealthJobTests {
         .cowHealth(10.01)
         .build();
 
+     
+
         Commons commonsTemp[] = {testCommons};
         UserCommons userCommonsTemp[] = {origUserCommons};
         when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
         when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Act
-        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository, userRepository);
         updateCowHealthJob.accept(ctx);
 
         // Assert
 
         String expected = """
-            Updating cow health
+            Updating cow health...
+            Commons test commons, degradationRate: 0.01, carryingCapacity: 100
+            User: Chris Gaucho, numCows: 1, cowHealth: 10.0
+             old cow health: 10.0, new cow health: 10.01
             Cow health has been updated!""";
 
         assertEquals(expected, jobStarted.getLog());
@@ -188,15 +207,19 @@ public class UpdateCowHealthJobTests {
         when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
         when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(101)));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Act
-        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository, userRepository);
         updateCowHealthJob.accept(ctx);
 
         // Assert
 
         String expected = """
-            Updating cow health
+            Updating cow health...
+            Commons test commons, degradationRate: 0.01, carryingCapacity: 100
+            User: Chris Gaucho, numCows: 101, cowHealth: 100.0
+             old cow health: 100.0, new cow health: 99.99
             Cow health has been updated!""";
 
         assertEquals(expected, jobStarted.getLog());
@@ -256,15 +279,19 @@ public class UpdateCowHealthJobTests {
         when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
         when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(100)));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Act
-        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository, userRepository);
         updateCowHealthJob.accept(ctx);
 
         // Assert
 
         String expected = """
-            Updating cow health
+            Updating cow health...
+            Commons test commons, degradationRate: 0.01, carryingCapacity: 100
+            User: Chris Gaucho, numCows: 100, cowHealth: 50.0
+             old cow health: 50.0, new cow health: 50.01
             Cow health has been updated!""";
 
         assertEquals(expected, jobStarted.getLog());
@@ -324,15 +351,19 @@ public class UpdateCowHealthJobTests {
         when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
         when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(150)));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Act
-        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository, userRepository);
         updateCowHealthJob.accept(ctx);
 
         // Assert
 
         String expected = """
-            Updating cow health
+            Updating cow health...
+            Commons test commons, degradationRate: 0.01, carryingCapacity: 100
+            User: Chris Gaucho, numCows: 150, cowHealth: 0.0
+             old cow health: 0.0, new cow health: 0.0
             Cow health has been updated!""";
 
         assertEquals(expected, jobStarted.getLog());
@@ -392,15 +423,19 @@ public class UpdateCowHealthJobTests {
         when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
         when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Act
-        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository, userRepository);
         updateCowHealthJob.accept(ctx);
 
         // Assert
 
         String expected = """
-            Updating cow health
+            Updating cow health...
+            Commons test commons, degradationRate: 0.01, carryingCapacity: 100
+            User: Chris Gaucho, numCows: 1, cowHealth: 100.0
+             old cow health: 100.0, new cow health: 100.0
             Cow health has been updated!""";
 
         assertEquals(expected, jobStarted.getLog());
@@ -480,15 +515,23 @@ public class UpdateCowHealthJobTests {
         when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
         when(userCommonsRepository.findByCommonsId(testCommons.getId())).thenReturn(Arrays.asList(userCommonsTemp));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Act
-        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository);
+        UpdateCowHealthJob updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository, userRepository);
         updateCowHealthJob.accept(ctx);
 
         // Assert
 
         String expected = """
-            Updating cow health
+            Updating cow health...
+            Commons test commons, degradationRate: 0.01, carryingCapacity: 10
+            User: Chris Gaucho, numCows: 5, cowHealth: 50.0
+             old cow health: 50.0, new cow health: 50.01
+            User: Chris Gaucho, numCows: 5, cowHealth: 50.0
+             old cow health: 50.0, new cow health: 50.01
+            User: Chris Gaucho, numCows: 5, cowHealth: 50.0
+             old cow health: 50.0, new cow health: 50.01
             Cow health has been updated!""";
 
         assertEquals(expected, jobStarted.getLog());
