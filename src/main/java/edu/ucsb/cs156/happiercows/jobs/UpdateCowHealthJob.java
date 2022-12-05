@@ -44,7 +44,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
             Integer totalCows = commonsRepository.getNumCows(commons.getId()).orElseThrow(()->new RuntimeException("Error calling getNumCows(" + commons.getId() + ")"));
 
             for (UserCommons userCommons : allUserCommons) {
-                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(()->new RuntimeException("Error calling User.findById(" + userCommons.getUserId() + ")"));
+                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(()->new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
                 ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
 
                 double newCowHealth = calculateNewCowHealth(userCommons.getCowHealth(), userCommons.getNumOfCows(), totalCows, carryingCapacity, degradationRate);
