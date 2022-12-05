@@ -1,41 +1,26 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.Iterator;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
-import lombok.extern.slf4j.Slf4j;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
-import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.User;
 
 import java.time.LocalDateTime;
@@ -108,16 +93,6 @@ public class UpdateCowHealthJobTests {
                 .degradationRate(0.01)
                 .build();
 
-        UserCommons userCommonsToSend = UserCommons
-                .builder()
-                .id(1L)
-                .userId(1L)
-                .commonsId(1L)
-                .totalWealth(300)
-                .numOfCows(1)
-                .cowHealth(10)
-                .build();
-
         UserCommons newUserCommons = UserCommons
                 .builder()
                 .id(1L)
@@ -179,16 +154,6 @@ public class UpdateCowHealthJobTests {
                 .startingDate(LocalDateTime.now())
                 .carryingCapacity(100)
                 .degradationRate(0.01)
-                .build();
-
-        UserCommons userCommonsToSend = UserCommons
-                .builder()
-                .id(1L)
-                .userId(1L)
-                .commonsId(1L)
-                .totalWealth(300)
-                .numOfCows(101)
-                .cowHealth(100)
                 .build();
 
         UserCommons newUserCommons = UserCommons
@@ -254,16 +219,6 @@ public class UpdateCowHealthJobTests {
                 .degradationRate(0.01)
                 .build();
 
-        UserCommons userCommonsToSend = UserCommons
-                .builder()
-                .id(1L)
-                .userId(1L)
-                .commonsId(1L)
-                .totalWealth(300)
-                .numOfCows(100)
-                .cowHealth(50)
-                .build();
-
         UserCommons newUserCommons = UserCommons
                 .builder()
                 .id(1L)
@@ -327,16 +282,6 @@ public class UpdateCowHealthJobTests {
                 .degradationRate(0.01)
                 .build();
 
-        UserCommons userCommonsToSend = UserCommons
-                .builder()
-                .id(1L)
-                .userId(1L)
-                .commonsId(1L)
-                .totalWealth(300)
-                .numOfCows(150)
-                .cowHealth(0)
-                .build();
-
         UserCommons newUserCommons = UserCommons
                 .builder()
                 .id(1L)
@@ -398,16 +343,6 @@ public class UpdateCowHealthJobTests {
                 .startingDate(LocalDateTime.now())
                 .carryingCapacity(100)
                 .degradationRate(0.01)
-                .build();
-
-        UserCommons userCommonsToSend = UserCommons
-                .builder()
-                .id(1L)
-                .userId(1L)
-                .commonsId(1L)
-                .totalWealth(300)
-                .numOfCows(1)
-                .cowHealth(100)
                 .build();
 
         UserCommons newUserCommons = UserCommons
@@ -491,16 +426,6 @@ public class UpdateCowHealthJobTests {
                 .startingDate(LocalDateTime.now())
                 .carryingCapacity(10)
                 .degradationRate(0.01)
-                .build();
-
-        UserCommons userCommonsToSend = UserCommons
-                .builder()
-                .id(1L)
-                .userId(1L)
-                .commonsId(1L)
-                .totalWealth(300)
-                .numOfCows(5)
-                .cowHealth(50)
                 .build();
 
         UserCommons newUserCommons = UserCommons
