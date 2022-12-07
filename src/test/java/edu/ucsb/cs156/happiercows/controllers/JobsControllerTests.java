@@ -38,6 +38,10 @@ import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJob;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
+import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -57,6 +61,16 @@ public class JobsControllerTests extends ControllerTestCase {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @MockBean
+    CommonsRepository commonsRepository;
+
+    @MockBean
+    UserCommonsRepository userCommonsRepository;
+
+    @MockBean
+    UpdateCowHealthJobFactory updateCowHealthJobFactory;
+
 
     @WithMockUser(roles = { "ADMIN" })
     @Test

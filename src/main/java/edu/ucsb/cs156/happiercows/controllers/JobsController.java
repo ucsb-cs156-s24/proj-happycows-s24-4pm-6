@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.context.annotation.Import;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +23,7 @@ import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJob;
 import edu.ucsb.cs156.happiercows.jobs.TestJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJob;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 
@@ -41,6 +42,9 @@ public class JobsController extends ApiController {
 
     @Autowired
     ObjectMapper mapper;
+
+    @Autowired
+    UpdateCowHealthJobFactory updateCowHealthJobFactory;
 
     @ApiOperation(value = "List all jobs")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -79,7 +83,7 @@ public class JobsController extends ApiController {
     @PostMapping("/launch/updatecowhealth")
     public Job updateCowHealth(
     ) { 
-        UpdateCowHealthJob updateCowHealthJob = UpdateCowHealthJob.builder().build();
+        UpdateCowHealthJob updateCowHealthJob = updateCowHealthJobFactory.create();
         return jobService.runAsJob(updateCowHealthJob);
     }
 
