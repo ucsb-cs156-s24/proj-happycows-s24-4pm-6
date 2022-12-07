@@ -35,5 +35,7 @@ public class Job {
     private ZonedDateTime updatedAt;
 
     private String status;
+
+    @Column(columnDefinition="text")
     private String log;
 }
