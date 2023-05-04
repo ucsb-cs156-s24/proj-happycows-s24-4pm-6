@@ -24,6 +24,6 @@ COPY lombok.config /home/app
 COPY pom.xml /home/app
 
 ENV PRODUCTION=true
-RUN mvn -B -DskipTests -Pproduction -Ppostgres -f /home/app/pom.xml clean package
+RUN mvn -B -DskipTests -Pproduction -f /home/app/pom.xml clean package
 
 ENTRYPOINT ["sh", "-c", "java -jar /home/app/target/*.jar"]
