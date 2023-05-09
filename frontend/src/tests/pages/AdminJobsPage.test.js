@@ -43,7 +43,7 @@ describe("AdminJobsPage tests", () => {
         const testId = "JobsTable";
 
         expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-        expect(screen.getByTestId(`${testId}-cell-row-0-col-Created`)).toHaveTextContent("1");
+        expect(screen.getByTestId(`${testId}-cell-row-0-col-Created`)).toHaveTextContent("11/13/2022, 19:49:58");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-Updated`)).toHaveTextContent("11/13/2022, 19:49:59");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-status`)).toHaveTextContent("complete");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-Log`)).toHaveTextContent("Hello World! from test job!Goodbye from test job!");
@@ -79,6 +79,31 @@ describe("AdminJobsPage tests", () => {
         await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
 
         expect(axiosMock.history.post[0].url).toBe("/api/jobs/launch/testjob?fail=false&sleepMs=0");
+});
+
+test("user can update cow healath", async () => {
+    render(
+        <QueryClientProvider client={queryClient}>
+            <MemoryRouter>
+                <AdminJobsPage />
+            </MemoryRouter>
+        </QueryClientProvider>
+    );
+
+    expect(await screen.findByText("Update Cow Health")).toBeInTheDocument();
+
+    const UpdateCowHealthJobButton = screen.getByText("Update Cow Health");
+    expect(UpdateCowHealthJobButton).toBeInTheDocument();
+    UpdateCowHealthJobButton.click();
+
+    const submitButton = screen.getByTestId("UpdateCowHealthForm-Submit-Button");
+
+    expect(submitButton).toBeInTheDocument();
+    submitButton.click();
+
+    await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
+
+    expect(axiosMock.history.post[0].url).toBe("/api/jobs/launch/updatecowhealth");
 });
 
 

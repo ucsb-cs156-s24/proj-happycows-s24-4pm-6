@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
   private ObjectMapper objectMapper;
 
   public static UserCommons dummyUserCommons(long id) {
-    UserCommons userCommons = new UserCommons(id,1,1,1,1);
+    UserCommons userCommons = new UserCommons(id,1,1,"test",1,1, 100);
     return userCommons;
   }
   @WithMockUser(roles = { "ADMIN" })
@@ -140,12 +141,13 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       // arrange
   
       UserCommons origUserCommons = UserCommons
-      .builder()
+            .builder()
       .id(1L)
       .userId(1L)
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -164,6 +166,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -173,6 +176,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300-testCommons.getCowPrice())
       .numOfCows(2)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -209,6 +213,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -227,6 +232,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -236,6 +242,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(0)
       .numOfCows(2)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -272,6 +279,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -290,6 +298,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -299,6 +308,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300+testCommons.getCowPrice())
       .numOfCows(0)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -335,6 +345,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -353,6 +364,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -362,6 +374,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300-testCommons.getCowPrice())
       .numOfCows(2)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -400,6 +413,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -419,6 +433,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -428,6 +443,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300+testCommons.getCowPrice())
       .numOfCows(2)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -467,6 +483,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -485,6 +502,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -494,6 +512,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300+testCommons.getCowPrice())
       .numOfCows(2)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -531,6 +550,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -549,6 +569,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -558,6 +579,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300+testCommons.getCowPrice())
       .numOfCows(2)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -600,6 +622,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(0)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -618,6 +641,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(0)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -627,6 +651,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(0)
       .numOfCows(1)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -641,13 +666,14 @@ public class UserCommonsControllerTests extends ControllerTestCase {
                       .characterEncoding("utf-8")
                       .content(requestBody)
                       .with(csrf()))
-              .andExpect(status().isOk()).andReturn();
+              .andExpect(status().is(400)).andReturn();
   
       // assert
-      verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(eq(1L), eq(1L));
-      verify(userCommonsRepository, times(1)).save(correctuserCommons);
       String responseString = response.getResponse().getContentAsString();
-      assertEquals(expectedReturn, responseString);
+      String expectedString = "{\"message\":\"You need more money!\",\"type\":\"NotEnoughMoneyException\"}";
+      Map<String, Object> expectedJson = mapper.readValue(expectedString, Map.class);
+      Map<String, Object> jsonResponse = responseToJson(response);
+      assertEquals(expectedJson, jsonResponse);
   }
   
   @WithMockUser(roles = { "USER" })
@@ -663,6 +689,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(0)
+      .cowHealth(100)
       .build();
   
       Commons testCommons = Commons
@@ -681,6 +708,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(0)
+      .cowHealth(100)
       .build();
   
       UserCommons correctuserCommons = UserCommons
@@ -690,6 +718,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .commonsId(1L)
       .totalWealth(300)
       .numOfCows(0)
+      .cowHealth(100)
       .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
@@ -703,14 +732,16 @@ public class UserCommonsControllerTests extends ControllerTestCase {
           .contentType(MediaType.APPLICATION_JSON)
                       .characterEncoding("utf-8")
                       .content(requestBody)
-                      .with(csrf()))
-              .andExpect(status().isOk()).andReturn();
-  
+                      .with(csrf())).andExpect(status().is(400)).andReturn();
+
+
       // assert
-      verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(eq(1L), eq(1L));
-      verify(userCommonsRepository, times(1)).save(correctuserCommons);
       String responseString = response.getResponse().getContentAsString();
-      assertEquals(expectedReturn, responseString);
+      String expectedString = "{\"message\":\"You have no cows to sell!\",\"type\":\"NoCowsException\"}";
+      Map<String, Object> expectedJson = mapper.readValue(expectedString, Map.class);
+      Map<String, Object> jsonResponse = responseToJson(response);
+      assertEquals(expectedJson, jsonResponse);
+    
     }
 
 

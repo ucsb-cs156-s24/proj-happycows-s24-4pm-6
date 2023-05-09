@@ -4,15 +4,15 @@ import JobsTable from "main/components/Jobs/JobsTable";
 import { useBackend } from "main/utils/useBackend";
 import Accordion from 'react-bootstrap/Accordion';
 import TestJobForm from "main/components/Jobs/TestJobForm";
-import JobComingSoon from "main/components/Jobs/JobComingSoon";
+import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
+import MilkCowsJobForm from "main/components/Jobs/MilkCowsJobForm";
+import InstructorReportForm from "main/components/Jobs/InstructorReportForm";
 
 import { useBackendMutation } from "main/utils/useBackend";
 
 const AdminJobsPage = () => {
 
     const refreshJobsIntervalMilliseconds = 5000;
-
-    // test job 
 
     const objectToAxiosParamsTestJob = (data) => ({
         url: `/api/jobs/launch/testjob?fail=${data.fail}&sleepMs=${data.sleepMs}`,
@@ -32,7 +32,7 @@ const AdminJobsPage = () => {
         testJobMutation.mutate(data);
     }
 
-    // Stryker disable all 
+    // Stryker disable all
     const { data: jobs, error: _error, status: _status } =
         useBackend(
             ["/api/jobs/all"],
@@ -43,23 +43,40 @@ const AdminJobsPage = () => {
             [],
             { refetchInterval: refreshJobsIntervalMilliseconds }
         );
-    // Stryker enable  all 
+    // Stryker enable  all
+
+    const objectToAxiosParamsUpdateCowHealthJob = () => ({
+        url: `/api/jobs/launch/updatecowhealth`,
+        method: "POST"
+    });
+
+    // Stryker disable all
+    const UpdateCowHealthMutation = useBackendMutation(
+        objectToAxiosParamsUpdateCowHealthJob,
+        {  },
+        ["/api/jobs/all"]
+    );
+    // Stryker enable all
+
+    const submitUpdateCowHealthJob = async () => {
+        console.log("submitUpdateCowHealthJob")
+        UpdateCowHealthMutation.mutate();
+    }
 
     const jobLaunchers = [
         {
             name: "Update Cow Health",
-            form: <JobComingSoon />
+            form: <UpdateCowHealthForm submitAction={submitUpdateCowHealthJob}/>
         },
         {
             name: "Milk The Cows",
-            form: <JobComingSoon />
+            form: <MilkCowsJobForm />
         },
         {
             name: "Instructor Report",
-            form: <JobComingSoon />
+            form: <InstructorReportForm />
         },
     ]
-
 
     return (
         <BasicLayout>
