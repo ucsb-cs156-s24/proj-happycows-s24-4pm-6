@@ -82,7 +82,6 @@ jobs:
   deploy-main-docs:
     name: Deploy Documentation for main branch
     needs: [ rebuild-basic-site ]
-    if: ${{ github.event.workflow_run.conclusion != 'failure' }}
     runs-on: ubuntu-latest
     steps:
     - name: setup - Checkout local code to establish repo
