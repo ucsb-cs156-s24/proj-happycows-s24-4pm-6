@@ -9,6 +9,8 @@ frontend/reports
 # Don't check in a built storybook #
 
 frontend/storybook-static
+frontend/storybook_static
+
 
 # If a package-lock.json shows up in top level dir, don't store it in github
 # Only keep the one under frontend/
@@ -53,3 +55,4 @@ build/
 
 ### .DS_Store ###
 .DS_Store
+
