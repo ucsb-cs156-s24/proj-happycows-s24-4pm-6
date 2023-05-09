@@ -1,0 +1,52 @@
+name: "32-frontend-coverage: Frontend Coverage (JavaScript/Jest)"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: [frontend/**]
+  push:
+    branches: [main]
+    paths: [frontend/**]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+ 
+    steps:
+      - uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: "America/Los_Angeles"
+      - uses: actions/checkout@v3.5.2
+        with: 
+          fetch-depth: 2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version-file: 'frontend/package.json'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+        working-directory: ./frontend
+      - run: npm run coverage
+        working-directory: ./frontend
+      - name: Upload jest coverage report to Artifacts
+        if: always() # always upload artifacts, even if tests fail
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: jest-coverage
+          path: frontend/coverage/lcov-report/*
+     
+      - name: Deploy 🚀
+        if: always() # always upload artifacts, even if tests fail
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: frontend/coverage/lcov-report # The folder where the javadoc files are located
+          clean: true # Automatically remove deleted files from the deploy branch
+          target-folder: coverage # The folder that we serve our javadoc files from
+
+
+  
