@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 import java.util.Map;
 
@@ -37,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.entities.Commons;
+
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -63,7 +65,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void createCommonsTest() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     Commons commons = Commons.builder()
         .name("Jackson's Commons")
@@ -71,9 +72,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -82,9 +83,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -111,7 +112,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void createCommonsTest_zeroDegradation() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     Commons commons = Commons.builder()
         .name("Jackson's Commons")
@@ -120,8 +120,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(0)
-        .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -131,8 +131,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(0)
-        .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -167,6 +167,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(-8.49)
+        .carryingCapacity(100)
         .build();
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
@@ -176,10 +177,10 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(-8.49)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
-    String expectedResponse = objectMapper.writeValueAsString(commons);
 
     when(commonsRepository.save(commons))
         .thenReturn(commons);
@@ -221,7 +222,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void updateCommonsTest() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
         .name("Jackson's Commons")
@@ -229,9 +229,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
-        .showLeaderboard(false)
+        .showLeaderboard(true)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -240,9 +240,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
-        .showLeaderboard(false)
+        .showLeaderboard(true)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -263,6 +263,10 @@ public class CommonsControllerTests extends ControllerTestCase {
     commons.setMilkPrice(parameters.getMilkPrice());
     parameters.setDegradationRate(parameters.getDegradationRate() + 1.00);
     commons.setDegradationRate(parameters.getDegradationRate());
+    parameters.setShowLeaderboard(false);
+    commons.setShowLeaderboard(parameters.getShowLeaderboard());
+    parameters.setCarryingCapacity(123);
+    commons.setCarryingCapacity(parameters.getCarryingCapacity());
 
     requestBody = objectMapper.writeValueAsString(parameters);
 
@@ -286,7 +290,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void updateCommonsTest_withDegradationRate_Zero() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     CreateCommonsParams parameters = CreateCommonsParams.builder()
         .name("Jackson's Commons")
@@ -295,8 +298,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(8.49)
-        .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -306,8 +309,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingBalance(1020.10)
         .startingDate(someTime)
         .degradationRate(8.49)
-        .endingDate(someOtherTime)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -328,6 +331,8 @@ public class CommonsControllerTests extends ControllerTestCase {
     commons.setMilkPrice(parameters.getMilkPrice());
     parameters.setDegradationRate(0);
     commons.setDegradationRate(parameters.getDegradationRate());
+    parameters.setCarryingCapacity(123);
+    commons.setCarryingCapacity(parameters.getCarryingCapacity());
 
     requestBody = objectMapper.writeValueAsString(parameters);
 
@@ -360,6 +365,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(8.49)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     Commons commons = Commons.builder()
@@ -370,6 +376,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         .startingDate(someTime)
         .degradationRate(8.49)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     String requestBody = objectMapper.writeValueAsString(parameters);
@@ -460,17 +467,21 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     UserCommons uc = UserCommons.builder()
         .userId(1L)
+        .username("Fake user")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(0)
+        .cowHealth(100)
         .build();
 
     UserCommons ucSaved = UserCommons.builder()
         .id(17L)
         .userId(1L)
+        .username("Fake user")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(0)
+        .cowHealth(100)
         .build();
 
     String requestBody = mapper.writeValueAsString(uc);
@@ -504,6 +515,7 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     UserCommons uc = UserCommons.builder()
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -536,6 +548,7 @@ public class CommonsControllerTests extends ControllerTestCase {
   public void user_commons_exists_but_commons_doesnt_test() throws Exception {
     UserCommons uc = UserCommons.builder()
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -563,6 +576,7 @@ public class CommonsControllerTests extends ControllerTestCase {
   public void join_and_create_userCommons_for_nonexistent_commons() throws Exception {
     UserCommons uc = UserCommons.builder()
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -571,6 +585,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     UserCommons ucSaved = UserCommons.builder()
         .id(17L)
         .userId(1L)
+        .username("2L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -597,7 +612,6 @@ public class CommonsControllerTests extends ControllerTestCase {
   @Test
   public void deleteCommons_test_admin_exists() throws Exception {
     LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-    LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
 
     Commons c = Commons.builder()
         .name("Jackson's Commons")
@@ -605,9 +619,9 @@ public class CommonsControllerTests extends ControllerTestCase {
         .milkPrice(8.99)
         .startingBalance(1020.10)
         .startingDate(someTime)
-        .endingDate(someOtherTime)
         .degradationRate(50.0)
         .showLeaderboard(false)
+        .carryingCapacity(100)
         .build();
 
     when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
@@ -643,12 +657,9 @@ public class CommonsControllerTests extends ControllerTestCase {
       verify(commonsRepository, times(1)).findById(2L);
 
 
-
-      String responseString = response.getResponse().getContentAsString();
-
       String expectedString = "{\"message\":\"Commons with id 2 not found\",\"type\":\"EntityNotFoundException\"}";
 
-      Map<String, Object> expectedJson = mapper.readValue(expectedString, Map.class);
+      Map<String, Object> expectedJson = mapper.readValue(expectedString,  new TypeReference<Map<String,Object>>() {});
       Map<String, Object> jsonResponse = responseToJson(response);
       assertEquals(expectedJson, jsonResponse);
   }
@@ -659,6 +670,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     UserCommons uc = UserCommons.builder()
         .id(16L)
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -687,6 +699,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     UserCommons uc = UserCommons.builder()
         .id(16L)
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -709,6 +722,37 @@ public class CommonsControllerTests extends ControllerTestCase {
       assertEquals(e.toString(),
           "org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.Exception: UserCommons with commonsId=2 and userId=1 not found.");
     }
+  }
+
+  @WithMockUser(roles = { "USER" })
+  @Test
+  public void getCommonsPlusTest() throws Exception {
+    List<Commons> expectedCommons = new ArrayList<Commons>();
+    Commons Commons1 = Commons.builder().name("TestCommons1").id(1L).build();
+    expectedCommons.add(Commons1);
+
+    List<CommonsPlus> expectedCommonsPlus = new ArrayList<CommonsPlus>();
+    CommonsPlus CommonsPlus1 = CommonsPlus.builder()
+        .commons(Commons1)
+        .totalCows(50)
+        .totalUsers(20)
+        .build();
+
+    expectedCommonsPlus.add(CommonsPlus1);
+    when(commonsRepository.findAll()).thenReturn(expectedCommons);
+    when(commonsRepository.getNumCows(1L)).thenReturn(Optional.of(50));
+    when(commonsRepository.getNumUsers(1L)).thenReturn(Optional.of(20));
+
+    MvcResult response = mockMvc.perform(get("/api/commons/allplus").contentType("application/json"))
+        .andExpect(status().isOk()).andReturn();
+
+    verify(commonsRepository, times(1)).findAll();
+
+    String responseString = response.getResponse().getContentAsString();
+    List<CommonsPlus> actualCommonsPlus = objectMapper.readValue(responseString,
+        new TypeReference<List<CommonsPlus>>() {
+        });
+    assertEquals(actualCommonsPlus, expectedCommonsPlus);
   }
 
 }

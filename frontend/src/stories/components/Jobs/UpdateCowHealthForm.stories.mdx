@@ -1,0 +1,19 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+import { action } from "@storybook/addon-actions";
+import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
+
+<Meta
+  title="components/Jobs/UpdateCowHealthForm"
+  component={UpdateCowHealthForm}
+/>
+
+# UpdateCowHealthForm
+
+A button for updating cow health, with:
+* a line telling the user what the button does
+
+<Canvas>
+  <Story name="uncontrolled">
+    <UpdateCowHealthForm submitAction={action("submit")} />
+  </Story>
+</Canvas>

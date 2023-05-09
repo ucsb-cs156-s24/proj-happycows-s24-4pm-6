@@ -60,6 +60,7 @@ describe("AdminCreateCommonsPage tests", () => {
             "startingBalance": 500,
             "startingDate": "2022-03-05T00:00:00",
             "degradationRate": 30.4,
+            "carryingCapacity": 25,
             "showLeaderboard": false
         });
 
@@ -79,6 +80,7 @@ describe("AdminCreateCommonsPage tests", () => {
         const milkPriceField = screen.getByLabelText("Milk Price");
         const startDateField = screen.getByLabelText("Starting Date");
         const degradationRateField = screen.getByLabelText("Degradation Rate");
+        const carryingCapacityField = screen.getByLabelText("Carrying Capacity");
         const showLeaderboardField = screen.getByLabelText("Show Leaderboard?");
         const button = screen.getByTestId("CommonsForm-Submit-Button");
 
@@ -88,6 +90,7 @@ describe("AdminCreateCommonsPage tests", () => {
         fireEvent.change(milkPriceField, { target: { value: '5' } })
         fireEvent.change(startDateField, { target: { value: '2022-03-05' } })
         fireEvent.change(degradationRateField, { target: { value: '30.4' } })
+        fireEvent.change(carryingCapacityField, { target: { value: '25' } })
         fireEvent.change(showLeaderboardField, { target: { value: true } })
         fireEvent.click(button);
 
@@ -104,6 +107,7 @@ describe("AdminCreateCommonsPage tests", () => {
             milkPrice: 5,
             startingDate: '2022-03-05T00:00:00.000Z', // [1]
             degradationRate: 30.4,
+            carryingCapacity: 25,
             showLeaderboard: false
         };
 
@@ -114,6 +118,7 @@ describe("AdminCreateCommonsPage tests", () => {
             <br />name: My New Commons
             <br />startDate: 2022-03-05T00:00:00
             <br />cowPrice: 10
+            <br />carryingCapacity: 25
         </div>);
     });
 });

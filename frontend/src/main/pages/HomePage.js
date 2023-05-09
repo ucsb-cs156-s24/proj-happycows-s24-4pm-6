@@ -48,6 +48,14 @@ export default function HomePage() {
   let navigate = useNavigate();
   const visitButtonClick = (id) => { navigate("/play/" + id) };
 
+  //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
+  let joinedIdList = [];
+  for (let commonJoined of commonsJoined) {
+	joinedIdList.push(commonJoined.id)
+  }
+  let commonsNotJoined = commons.filter(f => !joinedIdList.includes(f.id));
+
+
   return (
     <div style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
       <BasicLayout>
@@ -55,7 +63,7 @@ export default function HomePage() {
         <Container>
           <Row>
             <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} /></Col>
-            <Col sm><CommonsList commonList={commons} title="Join A Commons" buttonText={"Join"} buttonLink={mutation.mutate} /></Col>
+            <Col sm><CommonsList commonList={commonsNotJoined} title="Join A New Commons" buttonText={"Join"} buttonLink={mutation.mutate} /></Col>
           </Row>
         </Container>
       </BasicLayout>

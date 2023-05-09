@@ -50,3 +50,6 @@ build/
 
 ### Local Configuration ###
 .env
+
+### .DS_Store ###
+.DS_Store

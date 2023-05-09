@@ -30,18 +30,16 @@ public class JobService {
       .build();
 
     jobsRepository.save(job);
-    self.runJobAsync(job, jobFunction, SecurityContextHolder.getContext());
-
+    self.runJobAsync(job, jobFunction);
     return job;
   }
 
   
 
   @Async
-  public void runJobAsync(Job job, JobContextConsumer jobFunction, SecurityContext securityContext) {
+  public void runJobAsync(Job job, JobContextConsumer jobFunction) {
     JobContext context = new JobContext(jobsRepository, job);
 
-    SecurityContextHolder.setContext(securityContext);
 
     try {
       jobFunction.accept(context);

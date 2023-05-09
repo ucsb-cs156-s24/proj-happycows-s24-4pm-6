@@ -26,8 +26,12 @@ public class UserCommons {
   @Column(name="user_id")
   private long userId;  
 
+  private String username;
+
   private double totalWealth;
 
   private int numOfCows;
+
+  private double cowHealth;
 }
 
