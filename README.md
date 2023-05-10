@@ -1,21 +1,8 @@
 # HappyCows/HappierCows
 
-[![codecov](https://codecov.io/gh/ucsb-cs156-s22/s22-6pm-happycows/branch/main/graph/badge.svg?token=PBkThDRbmH)](https://codecov.io/gh/ucsb-cs156-s22/s22-6pm-happycows)
+# Deployments
 
-
-# Storybook
-
-* Prod: <https://ucsb-cs156.github.io/proj-happycows-docs/>
-* QA: <https://ucsb-cs156.github.io/proj-happycows-docs-qa/>
-
-# Heroku
-
-* Prod: <https://f22-proj-happycows.herokuapp.com/>
-* Dashboard: <https://dashboard.heroku.com/apps/f22-proj-happycows>
-
-* QA: <https://f22-proj-happycows-qa.herokuapp.com/>
-* Dashboard: <https://dashboard.heroku.com/apps/f22-proj-happycows-qa>
-
+* <https://proj-happycows.dokku-00.cs.ucsb.edu/>
 
 # Description
 
