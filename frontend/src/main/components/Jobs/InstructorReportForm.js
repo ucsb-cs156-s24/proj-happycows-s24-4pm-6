@@ -1,6 +1,6 @@
 function InstructorReportForm() {
     return (
-      <p>This will be the Instructor Report Function! (Creating this form asap Money!)</p>
+      <p>This will be the Instructor Report Function (coming soon)</p>
     );
   }
   

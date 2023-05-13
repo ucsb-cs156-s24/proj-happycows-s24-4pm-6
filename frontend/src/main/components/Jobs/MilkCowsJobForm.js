@@ -1,6 +1,6 @@
 function MilkCowsJobForm() {
     return (
-      <p>This will be the Milk Cow Job Function! (Creating this form asap Money!)</p>
+      <p>This will be the Milk Cow Job Function. (Coming soon)</p>
     );
   }
   
