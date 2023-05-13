@@ -35,6 +35,13 @@ import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * This class is used to configure Spring Security. 
+ * 
+ * Among other things, this class is partially responsible for 
+ * the implementation of the ADMIN_EMAILS feature.
+ */
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
