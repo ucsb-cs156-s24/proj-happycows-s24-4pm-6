@@ -50,7 +50,6 @@ public class JobsController extends ApiController {
     @Autowired
     MilkTheCowsJobFactory milkTheCowsJobFactory;
 
-
     @ApiOperation(value = "List all jobs")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/all")

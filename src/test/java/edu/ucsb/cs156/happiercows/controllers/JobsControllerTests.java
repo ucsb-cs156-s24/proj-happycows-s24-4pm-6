@@ -191,6 +191,7 @@ public class JobsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = { "ADMIN" })
     @Test
     public void admin_can_launch_milk_the_cows_job() throws Exception {
+        
         // act
         MvcResult response = mockMvc.perform(post("/api/jobs/launch/milkthecowjob").with(csrf()))
                 .andExpect(status().isOk()).andReturn();
