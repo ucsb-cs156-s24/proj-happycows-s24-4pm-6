@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJob;
+import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.TestJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
@@ -45,6 +46,10 @@ public class JobsController extends ApiController {
 
     @Autowired
     UpdateCowHealthJobFactory updateCowHealthJobFactory;
+
+    @Autowired
+    MilkTheCowsJobFactory milkTheCowsJobFactory;
+
 
     @ApiOperation(value = "List all jobs")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -74,7 +79,7 @@ public class JobsController extends ApiController {
     @PostMapping("/launch/milkthecowjob")
     public Job launchTestJob(
     ) {
-        MilkTheCowsJob milkTheCowsJob = MilkTheCowsJob.builder().build();
+        MilkTheCowsJob milkTheCowsJob = milkTheCowsJobFactory.create();
         return jobService.runAsJob(milkTheCowsJob);
     }
 
