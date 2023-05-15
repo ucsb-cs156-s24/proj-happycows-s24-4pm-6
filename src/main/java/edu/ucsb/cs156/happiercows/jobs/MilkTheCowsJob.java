@@ -32,7 +32,7 @@ public class MilkTheCowsJob implements JobContextConsumer {
         Iterable<Commons> allCommons = commonsRepository.findAll();
 
         for (Commons commons : allCommons) {
-            ctx.log("Milking cows for Commons: " + commons.getName());
+            ctx.log("Milking cows for Commons: " + commons.getName() + ", Milk Price: $" + String.format("%.2f",commons.getMilkPrice()));
 
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
 
@@ -40,8 +40,8 @@ public class MilkTheCowsJob implements JobContextConsumer {
                 User user = userRepository.findById(userCommons.getUserId()).orElseThrow(()->new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
                 ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
 
-                double profit = calculateMilkingProfit(userCommons);
-                ctx.log("Profit for user: " + user.getFullName() + " is: " + profit);
+                double profit = calculateMilkingProfit(commons, userCommons);
+                ctx.log("Profit for user: " + user.getFullName() + " is: $" + String.format("%.2f",profit));
             }
         }
 
@@ -53,8 +53,9 @@ public class MilkTheCowsJob implements JobContextConsumer {
      * @param userCommons
      * @return
      */
-    public static double calculateMilkingProfit(UserCommons userCommons) {
-        double profit = userCommons.getNumOfCows() * userCommons.getCowHealth();
+    public static double calculateMilkingProfit(Commons commons, UserCommons userCommons) {
+        double milkPrice = commons.getMilkPrice();
+        double profit = userCommons.getNumOfCows() * (userCommons.getCowHealth() / 100.0) * milkPrice;
         return profit;
     }
 }

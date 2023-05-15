@@ -114,9 +114,9 @@ public class MilkTheCowsJobTests {
 
         String expected = """
                 Starting to milk the cows
-                Milking cows for Commons: test commons
+                Milking cows for Commons: test commons, Milk Price: $2.00
                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
-                Profit for user: Chris Gaucho is: 10.0
+                Profit for user: Chris Gaucho is: $0.20
                 Cows have been milked!""";
 
         assertEquals(expected, jobStarted.getLog());
