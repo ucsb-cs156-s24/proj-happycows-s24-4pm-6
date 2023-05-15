@@ -4,6 +4,7 @@ import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
@@ -21,6 +22,8 @@ public class MilkTheCowsJob implements JobContextConsumer {
     private UserCommonsRepository userCommonsRepository;
     @Getter
     private UserRepository userRepository;
+    @Getter
+    private ProfitRepository profitRepository;
 
     @Override
     public void accept(JobContext ctx) throws Exception {
@@ -37,12 +40,21 @@ public class MilkTheCowsJob implements JobContextConsumer {
                 User user = userRepository.findById(userCommons.getUserId()).orElseThrow(()->new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
                 ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
 
-                ctx.log("Logic to milk the cows for user: " + user.getFullName() + " will go here");
-
-                // TODO: Milk the cows, and report profits.
+                double profit = calculateMilkingProfit(userCommons);
+                ctx.log("Profit for user: " + user.getFullName() + " is: " + profit);
             }
         }
 
         ctx.log("Cows have been milked!");
+    }
+
+    /**
+     * Calculate the profit for a user from milking their cows.  
+     * @param userCommons
+     * @return
+     */
+    public static double calculateMilkingProfit(UserCommons userCommons) {
+        double profit = userCommons.getNumOfCows() * userCommons.getCowHealth();
+        return profit;
     }
 }

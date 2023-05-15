@@ -19,6 +19,7 @@ import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
@@ -34,6 +35,9 @@ public class MilkTheCowsJobTests {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    ProfitRepository profitRepository;
 
     private User user = User
             .builder()
@@ -52,7 +56,7 @@ public class MilkTheCowsJobTests {
 
         // Act
         MilkTheCowsJob milkTheCowsJob = new MilkTheCowsJob(commonsRepository, userCommonsRepository,
-                userRepository);
+                userRepository, profitRepository);
 
         milkTheCowsJob.accept(ctx);
 
@@ -103,7 +107,7 @@ public class MilkTheCowsJobTests {
 
         // Act
         MilkTheCowsJob MilkTheCowsJob = new MilkTheCowsJob(commonsRepository, userCommonsRepository,
-                userRepository);
+                userRepository, profitRepository);
         MilkTheCowsJob.accept(ctx);
 
         // Assert
@@ -112,7 +116,7 @@ public class MilkTheCowsJobTests {
                 Starting to milk the cows
                 Milking cows for Commons: test commons
                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
-                Logic to milk the cows for user: Chris Gaucho will go here
+                Profit for user: Chris Gaucho is: 10.0
                 Cows have been milked!""";
 
         assertEquals(expected, jobStarted.getLog());
@@ -157,7 +161,7 @@ public class MilkTheCowsJobTests {
 
             // Act
             MilkTheCowsJob MilkTheCowsJob = new MilkTheCowsJob(commonsRepository, userCommonsRepository,
-                            userRepository);
+                            userRepository, profitRepository);
 
             RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
                     // Code under test

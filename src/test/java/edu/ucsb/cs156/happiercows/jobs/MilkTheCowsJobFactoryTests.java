@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 
@@ -26,6 +27,9 @@ public class MilkTheCowsJobFactoryTests {
     @MockBean
     UserRepository userRepository;
 
+    @MockBean
+    ProfitRepository profitRepository;
+
     @Autowired
     MilkTheCowsJobFactory MilkTheCowsJobFactory;
 
@@ -39,6 +43,7 @@ public class MilkTheCowsJobFactoryTests {
         assertEquals(commonsRepository,milkTheCowsJob.getCommonsRepository());
         assertEquals(userCommonsRepository,milkTheCowsJob.getUserCommonsRepository());
         assertEquals(userRepository,milkTheCowsJob.getUserRepository());
+        assertEquals(profitRepository,milkTheCowsJob.getProfitRepository());
 
     }
 }
