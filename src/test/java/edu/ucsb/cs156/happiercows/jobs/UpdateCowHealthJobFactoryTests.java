@@ -33,7 +33,7 @@ public class UpdateCowHealthJobFactoryTests {
     void test_create() throws Exception {
 
         // Act
-        UpdateCowHealthJob updateCowHealthJob = updateCowHealthJobFactory.create();
+        UpdateCowHealthJob updateCowHealthJob = (UpdateCowHealthJob) updateCowHealthJobFactory.create();
 
         // Assert
         assertEquals(commonsRepository,updateCowHealthJob.getCommonsRepository());

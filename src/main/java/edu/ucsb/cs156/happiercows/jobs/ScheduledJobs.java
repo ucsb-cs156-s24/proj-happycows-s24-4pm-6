@@ -3,6 +3,8 @@ package edu.ucsb.cs156.happiercows.jobs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +38,7 @@ public class ScheduledJobs {
     public void runUpdateCowHealthJobBasedOnCron() {
        log.info("runUpdateCowHealthJobBasedOnCron: running");
 
-       UpdateCowHealthJob updateCowHealthJob = updateCowHealthJobFactory.create();
+       JobContextConsumer updateCowHealthJob = updateCowHealthJobFactory.create();
        jobService.runAsJob(updateCowHealthJob);
     
        log.info("runUpdateCowHealthJobBasedOnCron: launched job");
@@ -46,7 +48,7 @@ public class ScheduledJobs {
     public void runMilkTheCowsJobBasedOnCron() {
        log.info("runMilkTheCowsJobBasedOnCron: running");
 
-       MilkTheCowsJob milkTheCowsJob = milkTheCowsJobFactory.create();
+       JobContextConsumer milkTheCowsJob = milkTheCowsJobFactory.create();
        jobService.runAsJob(milkTheCowsJob);
     
        log.info("runMilkTheCowsJobBasedOnCron: launched job");

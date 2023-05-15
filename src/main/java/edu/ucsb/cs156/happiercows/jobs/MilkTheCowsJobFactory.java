@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
+import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -21,7 +22,7 @@ public class MilkTheCowsJobFactory  {
     @Autowired
     private UserRepository userRepository;
 
-    public MilkTheCowsJob create() {
+    public JobContextConsumer create() {
         log.info("userRepository = " + userRepository);
         log.info("commonsRepository = " + commonsRepository);
         log.info("userCommonsRepository = " + userCommonsRepository);
