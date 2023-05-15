@@ -2,7 +2,12 @@
 
 # Deployments
 
-* <https://proj-happycows.dokku-00.cs.ucsb.edu/>
+| Type | Link       | 
+|------|------------|
+| prod | <https://proj-happycows.dokku-00.cs.ucsb.edu/> | 
+| qa | <https://proj-happycows-qa.dokku-00.cs.ucsb.edu/>  | 
+
+
 
 # Description
 
