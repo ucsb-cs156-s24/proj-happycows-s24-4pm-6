@@ -1,6 +1,9 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
+import java.time.LocalDateTime;
+
 import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.Profit;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -25,6 +28,10 @@ public class MilkTheCowsJob implements JobContextConsumer {
     @Getter
     private ProfitRepository profitRepository;
 
+    public String formatDollars(double amount) {
+        return  String.format("$%.2f", amount);
+    }
+
     @Override
     public void accept(JobContext ctx) throws Exception {
         ctx.log("Starting to milk the cows");
@@ -32,16 +39,34 @@ public class MilkTheCowsJob implements JobContextConsumer {
         Iterable<Commons> allCommons = commonsRepository.findAll();
 
         for (Commons commons : allCommons) {
-            ctx.log("Milking cows for Commons: " + commons.getName() + ", Milk Price: $" + String.format("%.2f",commons.getMilkPrice()));
+            String name = commons.getName();
+            double milkPrice = commons.getMilkPrice();
+            ctx.log("Milking cows for Commons: " + name + ", Milk Price: " + formatDollars(milkPrice));
 
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
 
             for (UserCommons userCommons : allUserCommons) {
-                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(()->new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
-                ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
+                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(() -> new RuntimeException(
+                        "Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
+                ctx.log("User: " + user.getFullName() 
+                        + ", numCows: " + userCommons.getNumOfCows() 
+                        + ", cowHealth: " + userCommons.getCowHealth()
+                        + ", totalWealth: " + formatDollars(userCommons.getTotalWealth()));
 
-                double profit = calculateMilkingProfit(commons, userCommons);
-                ctx.log("Profit for user: " + user.getFullName() + " is: $" + String.format("%.2f",profit));
+                double profitAmount = calculateMilkingProfit(commons, userCommons);
+                Profit profit = Profit.builder()
+                        .userCommons(userCommons)
+                        .amount(profitAmount)
+                        .timestamp(LocalDateTime.now())
+                        .numCows(userCommons.getNumOfCows())
+                        .avgCowHealth(userCommons.getCowHealth())
+                        .build();
+                double newWeath = userCommons.getTotalWealth() + profitAmount;
+                userCommons.setTotalWealth(newWeath);
+                profit = profitRepository.save(profit);
+                ctx.log("Profit for user: " + user.getFullName() 
+                        + " is: " + formatDollars(profitAmount)
+                        + ", newWealth: " + formatDollars(newWeath));
             }
         }
 
@@ -49,7 +74,8 @@ public class MilkTheCowsJob implements JobContextConsumer {
     }
 
     /**
-     * Calculate the profit for a user from milking their cows.  
+     * Calculate the profit for a user from milking their cows.
+     * 
      * @param userCommons
      * @return
      */

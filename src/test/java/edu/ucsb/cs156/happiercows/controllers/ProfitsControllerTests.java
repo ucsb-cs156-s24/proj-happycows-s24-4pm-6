@@ -70,9 +70,9 @@ public class ProfitsControllerTests extends ControllerTestCase {
   LocalDateTime t2 = LocalDateTime.parse("2022-03-05T15:50:11");
   LocalDateTime t3 = LocalDateTime.parse("2022-03-05T15:50:12");
 
-  Profit p1 = Profit.builder().id(41).profit(123.45).timestamp(t1).userCommons(uc1).numCows(1).avgCowHealth(80).build();
-  Profit p2 = Profit.builder().id(42).profit(543.21).timestamp(t2).userCommons(uc1).numCows(2).avgCowHealth(90).build();
-  Profit p3 = Profit.builder().id(43).profit(567.89).timestamp(t3).userCommons(uc2).numCows(3).avgCowHealth(100)
+  Profit p1 = Profit.builder().id(41).amount(123.45).timestamp(t1).userCommons(uc1).numCows(1).avgCowHealth(80).build();
+  Profit p2 = Profit.builder().id(42).amount(543.21).timestamp(t2).userCommons(uc1).numCows(2).avgCowHealth(90).build();
+  Profit p3 = Profit.builder().id(43).amount(567.89).timestamp(t3).userCommons(uc2).numCows(3).avgCowHealth(100)
       .build();
 
   @WithMockUser(roles = { "USER" })
@@ -105,7 +105,7 @@ public class ProfitsControllerTests extends ControllerTestCase {
         .userId(2).build();
     Profit p1 = Profit.builder()
         .id(42)
-        .profit(543.21)
+        .amount(543.21)
         .timestamp(LocalDateTime.parse("2022-03-05T15:50:11"))
         .userCommons(uc1)
         .numCows(2)

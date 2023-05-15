@@ -27,9 +27,9 @@ public class Profit {
 
     @ManyToOne
     @JoinColumn(name = "user_commons_id")
-    
+
     private UserCommons userCommons;
-    private double profit;
+    private double amount;
     private LocalDateTime timestamp;
     private int numCows;
     private double avgCowHealth;
