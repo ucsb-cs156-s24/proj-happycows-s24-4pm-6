@@ -38,7 +38,7 @@ import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
-import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJob;
+import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
@@ -71,6 +71,8 @@ public class JobsControllerTests extends ControllerTestCase {
     @MockBean
     UpdateCowHealthJobFactory updateCowHealthJobFactory;
 
+    @MockBean
+    MilkTheCowsJobFactory milkTheCowsJobFactory;
 
     @WithMockUser(roles = { "ADMIN" })
     @Test
@@ -189,6 +191,7 @@ public class JobsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = { "ADMIN" })
     @Test
     public void admin_can_launch_milk_the_cows_job() throws Exception {
+        
         // act
         MvcResult response = mockMvc.perform(post("/api/jobs/launch/milkthecowjob").with(csrf()))
                 .andExpect(status().isOk()).andReturn();

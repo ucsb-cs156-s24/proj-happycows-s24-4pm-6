@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-@Slf4j
 public class UpdateCowHealthJob implements JobContextConsumer {
 
     @Getter
