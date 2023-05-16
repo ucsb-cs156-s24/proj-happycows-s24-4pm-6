@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * a Unix cron expression, but with an extra field at the beginning for
  * the seconds.
  * 
- * @See <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html">Spring Cron Syntax</a>
+ * @see <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html">Spring Cron Syntax</a>
  * 
  */
 
