@@ -63,6 +63,7 @@ public class MilkTheCowsJob implements JobContextConsumer {
                         .build();
                 double newWeath = userCommons.getTotalWealth() + profitAmount;
                 userCommons.setTotalWealth(newWeath);
+                userCommonsRepository.save(userCommons);
                 profit = profitRepository.save(profit);
                 ctx.log("Profit for user: " + user.getFullName() 
                         + " is: " + formatDollars(profitAmount)
