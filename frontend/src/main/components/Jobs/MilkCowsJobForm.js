@@ -12,7 +12,7 @@ function MilkTheCowsForm( {submitAction} ) {
 
     return (
       <Form onSubmit={handleSubmit(submitAction)}>
-        <p>Click this button to update cows' health in all commons!</p>
+        <p>Click this button to milk the cows across all commons!</p>
         <Button type="submit" data-testid="MilkTheCowsForm-Submit-Button">Update</Button>
     </Form>
     );
