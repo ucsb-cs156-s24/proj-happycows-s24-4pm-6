@@ -46,32 +46,44 @@ public class MilkTheCowsJob implements JobContextConsumer {
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
 
             for (UserCommons userCommons : allUserCommons) {
-                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(() -> new RuntimeException(
-                        "Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
-                ctx.log("User: " + user.getFullName() 
-                        + ", numCows: " + userCommons.getNumOfCows() 
-                        + ", cowHealth: " + userCommons.getCowHealth()
-                        + ", totalWealth: " + formatDollars(userCommons.getTotalWealth()));
-
-                double profitAmount = calculateMilkingProfit(commons, userCommons);
-                Profit profit = Profit.builder()
-                        .userCommons(userCommons)
-                        .amount(profitAmount)
-                        .timestamp(LocalDateTime.now())
-                        .numCows(userCommons.getNumOfCows())
-                        .avgCowHealth(userCommons.getCowHealth())
-                        .build();
-                double newWeath = userCommons.getTotalWealth() + profitAmount;
-                userCommons.setTotalWealth(newWeath);
-                userCommonsRepository.save(userCommons);
-                profit = profitRepository.save(profit);
-                ctx.log("Profit for user: " + user.getFullName() 
-                        + " is: " + formatDollars(profitAmount)
-                        + ", newWealth: " + formatDollars(newWeath));
+                milkCows(ctx, commons, userCommons);
             }
         }
 
         ctx.log("Cows have been milked!");
+    }
+
+    /** This method performs the function of milking the cows for a single userCommons. 
+     *  It is a public method only so it can be exposed to the unit tests
+     * @param ctx the JobContext
+     * @param commons the Commons
+     * @param userCommons the UserCommons
+     *
+     * */
+
+    public void milkCows(JobContext ctx, Commons commons, UserCommons userCommons) {
+        User user = userRepository.findById(userCommons.getUserId()).orElseThrow(() -> new RuntimeException(
+                "Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
+        ctx.log("User: " + user.getFullName() 
+                + ", numCows: " + userCommons.getNumOfCows() 
+                + ", cowHealth: " + userCommons.getCowHealth()
+                + ", totalWealth: " + formatDollars(userCommons.getTotalWealth()));
+
+        double profitAmount = calculateMilkingProfit(commons, userCommons);
+        Profit profit = Profit.builder()
+                .userCommons(userCommons)
+                .amount(profitAmount)
+                .timestamp(LocalDateTime.now())
+                .numCows(userCommons.getNumOfCows())
+                .avgCowHealth(userCommons.getCowHealth())
+                .build();
+        double newWeath = userCommons.getTotalWealth() + profitAmount;
+        userCommons.setTotalWealth(newWeath);
+        userCommonsRepository.save(userCommons);
+        profit = profitRepository.save(profit);
+        ctx.log("Profit for user: " + user.getFullName() 
+                + " is: " + formatDollars(profitAmount)
+                + ", newWealth: " + formatDollars(newWeath));
     }
 
     /**
