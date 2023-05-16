@@ -32,5 +32,13 @@ describe("Profits tests", () => {
         expect(screen.getByTestId("ProfitsTable-cell-row-0-col-date")).toHaveTextContent(/2023-05-15/);
         expect(screen.getByTestId("ProfitsTable-cell-row-1-col-date")).toHaveTextContent(/2023-05-16/);
         expect(screen.getByTestId("ProfitsTable-cell-row-2-col-date")).toHaveTextContent(/2023-05-17/);
+
+        expect(screen.getByTestId("ProfitsTable-cell-row-0-col-avgCowHealth")).toHaveTextContent(/97/);
+        expect(screen.getByTestId("ProfitsTable-cell-row-1-col-avgCowHealth")).toHaveTextContent(/91/);
+        expect(screen.getByTestId("ProfitsTable-cell-row-2-col-avgCowHealth")).toHaveTextContent(/88/);
+
+        expect(screen.getByTestId("ProfitsTable-cell-row-0-col-numCows")).toHaveTextContent(/6/);
+        expect(screen.getByTestId("ProfitsTable-cell-row-1-col-numCows")).toHaveTextContent(/6/);
+        expect(screen.getByTestId("ProfitsTable-cell-row-2-col-numCows")).toHaveTextContent(/6/);
     });
 });
