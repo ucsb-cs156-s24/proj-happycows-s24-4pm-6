@@ -26,6 +26,7 @@ import edu.ucsb.cs156.happiercows.jobs.TestJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
+import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 
 
@@ -78,7 +79,7 @@ public class JobsController extends ApiController {
     @PostMapping("/launch/milkthecowjob")
     public Job launchTestJob(
     ) {
-        MilkTheCowsJob milkTheCowsJob = milkTheCowsJobFactory.create();
+        JobContextConsumer milkTheCowsJob = milkTheCowsJobFactory.create();
         return jobService.runAsJob(milkTheCowsJob);
     }
 
@@ -87,7 +88,7 @@ public class JobsController extends ApiController {
     @PostMapping("/launch/updatecowhealth")
     public Job updateCowHealth(
     ) { 
-        UpdateCowHealthJob updateCowHealthJob = updateCowHealthJobFactory.create();
+        JobContextConsumer updateCowHealthJob = updateCowHealthJobFactory.create();
         return jobService.runAsJob(updateCowHealthJob);
     }
 

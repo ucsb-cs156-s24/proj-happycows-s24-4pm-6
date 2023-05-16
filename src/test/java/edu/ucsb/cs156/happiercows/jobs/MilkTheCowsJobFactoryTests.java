@@ -33,12 +33,12 @@ public class MilkTheCowsJobFactoryTests {
     void test_create() throws Exception {
 
         // Act
-        MilkTheCowsJob MilkTheCowsJob = MilkTheCowsJobFactory.create();
+        MilkTheCowsJob milkTheCowsJob = (MilkTheCowsJob) MilkTheCowsJobFactory.create();
 
         // Assert
-        assertEquals(commonsRepository,MilkTheCowsJob.getCommonsRepository());
-        assertEquals(userCommonsRepository,MilkTheCowsJob.getUserCommonsRepository());
-        assertEquals(userRepository,MilkTheCowsJob.getUserRepository());
+        assertEquals(commonsRepository,milkTheCowsJob.getCommonsRepository());
+        assertEquals(userCommonsRepository,milkTheCowsJob.getUserCommonsRepository());
+        assertEquals(userRepository,milkTheCowsJob.getUserRepository());
 
     }
 }
