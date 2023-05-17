@@ -45,6 +45,8 @@ const AdminJobsPage = () => {
         );
     // Stryker enable  all
 
+    // UpdateCowHealth job
+
     const objectToAxiosParamsUpdateCowHealthJob = () => ({
         url: `/api/jobs/launch/updatecowhealth`,
         method: "POST"
@@ -63,14 +65,38 @@ const AdminJobsPage = () => {
         UpdateCowHealthMutation.mutate();
     }
 
+    // MilkTheCows job
+
+    const objectToAxiosParamsMilkTheCowsJob = () => ({
+        url: `/api/jobs/launch/milkthecowjob`,
+        method: "POST"
+    });
+
+    // Stryker disable all
+    const MilkTheCowsMutation = useBackendMutation(
+        objectToAxiosParamsMilkTheCowsJob,
+        {  },
+        ["/api/jobs/all"]
+    );
+    // Stryker enable all
+
+    const submitMilkTheCowsJob = async () => {
+        console.log("submitMilkTheCowsJob")
+        MilkTheCowsMutation.mutate();
+    }
+
     const jobLaunchers = [
+        {
+            name: "Test Job",
+            form:  <TestJobForm submitAction={submitTestJob} />
+        },
         {
             name: "Update Cow Health",
             form: <UpdateCowHealthForm submitAction={submitUpdateCowHealthJob}/>
         },
         {
             name: "Milk The Cows",
-            form: <MilkCowsJobForm />
+            form: <MilkCowsJobForm submitAction={submitMilkTheCowsJob}/>
         },
         {
             name: "Instructor Report",
@@ -80,17 +106,12 @@ const AdminJobsPage = () => {
 
     return (
         <BasicLayout>
+
             <h2 className="p-3">Launch Jobs</h2>
             <Accordion>
-                <Accordion.Item eventKey="0">
-                    <Accordion.Header>Test Job</Accordion.Header>
-                    <Accordion.Body>
-                        <TestJobForm submitAction={submitTestJob} />
-                    </Accordion.Body>
-                </Accordion.Item>
                 {
                     jobLaunchers.map((jobLauncher, index) => (
-                        <Accordion.Item eventKey={index + 1}>
+                        <Accordion.Item eventKey={index}>
                             <Accordion.Header>{jobLauncher.name}</Accordion.Header>
                             <Accordion.Body>
                                 {jobLauncher.form}
@@ -101,8 +122,8 @@ const AdminJobsPage = () => {
             </Accordion>
 
             <h2 className="p-3">Job Status</h2>
-
             <JobsTable jobs={jobs} />
+
         </BasicLayout>
     );
 };

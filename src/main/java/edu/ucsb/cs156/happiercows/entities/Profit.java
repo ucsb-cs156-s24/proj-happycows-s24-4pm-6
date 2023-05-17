@@ -1,5 +1,7 @@
 package edu.ucsb.cs156.happiercows.entities;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,8 +27,10 @@ public class Profit {
 
     @ManyToOne
     @JoinColumn(name = "user_commons_id")
-    
+
     private UserCommons userCommons;
-    private long profit;
-    private long timestamp;
+    private double amount;
+    private LocalDateTime timestamp;
+    private int numCows;
+    private double avgCowHealth;
 }

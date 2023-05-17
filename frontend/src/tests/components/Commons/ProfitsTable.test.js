@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import ProfitsTable from "main/components/Commons/ProfitsTable";
-import profitsTableFixtures from "fixtures/profitsTableFixtures";
+import profitsFixtures from "fixtures/profitsFixtures";
 
 describe("ProfitsTable tests", () => {
     test("renders without crashing for 0 profits", () => {
@@ -11,13 +11,13 @@ describe("ProfitsTable tests", () => {
 
     test("renders without crashing", async () => {
         render(
-            <ProfitsTable profits={profitsTableFixtures.threeTableProfits} />
+            <ProfitsTable profits={profitsFixtures.threeProfits} />
         );
         await waitFor(()=>{
-            expect(screen.getByTestId("ProfitsTable-header-profit") ).toBeInTheDocument();
+            expect(screen.getByTestId("ProfitsTable-header-Amount") ).toBeInTheDocument();
         });
 
-        const expectedHeaders = [ "Profit", "Date"];
+        const expectedHeaders = [ "Amount", "Date", "CowHealth", "NumCows"];
     
         expectedHeaders.forEach((headerText) => {
           const header = screen.getByText(headerText);

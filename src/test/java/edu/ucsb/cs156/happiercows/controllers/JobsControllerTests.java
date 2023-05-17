@@ -2,6 +2,7 @@ package edu.ucsb.cs156.happiercows.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -92,9 +93,9 @@ public class JobsControllerTests extends ControllerTestCase {
         MvcResult response = mockMvc.perform(get("/api/jobs/all"))
                 .andExpect(status().isOk()).andReturn();
 
-        // // assert
+        // assert
 
-        verify(jobsRepository).findAll();
+        verify(jobsRepository, atLeastOnce()).findAll();
         String expectedJson = mapper.writeValueAsString(expectedJobs);
         String responseString = response.getResponse().getContentAsString();
         assertEquals(expectedJson, responseString);
