@@ -2,8 +2,6 @@ package edu.ucsb.cs156.happiercows.services;
 
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -17,6 +15,7 @@ class CowHealthUpdateStrategyTest {
     void getByName_can_get_strategy_by_name() {
         assertEquals(Optional.of(CowHealthUpdateStrategy.Linear), CowHealthUpdateStrategy.getByName("Linear"));
     }
+
     @Test
     void getByName_returns_empty_optional_if_name_is_invalid() {
         assertEquals(Optional.empty(), CowHealthUpdateStrategy.getByName("invalid"));
@@ -36,48 +35,37 @@ class CowHealthUpdateStrategyTest {
     }
 
 
-    @Nested
-    class FormulaTests {
-        Commons commons;
-        UserCommons user;
+    Commons commons = Commons.builder()
+            .degradationRate(0.01)
+            .carryingCapacity(100)
+            .build();
+    UserCommons user = UserCommons.builder().cowHealth(50).build();
 
-        @BeforeEach
-        void setup() {
-            commons = Commons.builder()
-                    .degradationRate(0.01)
-                    .carryingCapacity(100)
-                    .build();
-            user = UserCommons.builder()
-                    .cowHealth(50)
-                    .build();
-        }
+    @Test
+    void linear_updates_health_proportional_to_num_cows_over_capacity() {
+        var formula = CowHealthUpdateStrategy.Linear;
 
-        @Test
-        void linear_updates_health_proportional_to_num_cows_over_capacity() {
-            var formula = CowHealthUpdateStrategy.Linear;
+        assertEquals(49.9, formula.calculateNewCowHealth(commons, user, 110));
+        assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 100));
+        assertEquals(50.1, formula.calculateNewCowHealth(commons, user, 90));
+    }
 
-            assertEquals(49.9, formula.calculateNewCowHealth(commons, user, 110));
-            assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 100));
-            assertEquals(50.1, formula.calculateNewCowHealth(commons, user, 90));
-        }
+    @Test
+    void constant_changes_by_constant_amount() {
+        var formula = CowHealthUpdateStrategy.Constant;
 
-        @Test
-        void constant_changes_by_constant_amount() {
-            var formula = CowHealthUpdateStrategy.Constant;
+        assertEquals(49.99, formula.calculateNewCowHealth(commons, user, 120));
+        assertEquals(49.99, formula.calculateNewCowHealth(commons, user, 110));
+        assertEquals(50.01, formula.calculateNewCowHealth(commons, user, 100));
+        assertEquals(50.01, formula.calculateNewCowHealth(commons, user, 90));
+    }
 
-            assertEquals(49.99, formula.calculateNewCowHealth(commons, user, 120));
-            assertEquals(49.99, formula.calculateNewCowHealth(commons, user, 110));
-            assertEquals(50.01, formula.calculateNewCowHealth(commons, user, 100));
-            assertEquals(50.01, formula.calculateNewCowHealth(commons, user, 90));
-        }
+    @Test
+    void noop_does_nothing() {
+        var formula = CowHealthUpdateStrategy.Noop;
 
-        @Test
-        void noop_does_nothing() {
-            var formula = CowHealthUpdateStrategy.Noop;
-
-            assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 110));
-            assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 100));
-            assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 90));
-        }
+        assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 110));
+        assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 100));
+        assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 90));
     }
 }
