@@ -7,6 +7,7 @@ import TestJobForm from "main/components/Jobs/TestJobForm";
 import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
 import MilkCowsJobForm from "main/components/Jobs/MilkCowsJobForm";
 import InstructorReportForm from "main/components/Jobs/InstructorReportForm";
+import { toast } from "react-toastify";
 
 import { useBackendMutation } from "main/utils/useBackend";
 
@@ -29,6 +30,7 @@ const AdminJobsPage = () => {
 
     const submitTestJob = async (data) => {
         console.log("submitTestJob, data=", data);
+        toast('Running test job... Sleep for ' + data.sleepMs + ' ms, fail=' + data.fail);
         testJobMutation.mutate(data);
     }
 
@@ -61,7 +63,8 @@ const AdminJobsPage = () => {
     // Stryker enable all
 
     const submitUpdateCowHealthJob = async () => {
-        console.log("submitUpdateCowHealthJob")
+        console.log("submitUpdateCowHealthJob");
+        toast('Updating cow health...');
         UpdateCowHealthMutation.mutate();
     }
 
@@ -81,7 +84,8 @@ const AdminJobsPage = () => {
     // Stryker enable all
 
     const submitMilkTheCowsJob = async () => {
-        console.log("submitMilkTheCowsJob")
+        console.log("submitMilkTheCowsJob");
+        toast('Milking the cows...');
         MilkTheCowsMutation.mutate();
     }
 
