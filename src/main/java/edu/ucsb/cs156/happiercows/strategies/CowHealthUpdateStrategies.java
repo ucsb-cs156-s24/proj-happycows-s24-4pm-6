@@ -7,7 +7,7 @@ import lombok.Getter;
 
 /**
  * The CowHealthUpdateStrategies enum provides a variety of strategies for updating cow health.
- * 
+ *
  * For information on Java enum's, see the Oracle Java Tutorial on <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html">Enum Types</a>,
  * which are far more powerful in Java than enums in most other languages.
  */
@@ -41,4 +41,7 @@ public enum CowHealthUpdateStrategies implements CowHealthUpdateStrategy {
 
     private final String displayName;
     private final String description;
+
+    public final static CowHealthUpdateStrategies DEFAULT_ABOVE_CAPACITY = Linear;
+    public final static CowHealthUpdateStrategies DEFAULT_BELOW_CAPACITY = Constant;
 }
