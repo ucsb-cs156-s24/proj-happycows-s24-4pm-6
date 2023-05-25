@@ -4,28 +4,9 @@ import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CowHealthUpdateStrategyTest {
-
-    @Test
-    void getByName_can_get_strategy_by_name() {
-        assertEquals(Optional.of(CowHealthUpdateStrategy.Linear), CowHealthUpdateStrategy.getByName("Linear"));
-    }
-
-    @Test
-    void getByName_returns_empty_optional_if_name_is_invalid() {
-        assertEquals(Optional.empty(), CowHealthUpdateStrategy.getByName("invalid"));
-    }
-
-    @Test
-    void can_get_all_strategies() {
-        var values = CowHealthUpdateStrategy.values();
-        assertTrue(values.length > 0);
-    }
 
     @Test
     void get_name_and_description() {

@@ -5,8 +5,6 @@ import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Optional;
-
 @Getter
 @AllArgsConstructor
 public enum CowHealthUpdateStrategy {
@@ -43,14 +41,5 @@ public enum CowHealthUpdateStrategy {
             UserCommons user,
             int totalCows
     );
-
-    public static Optional<CowHealthUpdateStrategy> getByName(String name) {
-        try {
-            return Optional.of(CowHealthUpdateStrategy.valueOf(name));
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
-
-    }
 
 }
