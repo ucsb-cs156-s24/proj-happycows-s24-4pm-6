@@ -5,6 +5,13 @@ import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * The CowHealthUpdateStrategies enum provides a variety of strategies for updating cow health.
+ * 
+ * For information on Java enum's, see the Oracle Java Tutorial on <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html">Enum Types</a>,
+ * which are far more powerful in Java than enums in most other languages.
+ */
+
 @Getter
 @AllArgsConstructor
 public enum CowHealthUpdateStrategies implements CowHealthUpdateStrategy {
