@@ -29,16 +29,54 @@ public class SystemInfoControllerTests extends ControllerTestCase {
 
   @Test
   public void systemInfo__logged_out() throws Exception {
-    mockMvc.perform(get("/api/systemInfo"))
-        .andExpect(status().is(403));
+
+
+    // arrange
+
+    SystemInfo systemInfo = SystemInfo
+        .builder()
+        .showSwaggerUILink(true)
+        .springH2ConsoleEnabled(true)
+        .sourceRepo("https://github.com/ucsb-cs156/proj-happycows")
+        .build();
+    when(mockSystemInfoService.getSystemInfo()).thenReturn(systemInfo);
+    String expectedJson = mapper.writeValueAsString(systemInfo);
+
+    // act
+    MvcResult response = mockMvc.perform(get("/api/systemInfo"))
+        .andExpect(status().isOk()).andReturn();
+
+    // assert
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
   }
+
 
   @WithMockUser(roles = { "USER" })
   @Test
   public void systemInfo__user_logged_in() throws Exception {
-    mockMvc.perform(get("/api/systemInfo"))
-        .andExpect(status().is(403));
+
+
+    // arrange
+
+    SystemInfo systemInfo = SystemInfo
+        .builder()
+        .showSwaggerUILink(true)
+        .springH2ConsoleEnabled(true)
+        .sourceRepo("https://github.com/ucsb-cs156/proj-happycows")
+        .build();
+    when(mockSystemInfoService.getSystemInfo()).thenReturn(systemInfo);
+    String expectedJson = mapper.writeValueAsString(systemInfo);
+
+    // act
+    MvcResult response = mockMvc.perform(get("/api/systemInfo"))
+        .andExpect(status().isOk()).andReturn();
+
+    // assert
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
   }
+
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
@@ -51,7 +89,7 @@ public class SystemInfoControllerTests extends ControllerTestCase {
         .builder()
         .showSwaggerUILink(true)
         .springH2ConsoleEnabled(true)
-        .sourceRepo("https://github.com/ucsb-cs156/proj-courses")
+        .sourceRepo("https://github.com/ucsb-cs156/proj-happycows")
         .build();
     when(mockSystemInfoService.getSystemInfo()).thenReturn(systemInfo);
     String expectedJson = mapper.writeValueAsString(systemInfo);
