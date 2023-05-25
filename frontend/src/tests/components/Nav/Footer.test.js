@@ -15,7 +15,7 @@ describe("Footer tests", () => {
     
         const href = screen.getByTestId("github-href");
         // console.log(href.href);
-        expect(href).toHaveAttribute("href", "https://github.com/ucsb-cs156-f22/f22-5pm-happycows");
+        expect(href).toHaveAttribute("href", "https://github.com/ucsb-cs156/proj-happycows");
     });
 
     test("renders correctly when systemInfo.showingNeither", async () => {
