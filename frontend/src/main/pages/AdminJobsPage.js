@@ -30,7 +30,7 @@ const AdminJobsPage = () => {
 
     const submitTestJob = async (data) => {
         console.log("submitTestJob, data=", data);
-        toast('Running test job... Sleep for ' + data.sleepMs + ' ms, fail=' + data.fail);
+        toast('Submitted job: Test Job');
         testJobMutation.mutate(data);
     }
 
@@ -64,7 +64,7 @@ const AdminJobsPage = () => {
 
     const submitUpdateCowHealthJob = async () => {
         console.log("submitUpdateCowHealthJob");
-        toast('Updating cow health...');
+        toast('Submitted Job: Update Cow Health');
         UpdateCowHealthMutation.mutate();
     }
 
@@ -85,7 +85,7 @@ const AdminJobsPage = () => {
 
     const submitMilkTheCowsJob = async () => {
         console.log("submitMilkTheCowsJob");
-        toast('Milking the cows...');
+        toast('Submitted Job: Milk The Cows');
         MilkTheCowsMutation.mutate();
     }
 
