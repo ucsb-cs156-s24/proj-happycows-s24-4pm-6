@@ -6,6 +6,7 @@ export function useSystemInfo() {
   return useQuery("systemInfo", async () => {
     try {
       const response = await axios.get("/api/systemInfo");
+      document.write(response?.springH2ConsoleEnabled)
       return response.data;
     } catch (e) {
       console.error("Error invoking axios.get: ", e);

@@ -8,7 +8,6 @@ export default function Footer({systemInfo}) {
           HappierCows is a project of <a href="https://devries.chem.ucsb.edu/mattanjah-de-vries">Mattanjah de Vries</a>, 
           Distinguished Professor of Chemistry at UC Santa Barbara. 
           The open source code is<a data-testid="github-href" href={systemInfo?.sourceRepo}> available on GitHub</a>. 
-          <a href="https://github.com/ucsb-cs156/proj-happycows">HELP</a>
         </p>
         
       </Container>
