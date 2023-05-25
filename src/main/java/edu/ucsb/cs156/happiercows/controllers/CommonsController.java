@@ -8,6 +8,7 @@ import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
+import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
@@ -162,6 +163,16 @@ public class CommonsController extends ApiController {
         Commons saved = commonsRepository.save(commons);
         String body = mapper.writeValueAsString(saved);
 
+        return ResponseEntity.ok().body(body);
+    }
+
+
+    @ApiOperation(value = "List all cow health update strategies")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/all-health-update-strategies")
+    public ResponseEntity<String> listCowHealthUpdateStrategies() throws JsonProcessingException {
+        var result = HealthUpdateStrategyList.create();
+        String body = mapper.writeValueAsString(result);
         return ResponseEntity.ok().body(body);
     }
 

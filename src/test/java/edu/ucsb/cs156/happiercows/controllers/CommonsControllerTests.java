@@ -8,6 +8,7 @@ import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
+import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
@@ -557,6 +558,19 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         assertEquals(responseMap.get("message"), "Commons with id 18 not found");
         assertEquals(responseMap.get("type"), "EntityNotFoundException");
+    }
+
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void getHealthUpdateStrategiesTest() throws Exception {
+        var response = mockMvc.perform(
+                get("/api/commons/all-health-update-strategies")
+        ).andExpect(status().isOk()).andReturn();
+
+        var expected = HealthUpdateStrategyList.create();
+        var actual = mapper.readValue(response.getResponse().getContentAsString(), HealthUpdateStrategyList.class);
+        assertEquals(expected, actual);
+
     }
 
     @WithMockUser(roles = {"USER"})
