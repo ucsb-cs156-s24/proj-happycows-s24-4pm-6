@@ -33,7 +33,7 @@ class SystemInfoServiceImplTests  {
     SystemInfo si = systemInfoService.getSystemInfo();
     assertTrue(si.getSpringH2ConsoleEnabled());
     assertTrue(si.getShowSwaggerUILink());
-    assertEquals("https://github.com/ucsb-cs156/proj-courses", si.getSourceRepo());
+    assertEquals("https://github.com/ucsb-cs156/proj-happycows", si.getSourceRepo());
   }
 
 }
