@@ -1,4 +1,4 @@
-package edu.ucsb.cs156.happiercows.services;
+package edu.ucsb.cs156.happiercows.strategies;
 
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;

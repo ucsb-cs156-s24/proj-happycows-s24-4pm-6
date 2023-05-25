@@ -1,7 +1,8 @@
-package edu.ucsb.cs156.happiercows.services;
+package edu.ucsb.cs156.happiercows.strategies;
 
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
