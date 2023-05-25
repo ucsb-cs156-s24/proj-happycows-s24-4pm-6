@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CowHealthUpdateStrategyTest {
+class CowHealthUpdateStrategyTests {
 
     @Test
     void get_name_and_description() {
-        assertEquals("Linear", CowHealthUpdateStrategy.Linear.name());
-        assertEquals("Linear", CowHealthUpdateStrategy.Linear.getDisplayName());
-        assertEquals("Cow health increases/decreases proportionally to the number of cows over/under the carrying capacity.", CowHealthUpdateStrategy.Linear.getDescription());
+        assertEquals("Linear", CowHealthUpdateStrategies.Linear.name());
+        assertEquals("Linear", CowHealthUpdateStrategies.Linear.getDisplayName());
+        assertEquals("Cow health increases/decreases proportionally to the number of cows over/under the carrying capacity.", CowHealthUpdateStrategies.Linear.getDescription());
     }
 
 
@@ -24,7 +24,7 @@ class CowHealthUpdateStrategyTest {
 
     @Test
     void linear_updates_health_proportional_to_num_cows_over_capacity() {
-        var formula = CowHealthUpdateStrategy.Linear;
+        var formula = CowHealthUpdateStrategies.Linear;
 
         assertEquals(49.9, formula.calculateNewCowHealth(commons, user, 110));
         assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 100));
@@ -33,7 +33,7 @@ class CowHealthUpdateStrategyTest {
 
     @Test
     void constant_changes_by_constant_amount() {
-        var formula = CowHealthUpdateStrategy.Constant;
+        var formula = CowHealthUpdateStrategies.Constant;
 
         assertEquals(49.99, formula.calculateNewCowHealth(commons, user, 120));
         assertEquals(49.99, formula.calculateNewCowHealth(commons, user, 110));
@@ -43,7 +43,7 @@ class CowHealthUpdateStrategyTest {
 
     @Test
     void noop_does_nothing() {
-        var formula = CowHealthUpdateStrategy.Noop;
+        var formula = CowHealthUpdateStrategies.Noop;
 
         assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 110));
         assertEquals(50.0, formula.calculateNewCowHealth(commons, user, 100));
