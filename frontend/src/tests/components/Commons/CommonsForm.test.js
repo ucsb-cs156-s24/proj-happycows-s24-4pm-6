@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import {fireEvent, render, screen} from "@testing-library/react";
+import {BrowserRouter as Router} from "react-router-dom";
 import CommonsForm from "main/components/Commons/CommonsForm";
+import {QueryClient, QueryClientProvider} from "react-query";
 
 const mockedNavigate = jest.fn();
 
@@ -12,9 +13,11 @@ jest.mock('react-router-dom', () => ({
 describe("CommonsForm tests", () => {
   it("renders correctly", async () => {
     render(
-      <Router >
-        <CommonsForm />
-      </Router>
+        <QueryClientProvider client={new QueryClient()}>
+          <Router>
+            <CommonsForm/>
+          </Router>
+        </QueryClientProvider>
     );
 
     expect(await screen.findByText(/Commons Name/)).toBeInTheDocument();
@@ -27,7 +30,9 @@ describe("CommonsForm tests", () => {
       /Degradation Rate/,
       /Carrying Capacity/,
       /Show Leaderboard\?/,
-      
+      /When below capacity/,
+      /When above capacity/,
+
     ].forEach(
       (pattern) => {
         expect(screen.getByText(pattern)).toBeInTheDocument();
@@ -41,9 +46,11 @@ describe("CommonsForm tests", () => {
     const submitAction = jest.fn();
 
     render(
-      <Router  >
-        <CommonsForm submitAction={submitAction} buttonLabel="Create" />
-      </Router  >
+        <QueryClientProvider client={new QueryClient()}>
+          <Router>
+            <CommonsForm submitAction={submitAction} buttonLabel="Create"/>
+          </Router>
+        </QueryClientProvider>
     );
 
     expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();

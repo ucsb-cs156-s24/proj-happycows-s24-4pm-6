@@ -1,5 +1,6 @@
-import { Button, Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import {Button, Form} from "react-bootstrap";
+import {useForm} from "react-hook-form";
+import {useBackend} from "../../utils/useBackend";
 
 function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
   // Stryker disable all
@@ -11,6 +12,37 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
     { defaultValues: initialCommons || {} }
   );
   // Stryker enable all
+
+  const {data: healthUpdateStrategies} = useBackend(
+    "/api/commons/all-health-update-strategies", {
+      method: "GET",
+      url: "/api/commons/all-health-update-strategies",
+    },
+  );
+
+
+  function healthUpdateStrategiesDropdown(formName, displayName, initialValue) {
+    return (
+      <Form.Group className="mb-3">
+        <Form.Label htmlFor={formName}>{displayName}</Form.Label>
+        {healthUpdateStrategies && (
+          <Form.Select
+            data-testid={`${testid}-${formName}`}
+            id={formName}
+            {...register(formName, {required: `${displayName} is required`})}
+            defaultValue={initialValue}
+          >
+            {healthUpdateStrategies.strategies.map((strategy) => (
+              <option key={strategy.name} value={strategy.name} title={strategy.description}>
+                {strategy.displayName}
+              </option>
+            ))}
+          </Form.Select>
+        )}
+
+      </Form.Group>
+    );
+  }
 
   const testid = "CommonsForm";
 
@@ -158,9 +190,19 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
         </Form.Control.Feedback>
       </Form.Group>
 
+      <h4>
+        Health update formula
+      </h4>
+      {healthUpdateStrategiesDropdown("aboveCapacityHealthUpdateStrategy", "When above capacity",
+        initialCommons?.aboveCapacityHealthUpdateStrategy || healthUpdateStrategies?.defaultAboveCapacity
+      )}
+      {healthUpdateStrategiesDropdown("belowCapacityHealthUpdateStrategy", "When below capacity",
+        initialCommons?.belowCapacityHealthUpdateStrategy || healthUpdateStrategies?.defaultBelowCapacity
+      )}
+
       <Form.Group className="mb-3">
         <Form.Label htmlFor="showLeaderboard">Show Leaderboard?</Form.Label>
-        <Form.Check 
+        <Form.Check
           data-testid={`${testid}-showLeaderboard`}
           type="checkbox"
           id="showLeaderboard"
