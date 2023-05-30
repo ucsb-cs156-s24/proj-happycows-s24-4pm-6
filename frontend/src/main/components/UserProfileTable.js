@@ -43,15 +43,14 @@ export default function UserProfileTable({ user }) {
 }
 
 function commonsString(commons) {
-    if(commons === undefined)
-        return "";
-    
     var result = "";
 
-    for (var i = 0; i < commons.length; i++) {
-        result += commons[i].name + ", ";
+    if (commons !== undefined) {
+        for (var i = 0; i < commons.length; i++) {
+            result += commons[i].name + ", ";
+        }
+        result = result.substring(0, result.length - 2);
     }
-    result = result.substring(0, result.length - 2);
 
     return result;
 }
