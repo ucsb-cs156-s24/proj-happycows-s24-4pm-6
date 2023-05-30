@@ -32,20 +32,27 @@ public class SetCowHealthJob implements JobContextConsumer {
         ctx.log("Setting cow health...");
 
         Optional<Commons> commons = commonsRepository.findById(commonsID);
-        Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.get().getId());
+        
 
         if (commons.isPresent()) {
             ctx.log("Commons " + commons.get().getName());
-        }
+
+            Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.get().getId());
         
-        for (UserCommons userCommons : allUserCommons) {
-            User user = userRepository.findById(userCommons.getUserId()).orElseThrow(()->new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
-            ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
-            ctx.log(" old cow health: " + userCommons.getCowHealth() + ", new cow health: " + newCowHealth);
-            userCommons.setCowHealth(newCowHealth);
-            userCommonsRepository.save(userCommons);
+            for (UserCommons userCommons : allUserCommons) {
+                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(()->new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
+                ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
+                ctx.log(" old cow health: " + userCommons.getCowHealth() + ", new cow health: " + newCowHealth);
+                userCommons.setCowHealth(newCowHealth);
+                userCommonsRepository.save(userCommons);
+            }
+
+            ctx.log("Cow health has been set!");
+        }
+        else {
+            ctx.log(String.format("No commons found for id %d", commonsID));
         }
 
-        ctx.log("Cow health has been set!");
+       
     } 
 }

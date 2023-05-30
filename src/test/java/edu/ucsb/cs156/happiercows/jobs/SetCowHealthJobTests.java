@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -44,24 +45,33 @@ public class SetCowHealthJobTests {
                         .build();
         
         @Test
-        void test_log_output_success() throws Exception {
+        void error_msg_when_no_commons_found() throws Exception {
 
                 // Arrange
 
                 Job jobStarted = Job.builder().build();
                 JobContext ctx = new JobContext(null, jobStarted);
 
+                when(commonsRepository.findById(any())).thenReturn(Optional.empty());
+                
+                // Optional<Commons> commons = commonsRepository.findById(commonsID);
+                // Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.get().getId());
+
+                
                 // Act
-                SetCowHealthJob setCowHealthJob = new SetCowHealthJob(117, 2, commonsRepository, userCommonsRepository, 
+                SetCowHealthJob setCowHealthJob = new SetCowHealthJob(117L, 2.0, commonsRepository, userCommonsRepository, 
                 userRepository);
                 setCowHealthJob.accept(ctx);
 
                 // Assert
                 String expected = """
                                 Setting cow health...
-                                Cow health has been set!""";
+                                No commons found for id 117""";
 
                 assertEquals(expected, jobStarted.getLog());
+                
+      
+                
         }
         
 
