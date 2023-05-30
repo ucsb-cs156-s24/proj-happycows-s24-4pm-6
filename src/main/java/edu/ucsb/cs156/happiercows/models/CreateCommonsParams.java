@@ -35,4 +35,6 @@ public class CreateCommonsParams {
   private Boolean showLeaderboard = false; 
   @NumberFormat
   private int carryingCapacity;
+  @NumberFormat
+  private int numPlayers;
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Card, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { hasRole } from "main/utils/currentUser";
+import { daysSinceTimestamp } from "main/utils/dateUtils";
 
 export default function CommonsOverview({ commons, currentUser }) {
 
@@ -15,8 +16,8 @@ export default function CommonsOverview({ commons, currentUser }) {
             <Card.Body>
                 <Row>
                     <Col>
-                        <Card.Title>Today is day {commons.day}! </Card.Title>
-                        <Card.Text>Total Players: {commons.totalPlayers}</Card.Text>
+                        <Card.Title>Today is day {daysSinceTimestamp(commons.startingDate)}!</Card.Title>
+                        <Card.Text>Total Players: {commons.numPlayers}</Card.Text>
                     </Col>
                     <Col>
                         {showLeaderboard &&
