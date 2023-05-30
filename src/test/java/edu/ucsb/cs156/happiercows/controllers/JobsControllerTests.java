@@ -40,6 +40,7 @@ import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
@@ -74,6 +75,9 @@ public class JobsControllerTests extends ControllerTestCase {
 
     @MockBean
     MilkTheCowsJobFactory milkTheCowsJobFactory;
+
+    @MockBean
+    SetCowHealthJobFactory setCowHealthJobFactory;
 
     @WithMockUser(roles = { "ADMIN" })
     @Test
@@ -225,6 +229,21 @@ public class JobsControllerTests extends ControllerTestCase {
     public void admin_can_launch_update_cow_health_job() throws Exception {
         // act
         MvcResult response = mockMvc.perform(post("/api/jobs/launch/updatecowhealth").with(csrf()))
+                .andExpect(status().isOk()).andReturn();
+
+        // assert
+        String responseString = response.getResponse().getContentAsString();
+        log.info("responseString={}", responseString);
+        Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+        assertNotNull(jobReturned.getStatus());
+    }
+
+    @WithMockUser(roles = { "ADMIN" })
+    @Test
+    public void admin_can_launch_set_cow_health_job() throws Exception {
+        // act
+        MvcResult response = mockMvc.perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=20").with(csrf()))
                 .andExpect(status().isOk()).andReturn();
 
         // assert
