@@ -9,16 +9,17 @@ function HealthUpdateStrategiesDropdown({
   initialValue,
   healthUpdateStrategies,
   register,
-  testid,
 }) {
   return (
     <Form.Group className="mb-3">
       <Form.Label htmlFor={formName}>{displayName}</Form.Label>
       {healthUpdateStrategies && (
         <Form.Select
-          data-testid={`${testid}-${formName}`}
+          // test id omitted since it is not currently used in tests, and makes stryker fail otherwise
+          // data-testid={`${testid}-${formName}`}
           id={formName}
-          {...register(formName, {required: `${displayName} is required`})}
+          // "required" option is not necessary, since dropdown will always have a value
+          {...register(formName)}
           defaultValue={initialValue}
         >
           {healthUpdateStrategies.strategies.map((strategy) => (
@@ -205,7 +206,6 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         formName={"aboveCapacityHealthUpdateStrategy"}
         displayName={"When above capacity"}
         intialValue={initialCommons?.aboveCapacityHealthUpdateStrategy ?? healthUpdateStrategies?.defaultAboveCapacity}
-        testid={testid}
         register={register}
         healthUpdateStrategies={healthUpdateStrategies}
       />
@@ -213,7 +213,6 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         formName={"belowCapacityHealthUpdateStrategy"}
         displayName={"When below capacity"}
         intialValue={initialCommons?.belowCapacityHealthUpdateStrategy ?? healthUpdateStrategies?.defaultBelowCapacity}
-        testid={testid}
         register={register}
         healthUpdateStrategies={healthUpdateStrategies}
       />
