@@ -119,9 +119,9 @@ describe("AdminCreateCommonsPage tests", () => {
             startingDate: '2022-03-05T00:00:00.000Z', // [1]
             degradationRate: 30.4,
             carryingCapacity: 25,
+            showLeaderboard: false,
             aboveCapacityHealthUpdateStrategy: "strat2",
             belowCapacityHealthUpdateStrategy: "strat3",
-            showLeaderboard: false
         };
 
         expect(axiosMock.history.post[0].data).toEqual( JSON.stringify(expectedCommons) );
