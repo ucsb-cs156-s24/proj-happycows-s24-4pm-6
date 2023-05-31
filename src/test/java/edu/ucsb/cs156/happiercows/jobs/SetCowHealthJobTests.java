@@ -53,11 +53,7 @@ public class SetCowHealthJobTests {
                 JobContext ctx = new JobContext(null, jobStarted);
 
                 when(commonsRepository.findById(any())).thenReturn(Optional.empty());
-                
-                // Optional<Commons> commons = commonsRepository.findById(commonsID);
-                // Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.get().getId());
 
-                
                 // Act
                 SetCowHealthJob setCowHealthJob = new SetCowHealthJob(117L, 2.0, commonsRepository, userCommonsRepository, 
                 userRepository);
@@ -69,8 +65,6 @@ public class SetCowHealthJobTests {
                                 No commons found for id 117""";
 
                 assertEquals(expected, jobStarted.getLog());
-                
-      
                 
         }
         
