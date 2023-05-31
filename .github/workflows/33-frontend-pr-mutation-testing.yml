@@ -71,21 +71,19 @@ jobs:
         if: always() # always upload artifacts, even if tests fail
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: stryker-incremental-${{ env.pr_number }}.json
-          path: frontend/history/stryker-incremental-${{ env.pr_number }}.json
+          name: stryker-incremental-${{env.pr_number}}.json
+          path: frontend/history/stryker-incremental-${{env.pr_number}}.json
 
       - name: Set path for github pages deploy when there is a PR num
         if: always() # always upload artifacts, even if tests fail
         run: |
-          if [[ "${{ env.pr_number }}" == "main" ]]; then
-            prefix=""
-            echo "prefix=${prefix}"
-            echo "prefix=${prefix}" >> "$GITHUB_ENV"
+          if [ "${{env.pr_number }}" = "main" ]; then
+             prefix=""
           else
-            prefix="prs/${pr_number}/"
-            echo "prefix=${prefix}"
-            echo "prefix=${prefix}" >> "$GITHUB_ENV"
+             prefix="prs/${{ env.pr_number }}/"
           fi
+          echo "prefix=${prefix}"
+          echo "prefix=${prefix}" >> "$GITHUB_ENV"
       
       - name: Deploy 🚀
         if: always() # always upload artifacts, even if tests fail
