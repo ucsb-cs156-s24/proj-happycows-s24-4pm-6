@@ -3,7 +3,7 @@ import { Card, Button, Row, Col } from "react-bootstrap";
 import cowHead from "./../../../assets/CowHead.png"; 
 
 // add parameters 
-const ManageCows = ({userCommons,commons, onBuy, onSell}) =>  {
+const ManageCows = ({userCommons, commons, onBuy, onSell}) =>  {
     // update cowPrice from fixture
     return (
         <Card>
