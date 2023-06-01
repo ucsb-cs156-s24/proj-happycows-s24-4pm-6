@@ -542,6 +542,33 @@ public class CommonsControllerTests extends ControllerTestCase {
         assertEquals(expectedJson, responseString);
     }
 
+    // This commons SHOULD be in the repository
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void getCommonsPlusByIdTest_valid() throws Exception {
+        Commons Commons1 = Commons.builder()
+                .name("TestCommons2")
+                .id(18L)
+                .build();
+        CommonsPlus commonsPlus = CommonsPlus.builder()
+                .commons(Commons1)
+                .totalCows(5)
+                .totalUsers(2)
+                .build();
+                
+        when(commonsRepository.findById(eq(18L))).thenReturn(Optional.of(Commons1));
+        when(commonsRepository.getNumCows(18L)).thenReturn(Optional.of(5));
+        when(commonsRepository.getNumUsers(18L)).thenReturn(Optional.of(2));
+
+        MvcResult response = mockMvc.perform(get("/api/commons/plus?id=18"))
+                .andExpect(status().isOk()).andReturn();
+
+        verify(commonsRepository, times(1)).findById(eq(18L));
+        String expectedJson = mapper.writeValueAsString(commonsPlus);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
+
     // This common SHOULD NOT be in the repository
     @WithMockUser(roles = {"USER"})
     @Test
@@ -550,6 +577,23 @@ public class CommonsControllerTests extends ControllerTestCase {
         when(commonsRepository.findById(eq(18L))).thenReturn(Optional.empty());
 
         MvcResult response = mockMvc.perform(get("/api/commons?id=18"))
+                .andExpect(status().is(404)).andReturn();
+
+        verify(commonsRepository, times(1)).findById(eq(18L));
+
+        Map<String, Object> responseMap = responseToJson(response);
+
+        assertEquals(responseMap.get("message"), "Commons with id 18 not found");
+        assertEquals(responseMap.get("type"), "EntityNotFoundException");
+    }
+
+    // This commons SHOULD NOT be in the repository
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void getCommonsPlusByIdTest_invalid() throws Exception {                
+        when(commonsRepository.findById(eq(18L))).thenReturn(Optional.empty());
+
+        MvcResult response = mockMvc.perform(get("/api/commons/plus?id=18"))
                 .andExpect(status().is(404)).andReturn();
 
         verify(commonsRepository, times(1)).findById(eq(18L));
