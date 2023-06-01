@@ -1,38 +1,32 @@
 package edu.ucsb.cs156.happiercows.models;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import org.springframework.format.annotation.NumberFormat;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
-import org.springframework.security.core.GrantedAuthority;
-
-import edu.ucsb.cs156.happiercows.entities.User;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class CreateCommonsParams {
-  private String name;
-  @NumberFormat
-  private double cowPrice;
-  @NumberFormat
-  private double milkPrice;
-  @NumberFormat
-  private double startingBalance;
-  @NumberFormat private double degradationRate;
-  @DateTimeFormat
-  private LocalDateTime startingDate;
-  @Builder.Default
-  private Boolean showLeaderboard = false; 
-  @NumberFormat
-  private int carryingCapacity;
+    private String name;
+    @NumberFormat
+    private double cowPrice;
+    @NumberFormat
+    private double milkPrice;
+    @NumberFormat
+    private double startingBalance;
+    @DateTimeFormat
+    private LocalDateTime startingDate;
+    @Builder.Default
+    private Boolean showLeaderboard = false;
+    @NumberFormat
+    private int carryingCapacity;
+    @NumberFormat
+    private double degradationRate;
+
+    private String aboveCapacityHealthUpdateStrategy;
+    private String belowCapacityHealthUpdateStrategy;
 }

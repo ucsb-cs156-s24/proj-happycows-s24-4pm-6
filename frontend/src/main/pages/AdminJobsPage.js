@@ -7,6 +7,8 @@ import TestJobForm from "main/components/Jobs/TestJobForm";
 import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
 import MilkCowsJobForm from "main/components/Jobs/MilkCowsJobForm";
 import InstructorReportForm from "main/components/Jobs/InstructorReportForm";
+import { toast } from "react-toastify";
+
 import { useBackendMutation } from "main/utils/useBackend";
 import SetCowHealthForm from "main/components/Jobs/SetCowHealthForm";
 
@@ -26,6 +28,7 @@ const AdminJobsPage = () => {
 
   const submitTestJob = async (data) => {
     console.log("submitTestJob, data=", data);
+    toast("Submitted job: Test Job");
     testJobMutation.mutate(data);
   };
 
@@ -85,6 +88,7 @@ const AdminJobsPage = () => {
 
   const submitUpdateCowHealthJob = async () => {
     console.log("submitUpdateCowHealthJob");
+    toast("Submitted Job: Update Cow Health");
     UpdateCowHealthMutation.mutate();
   };
 
@@ -105,6 +109,7 @@ const AdminJobsPage = () => {
 
   const submitMilkTheCowsJob = async () => {
     console.log("submitMilkTheCowsJob");
+    toast("Submitted Job: Milk The Cows");
     MilkTheCowsMutation.mutate();
   };
 
