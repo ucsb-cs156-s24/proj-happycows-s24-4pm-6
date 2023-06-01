@@ -184,11 +184,9 @@ public class CommonsController extends ApiController {
       String body = mapper.writeValueAsString(joinedCommons);
       return ResponseEntity.ok().body(body);
     }
-    else if (joinedCommons.getUsers() != null){
-      // user is not a member of this commons
-      joinedCommons.setNumPlayers(joinedCommons.getUsers().size() + 1);
-      commonsRepository.save(joinedCommons);
-    }
+
+    joinedCommons.setNumPlayers(commonsRepository.getNumUsers(commonsId).orElse(0) + 1);
+    commonsRepository.save(joinedCommons);
 
     UserCommons uc = UserCommons.builder()
         .commonsId(commonsId)
