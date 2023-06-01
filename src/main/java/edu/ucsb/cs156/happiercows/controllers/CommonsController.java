@@ -143,7 +143,6 @@ public class CommonsController extends ApiController {
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
                 .carryingCapacity(params.getCarryingCapacity())
-                .numPlayers(0);
         
         // ok to set null values for these, so old backend still works
         if (params.getAboveCapacityHealthUpdateStrategy() != null) {
@@ -197,9 +196,6 @@ public class CommonsController extends ApiController {
             return ResponseEntity.ok().body(body);
         }
 
-    joinedCommons.setNumPlayers(commonsRepository.getNumUsers(commonsId).orElse(0) + 1);
-    commonsRepository.save(joinedCommons);
-
         UserCommons uc = UserCommons.builder()
                 .commonsId(commonsId)
                 .userId(userId)
@@ -244,12 +240,8 @@ public class CommonsController extends ApiController {
                 String.format("UserCommons with commonsId=%d and userId=%d not found.", commonsId, userId)));
 
         userCommonsRepository.deleteById(userCommons.getId());
-
-        Commons commons = commonsRepository.findById(commonsId).get();
-        commons.setNumPlayers(commonsRepository.getNumUsers(commonsId).get());
-        commonsRepository.save(commons);
     
-        String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commons.getNumPlayers());
+        String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
     
         return genericMessage(responseString);    
     }

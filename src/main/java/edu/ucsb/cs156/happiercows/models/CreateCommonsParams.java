@@ -25,8 +25,6 @@ public class CreateCommonsParams {
     @NumberFormat
     private int carryingCapacity;
     @NumberFormat
-    private int numPlayers;
-    @NumberFormat
     private double degradationRate;
 
     private String aboveCapacityHealthUpdateStrategy;

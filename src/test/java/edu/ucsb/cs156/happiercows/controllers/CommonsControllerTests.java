@@ -614,8 +614,6 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
         verify(userCommonsRepository, times(1)).save(uc);
-
-        c.setNumPlayers(1);
         
         String responseString = response.getResponse().getContentAsString();
         String cAsJson = mapper.writeValueAsString(c);
@@ -790,7 +788,6 @@ public class CommonsControllerTests extends ControllerTestCase {
         Commons c = Commons.builder()
         .id(2L)
         .name("Example Commons")
-        .numPlayers(1)
         .build();
 
         UserCommons uc = UserCommons.builder()
