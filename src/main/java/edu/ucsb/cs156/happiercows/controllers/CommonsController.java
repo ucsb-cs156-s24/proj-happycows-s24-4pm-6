@@ -223,7 +223,7 @@ public class CommonsController extends ApiController {
   @ApiOperation("Delete a user from a commons")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @DeleteMapping("/{commonsId}/users/{userId}")
-  public ResponseEntity<Commons> deleteUserFromCommon(@PathVariable("commonsId") Long commonsId,
+  public Object deleteUserFromCommon(@PathVariable("commonsId") Long commonsId,
       @PathVariable("userId") Long userId) throws Exception {
 
     Optional<UserCommons> uc = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId);
@@ -236,7 +236,9 @@ public class CommonsController extends ApiController {
     commons.setNumPlayers(commonsRepository.getNumUsers(commonsId).get());
     commonsRepository.save(commons);
 
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commons.getNumPlayers());
+
+    return genericMessage(responseString);
   }
 
   public CommonsPlus toCommonsPlus(Commons c) {

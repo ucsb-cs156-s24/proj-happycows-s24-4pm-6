@@ -669,6 +669,12 @@ public class CommonsControllerTests extends ControllerTestCase {
   @WithMockUser(roles = { "ADMIN" })
   @Test
   public void deleteUserFromCommonsTest() throws Exception {
+    Commons c = Commons.builder()
+        .id(2L)
+        .name("Example Commons")
+        .numPlayers(1)
+        .build();
+
     UserCommons uc = UserCommons.builder()
         .id(16L)
         .userId(1L)
@@ -681,18 +687,21 @@ public class CommonsControllerTests extends ControllerTestCase {
     String requestBody = mapper.writeValueAsString(uc);
 
     when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(uc));
+    when(commonsRepository.findById(2L)).thenReturn(Optional.of(c));
+    when(commonsRepository.getNumUsers(2L)).thenReturn(Optional.of(0));
 
     MvcResult response = mockMvc
         .perform(delete("/api/commons/2/users/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
             .characterEncoding("utf-8").content(requestBody))
-        .andExpect(status().is(204)).andReturn();
+        .andExpect(status().is(200)).andReturn();
 
     verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
     verify(userCommonsRepository, times(1)).deleteById(16L);
 
     String responseString = response.getResponse().getContentAsString();
+    String expectedString = "{\"message\":\"user with id 1 deleted from commons with id 2, 0 users remain\"}";
 
-    assertEquals(responseString, "");
+    assertEquals(responseString, expectedString);
   }
 
   @WithMockUser(roles = { "ADMIN" })
