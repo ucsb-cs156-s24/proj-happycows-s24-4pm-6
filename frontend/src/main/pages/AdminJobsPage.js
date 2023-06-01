@@ -50,11 +50,8 @@ const AdminJobsPage = () => {
 
   // SetCowHealth job
 
-  const objectToAxiosParamsSetCowHealthJob = (
-    selectedCommons,
-    healthValue
-  ) => ({
-    url: `/api/jobs/launch/setcowhealth`,
+  const objectToAxiosParamsSetCowHealthJob = (data) => ({
+    url: `/api/jobs/launch/setcowhealth?commonsID=${data.selectedCommons}&health=${data.healthValue}`,
     method: "POST",
   });
 
@@ -68,7 +65,8 @@ const AdminJobsPage = () => {
 
   const submitSetCowHealthJob = async (data) => {
     console.log("submitSetCowHealthJob", data);
-    SetCowHealthMutation.mutate();
+    toast("Submitted Job: Set Cow Health");
+    SetCowHealthMutation.mutate(data);
   };
 
   // UpdateCowHealth job

@@ -28,6 +28,11 @@ function SetCowHealthForm({ submitAction }) {
     defaultValues.selectedCommons
   );
   const [showCommonsError, setShowCommonsError] = useState(false);
+  const [healthValue, setHealthValue] = useState(defaultValues.healthValue);
+
+  const handleHealthValueChange = (e) => {
+    setHealthValue(e.target.value);
+  };
 
   const handleCommonsSelection = (id) => {
     setSelectedCommons(id);
@@ -42,9 +47,10 @@ function SetCowHealthForm({ submitAction }) {
       return;
     }
 
-    submitAction(getValues()); // Call the actual submitAction with form values
+    submitAction({ selectedCommons, healthValue }); // Call the actual submitAction with form values
 
-    reset();
+    reset({ selectedCommons: null, healthValue: 100 });
+    setHealthValue(100);
     setSelectedCommons(null);
     setShowCommonsError(false);
   };
@@ -91,8 +97,11 @@ function SetCowHealthForm({ submitAction }) {
           type="number"
           step="1"
           isInvalid={!!errors.healthValue}
-          onChange={(e) => setValue("healthValue", e.target.value)}
-          value={getValues("healthValue")}
+          onBLur={(e) =>
+            setValue("healthValue", e.target.value, { shouldValidate: true })
+          }
+          value={healthValue}
+          onChange={handleHealthValueChange}
         />
         <Form.Control.Feedback type="invalid">
           {errors.healthValue?.message}
