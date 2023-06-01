@@ -71,6 +71,17 @@ public class CommonsController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
+    @ApiOperation(value = "Get the number of cows/users in a commons")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/plus")
+    public CommonsPlus getCommonsPlusById(
+            @ApiParam("id") @RequestParam long id) throws JsonProcessingException {
+                CommonsPlus commonsPlus = toCommonsPlus(commonsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Commons.class, id)));
+
+        return commonsPlus;
+    }
+
     @ApiOperation(value = "Update a commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
@@ -142,7 +153,7 @@ public class CommonsController extends ApiController {
                 .startingDate(params.getStartingDate())
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
-                .carryingCapacity(params.getCarryingCapacity())
+                .carryingCapacity(params.getCarryingCapacity());
         
         // ok to set null values for these, so old backend still works
         if (params.getAboveCapacityHealthUpdateStrategy() != null) {
