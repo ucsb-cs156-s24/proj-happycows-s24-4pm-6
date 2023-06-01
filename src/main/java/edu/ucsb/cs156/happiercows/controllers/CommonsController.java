@@ -113,7 +113,6 @@ public class CommonsController extends ApiController {
     updated.setShowLeaderboard(params.getShowLeaderboard());
     updated.setDegradationRate(params.getDegradationRate());
     updated.setCarryingCapacity(params.getCarryingCapacity());
-    updated.setNumPlayers(params.getNumPlayers());
 
     if (params.getDegradationRate() < 0) {
       throw new IllegalArgumentException("Degradation Rate cannot be negative");
