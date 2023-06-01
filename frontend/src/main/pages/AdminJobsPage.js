@@ -29,10 +29,6 @@ const AdminJobsPage = () => {
     testJobMutation.mutate(data);
   };
 
-  const submitSetCowHealthJob = async (data) => {
-    console.log("Submitted: SetCowHealthJob, data=", data);
-  };
-
   // Stryker disable all
   const {
     data: jobs,
@@ -48,6 +44,26 @@ const AdminJobsPage = () => {
     { refetchInterval: refreshJobsIntervalMilliseconds }
   );
   // Stryker enable  all
+
+  // SetCowHealth job
+
+  const objectToAxiosParamsSetCowHealthJob = () => ({
+    url: `/api/jobs/launch/setcowhealth`,
+    method: "POST",
+  });
+
+  // Stryker disable all
+  const SetCowHealthMutation = useBackendMutation(
+    objectToAxiosParamsSetCowHealthJob,
+    {},
+    ["/api/jobs/all"]
+  );
+  // Stryker enable all
+
+  const submitSetCowHealthJob = async (data) => {
+    console.log("submitSetCowHealthJob", data);
+    SetCowHealthMutation.mutate();
+  };
 
   // UpdateCowHealth job
 
@@ -95,7 +111,7 @@ const AdminJobsPage = () => {
       form: <TestJobForm submitAction={submitTestJob} />,
     },
     {
-      name: "Change Cow Health",
+      name: "Set Cow Health For A Particular Commons",
       form: <SetCowHealthForm submitAction={submitSetCowHealthJob} />,
     },
     {
