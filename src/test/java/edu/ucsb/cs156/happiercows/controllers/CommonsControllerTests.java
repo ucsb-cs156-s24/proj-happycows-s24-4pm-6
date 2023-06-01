@@ -808,10 +808,10 @@ public class CommonsControllerTests extends ControllerTestCase {
         when(commonsRepository.findById(2L)).thenReturn(Optional.of(c));
         when(commonsRepository.getNumUsers(2L)).thenReturn(Optional.of(0));
 
-    MvcResult response = mockMvc
-        .perform(delete("/api/commons/2/users/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-            .characterEncoding("utf-8").content(requestBody))
-            .andExpect(status().is(200)).andReturn();
+        MvcResult response = mockMvc
+                .perform(delete("/api/commons/2/users/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8").content(requestBody))
+                .andExpect(status().is(200)).andReturn();
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
         verify(userCommonsRepository, times(1)).deleteById(16L);
@@ -820,7 +820,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         String expectedString = "{\"message\":\"user with id 1 deleted from commons with id 2, 0 users remain\"}";
 
         assertEquals(responseString, expectedString);
-  }
+    }
 
     @WithMockUser(roles = {"ADMIN"})
     @Test
