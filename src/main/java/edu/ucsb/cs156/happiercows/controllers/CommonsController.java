@@ -231,6 +231,11 @@ public class CommonsController extends ApiController {
         String.format("UserCommons with commonsId=%d and userId=%d not found.", commonsId, userId)));
 
     userCommonsRepository.deleteById(userCommons.getId());
+
+    Commons commons = commonsRepository.findById(commonsId).get();
+    commons.setNumPlayers(commonsRepository.getNumUsers(commonsId).get());
+    commonsRepository.save(commons);
+
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
