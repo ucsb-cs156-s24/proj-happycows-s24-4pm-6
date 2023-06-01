@@ -47,7 +47,10 @@ const AdminJobsPage = () => {
 
   // SetCowHealth job
 
-  const objectToAxiosParamsSetCowHealthJob = () => ({
+  const objectToAxiosParamsSetCowHealthJob = (
+    selectedCommons,
+    healthValue
+  ) => ({
     url: `/api/jobs/launch/setcowhealth`,
     method: "POST",
   });
