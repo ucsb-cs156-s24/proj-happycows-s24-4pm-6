@@ -113,7 +113,7 @@ public class CommonsController extends ApiController {
     updated.setShowLeaderboard(params.getShowLeaderboard());
     updated.setDegradationRate(params.getDegradationRate());
     updated.setCarryingCapacity(params.getCarryingCapacity());
-    updated.setNumPlayers(updated.getUsers().size());
+    updated.setNumPlayers(params.getNumPlayers());
 
     if (params.getDegradationRate() < 0) {
       throw new IllegalArgumentException("Degradation Rate cannot be negative");
@@ -184,7 +184,7 @@ public class CommonsController extends ApiController {
       String body = mapper.writeValueAsString(joinedCommons);
       return ResponseEntity.ok().body(body);
     }
-    else {
+    else if (joinedCommons.getUsers() != null){
       // user is not a member of this commons
       joinedCommons.setNumPlayers(joinedCommons.getUsers().size() + 1);
       commonsRepository.save(joinedCommons);
