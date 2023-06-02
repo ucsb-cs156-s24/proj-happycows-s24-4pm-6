@@ -32,21 +32,6 @@ export default function PlayPage() {
     );
   // Stryker enable all 
 
-
-  // Stryker disable all 
-  const { data: commons } =
-    useBackend(
-      [`/api/commons?id=${commonsId}`],
-      {
-        method: "GET",
-        url: "/api/commons",
-        params: {
-          id: commonsId
-        }
-      }
-    );
-  // Stryker enable all 
-
   // Stryker disable all
   const { data: commonsPlus } =
     useBackend(
@@ -143,7 +128,7 @@ export default function PlayPage() {
           <br />
           {!!userCommons &&
             <CardGroup >
-              <ManageCows userCommons={userCommons} commons={commons} onBuy={onBuy} onSell={onSell} />
+              <ManageCows userCommons={userCommons} onBuy={onBuy} onSell={onSell} />
               <FarmStats userCommons={userCommons} />
               <Profits userCommons={userCommons} profits={userCommonsProfits} />
             </CardGroup>
