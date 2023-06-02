@@ -7,7 +7,7 @@ export default function ProfitsTable({ profits }) {
     const memoizedColumns = React.useMemo(() => 
         [
             {
-                Header: "Amount",
+                Header: "Profit",
                 accessor: (row) => `$${row.amount.toFixed(2)}`,
             },
             {
