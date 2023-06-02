@@ -40,7 +40,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
             var cowHealthUpdateStrategy = isAboveCapacity ? commons.getAboveCapacityHealthUpdateStrategy() : commons.getBelowCapacityHealthUpdateStrategy();
 
             for (UserCommons userCommons : allUserCommons) {
-                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(() -> new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
+                User user = userCommons.getUser();
                 ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
 
                 var newCowHealth = calculateNewCowHealthUsingStrategy(cowHealthUpdateStrategy, commons, userCommons, totalCows);

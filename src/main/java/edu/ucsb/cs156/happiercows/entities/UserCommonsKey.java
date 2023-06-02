@@ -1,19 +1,32 @@
 package edu.ucsb.cs156.happiercows.entities;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
-import lombok.Data;
 
 @Data
 @Embeddable
-class UserCommonsKey implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class UserCommonsKey implements Serializable {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
 
-    @Column(name = "commons_id")
-    Long commonsId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "commons_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Commons commons;
 
-    @Column(name = "user_id")
-    Long userId;
 }

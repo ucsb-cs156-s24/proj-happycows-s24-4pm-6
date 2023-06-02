@@ -7,6 +7,7 @@ import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.entities.UserCommonsKey;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
 import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -236,11 +237,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                         .content(requestBody))
                 .andExpect(status().isBadRequest()).andReturn();
 
-        Optional<IllegalArgumentException> someException = Optional
-                .ofNullable((IllegalArgumentException) response.getResolvedException());
-
-        assertNotNull(someException.get());
-        assertTrue(someException.get() instanceof IllegalArgumentException);
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
     }
 
     @WithMockUser(roles = {"USER"})
@@ -515,11 +512,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                         .content(requestBody))
                 .andExpect(status().isBadRequest()).andReturn();
 
-        Optional<IllegalArgumentException> someException = Optional
-                .ofNullable((IllegalArgumentException) response.getResolvedException());
-
-        assertNotNull(someException.get());
-        assertTrue(someException.get() instanceof IllegalArgumentException);
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
     }
 
     // This common SHOULD be in the repository
@@ -583,33 +576,20 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .build();
 
         UserCommons uc = UserCommons.builder()
-                .userId(1L)
+                .id(new UserCommonsKey(currentUserService.getUser(), c))
                 .username("Fake user")
-                .commonsId(2L)
                 .totalWealth(0)
                 .numOfCows(0)
                 .cowHealth(100)
                 .build();
 
-        UserCommons ucSaved = UserCommons.builder()
-                .id(17L)
-                .userId(1L)
-                .username("Fake user")
-                .commonsId(2L)
-                .totalWealth(0)
-                .numOfCows(0)
-                .cowHealth(100)
-                .build();
-
-        String requestBody = mapper.writeValueAsString(uc);
 
         when(userCommonsRepository.findByCommonsIdAndUserId(anyLong(), anyLong())).thenReturn(Optional.empty());
-        when(userCommonsRepository.save(eq(uc))).thenReturn(ucSaved);
+        when(userCommonsRepository.save(eq(uc))).thenReturn(uc);
         when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
 
         MvcResult response = mockMvc
-                .perform(post("/api/commons/join?commonsId=2").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("utf-8").content(requestBody))
+                .perform(post("/api/commons/join?commonsId=2").with(csrf()))
                 .andExpect(status().isOk()).andReturn();
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
@@ -631,9 +611,8 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .build();
 
         UserCommons uc = UserCommons.builder()
-                .userId(1L)
+                .id(new UserCommonsKey(currentUserService.getUser(), c))
                 .username("1L")
-                .commonsId(2L)
                 .totalWealth(0)
                 .numOfCows(1)
                 .build();
@@ -660,61 +639,15 @@ public class CommonsControllerTests extends ControllerTestCase {
         assertEquals(responseString, cAsJson);
     }
 
+
     @WithMockUser(roles = {"USER"})
     @Test
-    public void user_commons_exists_but_commons_doesnt_test() throws Exception {
-        UserCommons uc = UserCommons.builder()
-                .userId(1L)
-                .username("1L")
-                .commonsId(2L)
-                .totalWealth(0)
-                .numOfCows(1)
-                .build();
-
-        String requestBody = mapper.writeValueAsString(uc);
+    public void join_when_commons_with_id_does_not_exist() throws Exception {
 
         when(commonsRepository.findById(eq(2L))).thenReturn(Optional.empty());
 
         MvcResult response = mockMvc
-                .perform(post("/api/commons/join?commonsId=2").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("utf-8").content(requestBody))
-                .andExpect(status().is(404)).andReturn();
-
-        verify(commonsRepository, times(1)).findById(eq(2L));
-
-        Map<String, Object> responseMap = responseToJson(response);
-
-        assertEquals(responseMap.get("message"), "Commons with id 2 not found");
-        assertEquals(responseMap.get("type"), "EntityNotFoundException");
-    }
-
-    @WithMockUser(roles = {"USER"})
-    @Test
-    public void join_and_create_userCommons_for_nonexistent_commons() throws Exception {
-        UserCommons uc = UserCommons.builder()
-                .userId(1L)
-                .username("1L")
-                .commonsId(2L)
-                .totalWealth(0)
-                .numOfCows(1)
-                .build();
-
-        UserCommons ucSaved = UserCommons.builder()
-                .id(17L)
-                .userId(1L)
-                .username("2L")
-                .commonsId(2L)
-                .totalWealth(0)
-                .numOfCows(1)
-                .build();
-
-        String requestBody = mapper.writeValueAsString(uc);
-
-        when(commonsRepository.findById(eq(2L))).thenReturn(Optional.empty());
-
-        MvcResult response = mockMvc
-                .perform(post("/api/commons/join?commonsId=2").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("utf-8").content(requestBody))
+                .perform(post("/api/commons/join?commonsId=2").with(csrf()))
                 .andExpect(status().is(404)).andReturn();
 
         verify(commonsRepository, times(1)).findById(eq(2L));
@@ -743,7 +676,6 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
         doNothing().when(commonsRepository).deleteById(2L);
-        doNothing().when(userCommonsRepository).deleteAllByCommonsId(2L);
 
         MvcResult response = mockMvc.perform(
                         delete("/api/commons?id=2")
@@ -752,7 +684,6 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         verify(commonsRepository, times(1)).findById(2L);
         verify(commonsRepository, times(1)).deleteById(2L);
-        verify(userCommonsRepository, times(1)).deleteAllByCommonsId(2L);
 
         String responseString = response.getResponse().getContentAsString();
 
@@ -786,10 +717,8 @@ public class CommonsControllerTests extends ControllerTestCase {
     @Test
     public void deleteUserFromCommonsTest() throws Exception {
         UserCommons uc = UserCommons.builder()
-                .id(16L)
-                .userId(1L)
+                .id(new UserCommonsKey(currentUserService.getUser(), null))
                 .username("1L")
-                .commonsId(2L)
                 .totalWealth(0)
                 .numOfCows(1)
                 .build();
@@ -804,7 +733,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .andExpect(status().is(204)).andReturn();
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
-        verify(userCommonsRepository, times(1)).deleteById(16L);
+        verify(userCommonsRepository, times(1)).delete(uc);
 
         String responseString = response.getResponse().getContentAsString();
 
@@ -813,43 +742,24 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     @WithMockUser(roles = {"ADMIN"})
     @Test
-    public void deleteUserFromCommonsTest_nonexistent_userCommons() throws Exception {
-        UserCommons uc = UserCommons.builder()
-                .id(16L)
-                .userId(1L)
-                .username("1L")
-                .commonsId(2L)
-                .totalWealth(0)
-                .numOfCows(1)
-                .build();
+    public void deleteUserFromCommons_when_not_joined() throws Exception {
 
-        String requestBody = mapper.writeValueAsString(uc);
 
         when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.empty());
 
-        MvcResult response;
-        try {
-            response = mockMvc
-                    .perform(delete("/api/commons/2/users/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                            .characterEncoding("utf-8").content(requestBody))
-                    .andExpect(status().is(204)).andReturn();
-
-            // The way this works is very interesting. The error message is sent as the
-            // value of a nested exception.
-        } catch (Exception e) {
-            assertEquals(e.toString(),
-                    "org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.Exception: UserCommons with commonsId=2 and userId=1 not found.");
-        }
+        mockMvc
+                .perform(delete("/api/commons/2/users/1").with(csrf()))
+                .andExpect(status().is(404)).andReturn();
     }
 
     @WithMockUser(roles = {"USER"})
     @Test
     public void getCommonsPlusTest() throws Exception {
-        List<Commons> expectedCommons = new ArrayList<Commons>();
+        List<Commons> expectedCommons = new ArrayList<>();
         Commons Commons1 = Commons.builder().name("TestCommons1").id(1L).build();
         expectedCommons.add(Commons1);
 
-        List<CommonsPlus> expectedCommonsPlus = new ArrayList<CommonsPlus>();
+        List<CommonsPlus> expectedCommonsPlus = new ArrayList<>();
         CommonsPlus CommonsPlus1 = CommonsPlus.builder()
                 .commons(Commons1)
                 .totalCows(50)

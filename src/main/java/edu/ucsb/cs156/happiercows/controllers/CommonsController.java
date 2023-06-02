@@ -2,10 +2,7 @@ package edu.ucsb.cs156.happiercows.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.ucsb.cs156.happiercows.entities.Commons;
-import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
-import edu.ucsb.cs156.happiercows.entities.User;
-import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.entities.*;
 import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
 import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
@@ -197,8 +194,7 @@ public class CommonsController extends ApiController {
         }
 
         UserCommons uc = UserCommons.builder()
-                .commonsId(commonsId)
-                .userId(userId)
+                .id(new UserCommonsKey(u, joinedCommons))
                 .username(username)
                 .totalWealth(joinedCommons.getStartingBalance())
                 .numOfCows(0)
@@ -217,14 +213,12 @@ public class CommonsController extends ApiController {
     public Object deleteCommons(
             @ApiParam("id") @RequestParam Long id) {
 
-        Commons foundCommons = commonsRepository.findById(id)
+        commonsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Commons.class, id));
 
         commonsRepository.deleteById(id);
-        userCommonsRepository.deleteAllByCommonsId(id);
 
         String responseString = String.format("commons with id %d deleted", id);
-
         return genericMessage(responseString);
 
     }
@@ -235,11 +229,13 @@ public class CommonsController extends ApiController {
     public ResponseEntity<Commons> deleteUserFromCommon(@PathVariable("commonsId") Long commonsId,
                                                         @PathVariable("userId") Long userId) throws Exception {
 
-        Optional<UserCommons> uc = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId);
-        UserCommons userCommons = uc.orElseThrow(() -> new Exception(
-                String.format("UserCommons with commonsId=%d and userId=%d not found.", commonsId, userId)));
+        UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        UserCommons.class, "commonsId", commonsId, "userId", userId)
+                );
 
-        userCommonsRepository.deleteById(userCommons.getId());
+        userCommonsRepository.delete(userCommons);
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

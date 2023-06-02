@@ -1,14 +1,11 @@
 package edu.ucsb.cs156.happiercows.entities;
 
-import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Builder;
-import lombok.AccessLevel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
-
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 
 @Data
 @AllArgsConstructor
@@ -16,22 +13,35 @@ import javax.persistence.*;
 @Builder
 @Entity(name = "user_commons")
 public class UserCommons {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;  
+    @EmbeddedId
+    @JsonIgnore
+    private UserCommonsKey id;
 
-  @Column(name="commons_id")
-  private long commonsId;  
+    private String username;
 
-  @Column(name="user_id")
-  private long userId;  
+    private double totalWealth;
 
-  private String username;
+    private int numOfCows;
 
-  private double totalWealth;
+    private double cowHealth;
 
-  private int numOfCows;
+    @JsonIgnore
+    public User getUser() {
+        return id.getUser();
+    }
 
-  private double cowHealth;
+    @JsonIgnore
+    public Commons getCommons() {
+        return id.getCommons();
+    }
+
+    @JsonInclude
+    public long getUserId() {
+        return id.getUser().getId();
+    }
+
+    @JsonInclude
+    public long getCommonsId() {
+        return id.getCommons().getId();
+    }
 }
-

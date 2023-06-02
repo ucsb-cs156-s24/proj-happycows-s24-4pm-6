@@ -3,6 +3,7 @@ package edu.ucsb.cs156.happiercows.jobs;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.entities.UserCommonsKey;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
@@ -46,16 +47,6 @@ public class UpdateCowHealthJobTests {
             .email("cgaucho@example.org")
             .build();
 
-    private final UserCommons userCommons = UserCommons
-            .builder()
-            .id(1L)
-            .userId(1L)
-            .commonsId(1L)
-            .totalWealth(300)
-            .numOfCows(1)
-            .cowHealth(10.0)
-            .build();
-
     private final Commons commons = Commons
             .builder()
             .name("test commons")
@@ -67,6 +58,14 @@ public class UpdateCowHealthJobTests {
             .degradationRate(1)
             .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
             .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
+            .build();
+
+    private final UserCommons userCommons = UserCommons
+            .builder()
+            .id(new UserCommonsKey(user, commons))
+            .totalWealth(300)
+            .numOfCows(1)
+            .cowHealth(10.0)
             .build();
 
     private final Job job = Job.builder().build();
@@ -182,9 +181,7 @@ public class UpdateCowHealthJobTests {
         var userCommons1 = userCommons;
         var userCommons2 = UserCommons
                 .builder()
-                .id(1L)
-                .userId(1L)
-                .commonsId(1L)
+                .id(new UserCommonsKey(user, commons))
                 .totalWealth(300)
                 .numOfCows(6)
                 .cowHealth(20)
@@ -228,22 +225,5 @@ public class UpdateCowHealthJobTests {
         });
 
         Assertions.assertEquals("Error calling getNumCows(117)", thrown.getMessage());
-    }
-
-    @Test
-    void test_throws_exception_when_getting_user_fails() {
-        user.setId(321);
-        userCommons.setUserId(user.getId());
-        setupUpdateCowHealthTestOnCommons(100);
-        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
-
-        var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository,
-                userRepository);
-
-        var thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-            updateCowHealthJob.accept(ctx);
-        });
-
-        Assertions.assertEquals("Error calling userRepository.findById(321)", thrown.getMessage());
     }
 }
