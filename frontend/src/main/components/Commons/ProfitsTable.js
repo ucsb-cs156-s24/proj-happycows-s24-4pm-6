@@ -15,11 +15,11 @@ export default function ProfitsTable({ profits }) {
                 accessor: "date",
             },
             {
-                Header: "CowHealth",
-                accessor: "avgCowHealth",
+                Header: "Health",
+                accessor: (row) => `${row.avgCowHealth + '%'}`
             },
             {
-                Header: "NumCows",
+                Header: "Cows",
                 accessor: "numCows",
             },
         ], 
