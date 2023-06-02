@@ -35,7 +35,7 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
         },
         {
             Header: 'Cow Deaths',
-            accessor: 'cowsDeath', 
+            accessor: 'cowDeaths', 
         },
     ];
 
