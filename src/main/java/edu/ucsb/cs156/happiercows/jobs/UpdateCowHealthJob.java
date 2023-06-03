@@ -43,7 +43,8 @@ public class UpdateCowHealthJob implements JobContextConsumer {
                 User user = userRepository.findById(userCommons.getUserId()).orElseThrow(() -> new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
                 ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
                 
-                if (calculateCowDeaths(userCommons, ctx)) {   
+                calculateCowDeaths(userCommons, ctx);
+                if (userCommons.getNumOfCows() == 0) {   
                     totalCows = 0;
                 } 
                 
@@ -68,16 +69,13 @@ public class UpdateCowHealthJob implements JobContextConsumer {
         return Math.max(0, Math.min(health, 100));
     }
 
-    public static boolean calculateCowDeaths(UserCommons userCommons, JobContext ctx) {
+    public static void calculateCowDeaths(UserCommons userCommons, JobContext ctx) {
         if (userCommons.getCowHealth() == 0.0) {
             userCommons.setCowDeaths(userCommons.getCowDeaths() + userCommons.getNumOfCows());
             userCommons.setNumOfCows(0);
             userCommons.setCowHealth(100.0);
 
             ctx.log(" Cows for this user died.");
-
-            return true;
         }
-        return false;
     }
 }
