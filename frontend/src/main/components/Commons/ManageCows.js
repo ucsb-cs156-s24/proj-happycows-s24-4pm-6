@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button, Row } from "react-bootstrap";
+import { Card, Button, Row, Col } from "react-bootstrap";
 
 // add parameters 
 const ManageCows = ({userCommons,commons, onBuy, onSell}) =>  {
@@ -13,13 +13,14 @@ const ManageCows = ({userCommons,commons, onBuy, onSell}) =>  {
             <Card.Title className="text-center">🐮 Number of Cows: {userCommons.numOfCows}</Card.Title>
             <Card.Title className="text-center">🥛 Current Milk Price: ${commons?.milkPrice}</Card.Title>
             <Row>
-                <p />
-                <Button variant="outline-danger" onClick={()=>{onBuy(userCommons)}} data-testid={"buy-cow-button"}>Buy cow</Button>
-                <p />
-                <Button variant="outline-danger" onClick={()=>{onSell(userCommons)}} data-testid={"sell-cow-button"}>Sell cow</Button>
-                <p />
+                <Col className="text-center">
+                    <Button variant="outline-success" onClick={()=>{onBuy(userCommons)}} data-testid={"buy-cow-button"}>Buy cow</Button>
+                </Col>
+                <Col className="text-center">
+                    <Button variant="outline-danger" onClick={()=>{onSell(userCommons)}} data-testid={"sell-cow-button"}>Sell cow</Button>
+                </Col>
             </Row>
-
+                
                     Note: Buying cows buys at current cow price, but selling cows sells at current cow price
                     times the average health of cows as a percentage! 
         </Card.Body>
