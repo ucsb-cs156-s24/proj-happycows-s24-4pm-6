@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import ManageCows from "main/components/Commons/ManageCows"; 
 import userCommonsFixtures from "fixtures/userCommonsFixtures";
-import commonsFixtures from "fixtures/commonsFixtures"; 
 
 describe("ManageCows tests", () => {
     test("renders without crashing", () => {
