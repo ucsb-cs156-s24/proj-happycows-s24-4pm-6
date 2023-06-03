@@ -83,7 +83,8 @@ public class SetCowHealthJobTests {
     UserCommons getUserCommons() {
         return UserCommons
                 .builder()
-                .id(new UserCommonsKey(user, testCommons))
+                .user(user)
+.commons(testCommons)
                 .totalWealth(300)
                 .numOfCows(5)
                 .cowHealth(50)
@@ -105,7 +106,8 @@ public class SetCowHealthJobTests {
 
         UserCommons newUserCommons = UserCommons
                 .builder()
-                .id(new UserCommonsKey(user, testCommons))
+                .user(user)
+.commons(testCommons)
                 .totalWealth(300 - testCommons.getCowPrice())
                 .numOfCows(5)
                 .cowHealth(2.0)

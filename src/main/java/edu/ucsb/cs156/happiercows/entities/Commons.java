@@ -41,7 +41,7 @@ public class Commons {
     private CowHealthUpdateStrategies aboveCapacityHealthUpdateStrategy = CowHealthUpdateStrategies.DEFAULT_ABOVE_CAPACITY;
 
 
-    @OneToMany(mappedBy = "id.commons", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "commons", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<UserCommons> joinedUsers;
 }

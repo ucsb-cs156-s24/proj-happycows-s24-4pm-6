@@ -194,7 +194,8 @@ public class CommonsController extends ApiController {
         }
 
         UserCommons uc = UserCommons.builder()
-                .id(new UserCommonsKey(u, joinedCommons))
+                .user(u)
+.commons(joinedCommons)
                 .username(username)
                 .totalWealth(joinedCommons.getStartingBalance())
                 .numOfCows(0)

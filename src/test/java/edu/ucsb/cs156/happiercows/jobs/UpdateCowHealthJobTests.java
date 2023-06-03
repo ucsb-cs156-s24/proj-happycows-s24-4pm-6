@@ -62,7 +62,8 @@ public class UpdateCowHealthJobTests {
 
     private final UserCommons userCommons = UserCommons
             .builder()
-            .id(new UserCommonsKey(user, commons))
+            .user(user)
+.commons(commons)
             .totalWealth(300)
             .numOfCows(1)
             .cowHealth(10.0)
@@ -181,7 +182,8 @@ public class UpdateCowHealthJobTests {
         var userCommons1 = userCommons;
         var userCommons2 = UserCommons
                 .builder()
-                .id(new UserCommonsKey(user, commons))
+                .user(user)
+.commons(commons)
                 .totalWealth(300)
                 .numOfCows(6)
                 .cowHealth(20)

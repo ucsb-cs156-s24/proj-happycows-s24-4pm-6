@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +16,16 @@ public class UserCommons {
     @JsonIgnore
     private UserCommonsKey id;
 
+    @MapsId("userId")
+    @ManyToOne
+    @JsonIgnore
+    private User user;
+
+    @MapsId("commonsId")
+    @ManyToOne
+    @JsonIgnore
+    private Commons commons;
+
     private String username;
 
     private double totalWealth;
@@ -25,23 +34,13 @@ public class UserCommons {
 
     private double cowHealth;
 
-    @JsonIgnore
-    public User getUser() {
-        return id.getUser();
-    }
-
-    @JsonIgnore
-    public Commons getCommons() {
-        return id.getCommons();
-    }
-
     @JsonInclude
     public long getUserId() {
-        return id.getUser().getId();
+        return user.getId();
     }
 
     @JsonInclude
     public long getCommonsId() {
-        return id.getCommons().getId();
+        return commons.getId();
     }
 }

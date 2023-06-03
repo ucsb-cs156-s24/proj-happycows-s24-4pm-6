@@ -7,7 +7,6 @@ import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
-import edu.ucsb.cs156.happiercows.entities.UserCommonsKey;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
 import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -29,7 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -576,7 +576,8 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .build();
 
         UserCommons uc = UserCommons.builder()
-                .id(new UserCommonsKey(currentUserService.getUser(), c))
+                .user(currentUserService.getUser())
+                .commons(c)
                 .username("Fake user")
                 .totalWealth(0)
                 .numOfCows(0)
@@ -611,7 +612,8 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .build();
 
         UserCommons uc = UserCommons.builder()
-                .id(new UserCommonsKey(currentUserService.getUser(), c))
+                .user(currentUserService.getUser())
+                .commons(c)
                 .username("1L")
                 .totalWealth(0)
                 .numOfCows(1)
@@ -717,7 +719,8 @@ public class CommonsControllerTests extends ControllerTestCase {
     @Test
     public void deleteUserFromCommonsTest() throws Exception {
         UserCommons uc = UserCommons.builder()
-                .id(new UserCommonsKey(currentUserService.getUser(), null))
+                .user(currentUserService.getUser())
+                .commons(Commons.builder().id(1).build())
                 .username("1L")
                 .totalWealth(0)
                 .numOfCows(1)

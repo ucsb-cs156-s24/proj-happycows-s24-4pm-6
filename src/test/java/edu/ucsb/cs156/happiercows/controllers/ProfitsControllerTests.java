@@ -3,7 +3,10 @@ package edu.ucsb.cs156.happiercows.controllers;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ucsb.cs156.happiercows.ControllerTestCase;
-import edu.ucsb.cs156.happiercows.entities.*;
+import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.Profit;
+import edu.ucsb.cs156.happiercows.entities.User;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
@@ -49,7 +52,8 @@ public class ProfitsControllerTests extends ControllerTestCase {
 
     User user = User.builder().id(1).build();
     Commons commons = Commons.builder().id(1).build();
-    UserCommons uc1 = UserCommons.builder().id(new UserCommonsKey(user, commons)).build();
+    UserCommons uc1 = UserCommons.builder().user(user)
+            .commons(commons).build();
 
     LocalDateTime t1 = LocalDateTime.parse("2022-03-05T15:50:10");
 
@@ -72,7 +76,13 @@ public class ProfitsControllerTests extends ControllerTestCase {
         String responseString = response.getResponse().getContentAsString();
         List<Profit> actualProfits = objectMapper.readValue(responseString, new TypeReference<List<Profit>>() {
         });
-        assertEquals(actualProfits, profits);
+
+        // json serialized result doesn't include userCommons.user or userCommons.commons,
+        // so we exclude them from expected
+        p1.getUserCommons().setUser(null);
+        p1.getUserCommons().setCommons(null);
+
+        assertEquals(profits, actualProfits);
     }
 
     @WithMockUser(roles = {"USER"})

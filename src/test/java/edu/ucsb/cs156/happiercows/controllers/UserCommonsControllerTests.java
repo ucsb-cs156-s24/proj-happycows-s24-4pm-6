@@ -51,7 +51,8 @@ public class UserCommonsControllerTests extends ControllerTestCase {
 
     public UserCommons getTestUserCommons() {
         return UserCommons.builder()
-                .id(new UserCommonsKey(currentUserService.getUser(), testCommons))
+                .user(currentUserService.getUser())
+.commons(testCommons)
                 .totalWealth(300)
                 .numOfCows(1)
                 .cowHealth(100)

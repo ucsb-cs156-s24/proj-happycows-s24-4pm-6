@@ -34,7 +34,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "commons_id", referencedColumnName = "id"))
     private List<Commons> commons;
 
-    @OneToMany(mappedBy = "id.user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<UserCommons> joinedCommons;
 

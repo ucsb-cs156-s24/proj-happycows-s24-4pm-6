@@ -90,7 +90,8 @@ public class MilkTheCowsJobTests {
 
         UserCommons origUserCommons = UserCommons
                 .builder()
-                .id(new UserCommonsKey(user, testCommons))
+                .user(user)
+.commons(testCommons)
                 .totalWealth(300)
                 .numOfCows(1)
                 .cowHealth(10)
@@ -128,7 +129,8 @@ public class MilkTheCowsJobTests {
 
         UserCommons origUserCommons = UserCommons
                 .builder()
-                .id(new UserCommonsKey(user, testCommons))
+                .user(user)
+.commons(testCommons)
                 .totalWealth(300)
                 .numOfCows(1)
                 .cowHealth(10)
@@ -136,7 +138,8 @@ public class MilkTheCowsJobTests {
 
         UserCommons updatedUserCommons = UserCommons
                 .builder()
-                .id(new UserCommonsKey(user, testCommons))
+                .user(user)
+.commons(testCommons)
                 .totalWealth(300.20)
                 .numOfCows(1)
                 .cowHealth(10)
