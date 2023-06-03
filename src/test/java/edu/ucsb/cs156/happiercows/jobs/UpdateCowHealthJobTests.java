@@ -262,7 +262,7 @@ public class UpdateCowHealthJobTests {
                 Updating cow health...
                 Commons test commons, degradationRate: 1.0, carryingCapacity: 100
                 User: Chris Gaucho, numCows: 5, cowHealth: 0.0
-                 Cows for this user died.
+                 5 cows for this user died.
                  old cow health: 100.0, new cow health: 100.0
                 Cow health has been updated!""";
 
