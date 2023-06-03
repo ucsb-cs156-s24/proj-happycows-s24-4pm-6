@@ -34,6 +34,7 @@ public class UserCommons {
 
     private double cowHealth;
 
+    // userID and commonsId are used by the frontend
     @JsonInclude
     public long getUserId() {
         return user.getId();
