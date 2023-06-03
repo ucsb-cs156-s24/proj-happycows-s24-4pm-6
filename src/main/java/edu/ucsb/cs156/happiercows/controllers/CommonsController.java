@@ -2,7 +2,10 @@ package edu.ucsb.cs156.happiercows.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.ucsb.cs156.happiercows.entities.*;
+import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
+import edu.ucsb.cs156.happiercows.entities.User;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
 import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
@@ -195,7 +198,7 @@ public class CommonsController extends ApiController {
 
         UserCommons uc = UserCommons.builder()
                 .user(u)
-.commons(joinedCommons)
+                .commons(joinedCommons)
                 .username(username)
                 .totalWealth(joinedCommons.getStartingBalance())
                 .numOfCows(0)

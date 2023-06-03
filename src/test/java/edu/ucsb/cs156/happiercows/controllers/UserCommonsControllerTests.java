@@ -3,7 +3,6 @@ package edu.ucsb.cs156.happiercows.controllers;
 import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
-import edu.ucsb.cs156.happiercows.entities.UserCommonsKey;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
@@ -52,7 +51,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
     public UserCommons getTestUserCommons() {
         return UserCommons.builder()
                 .user(currentUserService.getUser())
-.commons(testCommons)
+                .commons(testCommons)
                 .totalWealth(300)
                 .numOfCows(1)
                 .cowHealth(100)
@@ -255,6 +254,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
         Map<String, Object> jsonResponse = responseToJson(response);
         assertEquals(expectedJson, jsonResponse);
     }
+
     @WithMockUser(roles = {"USER"})
     @Test
     public void test_buyCow_commons_does_not_exist() throws Exception {

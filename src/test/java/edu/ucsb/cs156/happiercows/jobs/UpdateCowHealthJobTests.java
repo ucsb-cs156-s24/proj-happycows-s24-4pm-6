@@ -3,7 +3,6 @@ package edu.ucsb.cs156.happiercows.jobs;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
-import edu.ucsb.cs156.happiercows.entities.UserCommonsKey;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
@@ -63,7 +62,7 @@ public class UpdateCowHealthJobTests {
     private final UserCommons userCommons = UserCommons
             .builder()
             .user(user)
-.commons(commons)
+            .commons(commons)
             .totalWealth(300)
             .numOfCows(1)
             .cowHealth(10.0)
@@ -183,7 +182,7 @@ public class UpdateCowHealthJobTests {
         var userCommons2 = UserCommons
                 .builder()
                 .user(user)
-.commons(commons)
+                .commons(commons)
                 .totalWealth(300)
                 .numOfCows(6)
                 .cowHealth(20)

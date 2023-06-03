@@ -3,7 +3,6 @@ package edu.ucsb.cs156.happiercows.jobs;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
-import edu.ucsb.cs156.happiercows.entities.UserCommonsKey;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
@@ -84,7 +83,7 @@ public class SetCowHealthJobTests {
         return UserCommons
                 .builder()
                 .user(user)
-.commons(testCommons)
+                .commons(testCommons)
                 .totalWealth(300)
                 .numOfCows(5)
                 .cowHealth(50)
@@ -107,7 +106,7 @@ public class SetCowHealthJobTests {
         UserCommons newUserCommons = UserCommons
                 .builder()
                 .user(user)
-.commons(testCommons)
+                .commons(testCommons)
                 .totalWealth(300 - testCommons.getCowPrice())
                 .numOfCows(5)
                 .cowHealth(2.0)
