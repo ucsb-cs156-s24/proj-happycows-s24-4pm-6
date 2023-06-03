@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +17,8 @@ import javax.persistence.*;
 public class UserCommons {
     @EmbeddedId
     @JsonIgnore
-    private UserCommonsKey id = new UserCommonsKey();
+    @Builder.Default
+    private final UserCommonsKey id = new UserCommonsKey();
 
     @MapsId("userId")
     @ManyToOne
