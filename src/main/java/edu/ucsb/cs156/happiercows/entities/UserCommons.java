@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class UserCommons {
     @EmbeddedId
     @JsonIgnore
-    private UserCommonsKey id;
+    private UserCommonsKey id = new UserCommonsKey();
 
     @MapsId("userId")
     @ManyToOne
