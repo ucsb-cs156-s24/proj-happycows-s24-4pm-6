@@ -9,7 +9,7 @@ const FarmStats = ({userCommons}) => {
         <Card.Body>
             {/* update total wealth and cow health with data from fixture */}
             <Card.Title className="text-center">
-                💵 Total Wealth: ${userCommons.totalWealth.toFixed(2)}
+                💰 Total Wealth: ${userCommons.totalWealth.toFixed(2)}
             </Card.Title>
             <Card.Title className="text-center">
                 ❤️ Cow Health: {Math.round(userCommons.cowHealth*100)/100}%
