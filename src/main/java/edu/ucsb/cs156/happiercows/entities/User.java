@@ -1,5 +1,7 @@
 package edu.ucsb.cs156.happiercows.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +33,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "commons_id", referencedColumnName = "id"))
     private List<Commons> commons;
+
+    @OneToMany(mappedBy = "id.user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<UserCommons> joinedCommons;
+
 
     @Override
     public String toString() {
