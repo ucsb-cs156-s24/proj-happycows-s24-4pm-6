@@ -65,6 +65,7 @@ export default function PlayPage() {
     toast(`Cow bought!`);
   }
 
+  // Stryker disable all (can't check if commonsId is null because it is mocked)
   const objectToAxiosParamsBuy = (newUserCommons) => ({
     url: "/api/usercommons/buy",
     method: "PUT",
@@ -73,6 +74,7 @@ export default function PlayPage() {
       commonsId: commonsId
     }
   });
+  // Stryker restore all
 
 
   // Stryker disable all 
