@@ -120,7 +120,7 @@ export default function PlayPage() {
   };
 
   return (
-    <div style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
+    <div style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }} data-testid="playpage-div">
       <BasicLayout >
         <Container >
           {!!currentUser && <CommonsPlay currentUser={currentUser} />}
