@@ -2,6 +2,7 @@ package edu.ucsb.cs156.happiercows.testconfig;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +40,7 @@ public class MockCurrentUserServiceImpl extends CurrentUserServiceImpl {
     String locale="";
     String hostedDomain="example.org";
     boolean admin=false;
+    Instant lastOnline = Instant.ofEpochSecond(100);
 
     org.springframework.security.core.userdetails.User user = null;
 
@@ -70,6 +72,7 @@ public class MockCurrentUserServiceImpl extends CurrentUserServiceImpl {
     .hostedDomain(hostedDomain)
     .admin(admin)
     .id(1L)
+    .lastOnline(lastOnline)
     .build();
     
     log.info("************** ALERT **********************");

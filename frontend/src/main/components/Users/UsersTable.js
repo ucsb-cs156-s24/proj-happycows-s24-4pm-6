@@ -1,6 +1,6 @@
 import React from "react";
 import OurTable from "main/components/OurTable"
-import formatTime from "main/components/Utils/formatTime";
+import { formatTime } from "main/utils/dateUtils";
 
 const columns = [
     {
