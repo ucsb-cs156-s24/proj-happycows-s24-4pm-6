@@ -36,33 +36,19 @@ public class UserInfoControllerTests extends ControllerTestCase {
   @WithMockUser(roles = { "USER" })
   @Test
   public void currentUser__logged_in() throws Exception {
-
-    
-    // arrange
-
     CurrentUser currentUser = currentUserService.getCurrentUser();
-    String expectedJson = mapper.writeValueAsString(currentUser);
-
-    // act
+    String originalJson = mapper.writeValueAsString(currentUser);
 
     MvcResult response = mockMvc.perform(get("/api/currentUser"))
         .andExpect(status().isOk()).andReturn();
 
-    // assert
     String responseString = response.getResponse().getContentAsString();
-    assertEquals(expectedJson, responseString);
-  }
+    assertEquals(originalJson, responseString);
 
-  @WithMockUser(roles = { "USER" })
-  @Test
-  public void currentUser__update_last_online() throws Exception {
-    CurrentUser currentUser = currentUserService.getCurrentUser();
-    String originalJson = mapper.writeValueAsString(currentUser);
+    MvcResult newResponse = mockMvc.perform(post("/api/currentUser/last-online"))
+        .andExpect(status().isOk()).andReturn();
 
-    MvcResult response = mockMvc.perform(post("/api/currentUser/last-online"))
-      .andExpect(status().isOk()).andReturn();
-
-    String responseString = response.getResponse().getContentAsString();
-    assertNotEquals(originalJson, responseString);
+    String newResponseString = newResponse.getResponse().getContentAsString();
+    assertNotEquals(originalJson, newResponseString);
   }
 }
