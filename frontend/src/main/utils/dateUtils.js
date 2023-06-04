@@ -13,7 +13,8 @@ const daysSinceTimestamp = (date) => {
     return Math.ceil(timeDiff / (1000 * 3600 * 24));
 }
 
-const hourInSeconds = 60 * 60;
+const minutesInSeconds = 60;
+const hourInSeconds = 60 * minutesInSeconds;
 const dayInSeconds = 24 * hourInSeconds;
 const weekInSeconds = 7 * dayInSeconds;
 
@@ -26,9 +27,13 @@ export function formatTime(timeString) {
     const dateFromEpoch = new Date(timeString);
     const secondsPast = Math.floor((now - dateFromEpoch) / 1000);
 
+    if (secondsPast < minutesInSeconds * 2) {
+        return 'Online now';
+    }
+
     if (secondsPast < hourInSeconds) {
         const minutes = Math.floor(secondsPast / 60);
-        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        return `${minutes} minutes ago`;
     }
 
     if (secondsPast < dayInSeconds) {

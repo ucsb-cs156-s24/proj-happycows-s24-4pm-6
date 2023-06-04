@@ -36,15 +36,15 @@ describe("dateUtils tests", () => {
     it('should return empty string for null input', () => {
       expect(formatTime(null)).toEqual('');
     });
+
+    it('should return `Online now` for less than 2 minutes', () => {
+      const oneMinuteAgo = new Date(Date.now() - 60 * 1000).toISOString();
+      expect(formatTime(oneMinuteAgo)).toEqual('Online now');
+    });
   
     it('should return minutes ago format', () => {
       const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
       expect(formatTime(thirtyMinutesAgo)).toEqual('30 minutes ago');
-    });
-  
-    it('should return 1 minute ago for 1 minute', () => {
-      const oneMinuteAgo = new Date(Date.now() - 60 * 1000).toISOString();
-      expect(formatTime(oneMinuteAgo)).toEqual('1 minute ago');
     });
   
     it('should return hours ago format', () => {
