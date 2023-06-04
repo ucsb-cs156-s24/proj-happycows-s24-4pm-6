@@ -1,5 +1,6 @@
 import React from "react";
 import OurTable from "main/components/OurTable"
+import formatTime from "main/components/Utils/formatTime";
 
 const columns = [
     {
@@ -19,6 +20,10 @@ const columns = [
         accessor: 'email',
     },
     {
+        Header: 'Last Online',
+        accessor: 'lastOnline',
+    },
+    {
         Header: 'Admin',
         id: 'admin',
         accessor: (row, _rowIndex) => String(row.admin) // hack needed for boolean values to show up
@@ -27,7 +32,12 @@ const columns = [
 
 export default function UsersTable({ users }) {
     return <OurTable
-        data={users}
+        data={users && users.map(user => {
+            return {
+                ...user, 
+                lastOnline: formatTime(user.lastOnline),
+            };
+        })}
         columns={columns}
         testid={"UsersTable"} />;
 };

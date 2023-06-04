@@ -20,8 +20,8 @@ describe("UserTable tests", () => {
           <UsersTable users={usersFixtures.threeUsers}/>
         );
     
-        const expectedHeaders = ["id", "First Name", "Last Name", "Email", "Admin"];
-        const expectedFields = ["id", "givenName", "familyName", "email", "admin"];
+        const expectedHeaders = ["id", "First Name", "Last Name", "Email", "Last Online", "Admin"];
+        const expectedFields = ["id", "givenName", "familyName", "email", "lastOnline", "admin"];
         const testId = "UsersTable";
 
         expectedHeaders.forEach( (headerText)=> {
