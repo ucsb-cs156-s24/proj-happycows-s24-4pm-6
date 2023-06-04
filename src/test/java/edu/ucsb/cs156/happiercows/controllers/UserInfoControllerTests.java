@@ -21,6 +21,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -72,8 +73,10 @@ public class UserInfoControllerTests extends ControllerTestCase {
     CurrentUser currentUser = currentUserService.getCurrentUser();
     Instant beforeUpdate = currentUser.getUser().getLastOnline();
 
-    mockMvc.perform(post("/api/currentUser/last-online").with(csrf()))
-      .andExpect(status().isOk());
+    MvcResult response = mockMvc.perform(post("/api/currentUser/last-online").with(csrf()))
+      .andExpect(status().isOk()).andReturn();
+
+    assertFalse(response.getResponse().getContentAsString().isEmpty());
 
     verify(userRepository).save(userCaptor.capture());
     User savedUser = userCaptor.getValue();

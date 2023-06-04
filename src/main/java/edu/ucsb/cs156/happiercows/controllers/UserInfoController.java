@@ -33,11 +33,12 @@ public class UserInfoController extends ApiController {
   @Operation(summary = "Update user's last online time")
   @PreAuthorize("hasRole('ROLE_USER')")
   @PostMapping("/last-online")
-  public ResponseEntity<?> updateLastOnline() {
+  public ResponseEntity<Instant> updateLastOnline() {
     User user = super.getCurrentUser().getUser();
-    user.setLastOnline(Instant.now());
+    Instant timeNow = Instant.now();
+    user.setLastOnline(timeNow);
     userRepository.save(user);
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok().body(timeNow);
   }
 }
 
