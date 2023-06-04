@@ -13,6 +13,7 @@ import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.testconfig.TestConfig;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -36,19 +37,33 @@ public class UserInfoControllerTests extends ControllerTestCase {
   @WithMockUser(roles = { "USER" })
   @Test
   public void currentUser__logged_in() throws Exception {
+
+    
+    // arrange
+
     CurrentUser currentUser = currentUserService.getCurrentUser();
-    String originalJson = mapper.writeValueAsString(currentUser);
+    String expectedJson = mapper.writeValueAsString(currentUser);
+
+    // act
 
     MvcResult response = mockMvc.perform(get("/api/currentUser"))
         .andExpect(status().isOk()).andReturn();
 
+    // assert
     String responseString = response.getResponse().getContentAsString();
-    assertEquals(originalJson, responseString);
+    assertEquals(expectedJson, responseString);
+  }
 
-    MvcResult newResponse = mockMvc.perform(post("/api/currentUser/last-online"))
-        .andExpect(status().isOk()).andReturn();
+  @WithMockUser(roles = { "USER" })
+  @Test
+  public void currentUser__update_last_online() throws Exception {
+    CurrentUser currentUser = currentUserService.getCurrentUser();
+    String originalJson = mapper.writeValueAsString(currentUser);
 
-    String newResponseString = newResponse.getResponse().getContentAsString();
-    assertNotEquals(originalJson, newResponseString);
+    MvcResult response = mockMvc.perform(post("/api/currentUser/last-online").with(csrf()))
+      .andExpect(status().isOk()).andReturn();
+
+    String responseString = response.getResponse().getContentAsString();
+    assertNotEquals(originalJson, responseString);
   }
 }
