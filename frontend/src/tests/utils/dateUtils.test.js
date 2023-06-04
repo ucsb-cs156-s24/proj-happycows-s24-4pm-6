@@ -43,8 +43,8 @@ describe("dateUtils tests", () => {
     });
   
     it('should return minutes ago format', () => {
-      const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
-      expect(formatTime(thirtyMinutesAgo)).toEqual('30 minutes ago');
+      const thirtyMinutesAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+      expect(formatTime(thirtyMinutesAgo)).toEqual('2 minutes ago');
     });
   
     it('should return hours ago format', () => {
@@ -68,7 +68,7 @@ describe("dateUtils tests", () => {
     });
   
     it('should return date string for over a week', () => {
-      const twoWeeksAgo = new Date(Date.now() - 2 * 7 * 24 * 60 * 60 * 1000);
+      const twoWeeksAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
       expect(formatTime(twoWeeksAgo.toISOString())).toEqual(twoWeeksAgo.toLocaleDateString());
     });
   })
