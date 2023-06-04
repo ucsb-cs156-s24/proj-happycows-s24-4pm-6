@@ -224,7 +224,7 @@ public class UpdateCowHealthJobTests {
             .commonsId(1L)
             .totalWealth(300)
             .numOfCows(5)
-            .cowHealth(0)
+            .cowHealth(0.0)
             .cowDeaths(0)
             .build();
 
@@ -238,7 +238,7 @@ public class UpdateCowHealthJobTests {
     }
 
     @Test
-    void test_cow_deaths_in_job_context() throws Exception {
+    void test_cowDeaths_in_job_context() throws Exception {
         UserCommons userCommons = UserCommons 
         .builder()
         .id(1L)
@@ -246,7 +246,7 @@ public class UpdateCowHealthJobTests {
         .commonsId(1L)
         .totalWealth(300)
         .numOfCows(5)
-        .cowHealth(0)
+        .cowHealth(-1.0)
         .cowDeaths(0)
         .build();
         commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear);
@@ -261,9 +261,9 @@ public class UpdateCowHealthJobTests {
         String expected = """
                 Updating cow health...
                 Commons test commons, degradationRate: 1.0, carryingCapacity: 100
-                User: Chris Gaucho, numCows: 5, cowHealth: 0.0
+                User: Chris Gaucho, numCows: 5, cowHealth: -1.0
                  5 cows for this user died.
-                 old cow health: 100.0, new cow health: 100.0
+                 old cow health: -1.0, new cow health: 100.0
                 Cow health has been updated!""";
 
         assertEquals(expected, job.getLog());
