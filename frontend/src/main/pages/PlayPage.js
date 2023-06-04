@@ -30,7 +30,7 @@ export default function PlayPage() {
         }
       }
     );
-  // Stryker enable all 
+  // Stryker restore all 
 
   // Stryker disable all
   const { data: commonsPlus } =
@@ -44,7 +44,7 @@ export default function PlayPage() {
         }
       }
     );
-  // Stryker enable all
+  // Stryker restore all
 
   // Stryker disable all 
   const { data: userCommonsProfits } =
@@ -58,7 +58,7 @@ export default function PlayPage() {
         }
       }
     );
-  // Stryker enable all 
+  // Stryker restore all 
 
 
   const onSuccessBuy = () => {
@@ -82,7 +82,7 @@ export default function PlayPage() {
     // Stryker disable next-line all : hard to set up test for caching
     [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
   );
-  // Stryker enable all 
+  // Stryker restore all 
 
 
   const onBuy = (userCommons) => {
@@ -103,7 +103,7 @@ export default function PlayPage() {
       commonsId: commonsId
     }
   });
-  // Stryker enable all 
+  // Stryker restore all 
 
 
   // Stryker disable all 
@@ -112,7 +112,7 @@ export default function PlayPage() {
     { onSuccess: onSuccessSell },
     [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
   );
-  // Stryker enable all 
+  // Stryker restore all 
 
 
   const onSell = (userCommons) => {
