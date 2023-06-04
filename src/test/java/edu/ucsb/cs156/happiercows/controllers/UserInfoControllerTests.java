@@ -53,7 +53,7 @@ public class UserInfoControllerTests extends ControllerTestCase {
     assertEquals(expectedJson, responseString);
   }
 
-  @WithMockUser(roles = "USER")
+  @WithMockUser(roles = { "USER" })
   @Test
   public void currentUser__update_last_online() throws Exception {
     CurrentUser currentUser = currentUserService.getCurrentUser();
