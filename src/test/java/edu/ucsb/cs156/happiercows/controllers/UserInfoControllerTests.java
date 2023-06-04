@@ -8,6 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
 import edu.ucsb.cs156.happiercows.ControllerTestCase;
+import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.models.CurrentUser;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.testconfig.TestConfig;
@@ -15,15 +16,23 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
+import static org.mockito.Mockito.verify;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.time.Instant;
 
 @WebMvcTest(controllers = UserInfoController.class)
 @Import(TestConfig.class)
 @AutoConfigureDataJpa
 public class UserInfoControllerTests extends ControllerTestCase {
+  @Captor
+  ArgumentCaptor<User> userCaptor;
 
   @MockBean
   UserRepository userRepository;
@@ -61,12 +70,13 @@ public class UserInfoControllerTests extends ControllerTestCase {
   @Test
   public void currentUser__update_last_online() throws Exception {
     CurrentUser currentUser = currentUserService.getCurrentUser();
-    String originalJson = mapper.writeValueAsString(currentUser);
+    Instant beforeUpdate = currentUser.getUser().getLastOnline();
 
-    MvcResult response = mockMvc.perform(post("/api/currentUser/last-online").with(csrf()))
-      .andExpect(status().isOk()).andReturn();
+    mockMvc.perform(post("/api/currentUser/last-online").with(csrf()))
+      .andExpect(status().isOk());
 
-    String responseString = response.getResponse().getContentAsString();
-    assertNotEquals(originalJson, responseString);
+    verify(userRepository).save(userCaptor.capture());
+    User savedUser = userCaptor.getValue();
+    assertTrue(savedUser.getLastOnline().isAfter(beforeUpdate));
   }
 }
