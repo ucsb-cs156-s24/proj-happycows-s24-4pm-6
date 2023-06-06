@@ -89,6 +89,11 @@ const AdminJobsPage = () => {
         MilkTheCowsMutation.mutate();
     }
 
+    const submitInstuctorReportJob = async () => {
+        console.log("submitInstructorReportJob (wip)");
+        toast('Submitted Job: Instructor Report (wip)');
+    }
+
     const jobLaunchers = [
         {
             name: "Test Job",
@@ -104,7 +109,7 @@ const AdminJobsPage = () => {
         },
         {
             name: "Instructor Report",
-            form: <InstructorReportForm />
+            form: <InstructorReportForm submitAction={submitInstuctorReportJob}/>
         },
     ]
 

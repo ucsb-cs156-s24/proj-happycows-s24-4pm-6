@@ -1,7 +1,7 @@
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 
-function InstructorReportForm() {
+function InstructorReportForm( {submitAction} ) {
   const {
     handleSubmit,
   } = useForm(
@@ -11,6 +11,7 @@ function InstructorReportForm() {
     <Form onSubmit={handleSubmit(submitAction)}>
       <p>Click this button to generate an instructor report!</p>
       <Button type="submit" data-testid="InstructorReport-Submit-Button">Submit</Button>
-  </Form>
+    </Form>
   );
 }
+export default InstructorReportForm;
