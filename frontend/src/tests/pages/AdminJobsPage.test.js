@@ -1,14 +1,15 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { MemoryRouter } from "react-router-dom";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import {QueryClient, QueryClientProvider} from "react-query";
+import {MemoryRouter} from "react-router-dom";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 import AdminJobsPage from "main/pages/AdminJobsPage";
-import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
-import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import {apiCurrentUserFixtures} from "fixtures/currentUserFixtures";
+import {systemInfoFixtures} from "fixtures/systemInfoFixtures";
 import jobsFixtures from "fixtures/jobsFixtures";
 import mockConsole from "jest-mock-console";
+import commonsFixtures from "../../fixtures/commonsFixtures";
 
 describe("AdminJobsPage tests", () => {
   const queryClient = new QueryClient();
@@ -97,21 +98,26 @@ describe("AdminJobsPage tests", () => {
 
   test("user can submit a set cow health job", async () => {
     const restoreConsole = mockConsole();
+    axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+
+
     render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <AdminJobsPage />
-        </MemoryRouter>
-      </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter>
+            <AdminJobsPage/>
+          </MemoryRouter>
+        </QueryClientProvider>
     );
 
-    expect(await screen.findByText("Change Cow Health")).toBeInTheDocument();
 
-    const setCowHealthButton = screen.getByText("Change Cow Health");
+    const setCowHealthButton = await screen.findByText("Set Cow Health For A Particular Commons")
     expect(setCowHealthButton).toBeInTheDocument();
     setCowHealthButton.click();
 
-    //expect(await screen.findByTestId("TestJobForm-fail")).toBeInTheDocument();
+    const commonsRadio = screen.getByTestId("SetCowHealthForm-commons-1");
+    expect(commonsRadio).toBeInTheDocument();
+    fireEvent.click(commonsRadio);
+
 
     const healthInput = screen.getByTestId("SetCowHealthForm-healthValue");
     const submitButton = screen.getByTestId("SetCowHealthForm-Submit-Button");
@@ -119,15 +125,22 @@ describe("AdminJobsPage tests", () => {
     expect(healthInput).toBeInTheDocument();
     expect(submitButton).toBeInTheDocument();
 
-    fireEvent.change(healthInput, { target: { value: "10" } });
+    fireEvent.change(healthInput, {target: {value: "10"}});
     submitButton.click();
 
     // assert - check that the console.log was called with the expected message
-    expect(console.log).toHaveBeenCalled();
-    const message = console.log.mock.calls[0][0];
-    const expectedMessage = `Submitted: SetCowHealthJob, data=`;
-    expect(message).toBe(expectedMessage);
+    await waitFor(() => {
+      expect(console.log).toHaveBeenCalled();
+    })
+    expect(console.log).toHaveBeenNthCalledWith(1, "submitSetCowHealthJob", {
+      "healthValue": "10",
+      "selectedCommons": 1
+    });
     restoreConsole();
+
+    expect(axiosMock.history.post[0].url).toBe(
+        `/api/jobs/launch/setcowhealth?commonsID=1&health=10`
+    );
   });
 
   test("user can submit update cow health job", async () => {

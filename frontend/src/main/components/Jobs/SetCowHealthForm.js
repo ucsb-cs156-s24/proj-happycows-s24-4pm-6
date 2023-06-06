@@ -58,23 +58,23 @@ function SetCowHealthForm({ submitAction }) {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="description">
+        <Form.Text htmlFor="description">
           Set the cow health for all cows in a given commons below! **May only
           select one commons at a time.**
-        </Form.Label>
+        </Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label htmlFor="commons" className="fw-bold fs-5">
+        <Form.Text htmlFor="commons" className="fw-bold fs-5">
           Commons
-        </Form.Label>
+        </Form.Text>
         <div className="ms-3">
           {commons.map((object) => (
             <Form.Check
               key={object.id}
               type="radio"
               label={object.name}
-              id={`radio-${object.id}`}
+              data-testid={`${testid}-commons-${object.id}`}
               onChange={() => handleCommonsSelection(object.id)}
               checked={selectedCommons === object.id}
             />
@@ -97,7 +97,7 @@ function SetCowHealthForm({ submitAction }) {
           type="number"
           step="1"
           isInvalid={!!errors.healthValue}
-          onBLur={(e) =>
+          onBlur={(e) =>
             setValue("healthValue", e.target.value, { shouldValidate: true })
           }
           value={healthValue}
