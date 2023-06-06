@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import InstructorReportForm from "main/components/Jobs/InstructorReportForm";
 import jobsFixtures from "fixtures/jobsFixtures";
