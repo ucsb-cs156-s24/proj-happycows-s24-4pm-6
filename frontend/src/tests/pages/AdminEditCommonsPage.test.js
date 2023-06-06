@@ -1,12 +1,13 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { MemoryRouter } from "react-router-dom";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import {QueryClient, QueryClientProvider} from "react-query";
+import {MemoryRouter} from "react-router-dom";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 import AdminEditCommonsPage from "main/pages/AdminEditCommonsPage";
-import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
-import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import {apiCurrentUserFixtures} from "fixtures/currentUserFixtures";
+import {systemInfoFixtures} from "fixtures/systemInfoFixtures";
+import healthUpdateStrategyListFixtures from "../../fixtures/healthUpdateStrategyListFixtures";
 
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
@@ -40,6 +41,7 @@ describe("AdminEditCommonsPage tests", () => {
             axiosMock.resetHistory();
             axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
             axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+            axiosMock.onGet("/api/commons/all-health-update-strategies").reply(200, healthUpdateStrategyListFixtures.simple);
             axiosMock.onGet("/api/commons", { params: { id: 5 } }).reply(200, {
                 "id": 5,
                 "name": "Seths Common",
@@ -50,6 +52,8 @@ describe("AdminEditCommonsPage tests", () => {
                 "degradationRate": 20.3,
                 "carryingCapacity": 100,
                 "showLeaderboard": false,
+                "aboveCapacityHealthUpdateStrategy": "strat1",
+                "belowCapacityHealthUpdateStrategy": "strat2"
             });
             axiosMock.onPut('/api/commons/update').reply(200, {
                 "id": 5,
@@ -61,6 +65,8 @@ describe("AdminEditCommonsPage tests", () => {
                 "degradationRate": 40.3,
                 "carryingCapacity": 200,
                 "showLeaderboard": false,
+                "aboveCapacityHealthUpdateStrategy": "strat2",
+                "belowCapacityHealthUpdateStrategy": "strat3"
             });
         });
 
@@ -93,6 +99,8 @@ describe("AdminEditCommonsPage tests", () => {
             const startingDateField = screen.getByLabelText(/Starting Date/);
             const degradationRateField = screen.getByLabelText(/Degradation Rate/);
             const carryingCapacityField = screen.getByLabelText(/Carrying Capacity/);
+            const aboveCapacityHealthUpdateStrategyField = screen.getByLabelText(/When above capacity/);
+            const belowCapacityHealthUpdateStrategyField = screen.getByLabelText(/When below capacity/);
             const showLeaderboardField = screen.getByLabelText(/Show Leaderboard\?/);
 
             expect(nameField).toHaveValue("Seths Common");
@@ -102,6 +110,8 @@ describe("AdminEditCommonsPage tests", () => {
             expect(milkPriceField).toHaveValue(10);
             expect(degradationRateField).toHaveValue(20.3);
             expect(carryingCapacityField).toHaveValue(100);
+            expect(aboveCapacityHealthUpdateStrategyField).toHaveValue("strat1");
+            expect(belowCapacityHealthUpdateStrategyField).toHaveValue("strat2");
             expect(showLeaderboardField).not.toBeChecked();
         });
 
@@ -123,6 +133,8 @@ describe("AdminEditCommonsPage tests", () => {
             const startingDateField = screen.getByLabelText(/Starting Date/);
             const degradationRateField = screen.getByLabelText(/Degradation Rate/);
             const carryingCapacityField = screen.getByLabelText(/Carrying Capacity/);
+            const aboveCapacityHealthUpdateStrategyField = screen.getByLabelText(/When above capacity/);
+            const belowCapacityHealthUpdateStrategyField = screen.getByLabelText(/When below capacity/);
             const showLeaderboardField = screen.getByLabelText(/Show Leaderboard\?/);
 
             expect(nameField).toHaveValue("Seths Common");
@@ -132,6 +144,8 @@ describe("AdminEditCommonsPage tests", () => {
             expect(milkPriceField).toHaveValue(10);
             expect(degradationRateField).toHaveValue(20.3);
             expect(carryingCapacityField).toHaveValue(100);
+            expect(aboveCapacityHealthUpdateStrategyField).toHaveValue("strat1");
+            expect(belowCapacityHealthUpdateStrategyField).toHaveValue("strat2");
             expect(showLeaderboardField).not.toBeChecked();
 
             const submitButton = screen.getByText("Update");
@@ -145,6 +159,8 @@ describe("AdminEditCommonsPage tests", () => {
             fireEvent.change(milkPriceField, { target: { value: 5 } })
             fireEvent.change(degradationRateField, { target: { value: 40.3 } })
             fireEvent.change(carryingCapacityField, { target: { value: 200 } })
+            fireEvent.change(aboveCapacityHealthUpdateStrategyField, { target: { value: "strat2" } })
+            fireEvent.change(belowCapacityHealthUpdateStrategyField, { target: { value: "strat3" } })
             fireEvent.click(showLeaderboardField)
 
             fireEvent.click(submitButton);
@@ -163,6 +179,8 @@ describe("AdminEditCommonsPage tests", () => {
                 "startingDate": "2022-03-07T00:00:00.000Z",
                 "degradationRate": 40.3,
                 "carryingCapacity": 200,
+                "aboveCapacityHealthUpdateStrategy": "strat2",
+                "belowCapacityHealthUpdateStrategy": "strat3",
                 "showLeaderboard": true,
             })); // posted object
         });
