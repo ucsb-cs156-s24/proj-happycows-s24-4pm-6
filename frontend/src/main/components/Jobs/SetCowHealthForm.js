@@ -1,18 +1,18 @@
-import { Button, Form } from "react-bootstrap";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useBackend } from "main/utils/useBackend";
+import {Button, Form} from "react-bootstrap";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
+import {useBackend} from "main/utils/useBackend";
 
-function SetCowHealthForm({ submitAction }) {
+function SetCowHealthForm({submitAction}) {
   const defaultValues = {
     selectedCommons: null,
     healthValue: 100,
   };
 
-  const { data: commons } = useBackend(
-    ["/api/commons/all"],
-    { url: "/api/commons/all" },
-    []
+  const {data: commons} = useBackend(
+      ["/api/commons/all"],
+      {url: "/api/commons/all"},
+      []
   );
 
   const {
@@ -20,7 +20,8 @@ function SetCowHealthForm({ submitAction }) {
     reset,
     setValue,
     getValues,
-    formState: { errors },
+    setError,
+    formState: {errors},
   } = useForm({ defaultValues });
 
   const testid = "SetCowHealthForm";
@@ -31,7 +32,15 @@ function SetCowHealthForm({ submitAction }) {
   const [healthValue, setHealthValue] = useState(defaultValues.healthValue);
 
   const handleHealthValueChange = (e) => {
-    setHealthValue(e.target.value);
+    const newValue = e.target.value;
+    if (!(newValue >= 0 && newValue <= 100)) {
+      setError("healthValue", {
+        type: "manual",
+        message: "Health must be between 0 and 100",
+      });
+    } else {
+      setHealthValue(newValue);
+    }
   };
 
   const handleCommonsSelection = (id) => {

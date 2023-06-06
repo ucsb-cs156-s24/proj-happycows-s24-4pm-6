@@ -1,7 +1,8 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
+import {BrowserRouter as Router} from "react-router-dom";
 import jobsFixtures from "fixtures/jobsFixtures";
 import SetCowHealthForm from "main/components/Jobs/SetCowHealthForm";
+import {QueryClient, QueryClientProvider} from "react-query";
 
 const mockedNavigate = jest.fn();
 
@@ -13,9 +14,11 @@ jest.mock("react-router-dom", () => ({
 describe("SetCowHealthForm tests", () => {
   it("renders correctly with the right defaults", async () => {
     render(
-      <Router>
-        <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
-      </Router>
+        <QueryClientProvider client={new QueryClient()}>
+          <Router>
+            <SetCowHealthForm jobs={jobsFixtures.sixJobs}/>
+          </Router>
+        </QueryClientProvider>
     );
 
     //expect(await screen.findByTestId("TestJobForm-fail")).toBeInTheDocument();
@@ -29,9 +32,11 @@ describe("SetCowHealthForm tests", () => {
     const submitAction = jest.fn();
 
     render(
-      <Router>
-        <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
-      </Router>
+        <QueryClientProvider client={new QueryClient()}>
+          <Router>
+            <SetCowHealthForm jobs={jobsFixtures.sixJobs}/>
+          </Router>
+        </QueryClientProvider>
     );
 
     //expect(await screen.findByTestId("TestJobForm-fail")).toBeInTheDocument();
@@ -43,7 +48,10 @@ describe("SetCowHealthForm tests", () => {
 
     fireEvent.change(healthInput, { target: { value: "-1" } });
     fireEvent.click(submitButton);
-    expect(await screen.findByText(/Health must be/i)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Health must be/i)).toBeInTheDocument();
+    })
     expect(submitAction).not.toBeCalled();
   });
 });

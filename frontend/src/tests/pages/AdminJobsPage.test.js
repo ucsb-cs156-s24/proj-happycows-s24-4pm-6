@@ -12,10 +12,11 @@ import mockConsole from "jest-mock-console";
 import commonsFixtures from "../../fixtures/commonsFixtures";
 
 describe("AdminJobsPage tests", () => {
-  const queryClient = new QueryClient();
+  let queryClient = new QueryClient();
   const axiosMock = new AxiosMockAdapter(axios);
 
   beforeEach(() => {
+    queryClient = new QueryClient();
     axiosMock.reset();
     axiosMock.resetHistory();
     axiosMock
@@ -114,7 +115,7 @@ describe("AdminJobsPage tests", () => {
     expect(setCowHealthButton).toBeInTheDocument();
     setCowHealthButton.click();
 
-    const commonsRadio = screen.getByTestId("SetCowHealthForm-commons-1");
+    const commonsRadio = await screen.findByTestId("SetCowHealthForm-commons-1");
     expect(commonsRadio).toBeInTheDocument();
     fireEvent.click(commonsRadio);
 
