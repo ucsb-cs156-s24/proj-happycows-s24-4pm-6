@@ -18,6 +18,6 @@ For a particular user's commons, the box where you buy and sell your cows.
 
 <Canvas>
   <Story name="uncontrolled">
-    <ManageCows userCommons = {userCommonsFixtures.oneUserCommons[0]} onBuy={(userCommons) => { console.log("onBuy called:",userCommons); }} onSell={ (userCommons) => { console.log("onSell called:",userCommons); }} />
+    <ManageCows commons =  {commonsFixtures.oneCommons[0]} userCommons = {userCommonsFixtures.oneUserCommons[0]} onBuy={(userCommons) => { console.log("onBuy called:",userCommons); }} onSell={ (userCommons) => { console.log("onSell called:",userCommons); }} />
   </Story>
 </Canvas>
