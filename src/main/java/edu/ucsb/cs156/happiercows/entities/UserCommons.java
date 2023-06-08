@@ -38,10 +38,16 @@ public class UserCommons {
 
     private double cowHealth;
 
+    private int cowsBought;
+
+    private int cowsSold;
+
+    private int cowDeaths;
+
     // userID and commonsId are used by the frontend
     @JsonInclude
     public long getUserId() {
-        return user.getId();
+      return user.getId();
     }
 
     @JsonInclude

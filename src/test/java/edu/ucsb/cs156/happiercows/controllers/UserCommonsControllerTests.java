@@ -87,7 +87,6 @@ public class UserCommonsControllerTests extends ControllerTestCase {
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(eq(1L), eq(1L));
 
-        String responseString = response.getResponse().getContentAsString();
         String expectedString = "{\"message\":\"UserCommons with commonsId 1 and userId 1 not found\",\"type\":\"EntityNotFoundException\"}";
 
         Map<String, Object> expectedJson = mapper.readValue(expectedString, Map.class);
@@ -138,10 +137,12 @@ public class UserCommonsControllerTests extends ControllerTestCase {
         // arrange
 
         UserCommons origUserCommons = getTestUserCommons();
+        origUserCommons.setCowsBought(1);
 
         UserCommons updateUserCommons = getTestUserCommons();
         updateUserCommons.setNumOfCows(2);
         updateUserCommons.setTotalWealth(300 - testCommons.getCowPrice());
+        updateUserCommons.setCowsBought(2);
 
         String expectedReturn = mapper.writeValueAsString(updateUserCommons);
 
@@ -163,15 +164,19 @@ public class UserCommonsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void test_BuyCow_commons_exists_user_has_exact_amount_needed() throws Exception {
-
-        testCommons.setCowPrice(300);
         // arrange
 
+        testCommons.setCowPrice(300);
+
         UserCommons origUserCommons = getTestUserCommons();
+        origUserCommons.setTotalWealth(300);
+        origUserCommons.setNumOfCows(1);
+        origUserCommons.setCowsBought(1);
 
         UserCommons updatedUserCommons = getTestUserCommons();
         updatedUserCommons.setTotalWealth(0);
         updatedUserCommons.setNumOfCows(2);
+        updatedUserCommons.setCowsBought(2);
 
         String expectedReturn = mapper.writeValueAsString(updatedUserCommons);
 
@@ -197,10 +202,12 @@ public class UserCommonsControllerTests extends ControllerTestCase {
         // arrange
 
         UserCommons origUserCommons = getTestUserCommons();
+        origUserCommons.setCowsSold(1);
 
         UserCommons updatedUserCommons = getTestUserCommons();
         updatedUserCommons.setTotalWealth(300 + testCommons.getCowPrice());
         updatedUserCommons.setNumOfCows(0);
+        updatedUserCommons.setCowsSold(2);
 
         String expectedReturn = mapper.writeValueAsString(updatedUserCommons);
 

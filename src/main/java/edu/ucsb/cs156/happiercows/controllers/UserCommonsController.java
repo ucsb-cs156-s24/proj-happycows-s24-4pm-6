@@ -90,6 +90,7 @@ public class UserCommonsController extends ApiController {
         if(userCommons.getTotalWealth() >= commons.getCowPrice() ){
           userCommons.setTotalWealth(userCommons.getTotalWealth() - commons.getCowPrice());
           userCommons.setNumOfCows(userCommons.getNumOfCows() + 1);
+          userCommons.setCowsBought(userCommons.getCowsBought() + 1);
         }
         else{
           throw new NotEnoughMoneyException("You need more money!");
@@ -118,6 +119,7 @@ public class UserCommonsController extends ApiController {
         if(userCommons.getNumOfCows() >= 1 ){
           userCommons.setTotalWealth(userCommons.getTotalWealth() + commons.getCowPrice());
           userCommons.setNumOfCows(userCommons.getNumOfCows() - 1);
+          userCommons.setCowsSold(userCommons.getCowsSold() + 1);
         }
         else{
           throw new NoCowsException("You have no cows to sell!");
@@ -127,6 +129,8 @@ public class UserCommonsController extends ApiController {
         String body = mapper.writeValueAsString(userCommons);
         return ResponseEntity.ok().body(body);
     }
+
+    
 
     @ApiOperation(value = "Get all user commons for a specific commons")
     @GetMapping("/commons/all")

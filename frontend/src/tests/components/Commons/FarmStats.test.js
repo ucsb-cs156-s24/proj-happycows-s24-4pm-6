@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import FarmStats from "main/components/Commons/FarmStats"; 
-import userCommonsFixtures from "fixtures/userCommonsFixtures"; 
+import FarmStats from "main/components/Commons/FarmStats";
+import userCommonsFixtures from "fixtures/userCommonsFixtures";
 
 describe("FarmStats tests", () => {
     test("renders without crashing", () => {
@@ -16,9 +16,11 @@ describe("FarmStats tests", () => {
 
         await waitFor (() => {
             expect(screen.getByText(/Total Wealth: \$1000/)).toBeInTheDocument();
-        }); 
+        });
 
         expect(screen.getByText(/Cow Health: 98%/)).toBeInTheDocument();
-
+        expect(screen.getByText(/Total Cows Bought: 5/)).toBeInTheDocument();
+        expect(screen.getByText(/Total Cows Sold: 5/)).toBeInTheDocument();
+        expect(screen.getByText(/💀 Cow Deaths: 5/)).toBeInTheDocument();
     });
 });

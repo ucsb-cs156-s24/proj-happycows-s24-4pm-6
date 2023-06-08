@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
 
 // add parameters 
-const ManageCows = ({userCommons,commons, onBuy, onSell}) =>  {
+const ManageCows = ({userCommons, commons, onBuy, onSell}) =>  {
     // update cowPrice from fixture
     return (
         <Card>
