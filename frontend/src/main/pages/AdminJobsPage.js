@@ -91,7 +91,7 @@ const AdminJobsPage = () => {
 
     const submitInstuctorReportJob = async () => {
         console.log("submitInstructorReportJob (wip)");
-        toast('Submitted Job: Instructor Report (wip)');
+        toast('Instructor report not yet implemented; coming soon');
     }
 
     const jobLaunchers = [
