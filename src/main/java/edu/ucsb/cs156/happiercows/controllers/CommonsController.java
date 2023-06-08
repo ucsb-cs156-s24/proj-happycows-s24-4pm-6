@@ -154,7 +154,7 @@ public class CommonsController extends ApiController {
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
                 .carryingCapacity(params.getCarryingCapacity());
-        
+
         // ok to set null values for these, so old backend still works
         if (params.getAboveCapacityHealthUpdateStrategy() != null) {
             builder.aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(params.getAboveCapacityHealthUpdateStrategy()));
@@ -254,10 +254,8 @@ public class CommonsController extends ApiController {
 
         userCommonsRepository.delete(userCommons);
 
-        userCommonsRepository.deleteById(userCommons.getId());
-    
         String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
-    
+
         return genericMessage(responseString);
     }
 
