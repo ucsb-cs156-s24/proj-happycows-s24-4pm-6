@@ -1,23 +1,64 @@
-import { Button, Form } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import {Button, Form} from "react-bootstrap";
+import {useForm} from "react-hook-form";
+import {useBackend} from "../../utils/useBackend";
 
-function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
+
+function HealthUpdateStrategiesDropdown({
+  formName,
+  displayName,
+  initialValue,
+  healthUpdateStrategies,
+  register,
+}) {
+  return (
+    <Form.Group className="mb-3">
+      <Form.Label htmlFor={formName}>{displayName}</Form.Label>
+      {healthUpdateStrategies && (
+        <Form.Select
+          // test id omitted since it is not currently used in tests, and makes stryker fail otherwise
+          // data-testid={`${testid}-${formName}`}
+          id={formName}
+          // "required" option is not necessary, since dropdown will always have a value
+          {...register(formName)}
+          defaultValue={initialValue}
+        >
+          {healthUpdateStrategies.strategies.map((strategy) => (
+            <option key={strategy.name} value={strategy.name} title={strategy.description}>
+              {strategy.displayName}
+            </option>
+          ))}
+        </Form.Select>
+      )}
+
+    </Form.Group>
+  );
+}
+
+
+function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
   // Stryker disable all
   const {
     register,
-    formState: { errors },
+    formState: {errors},
     handleSubmit,
   } = useForm(
-    { defaultValues: initialCommons || {} }
+    {defaultValues: initialCommons || {}}
   );
   // Stryker enable all
+
+  const {data: healthUpdateStrategies} = useBackend(
+    "/api/commons/all-health-update-strategies", {
+      method: "GET",
+      url: "/api/commons/all-health-update-strategies",
+    },
+  );
 
   const testid = "CommonsForm";
 
   return (
     <Form onSubmit={handleSubmit(submitAction)}>
       {initialCommons && (
-        <Form.Group className="mb-3" >
+        <Form.Group className="mb-3">
           <Form.Label htmlFor="id">Id</Form.Label>
           <Form.Control
             data-testid={`${testid}-id`}
@@ -37,7 +78,7 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
           id="name"
           type="text"
           isInvalid={!!errors.name}
-          {...register("name", { required: "Commons name is required" })}
+          {...register("name", {required: "Commons name is required"})}
         />
         <Form.Control.Feedback type="invalid">
           {errors.name?.message}
@@ -55,7 +96,7 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
           {...register("startingBalance", {
             valueAsNumber: true,
             required: "Starting Balance is required",
-            min: { value: 0.01, message: "Starting Balance must be positive" },
+            min: {value: 0.01, message: "Starting Balance must be positive"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -74,7 +115,7 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
           {...register("cowPrice", {
             valueAsNumber: true,
             required: "Cow price is required",
-            min: { value: 0.01, message: "Cow price must be positive" },
+            min: {value: 0.01, message: "Cow price must be positive"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -93,7 +134,7 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
           {...register("milkPrice", {
             valueAsNumber: true,
             required: "Milk price is required",
-            min: { value: 0.01, message: "Milk price must be positive" },
+            min: {value: 0.01, message: "Milk price must be positive"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -131,7 +172,7 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
           {...register("degradationRate", {
             valueAsNumber: true,
             required: "Degradation rate is required",
-            min: { value: 0.00, message: "Degradation rate must be positive" },
+            min: {value: 0.00, message: "Degradation rate must be positive"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -150,7 +191,7 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
           {...register("carryingCapacity", {
             valueAsNumber: true,
             required: "Carrying capacity is required",
-            min: { value: 1, message: "Carrying Capacity must be greater than 0" },
+            min: {value: 1, message: "Carrying Capacity must be greater than 0"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -158,9 +199,28 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
         </Form.Control.Feedback>
       </Form.Group>
 
+      <h4>
+        Health update formula
+      </h4>
+      <HealthUpdateStrategiesDropdown
+        formName={"aboveCapacityHealthUpdateStrategy"}
+        displayName={"When above capacity"}
+        intialValue={initialCommons?.aboveCapacityHealthUpdateStrategy ?? healthUpdateStrategies?.defaultAboveCapacity}
+        register={register}
+        healthUpdateStrategies={healthUpdateStrategies}
+      />
+      <HealthUpdateStrategiesDropdown
+        formName={"belowCapacityHealthUpdateStrategy"}
+        displayName={"When below capacity"}
+        intialValue={initialCommons?.belowCapacityHealthUpdateStrategy ?? healthUpdateStrategies?.defaultBelowCapacity}
+        register={register}
+        healthUpdateStrategies={healthUpdateStrategies}
+      />
+
+
       <Form.Group className="mb-3">
         <Form.Label htmlFor="showLeaderboard">Show Leaderboard?</Form.Label>
-        <Form.Check 
+        <Form.Check
           data-testid={`${testid}-showLeaderboard`}
           type="checkbox"
           id="showLeaderboard"
@@ -168,7 +228,7 @@ function CommonsForm({ initialCommons, submitAction, buttonLabel = "Create" }) {
         />
       </Form.Group>
 
-      <Button type="submit" data-testid="CommonsForm-Submit-Button">{ buttonLabel }</Button>
+      <Button type="submit" data-testid="CommonsForm-Submit-Button">{buttonLabel}</Button>
     </Form>
   );
 }

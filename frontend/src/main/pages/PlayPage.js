@@ -30,22 +30,21 @@ export default function PlayPage() {
         }
       }
     );
-  // Stryker enable all 
+  // Stryker restore all 
 
-
-  // Stryker disable all 
-  const { data: commons } =
+  // Stryker disable all
+  const { data: commonsPlus } =
     useBackend(
-      [`/api/commons?id=${commonsId}`],
+      [`/api/commons/plus?id=${commonsId}`],
       {
         method: "GET",
-        url: "/api/commons",
+        url: "/api/commons/plus",
         params: {
           id: commonsId
         }
       }
     );
-  // Stryker enable all 
+  // Stryker restore all
 
   // Stryker disable all 
   const { data: userCommonsProfits } =
@@ -59,13 +58,14 @@ export default function PlayPage() {
         }
       }
     );
-  // Stryker enable all 
+  // Stryker restore all 
 
 
   const onSuccessBuy = () => {
     toast(`Cow bought!`);
   }
 
+  // Stryker disable all (can't check if commonsId is null because it is mocked)
   const objectToAxiosParamsBuy = (newUserCommons) => ({
     url: "/api/usercommons/buy",
     method: "PUT",
@@ -74,6 +74,7 @@ export default function PlayPage() {
       commonsId: commonsId
     }
   });
+  // Stryker restore all
 
 
   // Stryker disable all 
@@ -83,7 +84,7 @@ export default function PlayPage() {
     // Stryker disable next-line all : hard to set up test for caching
     [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
   );
-  // Stryker enable all 
+  // Stryker restore all 
 
 
   const onBuy = (userCommons) => {
@@ -104,7 +105,7 @@ export default function PlayPage() {
       commonsId: commonsId
     }
   });
-  // Stryker enable all 
+  // Stryker restore all 
 
 
   // Stryker disable all 
@@ -113,7 +114,7 @@ export default function PlayPage() {
     { onSuccess: onSuccessSell },
     [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
   );
-  // Stryker enable all 
+  // Stryker restore all 
 
 
   const onSell = (userCommons) => {
@@ -121,15 +122,15 @@ export default function PlayPage() {
   };
 
   return (
-    <div style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
+    <div style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }} data-testid="playpage-div">
       <BasicLayout >
         <Container >
           {!!currentUser && <CommonsPlay currentUser={currentUser} />}
-          {!!commons && <CommonsOverview commons={commons} currentUser={currentUser} />}
+          {!!commonsPlus && <CommonsOverview commonsPlus={commonsPlus} currentUser={currentUser} />}
           <br />
-          {!!userCommons &&
+          {!!userCommons && !!commonsPlus &&
             <CardGroup >
-              <ManageCows userCommons={userCommons} commons={commons} onBuy={onBuy} onSell={onSell} />
+              <ManageCows userCommons={userCommons} commons={commonsPlus.commons} onBuy={onBuy} onSell={onSell} />
               <FarmStats userCommons={userCommons} />
               <Profits userCommons={userCommons} profits={userCommonsProfits} />
             </CardGroup>

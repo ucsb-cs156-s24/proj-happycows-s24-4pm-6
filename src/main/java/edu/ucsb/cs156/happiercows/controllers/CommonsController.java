@@ -71,6 +71,17 @@ public class CommonsController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
+    @ApiOperation(value = "Get the number of cows/users in a commons")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/plus")
+    public CommonsPlus getCommonsPlusById(
+            @ApiParam("id") @RequestParam long id) throws JsonProcessingException {
+                CommonsPlus commonsPlus = toCommonsPlus(commonsRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Commons.class, id)));
+
+        return commonsPlus;
+    }
+
     @ApiOperation(value = "Update a commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
@@ -143,7 +154,7 @@ public class CommonsController extends ApiController {
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
                 .carryingCapacity(params.getCarryingCapacity());
-
+        
         // ok to set null values for these, so old backend still works
         if (params.getAboveCapacityHealthUpdateStrategy() != null) {
             builder.aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(params.getAboveCapacityHealthUpdateStrategy()));
@@ -230,8 +241,8 @@ public class CommonsController extends ApiController {
     @ApiOperation("Delete a user from a commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{commonsId}/users/{userId}")
-    public ResponseEntity<Commons> deleteUserFromCommon(@PathVariable("commonsId") Long commonsId,
-                                                        @PathVariable("userId") Long userId) throws Exception {
+    public Object deleteUserFromCommon(@PathVariable("commonsId") Long commonsId,
+                                       @PathVariable("userId") Long userId) throws Exception {
 
         UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -240,7 +251,11 @@ public class CommonsController extends ApiController {
 
         userCommonsRepository.delete(userCommons);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        userCommonsRepository.deleteById(userCommons.getId());
+    
+        String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
+    
+        return genericMessage(responseString);
     }
 
     public CommonsPlus toCommonsPlus(Commons c) {
