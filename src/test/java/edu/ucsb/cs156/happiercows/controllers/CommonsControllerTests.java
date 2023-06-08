@@ -542,6 +542,33 @@ public class CommonsControllerTests extends ControllerTestCase {
         assertEquals(expectedJson, responseString);
     }
 
+    // This commons SHOULD be in the repository
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void getCommonsPlusByIdTest_valid() throws Exception {
+        Commons Commons1 = Commons.builder()
+                .name("TestCommons2")
+                .id(18L)
+                .build();
+        CommonsPlus commonsPlus = CommonsPlus.builder()
+                .commons(Commons1)
+                .totalCows(5)
+                .totalUsers(2)
+                .build();
+                
+        when(commonsRepository.findById(eq(18L))).thenReturn(Optional.of(Commons1));
+        when(commonsRepository.getNumCows(18L)).thenReturn(Optional.of(5));
+        when(commonsRepository.getNumUsers(18L)).thenReturn(Optional.of(2));
+
+        MvcResult response = mockMvc.perform(get("/api/commons/plus?id=18"))
+                .andExpect(status().isOk()).andReturn();
+
+        verify(commonsRepository, times(1)).findById(eq(18L));
+        String expectedJson = mapper.writeValueAsString(commonsPlus);
+        String responseString = response.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
+
     // This common SHOULD NOT be in the repository
     @WithMockUser(roles = {"USER"})
     @Test
@@ -550,6 +577,23 @@ public class CommonsControllerTests extends ControllerTestCase {
         when(commonsRepository.findById(eq(18L))).thenReturn(Optional.empty());
 
         MvcResult response = mockMvc.perform(get("/api/commons?id=18"))
+                .andExpect(status().is(404)).andReturn();
+
+        verify(commonsRepository, times(1)).findById(eq(18L));
+
+        Map<String, Object> responseMap = responseToJson(response);
+
+        assertEquals(responseMap.get("message"), "Commons with id 18 not found");
+        assertEquals(responseMap.get("type"), "EntityNotFoundException");
+    }
+
+    // This commons SHOULD NOT be in the repository
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void getCommonsPlusByIdTest_invalid() throws Exception {                
+        when(commonsRepository.findById(eq(18L))).thenReturn(Optional.empty());
+
+        MvcResult response = mockMvc.perform(get("/api/commons/plus?id=18"))
                 .andExpect(status().is(404)).andReturn();
 
         verify(commonsRepository, times(1)).findById(eq(18L));
@@ -614,7 +658,7 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
         verify(userCommonsRepository, times(1)).save(uc);
-
+        
         String responseString = response.getResponse().getContentAsString();
         String cAsJson = mapper.writeValueAsString(c);
 
@@ -785,6 +829,11 @@ public class CommonsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"ADMIN"})
     @Test
     public void deleteUserFromCommonsTest() throws Exception {
+        Commons c = Commons.builder()
+        .id(2L)
+        .name("Example Commons")
+        .build();
+
         UserCommons uc = UserCommons.builder()
                 .id(16L)
                 .userId(1L)
@@ -797,18 +846,21 @@ public class CommonsControllerTests extends ControllerTestCase {
         String requestBody = mapper.writeValueAsString(uc);
 
         when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(uc));
+        when(commonsRepository.findById(2L)).thenReturn(Optional.of(c));
+        when(commonsRepository.getNumUsers(2L)).thenReturn(Optional.of(0));
 
         MvcResult response = mockMvc
                 .perform(delete("/api/commons/2/users/1").with(csrf()).contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("utf-8").content(requestBody))
-                .andExpect(status().is(204)).andReturn();
+                .andExpect(status().is(200)).andReturn();
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
         verify(userCommonsRepository, times(1)).deleteById(16L);
 
         String responseString = response.getResponse().getContentAsString();
+        String expectedString = "{\"message\":\"user with id 1 deleted from commons with id 2, 0 users remain\"}";
 
-        assertEquals(responseString, "");
+        assertEquals(responseString, expectedString);
     }
 
     @WithMockUser(roles = {"ADMIN"})

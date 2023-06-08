@@ -21,10 +21,10 @@ describe("ManageCows tests", () => {
         const sellButton = screen.getByTestId("sell-cow-button");
         
         fireEvent.click(buyButton);
-        await waitFor( ()=>expect(mockBuy).toHaveBeenCalled() );
+        await waitFor( ()=>expect(mockBuy).toHaveBeenCalledWith(userCommonsFixtures.oneUserCommons[0]) );
 
         fireEvent.click(sellButton);
-        await waitFor( ()=>expect(mockSell).toHaveBeenCalled() );
+        await waitFor( ()=>expect(mockSell).toHaveBeenCalledWith(userCommonsFixtures.oneUserCommons[0]) );
         
     });
 
