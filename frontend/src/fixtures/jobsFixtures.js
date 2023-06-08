@@ -95,6 +95,13 @@ const jobsFixtures = {
         "log": "Error updating cow health"
       }
     ],
+    formJob: {
+      "id":1,
+      "createdAt": "2022-11-13T19:49:58.097465-08:00",
+      "updatedAt": "2022-11-13T19:49:59.203879-08:00",
+      "status": "complete",
+      "log": "Generating Instructor Report\nReport has been generated!"
+    }
 };
 
 export default jobsFixtures;

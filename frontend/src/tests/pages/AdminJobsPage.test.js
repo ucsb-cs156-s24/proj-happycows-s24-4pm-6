@@ -131,5 +131,26 @@ describe("AdminJobsPage tests", () => {
         expect(axiosMock.history.post[0].url).toBe("/api/jobs/launch/milkthecowjob");
     });
 
+    test("user can attempt to submit instructor report form job", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminJobsPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByText("Instructor Report")).toBeInTheDocument();
+
+        const InstructorReportJobButton = screen.getByText("Instructor Report");
+        expect(InstructorReportJobButton).toBeInTheDocument();
+        InstructorReportJobButton.click();
+
+        const submitButton = screen.getByTestId("InstructorReport-Submit-Button");
+
+        expect(submitButton).toBeInTheDocument();
+        submitButton.click();
+    });
+
 
 });

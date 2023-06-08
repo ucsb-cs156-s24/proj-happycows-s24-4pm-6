@@ -1,0 +1,19 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+import { action } from "@storybook/addon-actions";
+import InstructorReportForm from "main/components/Jobs/InstructorReportForm";
+
+<Meta
+  title="components/Jobs/InstructorReportForm"
+  component={InstructorReportForm}
+/>
+
+# InstructorReportForm
+
+A button for creating an instructor report, with:
+* a line telling the user what the button does
+
+<Canvas>
+  <Story name="uncontrolled">
+    <InstructorReportForm submitAction={action("submit")} />
+  </Story>
+</Canvas>
