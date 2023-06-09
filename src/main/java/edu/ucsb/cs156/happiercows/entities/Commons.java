@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.happiercows.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,10 +40,8 @@ public class Commons {
     @Builder.Default
     private CowHealthUpdateStrategies aboveCapacityHealthUpdateStrategy = CowHealthUpdateStrategies.DEFAULT_ABOVE_CAPACITY;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinTable(name = "user_commons",
-            joinColumns = @JoinColumn(name = "commons_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    @JsonIgnore // https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion
-    private List<User> users;
+
+    @OneToMany(mappedBy = "commons", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<UserCommons> joinedUsers;
 }

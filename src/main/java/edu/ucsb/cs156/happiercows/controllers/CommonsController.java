@@ -154,7 +154,7 @@ public class CommonsController extends ApiController {
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
                 .carryingCapacity(params.getCarryingCapacity());
-        
+
         // ok to set null values for these, so old backend still works
         if (params.getAboveCapacityHealthUpdateStrategy() != null) {
             builder.aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(params.getAboveCapacityHealthUpdateStrategy()));
@@ -208,8 +208,8 @@ public class CommonsController extends ApiController {
         }
 
         UserCommons uc = UserCommons.builder()
-                .commonsId(commonsId)
-                .userId(userId)
+                .user(u)
+                .commons(joinedCommons)
                 .username(username)
                 .totalWealth(joinedCommons.getStartingBalance())
                 .numOfCows(0)
@@ -231,14 +231,12 @@ public class CommonsController extends ApiController {
     public Object deleteCommons(
             @ApiParam("id") @RequestParam Long id) {
 
-        Commons foundCommons = commonsRepository.findById(id)
+        commonsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Commons.class, id));
 
         commonsRepository.deleteById(id);
-        userCommonsRepository.deleteAllByCommonsId(id);
 
         String responseString = String.format("commons with id %d deleted", id);
-
         return genericMessage(responseString);
 
     }
@@ -249,15 +247,16 @@ public class CommonsController extends ApiController {
     public Object deleteUserFromCommon(@PathVariable("commonsId") Long commonsId,
                                        @PathVariable("userId") Long userId) throws Exception {
 
-        Optional<UserCommons> uc = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId);
-        UserCommons userCommons = uc.orElseThrow(() -> new Exception(
-                String.format("UserCommons with commonsId=%d and userId=%d not found.", commonsId, userId)));
+        UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        UserCommons.class, "commonsId", commonsId, "userId", userId)
+                );
 
-        userCommonsRepository.deleteById(userCommons.getId());
-    
+        userCommonsRepository.delete(userCommons);
+
         String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
-    
-        return genericMessage(responseString);    
+
+        return genericMessage(responseString);
     }
 
     public CommonsPlus toCommonsPlus(Commons c) {

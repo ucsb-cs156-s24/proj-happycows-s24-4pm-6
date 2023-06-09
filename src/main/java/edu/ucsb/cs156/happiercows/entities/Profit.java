@@ -2,12 +2,7 @@ package edu.ucsb.cs156.happiercows.entities;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,8 +21,10 @@ public class Profit {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_commons_id")
-
+    @JoinColumns({
+        @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+        @JoinColumn(name = "commons_id", referencedColumnName = "commons_id")
+    })
     private UserCommons userCommons;
     private double amount;
     private LocalDateTime timestamp;
