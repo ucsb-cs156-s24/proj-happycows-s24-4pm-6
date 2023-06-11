@@ -1,4 +1,4 @@
-import { padWithZero, timestampToDate } from "main/utils/dateUtils";
+import { padWithZero, timestampToDate, daysSinceTimestamp } from "main/utils/dateUtils";
 
 
 describe("dateUtils tests", () => {
@@ -22,6 +22,13 @@ describe("dateUtils tests", () => {
   describe("timestampToDate tests", () => {
     it("converts properly", () => {
       expect(timestampToDate(1653346250816)).toBe("2022-05-23");
+    });
+  });
+
+  describe("daysSinceTimestamp tests", () => {
+    it("calculates days properly", () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-06-01'));
+      expect(daysSinceTimestamp(1653346250816)).toBe(9);
     });
   });
 

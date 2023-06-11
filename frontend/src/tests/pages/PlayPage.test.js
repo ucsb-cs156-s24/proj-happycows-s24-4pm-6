@@ -15,6 +15,16 @@ jest.mock("react-router-dom", () => ({
     })
 }));
 
+const mockToast = jest.fn();
+jest.mock('react-toastify', () => {
+    const originalModule = jest.requireActual('react-toastify');
+    return {
+        __esModule: true,
+        ...originalModule,
+        toast: (x) => mockToast(x)
+    };
+});
+
 describe("PlayPage tests", () => {
     const axiosMock = new AxiosMockAdapter(axios);
     const queryClient = new QueryClient();
@@ -41,6 +51,14 @@ describe("PlayPage tests", () => {
                 name: "Sample Commons"
             }
         ]);
+        axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
+            commons: {
+                id: 1,
+                name: "Sample Commons"
+            },
+            totalPlayers: 5,
+            totalCows: 5 
+        });
         axiosMock.onGet("/api/profits/all/commonsid").reply(200, []);
         axiosMock.onPut("/api/usercommons/sell").reply(200, userCommons);
         axiosMock.onPut("/api/usercommons/buy").reply(200, userCommons);
@@ -71,10 +89,14 @@ describe("PlayPage tests", () => {
 
         await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
 
+        expect(mockToast).toBeCalledWith("Cow bought!");
+
         const sellCowButton = screen.getByTestId("sell-cow-button");
         fireEvent.click(sellCowButton);
 
         await waitFor(() => expect(axiosMock.history.put.length).toBe(2));
+
+        expect(mockToast).toBeCalledWith("Cow sold!");
     });
 
     test("Make sure that both the Announcements and Welcome Farmer components show up", async () => {
@@ -88,5 +110,18 @@ describe("PlayPage tests", () => {
 
         expect(await screen.findByText(/Announcements/)).toBeInTheDocument();
         expect(await screen.findByText(/Welcome Farmer/)).toBeInTheDocument();
+    });
+
+    test("Make sure div has correct attributes", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        var div = screen.getByTestId("playpage-div");
+        expect(div).toHaveAttribute("style", expect.stringContaining("background-size: cover; background-image: url(PlayPageBackground.png);"));
     });
 });

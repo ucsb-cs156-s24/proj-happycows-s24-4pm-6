@@ -36,6 +36,8 @@ export default function CommonsEditPage() {
         "startingDate": commons.startingDate,
         "degradationRate": commons.degradationRate,
         "carryingCapacity": commons.carryingCapacity,
+        "aboveCapacityHealthUpdateStrategy": commons.aboveCapacityHealthUpdateStrategy,
+        "belowCapacityHealthUpdateStrategy": commons.belowCapacityHealthUpdateStrategy,
         "showLeaderboard": commons.showLeaderboard,
     }
   });
