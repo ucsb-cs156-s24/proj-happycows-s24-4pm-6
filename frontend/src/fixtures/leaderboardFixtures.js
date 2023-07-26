@@ -7,7 +7,10 @@ const leaderboardFixtures = {
             "username": "one",
             "commonsId": 1,
             "totalWealth" : 1000,
-            "numOfCows": 5
+            "numOfCows": 5,
+            "cowsBought": 5,
+            "cowsSold": 5,
+            "cowDeaths": 5
         }
     ],
     threeUserCommonsLB:
@@ -18,7 +21,10 @@ const leaderboardFixtures = {
             "username": "one",
             "commonsId": 1,
             "totalWealth" : 1000,
-            "numOfCows": 8
+            "numOfCows": 8,
+            "cowsBought": 8,
+            "cowsSold": 8,
+            "cowDeaths": 8
         },
         {
             "id":2,
@@ -26,7 +32,10 @@ const leaderboardFixtures = {
             "username": "two",
             "commonsId": 1,
             "totalWealth" : 1000,
-            "numOfCows": 5
+            "numOfCows": 5,
+            "cowsBought": 5,
+            "cowsSold": 5,
+            "cowDeaths": 5
         },
         {
             "id":3,
@@ -34,7 +43,10 @@ const leaderboardFixtures = {
             "username": "three",
             "commonsId": 1,
             "totalWealth" : 100000,
-            "numOfCows": 1000
+            "numOfCows": 1000,
+            "cowsBought": 1000,
+            "cowsSold": 1000,
+            "cowDeaths": 1000
         }
     ],
     fiveUserCommonsLB: 
@@ -46,7 +58,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 1000,
             "cowHealth": 93.0,
-            "numOfCows": 8
+            "numOfCows": 8,
+            "cowsBought": 8,
+            "cowsSold": 8,
+            "cowDeaths": 8
         },
         {
             "id":2,
@@ -55,7 +70,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 1000,
             "cowHealth": 98.0,
-            "numOfCows": 5
+            "numOfCows": 5,
+            "cowsBought": 5,
+            "cowsSold": 5,
+            "cowDeaths": 5
         },
         {
             "id":3,
@@ -64,7 +82,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 100000,
             "cowHealth": 2.0,
-            "numOfCows": 1000
+            "numOfCows": 1000,
+            "cowsBought": 1000,
+            "cowsSold": 1000,
+            "cowDeaths": 1000
         },
         {
             "id":4,
@@ -73,7 +94,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 50,
             "cowHealth": 84.0,
-            "numOfCows": 100
+            "numOfCows": 100,
+            "cowsBought": 100,
+            "cowsSold": 100,
+            "cowDeaths": 100
         },
         {
             "id":5,
@@ -81,7 +105,10 @@ const leaderboardFixtures = {
             "username": "five",
             "commonsId": 1,
             "totalWealth" : 800,
-            "numOfCows": 60
+            "numOfCows": 60,
+            "cowsBought": 60,
+            "cowsSold": 60,
+            "cowDeaths": 60
         }
     ],
     tenUserCommonsLB: 
@@ -93,7 +120,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 1000,
             "cowHealth": 93.0,
-            "numOfCows": 8
+            "numOfCows": 8,
+            "cowsBought": 8,
+            "cowsSold": 8,
+            "cowDeaths": 8
         },
         {
             "id":2,
@@ -102,7 +132,10 @@ const leaderboardFixtures = {
             "username": "two",
             "totalWealth" : 1000,
             "cowHealth": 98.0,
-            "numOfCows": 5
+            "numOfCows": 5,
+            "cowsBought": 5,
+            "cowsSold": 5,
+            "cowDeaths": 5
         },
         {
             "id":3,
@@ -111,7 +144,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 100000,
             "cowHealth": 2.0,
-            "numOfCows": 1000
+            "numOfCows": 1000,
+            "cowsBought": 1000,
+            "cowsSold": 1000,
+            "cowDeaths": 1000
         },
         {
             "id":4,
@@ -120,7 +156,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 50,
             "cowHealth": 84.0,
-            "numOfCows": 100
+            "numOfCows": 100,
+            "cowsBought": 100,
+            "cowsSold": 100,
+            "cowDeaths": 100
         },
         {
             "id":5,
@@ -129,7 +168,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 800,
             "cowHealth": 72.0,
-            "numOfCows": 60
+            "numOfCows": 60,
+            "cowsBought": 60,
+            "cowsSold": 60,
+            "cowDeaths": 60
         },
         {
             "id":6,
@@ -138,7 +180,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 1000,
             "cowHealth": 93.0,
-            "numOfCows": 8
+            "numOfCows": 8,
+            "cowsBought": 8,
+            "cowsSold": 8,
+            "cowDeaths": 8
         },
         {
             "id":7,
@@ -147,7 +192,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 1000,
             "cowHealth": 98.0,
-            "numOfCows": 5
+            "numOfCows": 5,
+            "cowsBought": 5,
+            "cowsSold": 5,
+            "cowDeaths": 5
         },
         {
             "id":8,
@@ -156,7 +204,10 @@ const leaderboardFixtures = {
             "commonsId":  1,
             "totalWealth" : 100000,
             "cowHealth": 2.0,
-            "numOfCows": 1000
+            "numOfCows": 1000,
+            "cowsBought": 1000,
+            "cowsSold": 1000,
+            "cowDeaths": 1000
         },
         {
             "id":9,
@@ -165,7 +216,10 @@ const leaderboardFixtures = {
             "commonsId":  1,
             "totalWealth" : 50,
             "cowHealth": 84.0,
-            "numOfCows": 100
+            "numOfCows": 100,
+            "cowsBought": 100,
+            "cowsSold": 100,
+            "cowDeaths": 100
         },
         {
             "id":10,
@@ -173,9 +227,13 @@ const leaderboardFixtures = {
             "username": "ten",
             "commonsId": 1,
             "totalWealth" : 800,
-            "numOfCows": 60
+            "numOfCows": 60,
+            "cowsBought": 60,
+            "cowsSold": 60,
+            "cowDeaths": 60
         }
     ]
 }
 
 export default leaderboardFixtures;
+

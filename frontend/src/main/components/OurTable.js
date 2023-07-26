@@ -4,7 +4,12 @@ import { Table, Button } from "react-bootstrap";
 import Plaintext from "main/components/Utils/Plaintext";
 // Stryker disable all
 var tableStyle = {
-  "background": "white"
+  "background": "white",
+  "display": "block" ,
+  "max-width": "-moz-fit-content" ,
+  "margin": "0 auto" ,
+  "overflow-x": "auto" ,
+  "white-space": "nowrap"
 };
 // Stryker enable all
 export default function OurTable({ columns, data, testid = "testid", ...rest }) {

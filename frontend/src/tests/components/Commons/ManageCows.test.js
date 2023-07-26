@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import ManageCows from "main/components/Commons/ManageCows"; 
-import userCommonsFixtures from "fixtures/userCommonsFixtures"; 
+import userCommonsFixtures from "fixtures/userCommonsFixtures";
 
 describe("ManageCows tests", () => {
     test("renders without crashing", () => {
@@ -21,10 +21,10 @@ describe("ManageCows tests", () => {
         const sellButton = screen.getByTestId("sell-cow-button");
         
         fireEvent.click(buyButton);
-        await waitFor( ()=>expect(mockBuy).toHaveBeenCalled() );
+        await waitFor( ()=>expect(mockBuy).toHaveBeenCalledWith(userCommonsFixtures.oneUserCommons[0]) );
 
         fireEvent.click(sellButton);
-        await waitFor( ()=>expect(mockSell).toHaveBeenCalled() );
+        await waitFor( ()=>expect(mockSell).toHaveBeenCalledWith(userCommonsFixtures.oneUserCommons[0]) );
         
     });
 

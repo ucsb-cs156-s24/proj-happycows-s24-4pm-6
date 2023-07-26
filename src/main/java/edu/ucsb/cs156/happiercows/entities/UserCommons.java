@@ -1,14 +1,13 @@
 package edu.ucsb.cs156.happiercows.entities;
 
-import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Builder;
-import lombok.AccessLevel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
-
-import javax.persistence.*;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 
 @Data
 @AllArgsConstructor
@@ -16,22 +15,43 @@ import javax.persistence.*;
 @Builder
 @Entity(name = "user_commons")
 public class UserCommons {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;  
+    @EmbeddedId
+    @JsonIgnore
+    @Builder.Default
+    private final UserCommonsKey id = new UserCommonsKey();
 
-  @Column(name="commons_id")
-  private long commonsId;  
+    @MapsId("userId")
+    @ManyToOne
+    @JsonIgnore
+    private User user;
 
-  @Column(name="user_id")
-  private long userId;  
+    @MapsId("commonsId")
+    @ManyToOne
+    @JsonIgnore
+    private Commons commons;
 
-  private String username;
+    private String username;
 
-  private double totalWealth;
+    private double totalWealth;
 
-  private int numOfCows;
+    private int numOfCows;
 
-  private double cowHealth;
+    private double cowHealth;
+
+    private int cowsBought;
+
+    private int cowsSold;
+
+    private int cowDeaths;
+
+    // userID and commonsId are used by the frontend
+    @JsonInclude
+    public long getUserId() {
+      return user.getId();
+    }
+
+    @JsonInclude
+    public long getCommonsId() {
+        return commons.getId();
+    }
 }
-
