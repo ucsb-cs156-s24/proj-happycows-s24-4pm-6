@@ -30,6 +30,12 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
         for (Commons commons : allCommons) {
             ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", carryingCapacity: " + commons.getCarryingCapacity());
+            int numUsers = commonsRepository.getNumUsers(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumUsers(" + commons.getId() + ")"));
+
+            if (numUsers==0) {
+                ctx.log("No users in this commons, skipping");
+                continue;
+            }
 
             int carryingCapacity = commons.getCarryingCapacity();
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
