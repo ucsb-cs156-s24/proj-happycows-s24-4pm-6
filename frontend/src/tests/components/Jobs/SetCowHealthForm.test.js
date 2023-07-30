@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import AxiosMockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import commonsFixtures from "fixtures/commonsFixtures";
-import mockConsole from "jest-mock-console";
+// import mockConsole from "jest-mock-console";
 const mockedNavigate = jest.fn();
 
 jest.mock("react-router-dom", () => ({
@@ -64,7 +64,6 @@ describe("SetCowHealthForm tests", () => {
     getItemSpy.mockImplementation(() => null);
 
     const submitAction = jest.fn();
-    // const restoreConsole = mockConsole();
     axiosMock
       .onGet("/api/commons/all")
       .reply(200, commonsFixtures.threeCommons);
@@ -94,7 +93,7 @@ describe("SetCowHealthForm tests", () => {
 
     fireEvent.change(healthInput, { target: { value: "10" } });
     fireEvent.click(submitButton);
-    // submitButton.click();
+   
 
     // assert - check that the console.log was called with the expected message
     await waitFor(() => {
@@ -108,14 +107,6 @@ describe("SetCowHealthForm tests", () => {
         "selectedCommonsName": "Anika's Commons"
       }
     );
-
-    // expect(console.log).toHaveBeenNthCalledWith(1, "submitSetCowHealthJob", {
-    //   healthValue: "10",
-    //   selectedCommons: 1,
-    //   selectedCommonsName: "Anika's Commons"
-    // });
-
-    // restoreConsole();
   });
 
   it("can show error messages when user doesn't select commons", async () => {

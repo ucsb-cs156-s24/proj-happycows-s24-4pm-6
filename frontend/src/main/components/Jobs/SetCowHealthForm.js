@@ -20,7 +20,7 @@ function SetCowHealthForm({submitAction, testid="SetCowHealthForm"}) {
   const {
     handleSubmit,
     setValue,
-    getValues,
+   //  getValues,
     register,
     formState: {errors},
   } = useForm({ defaultValues });
