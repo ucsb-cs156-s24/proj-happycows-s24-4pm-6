@@ -1,12 +1,12 @@
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
-import {QueryClient, QueryClientProvider} from "react-query";
-import {MemoryRouter} from "react-router-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 import AdminJobsPage from "main/pages/AdminJobsPage";
-import {apiCurrentUserFixtures} from "fixtures/currentUserFixtures";
-import {systemInfoFixtures} from "fixtures/systemInfoFixtures";
+import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
+import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import jobsFixtures from "fixtures/jobsFixtures";
 import mockConsole from "jest-mock-console";
 import commonsFixtures from "../../fixtures/commonsFixtures";
@@ -101,15 +101,16 @@ describe("AdminJobsPage tests", () => {
     const restoreConsole = mockConsole();
     axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
 
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    getItemSpy.mockImplementation(() => null);
 
     render(
-        <QueryClientProvider client={queryClient}>
-          <MemoryRouter>
-            <AdminJobsPage/>
-          </MemoryRouter>
-        </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AdminJobsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
-
 
     const setCowHealthButton = await screen.findByText("Set Cow Health For A Particular Commons")
     expect(setCowHealthButton).toBeInTheDocument();
@@ -126,7 +127,7 @@ describe("AdminJobsPage tests", () => {
     expect(healthInput).toBeInTheDocument();
     expect(submitButton).toBeInTheDocument();
 
-    fireEvent.change(healthInput, {target: {value: "10"}});
+    fireEvent.change(healthInput, { target: { value: "10" } });
     submitButton.click();
 
     // assert - check that the console.log was called with the expected message
@@ -135,12 +136,13 @@ describe("AdminJobsPage tests", () => {
     })
     expect(console.log).toHaveBeenNthCalledWith(1, "submitSetCowHealthJob", {
       "healthValue": "10",
-      "selectedCommons": 1
+      "selectedCommons": 1,
+      "selectedCommonsName": "Anika's Commons",
     });
     restoreConsole();
 
     expect(axiosMock.history.post[0].url).toBe(
-        `/api/jobs/launch/setcowhealth?commonsID=1&health=10`
+      `/api/jobs/launch/setcowhealth?commonsID=1&health=10`
     );
   });
 
@@ -199,4 +201,28 @@ describe("AdminJobsPage tests", () => {
       "/api/jobs/launch/milkthecowjob"
     );
   });
+
+
+  test("user can attempt to submit instructor report form job", async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AdminJobsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText("Instructor Report")).toBeInTheDocument();
+
+    const InstructorReportJobButton = screen.getByText("Instructor Report");
+    expect(InstructorReportJobButton).toBeInTheDocument();
+    InstructorReportJobButton.click();
+
+    const submitButton = screen.getByTestId("InstructorReport-Submit-Button");
+
+    expect(submitButton).toBeInTheDocument();
+    submitButton.click();
+  });
+
+
 });

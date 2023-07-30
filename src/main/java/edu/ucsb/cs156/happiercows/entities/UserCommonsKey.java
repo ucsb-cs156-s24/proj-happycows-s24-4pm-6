@@ -1,19 +1,24 @@
 package edu.ucsb.cs156.happiercows.entities;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
-import lombok.Data;
 
 @Data
 @Embeddable
-class UserCommonsKey implements Serializable {
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class UserCommonsKey implements Serializable {
+    @JoinColumn(name = "user_id")
+    private long userId;
 
-    @Column(name = "commons_id")
-    Long commonsId;
+    @JoinColumn(name = "commons_id")
+    private long commonsId;
 
-    @Column(name = "user_id")
-    Long userId;
 }

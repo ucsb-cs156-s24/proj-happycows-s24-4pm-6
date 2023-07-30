@@ -14,6 +14,7 @@ const Profits = ({ profits }) => {
         })) : 
         // Stryker disable next-line ArrayDeclaration : no need to test what happens if [] is replaced with ["Stryker was here"]
         [];
+        profitsForTable.reverse();
     return (
         <Card>
             <Card.Header as="h5">

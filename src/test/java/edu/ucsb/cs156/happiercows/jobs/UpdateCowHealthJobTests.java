@@ -30,220 +30,321 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
 public class UpdateCowHealthJobTests {
-    @Mock
-    CommonsRepository commonsRepository;
+        @Mock
+        CommonsRepository commonsRepository;
 
-    @Mock
-    UserCommonsRepository userCommonsRepository;
+        @Mock
+        UserCommonsRepository userCommonsRepository;
 
-    @Mock
-    UserRepository userRepository;
+        @Mock
+        UserRepository userRepository;
 
-    private final User user = User
-            .builder()
-            .id(1L)
-            .fullName("Chris Gaucho")
-            .email("cgaucho@example.org")
-            .build();
+        private final User user = User
+                        .builder()
+                        .id(1L)
+                        .fullName("Chris Gaucho")
+                        .email("cgaucho@example.org")
+                        .build();
 
-    private final UserCommons userCommons = UserCommons
-            .builder()
-            .id(1L)
-            .userId(1L)
-            .commonsId(1L)
-            .totalWealth(300)
-            .numOfCows(1)
-            .cowHealth(10.0)
-            .build();
+        private final Commons commons = Commons
+                        .builder()
+                        .name("test commons")
+                        .cowPrice(10)
+                        .milkPrice(2)
+                        .startingBalance(300)
+                        .startingDate(LocalDateTime.now())
+                        .carryingCapacity(100)
+                        .degradationRate(1)
+                        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
+                        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
+                        .build();
 
-    private final Commons commons = Commons
-            .builder()
-            .name("test commons")
-            .cowPrice(10)
-            .milkPrice(2)
-            .startingBalance(300)
-            .startingDate(LocalDateTime.now())
-            .carryingCapacity(100)
-            .degradationRate(1)
-            .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
-            .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
-            .build();
+        private final UserCommons userCommons = UserCommons
+                        .builder()
+                        .user(user)
+                        .commons(commons)
+                        .totalWealth(300)
+                        .numOfCows(1)
+                        .cowHealth(10.0)
+                        .build();
 
-    private final Job job = Job.builder().build();
-    private final JobContext ctx = new JobContext(null, job);
+        private final Job job = Job.builder().build();
+        private final JobContext ctx = new JobContext(null, job);
 
-    private void runUpdateCowHealthJob() throws Exception {
-        var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository, userRepository);
-        updateCowHealthJob.accept(ctx);
-    }
+        private void runUpdateCowHealthJob() throws Exception {
+                var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository,
+                                userRepository);
+                updateCowHealthJob.accept(ctx);
+        }
 
-    @Test
-    void test_log_output_with_no_commons() throws Exception {
-        runUpdateCowHealthJob();
+        @Test
+        void test_log_output_with_no_commons() throws Exception {
+                runUpdateCowHealthJob();
 
-        String expected = """
-                Updating cow health...
-                Cow health has been updated!""";
-        assertEquals(expected, job.getLog());
-    }
+                String expected = """
+                                Updating cow health...
+                                Cow health has been updated!""";
+                assertEquals(expected, job.getLog());
+        }
 
-    private void setupUpdateCowHealthTestOnCommons(int totalCows) {
+    private void setupUpdateCowHealthTestOnCommons(int totalCows, int numUsers) {
         when(commonsRepository.findAll()).thenReturn(List.of(commons));
         when(userCommonsRepository.findByCommonsId(commons.getId())).thenReturn(List.of(userCommons));
         when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(totalCows));
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.of(numUsers));
     }
 
-    @Test
-    void test_uses_above_capacity_update_strategy() throws Exception {
-        commons.setAboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant);
-        double expectedNewHealth = 9.0;
+        @Test
+        void test_uses_above_capacity_update_strategy() throws Exception {
+                commons.setAboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant);
+                double expectedNewHealth = 9.0;
 
-        setupUpdateCowHealthTestOnCommons(101);
-        runUpdateCowHealthJob();
+                setupUpdateCowHealthTestOnCommons(101, 1);
+                runUpdateCowHealthJob();
 
-        assertEquals(expectedNewHealth, userCommons.getCowHealth());
+                assertEquals(expectedNewHealth, userCommons.getCowHealth());
 
-        String expected = """
-                Updating cow health...
-                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
-                User: Chris Gaucho, numCows: 1, cowHealth: 10.0
-                 old cow health: 10.0, new cow health: 9.0
-                Cow health has been updated!""";
-        assertEquals(expected, job.getLog());
-    }
+                String expected = """
+                                Updating cow health...
+                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                User: Chris Gaucho, numCows: 1, cowHealth: 10.0
+                                 old cow health: 10.0, new cow health: 9.0
+                                Cow health has been updated!""";
+                assertEquals(expected, job.getLog());
+        }
 
-    @Test
-    void test_uses_below_capacity_update_strategy() throws Exception {
-        commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant);
-        double expectedNewHealth = 11.0;
+        @Test
+        void test_uses_below_capacity_update_strategy() throws Exception {
+                commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant);
+                double expectedNewHealth = 11.0;
+                setupUpdateCowHealthTestOnCommons(99, 1);
+                runUpdateCowHealthJob();
 
-        setupUpdateCowHealthTestOnCommons(99);
-        runUpdateCowHealthJob();
+                assertEquals(expectedNewHealth, userCommons.getCowHealth());
 
-        assertEquals(expectedNewHealth, userCommons.getCowHealth());
+                String expected = """
+                                Updating cow health...
+                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                User: Chris Gaucho, numCows: 1, cowHealth: 10.0
+                                 old cow health: 10.0, new cow health: 11.0
+                                Cow health has been updated!""";
+                assertEquals(expected, job.getLog());
+        }
 
-        String expected = """
-                Updating cow health...
-                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
-                User: Chris Gaucho, numCows: 1, cowHealth: 10.0
-                 old cow health: 10.0, new cow health: 11.0
-                Cow health has been updated!""";
-        assertEquals(expected, job.getLog());
-    }
+        @Test
+        void test_uses_below_capacity_update_strategy_if_equal_to_carrying_capacity() throws Exception {
+                commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant);
+                double expectedNewHealth = 11.0;
 
+                setupUpdateCowHealthTestOnCommons(commons.getCarryingCapacity(), 1);
+                runUpdateCowHealthJob();
 
-    @Test
-    void test_uses_below_capacity_update_strategy_if_equal_to_carrying_capacity() throws Exception {
-        commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant);
-        double expectedNewHealth = 11.0;
+                assertEquals(expectedNewHealth, userCommons.getCowHealth());
 
-        setupUpdateCowHealthTestOnCommons(commons.getCarryingCapacity());
-        runUpdateCowHealthJob();
+                String expected = """
+                                Updating cow health...
+                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                User: Chris Gaucho, numCows: 1, cowHealth: 10.0
+                                 old cow health: 10.0, new cow health: 11.0
+                                Cow health has been updated!""";
+                assertEquals(expected, job.getLog());
+        }
 
-        assertEquals(expectedNewHealth, userCommons.getCowHealth());
-        String expected = """
-                Updating cow health...
-                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
-                User: Chris Gaucho, numCows: 1, cowHealth: 10.0
-                 old cow health: 10.0, new cow health: 11.0
-                Cow health has been updated!""";
-        assertEquals(expected, job.getLog());
-    }
+        @Test
+        void test_cow_health_minimum_is_0() throws Exception {
+                var mockStrategy = mock(CowHealthUpdateStrategy.class);
+                when(mockStrategy.calculateNewCowHealth(any(), any(), anyInt())).thenReturn(-1.0);
+                var newHealth = UpdateCowHealthJob.calculateNewCowHealthUsingStrategy(
+                                mockStrategy,
+                                commons,
+                                userCommons,
+                                1);
+                assertEquals(0.0, newHealth);
+        }
 
-    @Test
-    void test_cow_health_minimum_is_0() throws Exception {
-        var mockStrategy = mock(CowHealthUpdateStrategy.class);
-        when(mockStrategy.calculateNewCowHealth(any(), any(), anyInt())).thenReturn(-1.0);
-        var newHealth = UpdateCowHealthJob.calculateNewCowHealthUsingStrategy(
-                mockStrategy,
-                commons,
-                userCommons,
-                1
-        );
-        assertEquals(0.0, newHealth);
-    }
+        @Test
+        void test_cow_health_maximum_is_100() throws Exception {
+                var mockStrategy = mock(CowHealthUpdateStrategy.class);
+                when(mockStrategy.calculateNewCowHealth(any(), any(), anyInt())).thenReturn(101.0);
+                var newHealth = UpdateCowHealthJob.calculateNewCowHealthUsingStrategy(
+                                mockStrategy,
+                                commons,
+                                userCommons,
+                                1);
+                assertEquals(100.0, newHealth);
+        }
 
-    @Test
-    void test_cow_health_maximum_is_100() throws Exception {
-        var mockStrategy = mock(CowHealthUpdateStrategy.class);
-        when(mockStrategy.calculateNewCowHealth(any(), any(), anyInt())).thenReturn(101.0);
-        var newHealth = UpdateCowHealthJob.calculateNewCowHealthUsingStrategy(
-                mockStrategy,
-                commons,
-                userCommons,
-                1
-        );
-        assertEquals(100.0, newHealth);
-    }
+        @Test
+        void test_updating_values_for_multiple_users() throws Exception {
+                var userCommons1 = userCommons;
+                var userCommons2 = UserCommons
+                                .builder()
+                                .user(user)
+                                .commons(commons)
+                                .totalWealth(300)
+                                .numOfCows(6)
+                                .cowHealth(20)
+                                .build();
+                commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear);
 
-    @Test
-    void test_updating_values_for_multiple_users() throws Exception {
-        var userCommons1 = userCommons;
-        var userCommons2 = UserCommons
-                .builder()
-                .id(1L)
-                .userId(1L)
-                .commonsId(1L)
-                .totalWealth(300)
-                .numOfCows(6)
-                .cowHealth(20)
-                .build();
-        commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear);
+                when(commonsRepository.findAll()).thenReturn(List.of(commons));
+                when(userCommonsRepository.findByCommonsId(commons.getId()))
+                                .thenReturn(List.of(userCommons1, userCommons2));
+                when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(99));
+                when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+                when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.of(2));
 
-        when(commonsRepository.findAll()).thenReturn(List.of(commons));
-        when(userCommonsRepository.findByCommonsId(commons.getId())).thenReturn(List.of(userCommons1, userCommons2));
-        when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(99));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+                runUpdateCowHealthJob();
 
-        runUpdateCowHealthJob();
+                String expected = """
+                                Updating cow health...
+                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                User: Chris Gaucho, numCows: 1, cowHealth: 10.0
+                                 old cow health: 10.0, new cow health: 11.0
+                                User: Chris Gaucho, numCows: 6, cowHealth: 20.0
+                                 old cow health: 20.0, new cow health: 21.0
+                                Cow health has been updated!""";
 
+                assertEquals(expected, job.getLog());
 
-        String expected = """
-                Updating cow health...
-                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
-                User: Chris Gaucho, numCows: 1, cowHealth: 10.0
-                 old cow health: 10.0, new cow health: 11.0
-                User: Chris Gaucho, numCows: 6, cowHealth: 20.0
-                 old cow health: 20.0, new cow health: 21.0
-                Cow health has been updated!""";
+                assertEquals(11.0, userCommons1.getCowHealth());
+                assertEquals(21.0, userCommons2.getCowHealth());
+        }
 
-        assertEquals(expected, job.getLog());
+        @Test
+        void test_calculateCowDeaths_health_zero() throws Exception {
+                // arrange
+                UserCommons userCommons = UserCommons
+                                .builder()
+                                .user(user)
+                                .commons(commons)
+                                .totalWealth(300)
+                                .numOfCows(5)
+                                .cowHealth(0.0)
+                                .cowDeaths(0)
+                                .build();
 
-        assertEquals(11.0, userCommons1.getCowHealth());
-        assertEquals(21.0, userCommons2.getCowHealth());
-    }
+                // act
+                UpdateCowHealthJob.calculateCowDeaths(userCommons, ctx);
 
-    @Test
-    void test_throws_exception_when_get_num_cows_fails() {
-        setupUpdateCowHealthTestOnCommons(100);
-        commons.setId(117);
-        when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.empty());
+                // assert
+                assertEquals(0, userCommons.getNumOfCows());
+                assertEquals(5, userCommons.getCowDeaths());
+                assertEquals(100.0, userCommons.getCowHealth());
+        }
 
-        var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository,
-                userRepository);
+        @Test
+        void test_calculateCowDeaths_health_nonZero() throws Exception {
+                // arrange
+                UserCommons userCommons = UserCommons
+                                .builder()
+                                .user(user)
+                                .commons(commons)
+                                .totalWealth(300)
+                                .numOfCows(5)
+                                .cowHealth(1.0)
+                                .cowDeaths(42)
+                                .build();
 
-        var thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-            updateCowHealthJob.accept(ctx);
-        });
+                // act
+                UpdateCowHealthJob.calculateCowDeaths(userCommons, ctx);
 
-        Assertions.assertEquals("Error calling getNumCows(117)", thrown.getMessage());
-    }
+                // assert
+                assertEquals(5, userCommons.getNumOfCows());
+                assertEquals(42, userCommons.getCowDeaths());
+                assertEquals(1.0, userCommons.getCowHealth());
+        }
 
-    @Test
-    void test_throws_exception_when_getting_user_fails() {
-        user.setId(321);
-        userCommons.setUserId(user.getId());
-        setupUpdateCowHealthTestOnCommons(100);
-        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+        @Test
+        void test_cowDeaths_in_job_context() throws Exception {
+                UserCommons userCommons = UserCommons
+                                .builder()
+                                .user(user)
+                                .commons(commons)
+                                .totalWealth(300)
+                                .numOfCows(5)
+                                .cowHealth(-1.0)
+                                .cowDeaths(0)
+                                .build();
+                commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear);
 
-        var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository,
-                userRepository);
+                when(commonsRepository.findAll()).thenReturn(List.of(commons));
+                when(userCommonsRepository.findByCommonsId(commons.getId())).thenReturn(List.of(userCommons));
+                when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(99));
+                when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+                when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.of(1));
 
-        var thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-            updateCowHealthJob.accept(ctx);
-        });
+                runUpdateCowHealthJob();
 
-        Assertions.assertEquals("Error calling userRepository.findById(321)", thrown.getMessage());
-    }
+                String expected = """
+                                Updating cow health...
+                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                User: Chris Gaucho, numCows: 5, cowHealth: -1.0
+                                 5 cows for this user died.
+                                 old cow health: -1.0, new cow health: 100.0
+                                Cow health has been updated!""";
+
+                assertEquals(expected, job.getLog());
+
+                assertEquals(0, userCommons.getNumOfCows());
+                assertEquals(5, userCommons.getCowDeaths());
+                assertEquals(100.0, userCommons.getCowHealth());
+        }
+
+        @Test
+        void test_skipping_job_when_commons_has_zero_users() throws Exception {
+
+                commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear);
+
+                when(commonsRepository.findAll()).thenReturn(List.of(commons));
+                when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.of(0));
+
+                runUpdateCowHealthJob();
+
+                String expected = """
+                                Updating cow health...
+                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                No users in this commons, skipping
+                                Cow health has been updated!""";
+
+                assertEquals(expected, job.getLog());
+        }
+
+        @Test
+        void test_throws_exception_when_get_num_cows_fails() {
+                setupUpdateCowHealthTestOnCommons(100, 1);
+                commons.setId(117);
+                when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.empty());
+                when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.of(1));
+
+                var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository,
+                                userCommonsRepository,
+                                userRepository);
+
+                var thrown = Assertions.assertThrows(RuntimeException.class, () -> {
+                        updateCowHealthJob.accept(ctx);
+                });
+
+                Assertions.assertEquals("Error calling getNumCows(117)",
+                                thrown.getMessage());
+        }
+
+        @Test
+        void test_throws_exception_when_get_num_users_fails() {
+                setupUpdateCowHealthTestOnCommons(100, 1);
+                commons.setId(117);
+                when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.empty());
+
+                var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository,
+                                userCommonsRepository,
+                                userRepository);
+
+                var thrown = Assertions.assertThrows(RuntimeException.class, () -> {
+                        updateCowHealthJob.accept(ctx);
+                });
+
+                Assertions.assertEquals("Error calling getNumUsers(117)",
+                                thrown.getMessage());
+        }
 }

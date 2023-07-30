@@ -32,7 +32,7 @@ describe("SetCowHealthForm tests", () => {
     expect(screen.getByText(/Set Cow Health/)).toBeInTheDocument();
   });
 
-  it("has validation errors for required fields", async () => {
+  it("validates health > 0", async () => {
     const submitAction = jest.fn();
 
     render(
@@ -53,14 +53,18 @@ describe("SetCowHealthForm tests", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/Health must be/i)).toBeInTheDocument();
+      expect(screen.getByText(/Health Value must be ≥ 0/i)).toBeInTheDocument();
     });
     expect(submitAction).not.toBeCalled();
   });
 
-  it("user can successfully submit the job", async () => {
+  it("user can sucessfully submit the job", async () => {
+
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    getItemSpy.mockImplementation(() => null);
+
     const submitAction = jest.fn();
-    const restoreConsole = mockConsole();
+    // const restoreConsole = mockConsole();
     axiosMock
       .onGet("/api/commons/all")
       .reply(200, commonsFixtures.threeCommons);
@@ -89,22 +93,96 @@ describe("SetCowHealthForm tests", () => {
     expect(submitButton).toBeInTheDocument();
 
     fireEvent.change(healthInput, { target: { value: "10" } });
+    fireEvent.click(submitButton);
+    // submitButton.click();
+
+    // assert - check that the console.log was called with the expected message
+    await waitFor(() => {
+      expect(submitAction).toHaveBeenCalled();
+    });
+
+    expect(submitAction).toHaveBeenCalledWith(
+      {
+        "healthValue": "10",
+        "selectedCommons": 1,
+        "selectedCommonsName": "Anika's Commons"
+      }
+    );
+
+    // expect(console.log).toHaveBeenNthCalledWith(1, "submitSetCowHealthJob", {
+    //   healthValue: "10",
+    //   selectedCommons: 1,
+    //   selectedCommonsName: "Anika's Commons"
+    // });
+
+    // restoreConsole();
+  });
+
+  it("can show error messages when user doesn't select commons", async () => {
+    const submitAction = jest.fn();
+    // const restoreConsole = mockConsole();
+    axiosMock
+      .onGet("/api/commons/all")
+      .reply(200, commonsFixtures.threeCommons);
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <SetCowHealthForm
+            submitAction={submitAction}
+            jobs={jobsFixtures.sixJobs}
+          />
+        </Router>
+      </QueryClientProvider>
+    );
+
+    const submitButton = screen.getByTestId("SetCowHealthForm-Submit-Button");
+    await waitFor(() => {
+      expect(submitButton).toBeInTheDocument();
+    });
+
     submitButton.click();
 
     // assert - check that the console.log was called with the expected message
     await waitFor(() => {
-      expect(console.log).toHaveBeenCalled();
+      expect(screen.getByText(/Please select a commons./)).toBeInTheDocument();
     });
-    expect(console.log).toHaveBeenNthCalledWith(1, "submitSetCowHealthJob", {
-      healthValue: "10",
-      selectedCommons: 1,
-    });
-    restoreConsole();
+  });
 
-    expect(axiosMock.history.post[0].url).toBe(
-      `/api/jobs/launch/setcowhealth?commonsID=1&health=10`
+  test("when localstorage has no value, the default value of healthValue is 100", async () => {
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    getItemSpy.mockImplementation(() => null);
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+        </Router>
+      </QueryClientProvider>
     );
 
-    expect(submitAction).toHaveBeenCalled();
+    const healthInput = screen.getByTestId("SetCowHealthForm-healthValue");
+    expect(healthInput).toHaveValue(100);
+
   });
+
+  test("healthValue can be loaded from localstorage", async () => {
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    getItemSpy.mockImplementation(() => 42);
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+        </Router>
+      </QueryClientProvider>
+    );
+
+    const healthInput = screen.getByTestId("SetCowHealthForm-healthValue");
+    expect(healthInput).toHaveValue(42);
+
+  });
+
+
+
 });

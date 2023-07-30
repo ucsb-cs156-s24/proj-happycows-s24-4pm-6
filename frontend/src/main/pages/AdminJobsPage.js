@@ -65,7 +65,7 @@ const AdminJobsPage = () => {
 
   const submitSetCowHealthJob = async (data) => {
     console.log("submitSetCowHealthJob", data);
-    toast("Submitted Job: Set Cow Health");
+    toast(`Submitted Job: Set Cow Health (Commons: ${data.selectedCommonsName}, Health: ${data.healthValue})`);
     SetCowHealthMutation.mutate(data);
   };
 
@@ -96,6 +96,11 @@ const AdminJobsPage = () => {
     url: `/api/jobs/launch/milkthecowjob`,
     method: "POST",
   });
+  
+  const submitInstuctorReportJob = async () => {
+    console.log("submitInstructorReportJob (wip)");
+    toast('Instructor report not yet implemented; coming soon');
+  }
 
   // Stryker disable all
   const MilkTheCowsMutation = useBackendMutation(
@@ -130,7 +135,7 @@ const AdminJobsPage = () => {
     },
     {
       name: "Instructor Report",
-      form: <InstructorReportForm />,
+      form: <InstructorReportForm submitAction={submitInstuctorReportJob} />
     },
   ];
 
@@ -139,7 +144,7 @@ const AdminJobsPage = () => {
       <h2 className="p-3">Launch Jobs</h2>
       <Accordion>
         {jobLaunchers.map((jobLauncher, index) => (
-          <Accordion.Item eventKey={index}>
+          <Accordion.Item eventKey={index} key={index}>
             <Accordion.Header>{jobLauncher.name}</Accordion.Header>
             <Accordion.Body>{jobLauncher.form}</Accordion.Body>
           </Accordion.Item>

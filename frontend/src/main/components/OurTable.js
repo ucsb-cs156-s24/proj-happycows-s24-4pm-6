@@ -6,10 +6,10 @@ import Plaintext from "main/components/Utils/Plaintext";
 var tableStyle = {
   "background": "white",
   "display": "block" ,
-  "max-width": "-moz-fit-content" ,
+  "maxWidth": "-moz-fit-content" ,
   "margin": "0 auto" ,
-  "overflow-x": "auto" ,
-  "white-space": "nowrap"
+  "overflowX": "auto" ,
+  "whiteSpace": "nowrap"
 };
 // Stryker enable all
 export default function OurTable({ columns, data, testid = "testid", ...rest }) {

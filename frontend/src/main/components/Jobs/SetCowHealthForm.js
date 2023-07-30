@@ -3,65 +3,49 @@ import {useState} from "react";
 import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
 
-function SetCowHealthForm({submitAction}) {
-  const defaultValues = {
-    selectedCommons: null,
-    healthValue: 100,
-  };
+function SetCowHealthForm({submitAction, testid="SetCowHealthForm"}) {
+
+  const localHealthValue = localStorage.getItem(`${testid}-health`);
+  const [healthValue, setHealthValue] = useState(localHealthValue || 100);
 
   const {data: commons} = useBackend(
       ["/api/commons/all"],
       {url: "/api/commons/all"},
       []
   );
+  const [selectedCommons, setSelectedCommons] = useState(null);
+  const [selectedCommonsName, setSelectedCommonsName] = useState(null);
+  const defaultValues = { selectedCommons: selectedCommons, healthValue };
 
   const {
     handleSubmit,
-    reset,
     setValue,
     getValues,
-    setError,
+    register,
     formState: {errors},
   } = useForm({ defaultValues });
 
-  const testid = "SetCowHealthForm";
-  const [selectedCommons, setSelectedCommons] = useState(
-    defaultValues.selectedCommons
-  );
   const [showCommonsError, setShowCommonsError] = useState(false);
-  const [healthValue, setHealthValue] = useState(defaultValues.healthValue);
 
   const handleHealthValueChange = (e) => {
     const newValue = e.target.value;
-    if (!(newValue >= 0 && newValue <= 100)) {
-      setError("healthValue", {
-        type: "manual",
-        message: "Health must be between 0 and 100",
-      });
-    } else {
-      setHealthValue(newValue);
-    }
+    setHealthValue(newValue);
+    localStorage.setItem(`${testid}-health`, newValue);
   };
 
-  const handleCommonsSelection = (id) => {
+  const handleCommonsSelection = (id, name) => {
     setSelectedCommons(id);
+    setSelectedCommonsName(name);
     setValue("selectedCommons", id); // Update the form value for selectedCommons
   };
 
   const onSubmit = () => {
-    const { selectedCommons } = getValues(); // Get the form values
-
     if (!selectedCommons) {
       setShowCommonsError(true);
       return;
     }
-
-    submitAction({ selectedCommons, healthValue }); // Call the actual submitAction with form values
-
-    reset({ selectedCommons: null, healthValue: 100 });
-    setHealthValue(100);
-    setSelectedCommons(null);
-    setShowCommonsError(false);
+    const params= { selectedCommons, healthValue, selectedCommonsName };
+    submitAction(params);
   };
 
   return (
@@ -84,7 +68,7 @@ function SetCowHealthForm({submitAction}) {
               type="radio"
               label={object.name}
               data-testid={`${testid}-commons-${object.id}`}
-              onChange={() => handleCommonsSelection(object.id)}
+              onChange={() => handleCommonsSelection(object.id, object.name)}
               checked={selectedCommons === object.id}
             />
           ))}
@@ -97,6 +81,28 @@ function SetCowHealthForm({submitAction}) {
       </Form.Group>
 
       <Form.Group className="mb-3">
+        <Form.Label htmlFor="healthValue">Health [0-100]</Form.Label>
+        <Form.Control
+          data-testid={`${testid}-healthValue`}
+          id="healthValue"
+          type="number"
+          step="1"
+          value={healthValue}
+          isInvalid={!!errors.healthValue}
+          {...register("healthValue", {
+            valueAsNumber: true,
+            required: "healthValue is required",
+            min: {value: 0, message: "Health Value must be ≥ 0"},
+            max: {value: 100, message: "Health Value must be ≤ 100"},
+          })}
+          onChange={handleHealthValueChange}
+        />
+        <Form.Control.Feedback type="invalid">
+          {errors.healthValue?.message}
+        </Form.Control.Feedback>
+      </Form.Group>
+
+      {/* <Form.Group className="mb-3">
         <Form.Label htmlFor="health" className="fw-bold fs-5">
           Health [0-100]
         </Form.Label>
@@ -106,16 +112,18 @@ function SetCowHealthForm({submitAction}) {
           type="number"
           step="1"
           isInvalid={!!errors.healthValue}
-          onBlur={(e) =>
-            setValue("healthValue", e.target.value, { shouldValidate: true })
-          }
           value={healthValue}
           onChange={handleHealthValueChange}
+          {...register("healthValue", {
+            required: "healthValue is required",
+            min: {value: 0, message: "healthValue must be ≥ 0"},
+            min: {value: 100, message: "healthValue must be ≤ 100"},
+          })}
         />
         <Form.Control.Feedback type="invalid">
           {errors.healthValue?.message}
         </Form.Control.Feedback>
-      </Form.Group>
+      </Form.Group> */}
 
       <Button type="submit" data-testid="SetCowHealthForm-Submit-Button">
         Set Cow Health

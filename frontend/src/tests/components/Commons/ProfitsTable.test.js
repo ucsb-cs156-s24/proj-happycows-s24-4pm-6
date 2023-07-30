@@ -14,10 +14,10 @@ describe("ProfitsTable tests", () => {
             <ProfitsTable profits={profitsFixtures.threeProfits} />
         );
         await waitFor(()=>{
-            expect(screen.getByTestId("ProfitsTable-header-Amount") ).toBeInTheDocument();
+            expect(screen.getByTestId("ProfitsTable-header-Profit") ).toBeInTheDocument();
         });
 
-        const expectedHeaders = [ "Amount", "Date", "CowHealth", "NumCows"];
+        const expectedHeaders = [ "Profit", "Date", "Health", "Cows"];
     
         expectedHeaders.forEach((headerText) => {
           const header = screen.getByText(headerText);

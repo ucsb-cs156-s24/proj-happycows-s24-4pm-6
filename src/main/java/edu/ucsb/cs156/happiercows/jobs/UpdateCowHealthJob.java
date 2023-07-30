@@ -30,6 +30,12 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
         for (Commons commons : allCommons) {
             ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", carryingCapacity: " + commons.getCarryingCapacity());
+            int numUsers = commonsRepository.getNumUsers(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumUsers(" + commons.getId() + ")"));
+
+            if (numUsers==0) {
+                ctx.log("No users in this commons, skipping");
+                continue;
+            }
 
             int carryingCapacity = commons.getCarryingCapacity();
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
@@ -40,12 +46,15 @@ public class UpdateCowHealthJob implements JobContextConsumer {
             var cowHealthUpdateStrategy = isAboveCapacity ? commons.getAboveCapacityHealthUpdateStrategy() : commons.getBelowCapacityHealthUpdateStrategy();
 
             for (UserCommons userCommons : allUserCommons) {
-                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(() -> new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
+                User user = userCommons.getUser();
+                var newCowHealth = calculateNewCowHealthUsingStrategy(cowHealthUpdateStrategy, commons, userCommons, totalCows);
                 ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
 
-                var newCowHealth = calculateNewCowHealthUsingStrategy(cowHealthUpdateStrategy, commons, userCommons, totalCows);
-                ctx.log(" old cow health: " + userCommons.getCowHealth() + ", new cow health: " + newCowHealth);
+                double oldHealth = userCommons.getCowHealth();
                 userCommons.setCowHealth(newCowHealth);
+                calculateCowDeaths(userCommons, ctx);
+
+                ctx.log(" old cow health: " + oldHealth + ", new cow health: " + userCommons.getCowHealth());
                 userCommonsRepository.save(userCommons);
             }
         }
@@ -62,5 +71,15 @@ public class UpdateCowHealthJob implements JobContextConsumer {
     ) {
         var health = strategy.calculateNewCowHealth(commons, userCommons, totalCows);
         return Math.max(0, Math.min(health, 100));
+    }
+
+    public static void calculateCowDeaths(UserCommons userCommons, JobContext ctx) {
+        if (userCommons.getCowHealth() == 0.0) {
+            userCommons.setCowDeaths(userCommons.getCowDeaths() + userCommons.getNumOfCows());
+            userCommons.setNumOfCows(0);
+            userCommons.setCowHealth(100.0);
+
+            ctx.log(" " + userCommons.getCowDeaths() + " cows for this user died." );
+        }
     }
 }

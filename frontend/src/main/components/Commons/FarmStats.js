@@ -1,7 +1,6 @@
 import React from "react";
 import { Card } from "react-bootstrap";
-import Health from "./../../../assets/Health.png";
-import Cash from "./../../../assets/Cash.png";
+import { ProgressBar } from "react-bootstrap";
 
 const FarmStats = ({userCommons}) => {
     return (
@@ -9,17 +8,21 @@ const FarmStats = ({userCommons}) => {
         <Card.Header as="h5">Your Farm Stats</Card.Header>
         <Card.Body>
             {/* update total wealth and cow health with data from fixture */}
+            <Card.Title className="text-center">
+                💰 Total Wealth: ${userCommons.totalWealth.toFixed(2)}
+            </Card.Title>
             <Card.Text>
-                <img className="icon" src={Cash} alt="Cash"></img>
+                Total Cows Bought: {userCommons.cowsBought}
             </Card.Text>
             <Card.Text>
-                Total Wealth: ${userCommons.totalWealth}
+                Total Cows Sold: {userCommons.cowsSold}
             </Card.Text>
+            <Card.Title className="text-center">
+                ❤️ Cow Health: {Math.round(userCommons.cowHealth*100)/100}%
+            </Card.Title>
+            <ProgressBar now={userCommons.cowHealth} min={0} max={100} variant="danger" />
             <Card.Text>
-                <img className="icon" src={Health} alt="Health"></img> 
-            </Card.Text>
-            <Card.Text>
-                Cow Health: {Math.round(userCommons.cowHealth*100)/100}%
+                💀 Cow Deaths: {userCommons.cowDeaths}
             </Card.Text>
         </Card.Body>
         </Card>

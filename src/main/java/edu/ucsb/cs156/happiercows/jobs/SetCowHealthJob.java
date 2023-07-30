@@ -1,18 +1,18 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
 
-
-import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
-import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
-import java.util.Optional;
 import edu.ucsb.cs156.happiercows.entities.Commons;
-import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.entities.User;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
-import lombok.Getter;
+import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
+import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.Optional;
 
 @AllArgsConstructor
 public class SetCowHealthJob implements JobContextConsumer {
@@ -32,15 +32,15 @@ public class SetCowHealthJob implements JobContextConsumer {
         ctx.log("Setting cow health...");
 
         Optional<Commons> commons = commonsRepository.findById(commonsID);
-        
+
 
         if (commons.isPresent()) {
             ctx.log("Commons " + commons.get().getName());
 
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.get().getId());
-        
+
             for (UserCommons userCommons : allUserCommons) {
-                User user = userRepository.findById(userCommons.getUserId()).orElseThrow(()->new RuntimeException("Error calling userRepository.findById(" + userCommons.getUserId() + ")"));
+                User user = userCommons.getUser();
                 ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
                 ctx.log(" old cow health: " + userCommons.getCowHealth() + ", new cow health: " + newCowHealth);
                 userCommons.setCowHealth(newCowHealth);
@@ -48,11 +48,9 @@ public class SetCowHealthJob implements JobContextConsumer {
             }
 
             ctx.log("Cow health has been set!");
-        }
-        else {
+        } else {
             ctx.log(String.format("No commons found for id %d", commonsID));
         }
 
-       
-    } 
+    }
 }
