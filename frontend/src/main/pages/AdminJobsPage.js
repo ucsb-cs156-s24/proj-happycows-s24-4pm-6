@@ -122,7 +122,7 @@ const AdminJobsPage = () => {
       form: <TestJobForm submitAction={submitTestJob} />,
     },
     {
-      name: "Set Cow Health For A Particular Commons",
+      name: "Set Cow Health for a Specific Commons",
       form: <SetCowHealthForm submitAction={submitSetCowHealthJob} />,
     },
     {

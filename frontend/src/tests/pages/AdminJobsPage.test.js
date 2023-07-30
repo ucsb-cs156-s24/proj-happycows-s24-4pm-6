@@ -40,7 +40,7 @@ describe("AdminJobsPage tests", () => {
     expect(await screen.findByText("Job Status")).toBeInTheDocument();
 
     expect(await screen.findByText("Test Job")).toBeInTheDocument();
-    expect(await screen.findByText("Set Cow Health")).toBeInTheDocument();
+    expect(await screen.findByText("Set Cow Health for a Specific Commons")).toBeInTheDocument();
     expect(await screen.findByText("Update Cow Health")).toBeInTheDocument();
     expect(await screen.findByText("Milk The Cows")).toBeInTheDocument();
     expect(await screen.findByText("Instructor Report")).toBeInTheDocument();
@@ -112,14 +112,13 @@ describe("AdminJobsPage tests", () => {
       </QueryClientProvider>
     );
 
-    const setCowHealthButton = await screen.findByText("Set Cow Health For A Particular Commons")
+    const setCowHealthButton = await screen.findByText("Set Cow Health for a Specific Commons")
     expect(setCowHealthButton).toBeInTheDocument();
     setCowHealthButton.click();
 
     const commonsRadio = await screen.findByTestId("SetCowHealthForm-commons-1");
     expect(commonsRadio).toBeInTheDocument();
     fireEvent.click(commonsRadio);
-
 
     const healthInput = screen.getByTestId("SetCowHealthForm-healthValue");
     const submitButton = screen.getByTestId("SetCowHealthForm-Submit-Button");
@@ -223,6 +222,4 @@ describe("AdminJobsPage tests", () => {
     expect(submitButton).toBeInTheDocument();
     submitButton.click();
   });
-
-
 });
