@@ -159,7 +159,7 @@ describe("SetCowHealthForm tests", () => {
 
   test("healthValue can be loaded from localstorage", async () => {
     const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
-    getItemSpy.mockImplementation(() => 42);
+    getItemSpy.mockImplementation((key) => (key==="SetCowHealthForm-health" ? 42 : null));
 
     render(
       <QueryClientProvider client={new QueryClient()}>

@@ -15,15 +15,13 @@ function SetCowHealthForm({submitAction, testid="SetCowHealthForm"}) {
   );
   const [selectedCommons, setSelectedCommons] = useState(null);
   const [selectedCommonsName, setSelectedCommonsName] = useState(null);
-  const defaultValues = { selectedCommons: selectedCommons, healthValue };
 
   const {
     handleSubmit,
     setValue,
-   //  getValues,
     register,
     formState: {errors},
-  } = useForm({ defaultValues });
+  } = useForm();
 
   const [showCommonsError, setShowCommonsError] = useState(false);
 
