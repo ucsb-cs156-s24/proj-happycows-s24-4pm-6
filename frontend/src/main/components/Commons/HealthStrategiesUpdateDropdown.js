@@ -7,7 +7,6 @@ function HealthUpdateStrategiesDropdown({
     healthUpdateStrategies,
     register,
   }) {
-    console.log("HealthUpdateStrategiesDropdown: initialValue: ", initialValue);
     return (
       <Form.Group className="mb-3">
         <Form.Label htmlFor={formName}>{displayName}</Form.Label>
