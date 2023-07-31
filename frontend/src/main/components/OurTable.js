@@ -11,7 +11,7 @@ var tableStyle = {
   "overflowX": "auto" ,
   "whiteSpace": "nowrap"
 };
-// Stryker enable all
+// Stryker restore all
 export default function OurTable({ columns, data, testid = "testid", ...rest }) {
 
   const {

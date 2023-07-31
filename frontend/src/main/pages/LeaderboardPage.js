@@ -29,7 +29,7 @@ export default function LeaderboardPage() {
       },
       []
     );
-  // Stryker enable all 
+  // Stryker restore all 
 
   // Stryker disable all 
   const { data: commons, error: _commonsError, status: _commonsStatus } =
@@ -44,7 +44,7 @@ export default function LeaderboardPage() {
       },
       []
     );
-  // Stryker enable all 
+  // Stryker restore all 
 
   const showLeaderboard = (hasRole(currentUser, "ROLE_ADMIN") || commons.showLeaderboard );
   return (

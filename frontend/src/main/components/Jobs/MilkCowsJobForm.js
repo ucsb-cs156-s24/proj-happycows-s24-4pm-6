@@ -8,7 +8,7 @@ function MilkTheCowsForm( {submitAction} ) {
       handleSubmit,
     } = useForm(
     );
-    // Stryker enable all
+    // Stryker restore all
 
     return (
       <Form onSubmit={handleSubmit(submitAction)}>

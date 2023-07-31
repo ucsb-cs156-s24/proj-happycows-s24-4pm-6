@@ -24,7 +24,7 @@ const AdminJobsPage = () => {
   const testJobMutation = useBackendMutation(objectToAxiosParamsTestJob, {}, [
     "/api/jobs/all",
   ]);
-  // Stryker enable all
+  // Stryker restore all
 
   const submitTestJob = async (data) => {
     console.log("submitTestJob, data=", data);
@@ -46,7 +46,7 @@ const AdminJobsPage = () => {
     [],
     { refetchInterval: refreshJobsIntervalMilliseconds }
   );
-  // Stryker enable  all
+  // Stryker restore  all
 
   // SetCowHealth job
 
@@ -61,7 +61,7 @@ const AdminJobsPage = () => {
     {},
     ["/api/jobs/all"]
   );
-  // Stryker enable all
+  // Stryker restore all
 
   const submitSetCowHealthJob = async (data) => {
     console.log("submitSetCowHealthJob", data);
@@ -82,7 +82,7 @@ const AdminJobsPage = () => {
     {},
     ["/api/jobs/all"]
   );
-  // Stryker enable all
+  // Stryker restore all
 
   const submitUpdateCowHealthJob = async () => {
     console.log("submitUpdateCowHealthJob");
@@ -108,7 +108,7 @@ const AdminJobsPage = () => {
     {},
     ["/api/jobs/all"]
   );
-  // Stryker enable all
+  // Stryker restore all
 
   const submitMilkTheCowsJob = async () => {
     console.log("submitMilkTheCowsJob");

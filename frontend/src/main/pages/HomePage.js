@@ -20,7 +20,7 @@ export default function HomePage() {
       { url: "/api/commons/all" },
       []
     );
-  // Stryker enable all 
+  // Stryker restore all 
 
   const objectToAxiosParams = (newCommonsId) => ({
     url: "/api/commons/join",

@@ -31,7 +31,7 @@ const AdminCreateCommonsPage = () => {
         // Stryker disable next-line all : hard to set up test for caching
         ["/api/commons/all"]
     );
-    // Stryker enable all
+    // Stryker restore all
 
     const submitAction = async (data) => {
         mutation.mutate(data);

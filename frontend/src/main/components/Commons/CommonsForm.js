@@ -43,7 +43,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
   } = useForm(
     {defaultValues: initialCommons || {}}
   );
-  // Stryker enable all
+  // Stryker restore all
 
   const {data: healthUpdateStrategies} = useBackend(
     "/api/commons/all-health-update-strategies", {

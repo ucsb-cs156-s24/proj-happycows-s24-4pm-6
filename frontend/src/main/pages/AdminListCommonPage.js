@@ -15,7 +15,7 @@ export default function AdminListCommonsPage()
       { method: "GET", url: "/api/commons/allplus" },
       []
     );
-  // Stryker enable  all 
+  // Stryker restore  all 
 
   return (
     <BasicLayout>

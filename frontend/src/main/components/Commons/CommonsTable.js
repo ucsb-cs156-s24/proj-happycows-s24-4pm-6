@@ -19,7 +19,7 @@ export default function CommonsTable({ commons, currentUser }) {
         { onSuccess: onDeleteSuccess },
         ["/api/commons/allplus"]
     );
-    // Stryker enable all
+    // Stryker restore all
 
     // Stryker disable next-line all : TODO try to make a good test for this
     const deleteCallback = async (cell) => { 
