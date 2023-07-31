@@ -1,7 +1,14 @@
-import {fireEvent, render, screen} from "@testing-library/react";
-import {BrowserRouter as Router} from "react-router-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { BrowserRouter as Router } from "react-router-dom";
 import CommonsForm from "main/components/Commons/CommonsForm";
-import {QueryClient, QueryClientProvider} from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
+import commonsFixtures from "fixtures/commonsFixtures"
+import AxiosMockAdapter from "axios-mock-adapter";
+import axios from "axios";
+import healthUpdateStrategyListFixtures from "fixtures/healthUpdateStrategyListFixtures";
+
+// Next line uses technique from https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
+import * as useBackendModule from "main/utils/useBackend";
 
 const mockedNavigate = jest.fn();
 
@@ -11,13 +18,24 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe("CommonsForm tests", () => {
+  const axiosMock = new AxiosMockAdapter(axios);
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("renders correctly", async () => {
+
+    axiosMock
+      .onGet("/api/commons/all-health-update-strategies")
+      .reply(200, healthUpdateStrategyListFixtures.simple);
+
     render(
-        <QueryClientProvider client={new QueryClient()}>
-          <Router>
-            <CommonsForm/>
-          </Router>
-        </QueryClientProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <CommonsForm />
+        </Router>
+      </QueryClientProvider>
     );
 
     expect(await screen.findByText(/Commons Name/)).toBeInTheDocument();
@@ -45,12 +63,17 @@ describe("CommonsForm tests", () => {
   it("has validation errors for required fields", async () => {
     const submitAction = jest.fn();
 
+    axiosMock
+      .onGet("/api/commons/all-health-update-strategies")
+      .reply(200, healthUpdateStrategyListFixtures.simple);
+
+
     render(
-        <QueryClientProvider client={new QueryClient()}>
-          <Router>
-            <CommonsForm submitAction={submitAction} buttonLabel="Create"/>
-          </Router>
-        </QueryClientProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <CommonsForm submitAction={submitAction} buttonLabel="Create" />
+        </Router>
+      </QueryClientProvider>
     );
 
     expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();
@@ -69,4 +92,57 @@ describe("CommonsForm tests", () => {
 
     expect(submitAction).not.toBeCalled();
   });
+
+
+
+  it("renders correctly when an initialCommons is passed in", async () => {
+
+    axiosMock
+      .onGet("/api/commons/all-health-update-strategies")
+      .reply(200, healthUpdateStrategyListFixtures.simple);
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <CommonsForm initialCommons={commonsFixtures.threeCommons[0]}/>
+        </Router>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText(/Id/)).toBeInTheDocument();
+
+    expect(screen.getByTestId("CommonsForm-id")).toHaveValue(`${commonsFixtures.threeCommons[0].id}`);
+    expect(screen.getByTestId("CommonsForm-name")).toHaveValue(commonsFixtures.threeCommons[0].name);
+    expect(screen.getByTestId("CommonsForm-startingBalance")).toHaveValue(commonsFixtures.threeCommons[0].startingBalance);
+
+  });
+
+
+  test("the correct parameters are passed to useBackend", async () => {
+
+    axiosMock
+      .onGet("/api/commons/all-health-update-strategies")
+      .reply(200, healthUpdateStrategyListFixtures.simple);
+
+    // https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
+    const useBackendSpy = jest.spyOn(useBackendModule, 'useBackend');
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <CommonsForm />
+        </Router>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(useBackendSpy).toHaveBeenCalledWith(
+        "/api/commons/all-health-update-strategies", {
+        method: "GET",
+        url: "/api/commons/all-health-update-strategies",
+      },
+      );
+    });
+  });
+
 });

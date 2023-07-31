@@ -1,6 +1,6 @@
 import {Button, Form} from "react-bootstrap";
 import {useForm} from "react-hook-form";
-import {useBackend} from "../../utils/useBackend";
+import {useBackend} from "main/utils/useBackend";
 
 function HealthUpdateStrategiesDropdown({
   formName,
