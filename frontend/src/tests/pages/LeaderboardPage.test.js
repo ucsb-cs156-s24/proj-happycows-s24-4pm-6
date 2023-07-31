@@ -50,7 +50,7 @@ describe("LeaderboardPage tests", () => {
         axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
     };
 
-    test("renders without crashing for users", () => {
+    test("renders without crashing for users", async () => {
         setupUser();
         axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
             "id": 1,
@@ -73,6 +73,13 @@ describe("LeaderboardPage tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
+        await waitFor(()=>{
+            expect(screen.getByTestId("LeaderboardPage-main-div")).toBeInTheDocument();
+
+        });
+        const leaderboard_main_div = screen.getByTestId("LeaderboardPage-main-div");
+        expect(leaderboard_main_div).toHaveAttribute("style","background-size: cover; background-image: url(PlayPageBackground.png);");
+
     });
 
     test("renders leaderboard for users when showLeaderboard = true", async () => {
@@ -129,8 +136,21 @@ describe("LeaderboardPage tests", () => {
         expect(await screen.findByText("You're not authorized to see the leaderboard.")).toBeInTheDocument();
     });
 
-    test("renders without crashing for admin", () => {
+    test("renders leaderboard for Admin users when showLeaderboard = false", async () => {
         setupAdmin();
+        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
+            "id": 1,
+            "name": "Anika's Commons",
+            "day": 5,
+            "startingDate": "2026-03-05T15:50:10",
+            "startingBalance": 200.50,
+            "totalPlayers": 50,
+            "cowPrice": 15,
+            "milkPrice": 10,
+            "degradationRate": .5,
+            "showLeaderboard": false,
+        });
+        axiosMock.onGet("/api/usercommons/commons/all", { params: { commonsId: 1} }).reply(200,[]);
         const queryClient = new QueryClient();
         render(
             <QueryClientProvider client={queryClient}>
@@ -139,7 +159,10 @@ describe("LeaderboardPage tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
+        await waitFor(() => {
+            expect(axiosMock.history.get.length).toEqual(4);
+        });
+        expect(await screen.findByText("Total Wealth")).toBeInTheDocument();
     });
-
 
 });
