@@ -133,5 +133,7 @@ describe("AdminCreateCommonsPage tests", () => {
             <br />cowPrice: 10
             <br />carryingCapacity: 25
         </div>);
+
+        expect(mockedNavigate).toBeCalledWith({"to": "/"});
     });
 });

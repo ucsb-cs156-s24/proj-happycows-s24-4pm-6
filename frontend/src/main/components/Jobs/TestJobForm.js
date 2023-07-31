@@ -42,10 +42,9 @@ function TestJobForm({ submitAction }) {
           step="100"
           isInvalid={!!errors.sleepMs}
           {...register("sleepMs", {
-            valueAsNumber: true,
             required: "sleepMs is required (0 is ok)",
             min: { value: 0, message: "sleepMs must be positive" },
-            max: { value: 60000, message: "sleepMs may not be > 60000 (1 minute)" },
+            max: { value: 60000, message: "sleepMs must be ≤ 60000" },
           })}
         />
         <Form.Control.Feedback type="invalid">

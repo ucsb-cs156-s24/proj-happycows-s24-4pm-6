@@ -27,7 +27,6 @@ const AdminJobsPage = () => {
   // Stryker restore all
 
   const submitTestJob = async (data) => {
-    console.log("submitTestJob, data=", data);
     toast("Submitted job: Test Job");
     testJobMutation.mutate(data);
   };

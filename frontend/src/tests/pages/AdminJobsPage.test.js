@@ -11,6 +11,16 @@ import jobsFixtures from "fixtures/jobsFixtures";
 import mockConsole from "jest-mock-console";
 import commonsFixtures from "../../fixtures/commonsFixtures";
 
+const mockToast = jest.fn();
+jest.mock('react-toastify', () => {
+    const originalModule = jest.requireActual('react-toastify');
+    return {
+        __esModule: true,
+        ...originalModule,
+        toast: (x) => mockToast(x)
+    };
+});
+
 describe("AdminJobsPage tests", () => {
   let queryClient = new QueryClient();
   const axiosMock = new AxiosMockAdapter(axios);
@@ -95,6 +105,8 @@ describe("AdminJobsPage tests", () => {
     expect(axiosMock.history.post[0].url).toBe(
       "/api/jobs/launch/testjob?fail=false&sleepMs=0"
     );
+
+    expect(mockToast).toHaveBeenCalledWith("Submitted job: Test Job");
   });
 
   test("user can submit a set cow health job", async () => {
