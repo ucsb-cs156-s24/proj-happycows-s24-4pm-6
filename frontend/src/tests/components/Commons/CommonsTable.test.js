@@ -133,8 +133,6 @@ describe("UserTable tests", () => {
       );
     });
 
-    const expectedParams = ["deleteCallback commonsId", "1", "commonsName",  "commons1"];
-
   });
 
 });

@@ -8,7 +8,6 @@ import AdminJobsPage from "main/pages/AdminJobsPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import jobsFixtures from "fixtures/jobsFixtures";
-import mockConsole from "jest-mock-console";
 import commonsFixtures from "../../fixtures/commonsFixtures";
 
 const mockToast = jest.fn();
@@ -110,7 +109,6 @@ describe("AdminJobsPage tests", () => {
   });
 
   test("user can submit a set cow health job", async () => {
-    const restoreConsole = mockConsole();
     axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
 
     const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');

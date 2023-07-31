@@ -153,23 +153,23 @@ describe("HealthUpdateStrategiesDropdown tests", () => {
 
     fireEvent.change(screen.getByTestId("CommonsForm-startingBalance"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(screen.getByText(/Starting Balance must be ≥ 0.00/i)).toBeInTheDocument());
+    await screen.findByText(/Starting Balance must be ≥ 0.00/i);
 
     fireEvent.change(screen.getByTestId("CommonsForm-cowPrice"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(screen.getByText(/Cow price must be ≥ 0.01/i)).toBeInTheDocument());
+    await screen.findByText(/Cow price must be ≥ 0.01/i);
 
     fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(screen.getByText(/Milk price must be ≥ 0.01/i)).toBeInTheDocument());
+    await screen.findByText(/Milk price must be ≥ 0.01/i);
 
     fireEvent.change(screen.getByTestId("CommonsForm-degradationRate"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(screen.getByText(/Degradation rate must be ≥ 0.00/i)).toBeInTheDocument());
+    await screen.findByText(/Degradation rate must be ≥ 0.00/i);
 
     fireEvent.change(screen.getByTestId("CommonsForm-carryingCapacity"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(screen.getByText(/Carrying Capacity must be ≥ 1/i)).toBeInTheDocument());
+    await screen.findByText(/Carrying Capacity must be ≥ 1/i);
 
 
     expect(submitAction).not.toBeCalled();

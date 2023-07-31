@@ -51,8 +51,6 @@ describe("CommonsUtils", () => {
     describe("commonsNotJoined", () => {
         test("it computes the correct result", () => {
             // arrange
-            const cell = { row: { values: { "commons.id" : 17 } } };
-
             const allCommons = commonsFixtures.sevenCommons;
             const commonsJoined = [ allCommons[0], allCommons[2], allCommons[4] ];
             const expectedCommonsNotJoined = [ allCommons[1], allCommons[3], allCommons[5], allCommons[6] ];

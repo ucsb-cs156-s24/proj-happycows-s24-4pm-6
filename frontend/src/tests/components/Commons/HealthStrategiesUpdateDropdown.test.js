@@ -3,17 +3,12 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
-
-import commonsFixtures from "fixtures/commonsFixtures";
 import healthUpdateStrategyListFixtures from "fixtures/healthUpdateStrategyListFixtures";
-
 
 describe("HealthUpdateStrategiesDropdown tests", () => {
 
-
     it("renders correctly, with initial value strat1", async () => {
 
-        const initialCommons = commonsFixtures.threeCommons[0];
         const register = jest.fn();
         const healthUpdateStrategies = healthUpdateStrategyListFixtures.simple;
 
@@ -45,7 +40,6 @@ describe("HealthUpdateStrategiesDropdown tests", () => {
 
     it("renders correctly, with initial value strat2", async () => {
 
-        const initialCommons = commonsFixtures.threeCommons[0];
         const register = jest.fn();
         const healthUpdateStrategies = healthUpdateStrategyListFixtures.simple;
 
@@ -73,6 +67,5 @@ describe("HealthUpdateStrategiesDropdown tests", () => {
         expect(screen.getByTestId("aboveCapacityHealthUpdateStrategy-strat1")).not.toHaveAttribute("selected")
 
     });
-    
     
 });
