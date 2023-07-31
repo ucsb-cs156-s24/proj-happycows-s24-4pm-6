@@ -141,20 +141,14 @@ describe("AdminJobsPage tests", () => {
     fireEvent.change(healthInput, { target: { value: "10" } });
     submitButton.click();
 
-    // assert - check that the console.log was called with the expected message
     await waitFor(() => {
-      expect(console.log).toHaveBeenCalled();
+      expect(axiosMock.history.post[0].url).toBe(
+        `/api/jobs/launch/setcowhealth?commonsID=1&health=10`
+      );
     })
-    expect(console.log).toHaveBeenNthCalledWith(1, "submitSetCowHealthJob", {
-      "healthValue": "10",
-      "selectedCommons": 1,
-      "selectedCommonsName": "Anika's Commons",
-    });
-    restoreConsole();
 
-    expect(axiosMock.history.post[0].url).toBe(
-      `/api/jobs/launch/setcowhealth?commonsID=1&health=10`
-    );
+    expect(mockToast).toHaveBeenCalledWith(`Submitted Job: Set Cow Health (Commons: Anika's Commons, Health: 10)`);
+
   });
 
   test("user can submit update cow health job", async () => {
@@ -184,6 +178,9 @@ describe("AdminJobsPage tests", () => {
     expect(axiosMock.history.post[0].url).toBe(
       "/api/jobs/launch/updatecowhealth"
     );
+
+    expect(mockToast).toHaveBeenCalledWith("Submitted Job: Update Cow Health");
+
   });
 
   test("user can submit milk the cows job", async () => {
@@ -211,6 +208,8 @@ describe("AdminJobsPage tests", () => {
     expect(axiosMock.history.post[0].url).toBe(
       "/api/jobs/launch/milkthecowjob"
     );
+
+    expect(mockToast).toHaveBeenCalledWith("Submitted Job: Milk The Cows");
   });
 
 
@@ -233,5 +232,10 @@ describe("AdminJobsPage tests", () => {
 
     expect(submitButton).toBeInTheDocument();
     submitButton.click();
+
+    await waitFor( () => {
+      expect(mockToast).toHaveBeenCalledWith('Instructor report not yet implemented; coming soon');
+      }
+    );
   });
 });

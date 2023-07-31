@@ -63,7 +63,6 @@ const AdminJobsPage = () => {
   // Stryker restore all
 
   const submitSetCowHealthJob = async (data) => {
-    console.log("submitSetCowHealthJob", data);
     toast(`Submitted Job: Set Cow Health (Commons: ${data.selectedCommonsName}, Health: ${data.healthValue})`);
     SetCowHealthMutation.mutate(data);
   };
@@ -84,7 +83,6 @@ const AdminJobsPage = () => {
   // Stryker restore all
 
   const submitUpdateCowHealthJob = async () => {
-    console.log("submitUpdateCowHealthJob");
     toast("Submitted Job: Update Cow Health");
     UpdateCowHealthMutation.mutate();
   };
@@ -97,7 +95,6 @@ const AdminJobsPage = () => {
   });
   
   const submitInstuctorReportJob = async () => {
-    console.log("submitInstructorReportJob (wip)");
     toast('Instructor report not yet implemented; coming soon');
   }
 
@@ -110,7 +107,6 @@ const AdminJobsPage = () => {
   // Stryker restore all
 
   const submitMilkTheCowsJob = async () => {
-    console.log("submitMilkTheCowsJob");
     toast("Submitted Job: Milk The Cows");
     MilkTheCowsMutation.mutate();
   };
