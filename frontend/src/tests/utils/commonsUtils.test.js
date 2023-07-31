@@ -1,5 +1,6 @@
-import { cellToAxiosParamsDelete, onDeleteSuccess } from "main/utils/commonsUtils";
+import { cellToAxiosParamsDelete, commonsNotJoined, onDeleteSuccess } from "main/utils/commonsUtils";
 import mockConsole from "jest-mock-console";
+import commonsFixtures from "fixtures/commonsFixtures";
 
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
@@ -44,6 +45,23 @@ describe("CommonsUtils", () => {
                 method: "DELETE",
                 params: { id: 17 }
             });
+        });
+    });
+
+    describe("commonsNotJoined", () => {
+        test("it computes the correct result", () => {
+            // arrange
+            const cell = { row: { values: { "commons.id" : 17 } } };
+
+            const allCommons = commonsFixtures.sevenCommons;
+            const commonsJoined = [ allCommons[0], allCommons[2], allCommons[4] ];
+            const expectedCommonsNotJoined = [ allCommons[1], allCommons[3], allCommons[5], allCommons[6] ];
+           
+            // act
+            const result = commonsNotJoined(allCommons, commonsJoined);
+
+            // assert
+            expect(result).toEqual(expectedCommonsNotJoined);
         });
     });
 });
