@@ -16,31 +16,25 @@ import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 
 import edu.ucsb.cs156.happiercows.services.ReportService;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Builder
 @AllArgsConstructor
-public class InstructorReportJob implements JobContextConsumer {
+public class InstructorReportJobSingleCommons implements JobContextConsumer {
+
+    @Getter
+    private long commonsId;
 
     @Getter
     private ReportService reportService;
-
-    @Getter
-    private CommonsRepository commonsRepository;
-
+    
     @Override
     public void accept(JobContext ctx) throws Exception {
-        ctx.log("Starting instructor report...");
-        Iterable<Commons> allCommons = commonsRepository.findAll();
-
-        for (Commons commons : allCommons) {
-            ctx.log(String.format("Starting Commons id=%d (%s)...", commons.getId(), commons.getName()));
-            Report report = reportService.createReport(commons.getId());
-            ctx.log(String.format("Report %d for commons id=%d (%s) finished.", report.getId(), commons.getId(),
-                    commons.getName()));
-        }
-        ctx.log("Instructor report done!");
+        ctx.log("Producing instructor report for commons id: " + commonsId);
+        Report report = reportService.createReport(commonsId);
+        ctx.log(String.format("Instructor report %d for commons %s has been produced!", report.getId(), report.getName()));
     }
 }
