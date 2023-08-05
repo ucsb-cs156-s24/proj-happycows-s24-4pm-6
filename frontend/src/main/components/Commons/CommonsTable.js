@@ -20,7 +20,6 @@ export default function CommonsTable({ commons, currentUser }) {
     );
 
     const deleteCallback = async (cell) => { 
-        // console.log("deleteCallback commonsId", cell.row.values["commons.id"], "commonsName", cell.row.values["commons.name"]);
         deleteMutation.mutate(cell); 
     }
 
