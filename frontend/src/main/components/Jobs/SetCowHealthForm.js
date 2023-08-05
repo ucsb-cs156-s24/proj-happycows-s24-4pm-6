@@ -82,7 +82,6 @@ function SetCowHealthForm({ submitAction=()=>{}, testid = "SetCowHealthForm" }) 
           type="number"
           step="1"
           value={healthValue}
-          // isInvalid={!!errors.healthValue}
           {...register("healthValue", {
             valueAsNumber: true,
             required: "Health Value is required",
