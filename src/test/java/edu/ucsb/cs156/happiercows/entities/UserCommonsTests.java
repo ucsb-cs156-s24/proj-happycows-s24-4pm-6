@@ -25,4 +25,24 @@ public class UserCommonsTests {
         assertEquals(5L, asMap.get("commonsId"));
         assertEquals(10L, asMap.get("userId"));
     }
+
+    @Test
+    void userCommons_setId() {
+        // arrange
+        var userCommons = UserCommons.builder()
+                .commons(Commons.builder().id(5L).build())
+                .user(User.builder().id(10L).build())
+                .cowHealth(50)
+                .totalWealth(100)
+                .build();
+        
+        // act 
+
+        var newUserCommonsKey = new UserCommonsKey(20L, 30L);
+        userCommons.setId(newUserCommonsKey);
+        
+        // assert again
+        assertEquals(newUserCommonsKey, userCommons.getId());
+
+    }
 }
