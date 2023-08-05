@@ -18,7 +18,7 @@ public class UserCommons {
     @EmbeddedId
     @JsonIgnore
     @Builder.Default
-    private final UserCommonsKey id = new UserCommonsKey();
+    private UserCommonsKey id = new UserCommonsKey();
 
     @MapsId("userId")
     @ManyToOne
@@ -53,5 +53,12 @@ public class UserCommons {
     @JsonInclude
     public long getCommonsId() {
         return commons.getId();
+    }
+
+    public void setId(UserCommonsKey id) {
+        this.id = id;
+    }
+     public UserCommonsKey getId() {
+        return this.id;
     }
 }
