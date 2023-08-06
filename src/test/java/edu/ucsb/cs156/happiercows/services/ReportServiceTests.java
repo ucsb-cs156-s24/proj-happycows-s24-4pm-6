@@ -1,5 +1,6 @@
 package edu.ucsb.cs156.happiercows.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -144,11 +145,12 @@ class ReportServiceTests {
 
         // act
 
-        reportService.createAndSaveReportHeader(17L);
+        Report report = reportService.createAndSaveReportHeader(17L);
 
         // // assert
 
         verify(reportRepository).save(eq(expectedReportHeader));
+        assertEquals(expectedReportHeader, report);
   }
 
   @Test
@@ -181,10 +183,11 @@ class ReportServiceTests {
 
         // act
 
-        reportService.createReport(17L);
+        Report report = reportService.createReport(17L);
 
         // assert
 
+        assertEquals(expectedReportHeader, report);
         verify(reportLineRepository).save(eq(expectedReportLine));
         verify(reportLineRepository).save(eq(expectedReportLine));
   }
@@ -202,9 +205,11 @@ class ReportServiceTests {
 
         // act
 
-        reportService.createAndSaveReportLine(expectedReportHeader, userCommons);
+        ReportLine reportLine = reportService.createAndSaveReportLine(expectedReportHeader, userCommons);
 
         // assert
+
+        assertEquals(expectedReportLine, reportLine);
 
         verify(reportLineRepository).save(eq(expectedReportLine));
   }
