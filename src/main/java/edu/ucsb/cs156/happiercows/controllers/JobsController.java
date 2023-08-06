@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
+import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommons;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJob;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
@@ -115,5 +116,17 @@ public class JobsController extends ApiController {
             InstructorReportJob.builder().build();
        
         return jobService.runAsJob(instructorReportJob);
+    }
+
+    @Operation(summary = "Launch Job to Produce Instructor Report for a single commons")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/instructorreportsinglecommons")
+    public Job instructorReportSingleCommons(
+         @Parameter(name="commonsId") @RequestParam Long commonsId
+    ) { 
+        InstructorReportJobSingleCommons instructorReportJobSingleCommons = 
+            InstructorReportJobSingleCommons.builder().commonsId(commonsId).build();
+       
+        return jobService.runAsJob(instructorReportJobSingleCommons);
     }
 }
