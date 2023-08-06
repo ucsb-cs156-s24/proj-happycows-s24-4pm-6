@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Operation;;
+import io.swagger.v3.oas.annotations.Operation;
 
 @Tag(name="User information (admin only)")
 @RequestMapping("/api/admin/users")

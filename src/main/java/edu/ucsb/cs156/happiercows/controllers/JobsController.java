@@ -3,7 +3,7 @@ package edu.ucsb.cs156.happiercows.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Operation;;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
+import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommons;
+import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommonsFactory;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJob;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
@@ -54,6 +56,12 @@ public class JobsController extends ApiController {
 
     @Autowired
     SetCowHealthJobFactory setCowHealthJobFactory;
+
+    @Autowired
+    InstructorReportJobFactory instructorReportJobFactory;
+
+    @Autowired
+    InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
 
     @Operation(summary = "List all jobs")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -112,9 +120,7 @@ public class JobsController extends ApiController {
     @PostMapping("/launch/instructorreport")
     public Job instructorReport(
     ) { 
-        InstructorReportJob instructorReportJob = 
-            InstructorReportJob.builder().build();
-       
+        InstructorReportJob instructorReportJob = (InstructorReportJob) instructorReportJobFactory.create();
         return jobService.runAsJob(instructorReportJob);
     }
 
@@ -124,9 +130,8 @@ public class JobsController extends ApiController {
     public Job instructorReportSingleCommons(
          @Parameter(name="commonsId") @RequestParam Long commonsId
     ) { 
-        InstructorReportJobSingleCommons instructorReportJobSingleCommons = 
-            InstructorReportJobSingleCommons.builder().commonsId(commonsId).build();
-       
+
+        InstructorReportJobSingleCommons instructorReportJobSingleCommons = (InstructorReportJobSingleCommons) instructorReportJobSingleCommonsFactory.create(commonsId);
         return jobService.runAsJob(instructorReportJobSingleCommons);
     }
 }
