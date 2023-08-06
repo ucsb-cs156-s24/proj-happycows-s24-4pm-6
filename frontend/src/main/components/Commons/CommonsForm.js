@@ -1,39 +1,8 @@
 import {Button, Form} from "react-bootstrap";
 import {useForm} from "react-hook-form";
-import {useBackend} from "../../utils/useBackend";
+import {useBackend} from "main/utils/useBackend";
 
-
-function HealthUpdateStrategiesDropdown({
-  formName,
-  displayName,
-  initialValue,
-  healthUpdateStrategies,
-  register,
-}) {
-  return (
-    <Form.Group className="mb-3">
-      <Form.Label htmlFor={formName}>{displayName}</Form.Label>
-      {healthUpdateStrategies && (
-        <Form.Select
-          // test id omitted since it is not currently used in tests, and makes stryker fail otherwise
-          // data-testid={`${testid}-${formName}`}
-          id={formName}
-          // "required" option is not necessary, since dropdown will always have a value
-          {...register(formName)}
-          defaultValue={initialValue}
-        >
-          {healthUpdateStrategies.strategies.map((strategy) => (
-            <option key={strategy.name} value={strategy.name} title={strategy.description}>
-              {strategy.displayName}
-            </option>
-          ))}
-        </Form.Select>
-      )}
-
-    </Form.Group>
-  );
-}
-
+import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
   // Stryker disable all
@@ -44,7 +13,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
   } = useForm(
     {defaultValues: initialCommons || {}}
   );
-  // Stryker enable all
+  // Stryker restore all
 
   const {data: healthUpdateStrategies} = useBackend(
     "/api/commons/all-health-update-strategies", {
@@ -55,6 +24,9 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
   const testid = "CommonsForm";
 
+  const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
+  const aboveStrategy = initialCommons?.aboveCapacityStrategy || healthUpdateStrategies?.defaultAboveCapacity;
+  
   return (
     <Form onSubmit={handleSubmit(submitAction)}>
       {initialCommons && (
@@ -96,7 +68,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
           {...register("startingBalance", {
             valueAsNumber: true,
             required: "Starting Balance is required",
-            min: {value: 0.01, message: "Starting Balance must be positive"},
+            min: {value: 0.00, message: "Starting Balance must be ≥ 0.00"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -115,7 +87,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
           {...register("cowPrice", {
             valueAsNumber: true,
             required: "Cow price is required",
-            min: {value: 0.01, message: "Cow price must be positive"},
+            min: {value: 0.01, message: "Cow price must be ≥ 0.01"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -134,7 +106,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
           {...register("milkPrice", {
             valueAsNumber: true,
             required: "Milk price is required",
-            min: {value: 0.01, message: "Milk price must be positive"},
+            min: {value: 0.01, message: "Milk price must be ≥ 0.01"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -172,7 +144,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
           {...register("degradationRate", {
             valueAsNumber: true,
             required: "Degradation rate is required",
-            min: {value: 0.00, message: "Degradation rate must be positive"},
+            min: {value: 0.00, message: "Degradation rate must be ≥ 0.00"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -191,7 +163,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
           {...register("carryingCapacity", {
             valueAsNumber: true,
             required: "Carrying capacity is required",
-            min: {value: 1, message: "Carrying Capacity must be greater than 0"},
+            min: {value: 1, message: "Carrying Capacity must be ≥ 1"},
           })}
         />
         <Form.Control.Feedback type="invalid">
@@ -205,14 +177,14 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
       <HealthUpdateStrategiesDropdown
         formName={"aboveCapacityHealthUpdateStrategy"}
         displayName={"When above capacity"}
-        intialValue={initialCommons?.aboveCapacityHealthUpdateStrategy ?? healthUpdateStrategies?.defaultAboveCapacity}
+        initialValue={ aboveStrategy }
         register={register}
         healthUpdateStrategies={healthUpdateStrategies}
       />
       <HealthUpdateStrategiesDropdown
         formName={"belowCapacityHealthUpdateStrategy"}
         displayName={"When below capacity"}
-        intialValue={initialCommons?.belowCapacityHealthUpdateStrategy ?? healthUpdateStrategies?.defaultBelowCapacity}
+        initialValue={ belowStrategy }
         register={register}
         healthUpdateStrategies={healthUpdateStrategies}
       />

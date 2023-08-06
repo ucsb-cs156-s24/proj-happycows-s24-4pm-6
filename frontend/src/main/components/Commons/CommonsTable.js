@@ -13,17 +13,13 @@ export default function CommonsTable({ commons, currentUser }) {
         navigate(`/admin/editcommons/${cell.row.values["commons.id"]}`)
     }
 
-    // Stryker disable all : hard to test for query caching
     const deleteMutation = useBackendMutation(
         cellToAxiosParamsDelete,
         { onSuccess: onDeleteSuccess },
         ["/api/commons/allplus"]
     );
-    // Stryker enable all
 
-    // Stryker disable next-line all : TODO try to make a good test for this
     const deleteCallback = async (cell) => { 
-        console.log("deleteCallback cell=", cell);
         deleteMutation.mutate(cell); 
     }
 

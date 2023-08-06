@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+
 // based in part on this SO answer: https://codereview.stackexchange.com/a/211511
 
 export default function Plaintext({text}) {
@@ -10,11 +12,11 @@ export default function Plaintext({text}) {
     <pre data-testid="plaintext">
       <span>{ firstLine }</span>
       {
-        rest.map((line) => (
-          <>
+        rest.map((line, i) => (
+          <Fragment key={i}>
             <br />
             <span>{ line }</span>
-          </>
+          </Fragment>
         ))
       }
     </pre>

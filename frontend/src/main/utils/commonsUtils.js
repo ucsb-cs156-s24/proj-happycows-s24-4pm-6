@@ -14,3 +14,9 @@ export function cellToAxiosParamsDelete(cell) {
         }
     }
 }
+
+export function commonsNotJoined(commons, commonsJoined) {
+    const joinedIdList = commonsJoined.map(c => c.id);
+    return commons.filter(f => !joinedIdList.includes(f.id));
+}
+

@@ -31,7 +31,7 @@ describe("CommonsList tests", () => {
         });
 
         let i = 0;
-        const names = screen.getAllByTestId("commonsCard-name");
+        const names = screen.getAllByTestId(/commonsCard-name/);
         names.forEach((n) => {
             expect(n).toBeInTheDocument();
             expect(typeof(n.textContent)).toBe('string');
@@ -40,7 +40,7 @@ describe("CommonsList tests", () => {
         })
 
         i = 0;
-        const ids = screen.getAllByTestId("commonsCard-id");
+        const ids = screen.getAllByTestId(/commonsCard-id/);
         ids.forEach((id) => {
             expect(id).toBeInTheDocument();
             expect(typeof(id.textContent)).toBe('string');
@@ -72,7 +72,7 @@ describe("CommonsList tests", () => {
         expect(() => screen.getAllByTestId(/commonsCard-button/)).toThrow('Unable to find an element');
 
         let i = 0;
-        const names = screen.getAllByTestId("commonsCard-name");
+        const names = screen.getAllByTestId(/commonsCard-name/);
         names.forEach((n) => {
             expect(n).toBeInTheDocument();
             expect(typeof(n.textContent)).toBe('string');
@@ -81,7 +81,7 @@ describe("CommonsList tests", () => {
         })
 
         i = 0;
-        const ids = screen.getAllByTestId("commonsCard-id");
+        const ids = screen.getAllByTestId(/commonsCard-id/);
         ids.forEach((id) => {
             expect(id).toBeInTheDocument();
             expect(typeof(id.textContent)).toBe('string');
