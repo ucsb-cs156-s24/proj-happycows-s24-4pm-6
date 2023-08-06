@@ -13,8 +13,6 @@ describe("CommonsSelect tests", () => {
   const defaultTestId = "CommonsSelect";
 
   it("renders correctly", async () => {
-    const submitAction = jest.fn();
-
     const commons=commonsFixtures.threeCommons;
 
     render(
