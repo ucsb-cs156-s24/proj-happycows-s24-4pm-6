@@ -17,7 +17,7 @@ const reportLineFixtures = {
       "createDate": "2023-08-07T01:12:54.765+00:00"
     },
     twoReportLines: [
-      [
+      
         {
           "id": 5,
           "reportId": 5,
@@ -44,7 +44,7 @@ const reportLineFixtures = {
           "cowDeaths": 0,
           "createDate": "2023-08-07T01:12:54.767+00:00"
         }
-      ]
+      
     ],
 }
 
