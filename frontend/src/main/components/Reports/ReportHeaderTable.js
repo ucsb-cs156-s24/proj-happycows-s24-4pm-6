@@ -4,18 +4,6 @@ import OurTable from "main/components/OurTable";
 export default function ReportHeaderTable({ report  }) {
     const columns = [
         {
-            Header: 'id',
-            accessor: 'id', 
-        },
-        {
-            Header: 'commonsId',
-            accessor: 'commonsId', 
-        },
-        {
-            Header: 'Name',
-            accessor: 'name',
-        },
-        {
             Header: 'Cow Price',
             accessor: 'cowPrice', 
         },
@@ -24,45 +12,35 @@ export default function ReportHeaderTable({ report  }) {
             accessor: 'milkPrice',
         },
         {
-            Header: 'Starting Balance',
+            Header: 'Start Bal',
             accessor: 'startingBalance',
         },
         {
-            Header: 'Starting Date',
-            accessor: 'startingDate',
+            Header: 'Start Date',
+            id: 'startingDate',
+            accessor: (row, _rowIndex) => String(row.startingDate).substring(0, 10)
+
         },
         {
-            Header: 'Show Leaderboard',
+            Header: 'Leaderboard',
             id: 'showLeaderboard',
             accessor: (row, _rowIndex) => String(row.showLeaderboard) // hack needed for boolean values to show up
         },
         {
-            Header: 'Carrying Capacity',
+            Header: 'Capacity',
             accessor: 'carryingCapacity',
         },
         {
-            Header: 'Degradation Rate',
+            Header: 'Degrad. Rate',
             accessor: 'degradationRate',
         },
         {
-            Header: 'BelowCap Strategy',
+            Header: 'BelowCap',
             accessor: 'belowCapacityHealthUpdateStrategy',
         },
         {
-            Header: 'AboveCap Strategy',
+            Header: 'AboveCap',
             accessor: 'aboveCapacityHealthUpdateStrategy',
-        },
-        {
-            Header: 'Num Users',
-            accessor: 'numUsers',
-        },
-        {
-            Header: 'Num Cows',
-            accessor: 'numCows',
-        },
-        {
-            Header: 'Create Date',
-            accessor: 'createDate',
         },
     ];
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import LeaderboardPage from "main/pages/LeaderboardPage";
-import { Route, Routes } from 'react-router-dom';
 
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
@@ -13,11 +12,11 @@ export default {
     component: LeaderboardPage,
 };
 
-export const OrdinaryUser = () => {
+export const OrdinaryUserShowLeaderboardTrue = () => {
     return (<LeaderboardPage />)
 }
 
-OrdinaryUser.parameters = {
+OrdinaryUserShowLeaderboardTrue.parameters = {
     msw: [
         rest.get('/api/currentUser', (_req, res, ctx) => {
             return res(ctx.json(apiCurrentUserFixtures.userOnly));
@@ -27,6 +26,27 @@ OrdinaryUser.parameters = {
         }),
         rest.get('/api/commons', (_req, res, ctx) => {
             return res(ctx.json(commonsFixtures.threeCommons[0]));
+        }),
+        rest.get('/api/usercommons/commons/all', (_req, res, ctx) => {
+            return res(ctx.json(userCommonsFixtures.tenUserCommons));
+        }),
+    ]
+}
+
+export const OrdinaryUserShowLeaderboardFalse = () => {
+    return (<LeaderboardPage />)
+}
+
+OrdinaryUserShowLeaderboardFalse.parameters = {
+    msw: [
+        rest.get('/api/currentUser', (_req, res, ctx) => {
+            return res(ctx.json(apiCurrentUserFixtures.userOnly));
+        }),
+        rest.get('/api/systemInfo', (_req, res, ctx) => {
+            return res(ctx.json(systemInfoFixtures.showingNeither));
+        }),
+        rest.get('/api/commons', (_req, res, ctx) => {
+            return res(ctx.json({...commonsFixtures.threeCommons[0], showLeaderboard: false}));
         }),
         rest.get('/api/usercommons/commons/all', (_req, res, ctx) => {
             return res(ctx.json(userCommonsFixtures.tenUserCommons));

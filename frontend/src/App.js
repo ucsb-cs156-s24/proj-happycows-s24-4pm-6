@@ -7,6 +7,8 @@ import LeaderboardPage from "main/pages/LeaderboardPage";
 import AdminUsersPage from "main/pages/AdminUsersPage";
 import AdminJobsPage from "main/pages/AdminJobsPage";
 import AdminCreateCommonsPage from "main/pages/AdminCreateCommonsPage";
+import AdminViewReportPage from "main/pages/AdminViewReportPage";
+
 import AdminEditCommonsPage from "main/pages/AdminEditCommonsPage";
 import AdminListCommonsPage from "main/pages/AdminListCommonPage";
 import AdminReportsPage from "main/pages/AdminReportsPage";

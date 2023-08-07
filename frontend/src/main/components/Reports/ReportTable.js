@@ -2,7 +2,7 @@ import OurTable, { ButtonColumn } from "main/components/OurTable";
 import { useNavigate } from "react-router-dom";
 
 // should take in a players list from a commons
-export default function ReportTable({ reports, storybook = false }) {
+export default function ReportTable({ reports, storybook = false, buttons=true }) {
 
     const testid = "ReportTable";
 
@@ -42,9 +42,11 @@ export default function ReportTable({ reports, storybook = false }) {
             Header: 'Num Cows',
             accessor: 'numCows',
         },
-        ButtonColumn("View Report", "secondary", reportCallback, testid)
     ];
 
+    if (buttons) {
+        columns.push(ButtonColumn("View Report", "secondary", reportCallback, testid));
+    }
     return <OurTable
         data={reports}
         columns={columns}
