@@ -2,9 +2,9 @@ package edu.ucsb.cs156.happiercows.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 
 
 @Slf4j
-@Api(description = "Jobs")
+@Tag(name = "Jobs")
 @RequestMapping("/api/jobs")
 @RestController
 public class JobsController extends ApiController {
@@ -54,7 +54,7 @@ public class JobsController extends ApiController {
     @Autowired
     SetCowHealthJobFactory setCowHealthJobFactory;
 
-    @ApiOperation(value = "List all jobs")
+    @Operation(summary = "List all jobs")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/all")
     public Iterable<Job> allJobs() {
@@ -62,12 +62,12 @@ public class JobsController extends ApiController {
         return jobs;
     }
 
-    @ApiOperation(value = "Launch Test Job (click fail if you want to test exception handling)")
+    @Operation(summary = "Launch Test Job (click fail if you want to test exception handling)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/launch/testjob")
     public Job launchTestJob(
-        @ApiParam("fail") @RequestParam Boolean fail, 
-        @ApiParam("sleepMs") @RequestParam Integer sleepMs
+        @Parameter(name="fail") @RequestParam Boolean fail, 
+        @Parameter(name="sleepMs") @RequestParam Integer sleepMs
     ) {
         TestJob testJob = TestJob.builder()
         .fail(fail)
@@ -77,7 +77,7 @@ public class JobsController extends ApiController {
         return jobService.runAsJob(testJob);
     }
 
-    @ApiOperation(value = "Launch Job to Milk the Cows (click fail if you want to test exception handling)")
+    @Operation(summary = "Launch Job to Milk the Cows (click fail if you want to test exception handling)")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/launch/milkthecowjob")
     public Job launchTestJob(
@@ -86,7 +86,7 @@ public class JobsController extends ApiController {
         return jobService.runAsJob(milkTheCowsJob);
     }
 
-    @ApiOperation(value = "Launch Job to Update Cow Health")
+    @Operation(summary = "Launch Job to Update Cow Health")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/launch/updatecowhealth")
     public Job updateCowHealth(
@@ -95,18 +95,18 @@ public class JobsController extends ApiController {
         return jobService.runAsJob(updateCowHealthJob);
     }
 
-    @ApiOperation(value = "Launch Job to Set Cow Health")
+    @Operation(summary = "Launch Job to Set Cow Health")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/launch/setcowhealth")
     public Job setCowHealth( 
-        @ApiParam("commonsID") @RequestParam Long commonsID, 
-        @ApiParam("health") @RequestParam double health
+        @Parameter(name="commonsID") @RequestParam Long commonsID, 
+        @Parameter(name="health") @RequestParam double health
     ) { 
         JobContextConsumer setCowHealthJob = setCowHealthJobFactory.create(commonsID, health);
         return jobService.runAsJob(setCowHealthJob);
     }
 
-    @ApiOperation(value = "Launch Job to Produce Instructor Report")
+    @Operation(summary = "Launch Job to Produce Instructor Report")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/launch/instructorreport")
     public Job instructorReport(

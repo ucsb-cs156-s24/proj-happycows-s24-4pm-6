@@ -20,9 +20,9 @@ import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import edu.ucsb.cs156.happiercows.errors.NoCowsException;
 import edu.ucsb.cs156.happiercows.errors.NotEnoughMoneyException;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;;
+import io.swagger.v3.oas.annotations.Parameter;
 
 import org.springframework.http.ResponseEntity;
 import javax.validation.Valid;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Api(description = "User Commons")
+@Tag(name = "User Commons")
 @RequestMapping("/api/usercommons")
 @RestController
 public class UserCommonsController extends ApiController {
@@ -45,12 +45,12 @@ public class UserCommonsController extends ApiController {
   @Autowired
   ObjectMapper mapper;
 
-  @ApiOperation(value = "Get a specific user commons (admin only)")
+  @Operation(summary = "Get a specific user commons (admin only)")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @GetMapping("")
   public UserCommons getUserCommonsById(
-      @ApiParam("userId") @RequestParam Long userId,
-      @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
+      @Parameter(name="userId") @RequestParam Long userId,
+      @Parameter(name="commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
 
     UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)
         .orElseThrow(
@@ -58,11 +58,11 @@ public class UserCommonsController extends ApiController {
     return userCommons;
   }
 
-  @ApiOperation(value = "Get a user commons for current user")
+  @Operation(summary = "Get a user commons for current user")
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("/forcurrentuser")
   public UserCommons getUserCommonsById(
-      @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
+      @Parameter(name="commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
 
     User u = getCurrentUser().getUser();
     Long userId = u.getId();
@@ -72,11 +72,11 @@ public class UserCommonsController extends ApiController {
     return userCommons;
   }
 
-  @ApiOperation(value = "Buy a cow, totalWealth updated")
+  @Operation(summary = "Buy a cow, totalWealth updated")
   @PreAuthorize("hasRole('ROLE_USER')")
   @PutMapping("/buy")
   public ResponseEntity<String> putUserCommonsByIdBuy(
-          @ApiParam("commonsId") @RequestParam Long commonsId) throws NotEnoughMoneyException, JsonProcessingException{
+          @Parameter(name="commonsId") @RequestParam Long commonsId) throws NotEnoughMoneyException, JsonProcessingException{
 
         User u = getCurrentUser().getUser();
         Long userId = u.getId();
@@ -101,11 +101,11 @@ public class UserCommonsController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
-  @ApiOperation(value = "Sell a cow, totalWealth updated")
+  @Operation(summary = "Sell a cow, totalWealth updated")
   @PreAuthorize("hasRole('ROLE_USER')")
   @PutMapping("/sell")
   public ResponseEntity<String> putUserCommonsByIdSell(
-          @ApiParam("commonsId") @RequestParam Long commonsId) throws NoCowsException, JsonProcessingException {
+          @Parameter(name="commonsId") @RequestParam Long commonsId) throws NoCowsException, JsonProcessingException {
         User u = getCurrentUser().getUser();
         Long userId = u.getId();
 
@@ -132,10 +132,10 @@ public class UserCommonsController extends ApiController {
 
     
 
-    @ApiOperation(value = "Get all user commons for a specific commons")
+    @Operation(summary = "Get all user commons for a specific commons")
     @GetMapping("/commons/all")
     public  ResponseEntity<String> getUsersCommonsByCommonsId(
-        @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
+        @Parameter(name="commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
       Iterable<UserCommons> uc = userCommonsRepository.findByCommonsId(commonsId);
       
    

@@ -12,9 +12,9 @@ import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Api(description = "Commons")
+@Tag(name = "Commons")
 @RequestMapping("/api/commons")
 @RestController
 public class CommonsController extends ApiController {
@@ -41,7 +41,7 @@ public class CommonsController extends ApiController {
     @Autowired
     ObjectMapper mapper;
 
-    @ApiOperation(value = "Get a list of all commons")
+    @Operation(summary = "Get a list of all commons")
     @GetMapping("/all")
     public ResponseEntity<String> getCommons() throws JsonProcessingException {
         log.info("getCommons()...");
@@ -50,7 +50,7 @@ public class CommonsController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
-    @ApiOperation(value = "Get a list of all commons and number of cows/users")
+    @Operation(summary = "Get a list of all commons and number of cows/users")
     @GetMapping("/allplus")
     public ResponseEntity<String> getCommonsPlus() throws JsonProcessingException {
         log.info("getCommonsPlus()...");
@@ -71,23 +71,23 @@ public class CommonsController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
-    @ApiOperation(value = "Get the number of cows/users in a commons")
+    @Operation(summary = "Get the number of cows/users in a commons")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/plus")
     public CommonsPlus getCommonsPlusById(
-            @ApiParam("id") @RequestParam long id) throws JsonProcessingException {
+            @Parameter(name="id") @RequestParam long id) throws JsonProcessingException {
                 CommonsPlus commonsPlus = toCommonsPlus(commonsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Commons.class, id)));
 
         return commonsPlus;
     }
 
-    @ApiOperation(value = "Update a commons")
+    @Operation(summary = "Update a commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<String> updateCommons(
-            @ApiParam("commons identifier") @RequestParam long id,
-            @ApiParam("request body") @RequestBody CreateCommonsParams params
+            @Parameter(name="commons identifier") @RequestParam long id,
+            @Parameter(name="request body") @RequestBody CreateCommonsParams params
     ) {
         Optional<Commons> existing = commonsRepository.findById(id);
 
@@ -126,11 +126,11 @@ public class CommonsController extends ApiController {
         return ResponseEntity.status(status).build();
     }
 
-    @ApiOperation(value = "Get a specific commons")
+    @Operation(summary = "Get a specific commons")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("")
     public Commons getCommonsById(
-            @ApiParam("id") @RequestParam Long id) throws JsonProcessingException {
+            @Parameter(name="id") @RequestParam Long id) throws JsonProcessingException {
 
         Commons commons = commonsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Commons.class, id));
@@ -138,11 +138,11 @@ public class CommonsController extends ApiController {
         return commons;
     }
 
-    @ApiOperation(value = "Create a new commons")
+    @Operation(summary = "Create a new commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/new", produces = "application/json")
     public ResponseEntity<String> createCommons(
-            @ApiParam("request body") @RequestBody CreateCommonsParams params
+            @Parameter(name="request body") @RequestBody CreateCommonsParams params
     ) throws JsonProcessingException {
 
         var builder = Commons.builder()
@@ -178,7 +178,7 @@ public class CommonsController extends ApiController {
     }
 
 
-    @ApiOperation(value = "List all cow health update strategies")
+    @Operation(summary = "List all cow health update strategies")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all-health-update-strategies")
     public ResponseEntity<String> listCowHealthUpdateStrategies() throws JsonProcessingException {
@@ -187,11 +187,11 @@ public class CommonsController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
-    @ApiOperation(value = "Join a commons")
+    @Operation(summary = "Join a commons")
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(value = "/join", produces = "application/json")
     public ResponseEntity<String> joinCommon(
-            @ApiParam("commonsId") @RequestParam Long commonsId) throws Exception {
+            @Parameter(name="commonsId") @RequestParam Long commonsId) throws Exception {
 
         User u = getCurrentUser().getUser();
         Long userId = u.getId();
@@ -225,11 +225,11 @@ public class CommonsController extends ApiController {
         return ResponseEntity.ok().body(body);
     }
 
-    @ApiOperation(value = "Delete a Commons")
+    @Operation(summary = "Delete a Commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("")
     public Object deleteCommons(
-            @ApiParam("id") @RequestParam Long id) {
+            @Parameter(name="id") @RequestParam Long id) {
 
         commonsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Commons.class, id));
@@ -241,7 +241,7 @@ public class CommonsController extends ApiController {
 
     }
 
-    @ApiOperation("Delete a user from a commons")
+    @Operation(summary="Delete a user from a commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{commonsId}/users/{userId}")
     public Object deleteUserFromCommon(@PathVariable("commonsId") Long commonsId,

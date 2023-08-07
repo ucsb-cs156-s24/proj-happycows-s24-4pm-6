@@ -6,9 +6,9 @@ import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(description = "Profits")
+@Tag(name = "Profits")
 @RequestMapping("/api/profits")
 @RestController
 @Slf4j
@@ -33,11 +33,11 @@ public class ProfitsController extends ApiController {
     @Autowired
     ProfitRepository profitRepository;
 
-    @ApiOperation(value = "Get all profits belonging to a user commons as a user via CommonsID")
+    @Operation(summary = "Get all profits belonging to a user commons as a user via CommonsID")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all/commonsid")
     public Iterable<Profit> allProfitsByCommonsId(
-            @ApiParam("commonsId") @RequestParam Long commonsId
+            @Parameter(name="commonsId") @RequestParam Long commonsId
     ) {
         Long userId = getCurrentUser().getUser().getId();
 
