@@ -123,7 +123,7 @@ jobs:
   build-pitest-main:
     name: d - Pitest (main)
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     needs: [initialize]
     env:
       destination: target/pit-reports
@@ -394,6 +394,7 @@ jobs:
   d-build-pitest-for-each-pr:
     name: d - Pitest (${{ matrix.value.number }}, ${{ matrix.value.headRefName }})
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: ${{ needs.initialize.outputs.pull_requests != '[]' && needs.initialize.outputs.pull_requests != '' }}
 
     needs: [initialize]
