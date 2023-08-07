@@ -90,8 +90,7 @@ export default function CommonsTable({ commons, currentUser }) {
 "secondary", leaderboardCallback, testid)
     ];
 
-    const columnsToDisplay = hasRole(currentUser,
-"ROLE_ADMIN") ? columnsIfAdmin : columns;
+    const columnsToDisplay = hasRole(currentUser,"ROLE_ADMIN") ? columnsIfAdmin : columns;
 
     return <OurTable
         data={commons}
