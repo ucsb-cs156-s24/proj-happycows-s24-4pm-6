@@ -39,6 +39,8 @@ import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
+import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommonsFactory;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
@@ -78,6 +80,12 @@ public class JobsControllerTests extends ControllerTestCase {
 
     @MockBean
     SetCowHealthJobFactory setCowHealthJobFactory;
+
+    @MockBean
+    InstructorReportJobFactory instructorReportJobFactory;
+
+    @MockBean
+    InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
 
     @WithMockUser(roles = { "ADMIN" })
     @Test
