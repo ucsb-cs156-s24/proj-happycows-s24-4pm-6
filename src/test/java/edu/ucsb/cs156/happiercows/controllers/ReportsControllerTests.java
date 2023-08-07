@@ -122,7 +122,7 @@ public class ReportsControllerTests extends ControllerTestCase {
                         .build();
 
 
- @WithMockUser(roles = { "ADMIN" })
+        @WithMockUser(roles = { "ADMIN" })
         @Test
         public void get_all_report_headers() throws Exception {
                 List<Report> reports = List.of(expectedReportHeader);
@@ -137,6 +137,23 @@ public class ReportsControllerTests extends ControllerTestCase {
                 List<Report> actualReports = objectMapper.readValue(responseString, new TypeReference<List<Report>>() {
                 });
                 assertEquals(reports, actualReports);
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void get_specific_report_header() throws Exception {
+                Optional<Report> optionalReport = Optional.of(expectedReportHeader);
+                when(reportRepository.findById(eq(432L))).thenReturn(optionalReport);
+               
+                MvcResult response = mockMvc.perform(get("/api/reports/byReportId?reportId=432")).andDo(print())
+                                .andExpect(status().isOk()).andReturn();
+
+                verify(reportRepository, times(1)).findById(eq(432L));
+
+                String responseString = response.getResponse().getContentAsString();
+                Optional<Report> actualReports = objectMapper.readValue(responseString, new TypeReference<Optional<Report>>() {
+                });
+                assertEquals(optionalReport, actualReports);
         }
                         
         @WithMockUser(roles = { "ADMIN" })

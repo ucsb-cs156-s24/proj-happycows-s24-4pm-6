@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -45,16 +46,26 @@ public class ReportsController extends ApiController {
     ReportLineRepository reportLineRepository;
 
 
-    @Operation(summary = "Get report headers for a given user commons")
+    @Operation(summary = "Get all report headers")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
     public Iterable<Report> allReports() {   
         Iterable<Report> reports = reportRepository.findAll(
             Sort.by(List.of(
-                new Order(Sort.Direction.DESC, "StartTime"),
-                new Order(Sort.Direction.ASC, "ProgDate")
+                new Order(Sort.Direction.ASC, "commonsId"),
+                new Order(Sort.Direction.DESC, "id")
               ))
         );
+        return reports;
+    }
+
+    @Operation(summary = "Get report headers for a given report")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/byReportId")
+    public Optional<Report> findByReportId(
+            @Parameter(name="reportId") @RequestParam Long reportId
+    ) {   
+        Optional<Report> reports = reportRepository.findById(reportId);
         return reports;
     }
 
