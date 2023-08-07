@@ -23,42 +23,34 @@ import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class InstructorReportJobTests {
+public class InstructorReportJobSingleCommonsTests {
 
     @MockBean
     ReportService reportService;
-
-    @MockBean
-    CommonsRepository commonsRepository;
 
     @Test
     void test_log_output() throws Exception {
 
         // Arrange
 
-        Commons commons= Commons.builder().id(17L).name("CS156").build();
-        Report report = Report.builder().id(17L).build();
+        Report report = Report.builder().id(17L).name("Foo").build();
         
         Job jobStarted = Job.builder().build();
         JobContext ctx = new JobContext(null, jobStarted);
       
-        when(commonsRepository.findAll()).thenReturn(Arrays.asList(commons));      
         when(reportService.createReport(17L)).thenReturn(report);
 
         // Act
-        InstructorReportJob instructorReportJob = new InstructorReportJob(reportService, commonsRepository);
-        instructorReportJob.accept(ctx);
+        InstructorReportJobSingleCommons InstructorReportJobSingleCommons = new InstructorReportJobSingleCommons(17L, reportService);
+        InstructorReportJobSingleCommons.accept(ctx);
 
         // Assert
 
-        verify(commonsRepository).findAll();
         verify(reportService).createReport(17L);
         
         String expected = """
-            Starting instructor report...
-            Starting Commons id=17 (CS156)...
-            Report 17 for commons id=17 (CS156) finished.
-            Instructor report done!""";
+            Producing instructor report for commons id: 17
+            Instructor report 17 for commons Foo has been produced!""";
 
         assertEquals(expected, jobStarted.getLog());
     }
