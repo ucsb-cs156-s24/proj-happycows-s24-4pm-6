@@ -14,7 +14,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Sort.Order;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +44,19 @@ public class ReportsController extends ApiController {
     @Autowired
     ReportLineRepository reportLineRepository;
 
+
+    @Operation(summary = "Get report headers for a given user commons")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("")
+    public Iterable<Report> allReports() {   
+        Iterable<Report> reports = reportRepository.findAll(
+            Sort.by(List.of(
+                new Order(Sort.Direction.DESC, "StartTime"),
+                new Order(Sort.Direction.ASC, "ProgDate")
+              ))
+        );
+        return reports;
+    }
 
     @Operation(summary = "Get report headers for a given user commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
