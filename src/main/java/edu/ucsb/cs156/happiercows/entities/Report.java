@@ -24,6 +24,7 @@ public class Report {
     private long id;
 
     private long commonsId;
+
     private String name;
     private double cowPrice;
     private double milkPrice;

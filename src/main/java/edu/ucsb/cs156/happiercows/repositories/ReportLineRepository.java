@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReportLineRepository extends CrudRepository<ReportLine, Long> {
-    Iterable<ReportLine> findAllByReportId(Long report_id);
+    Iterable<ReportLine> findAllByReportId(Long reportId);
 }

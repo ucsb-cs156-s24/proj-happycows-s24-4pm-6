@@ -32,6 +32,7 @@ public class ReportService {
         
         Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commonsId);
 
+
         for (UserCommons userCommons : allUserCommons) {
                createAndSaveReportLine(report, userCommons);
         }
@@ -45,6 +46,7 @@ public class ReportService {
 
         Report report = Report.builder()
                 .commonsId(commonsId)
+
                 .name(commons.getName())
                 .cowPrice(commons.getCowPrice())
                 .milkPrice(commons.getMilkPrice())
@@ -57,6 +59,7 @@ public class ReportService {
                 .aboveCapacityHealthUpdateStrategy(commons.getAboveCapacityHealthUpdateStrategy())
                 .numUsers(commonsRepository.getNumUsers(commonsId).orElse(0))
                 .numCows(commonsRepository.getNumCows(commonsId).orElse(0))
+
                 .build();
 
         reportRepository.save(report);

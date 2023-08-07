@@ -24,6 +24,7 @@ public class ReportLine {
     private long id;
     private long reportId;
     private long userId;
+
     private String username;
     private double totalWealth;
     private int numOfCows;
