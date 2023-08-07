@@ -23,7 +23,8 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long commons_id;
+    private long commonsId;
+
     private String name;
     private double cowPrice;
     private double milkPrice;

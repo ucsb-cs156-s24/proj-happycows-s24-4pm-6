@@ -4,7 +4,7 @@ import { Table } from "react-bootstrap";
 export default function UserProfileTable({ user }) {
     return (
         <Table striped bordered hover>
-            <thread>
+            <thead>
                 <tr>
                     <th>First Name</th>
                     <td>{user.givenName}</td>
@@ -37,7 +37,7 @@ export default function UserProfileTable({ user }) {
                     <th>Locale</th>
                     <td>{user.locale}</td>
                 </tr>
-            </thread>
+            </thead>
         </Table>
     );
 }

@@ -27,10 +27,11 @@ public class ReportService {
     @Autowired
     UserCommonsRepository userCommonsRepository;
 
-    public Report createReport(Long commons_id) {
-        Report report = createAndSaveReportHeader(commons_id);
+    public Report createReport(Long commonsId) {
+        Report report = createAndSaveReportHeader(commonsId);
         
-        Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons_id);
+        Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commonsId);
+
 
         for (UserCommons userCommons : allUserCommons) {
                createAndSaveReportLine(report, userCommons);
@@ -39,12 +40,13 @@ public class ReportService {
         return report;
     }
 
-    public Report createAndSaveReportHeader(Long commons_id) {
-        Commons commons = commonsRepository.findById(commons_id)
-                .orElseThrow(() -> new RuntimeException(String.format("Commons with id %d not found", commons_id)));
+    public Report createAndSaveReportHeader(Long commonsId) {
+        Commons commons = commonsRepository.findById(commonsId)
+                .orElseThrow(() -> new RuntimeException(String.format("Commons with id %d not found", commonsId)));
 
         Report report = Report.builder()
-                .commons_id(commons_id)
+                .commonsId(commonsId)
+
                 .name(commons.getName())
                 .cowPrice(commons.getCowPrice())
                 .milkPrice(commons.getMilkPrice())
@@ -55,8 +57,9 @@ public class ReportService {
                 .degradationRate(commons.getDegradationRate())
                 .belowCapacityHealthUpdateStrategy(commons.getBelowCapacityHealthUpdateStrategy())
                 .aboveCapacityHealthUpdateStrategy(commons.getAboveCapacityHealthUpdateStrategy())
-                .numUsers(commonsRepository.getNumUsers(commons_id).orElse(0))
-                .numCows(commonsRepository.getNumCows(commons_id).orElse(0))
+                .numUsers(commonsRepository.getNumUsers(commonsId).orElse(0))
+                .numCows(commonsRepository.getNumCows(commonsId).orElse(0))
+
                 .build();
 
         reportRepository.save(report);
@@ -65,8 +68,8 @@ public class ReportService {
 
     public ReportLine createAndSaveReportLine(Report report, UserCommons userCommons) {
         ReportLine reportLine = ReportLine.builder()
-                .report_id(report.getId())
-                .user_id(userCommons.getUser().getId())
+                .reportId(report.getId())
+                .userId(userCommons.getUser().getId())
                 .username(userCommons.getUsername())
                 .totalWealth(userCommons.getTotalWealth())
                 .numOfCows(userCommons.getNumOfCows())

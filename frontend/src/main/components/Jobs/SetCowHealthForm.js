@@ -2,6 +2,7 @@ import { Button, Form } from "react-bootstrap";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useBackend } from "main/utils/useBackend";
+import CommonsSelect from "main/components/Commons/CommonsSelect";
 
 function SetCowHealthForm({ submitAction=()=>{}, testid = "SetCowHealthForm" }) {
 
@@ -56,24 +57,8 @@ function SetCowHealthForm({ submitAction=()=>{}, testid = "SetCowHealthForm" }) 
         </Form.Text>
       </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Text htmlFor="commons" className="fw-bold fs-5">
-          Commons
-        </Form.Text>
-        <div className="ms-3">
-          {commons.map((object) => (
-            <Form.Check
-              key={object.id}
-              type="radio"
-              label={object.name}
-              data-testid={`${testid}-commons-${object.id}`}
-              onChange={() => handleCommonsSelection(object.id, object.name)}
-              checked={selectedCommons === object.id}
-            />
-          ))}
-        </div>
-      </Form.Group>
-
+      <CommonsSelect commons={commons} selectedCommons={selectedCommons} handleCommonsSelection={handleCommonsSelection} testid={testid} />
+      
       <Form.Group className="mb-3">
         <Form.Label htmlFor="healthValue">Health [0-100]</Form.Label>
         <Form.Control

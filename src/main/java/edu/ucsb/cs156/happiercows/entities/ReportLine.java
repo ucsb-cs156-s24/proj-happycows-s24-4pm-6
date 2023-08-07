@@ -22,8 +22,9 @@ public class ReportLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long report_id;
-    private long user_id;
+    private long reportId;
+    private long userId;
+
     private String username;
     private double totalWealth;
     private int numOfCows;

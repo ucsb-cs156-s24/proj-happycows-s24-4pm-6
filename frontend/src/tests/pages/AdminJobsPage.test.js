@@ -10,6 +10,7 @@ import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import jobsFixtures from "fixtures/jobsFixtures";
 import commonsFixtures from "../../fixtures/commonsFixtures";
 
+
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
     const originalModule = jest.requireActual('react-toastify');
@@ -35,7 +36,17 @@ describe("AdminJobsPage tests", () => {
       .onGet("/api/currentUser")
       .reply(200, apiCurrentUserFixtures.adminUser);
     axiosMock.onGet("/api/jobs/all").reply(200, jobsFixtures.sixJobs);
+
+    // see: https://ucsb-cs156.github.io/topics/testing/testing_jest.html#hiding-the-wall-of-red
+    jest.spyOn(console, 'error')
+    console.error.mockImplementation(() => null);
   });
+
+  afterEach(() => {
+     // see: https://ucsb-cs156.github.io/topics/testing/testing_jest.html#hiding-the-wall-of-red
+    console.error.mockRestore()
+  })
+
 
   test("renders without crashing", async () => {
     render(
@@ -211,7 +222,7 @@ describe("AdminJobsPage tests", () => {
   });
 
 
-  test("user can attempt to submit instructor report form job", async () => {
+  test("user can submit instructor report job", async () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
@@ -231,8 +242,57 @@ describe("AdminJobsPage tests", () => {
     expect(submitButton).toBeInTheDocument();
     submitButton.click();
 
+    await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
+
+    expect(axiosMock.history.post[0].url).toBe(
+      "/api/jobs/launch/instructorreport"
+    );
+
+
     await waitFor( () => {
-      expect(mockToast).toHaveBeenCalledWith('Instructor report not yet implemented; coming soon');
+      expect(mockToast).toHaveBeenCalledWith('Submitted Job: Instructor Report');
+      }
+    );
+  });
+
+  test("user can submit instructor report (specific commons) job", async () => {
+    
+    // arrange
+    axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+
+    // act
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AdminJobsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    // assert
+    const label = "Instructor Report (for specific commons)";
+    expect(await screen.findByText(label)).toBeInTheDocument();
+
+    const InstructorReportJobButton = screen.getByText(label);
+    expect(InstructorReportJobButton).toBeInTheDocument();
+    InstructorReportJobButton.click();
+
+    expect(screen.queryByText("There are no commons on which to run this job.")).not.toBeInTheDocument();
+
+    const submitButton = await screen.findByTestId("InstructorReportSpecificCommonsForm-Submit-Button");
+    expect(submitButton).toBeInTheDocument();
+    submitButton.click();
+
+    await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
+
+    await waitFor(() => {
+      expect(axiosMock.history.post[0].url).toBe(
+        `/api/jobs/launch/instructorreportsinglecommons?commonsId=5`
+      );
+    })
+
+    await waitFor( () => {
+      expect(mockToast).toHaveBeenCalledWith('Submitted Job: Instructor Report (Specific Commons)');
       }
     );
   });

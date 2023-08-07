@@ -7,6 +7,7 @@ import TestJobForm from "main/components/Jobs/TestJobForm";
 import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
 import MilkCowsJobForm from "main/components/Jobs/MilkCowsJobForm";
 import InstructorReportForm from "main/components/Jobs/InstructorReportForm";
+import InstructorReportSpecificCommonsForm from "main/components/Jobs/InstructorReportSpecificCommonsForm";
 import { toast } from "react-toastify";
 
 import { useBackendMutation } from "main/utils/useBackend";
@@ -14,6 +15,8 @@ import SetCowHealthForm from "main/components/Jobs/SetCowHealthForm";
 
 const AdminJobsPage = () => {
   const refreshJobsIntervalMilliseconds = 5000;
+
+  // *** Test job ***
 
   const objectToAxiosParamsTestJob = (data) => ({
     url: `/api/jobs/launch/testjob?fail=${data.fail}&sleepMs=${data.sleepMs}`,
@@ -47,7 +50,7 @@ const AdminJobsPage = () => {
   );
   // Stryker restore  all
 
-  // SetCowHealth job
+  // *** SetCowHealth job ***
 
   const objectToAxiosParamsSetCowHealthJob = (data) => ({
     url: `/api/jobs/launch/setcowhealth?commonsID=${data.selectedCommons}&health=${data.healthValue}`,
@@ -67,7 +70,7 @@ const AdminJobsPage = () => {
     SetCowHealthMutation.mutate(data);
   };
 
-  // UpdateCowHealth job
+  // *** UpdateCowHealth job ***
 
   const objectToAxiosParamsUpdateCowHealthJob = () => ({
     url: `/api/jobs/launch/updatecowhealth`,
@@ -87,16 +90,13 @@ const AdminJobsPage = () => {
     UpdateCowHealthMutation.mutate();
   };
 
-  // MilkTheCows job
+  // *** MilkTheCows job ***
 
   const objectToAxiosParamsMilkTheCowsJob = () => ({
     url: `/api/jobs/launch/milkthecowjob`,
     method: "POST",
   });
-  
-  const submitInstuctorReportJob = async () => {
-    toast('Instructor report not yet implemented; coming soon');
-  }
+
 
   // Stryker disable all
   const MilkTheCowsMutation = useBackendMutation(
@@ -111,45 +111,92 @@ const AdminJobsPage = () => {
     MilkTheCowsMutation.mutate();
   };
 
-  const jobLaunchers = [
-    {
-      name: "Test Job",
-      form: <TestJobForm submitAction={submitTestJob} />,
-    },
-    {
-      name: "Set Cow Health for a Specific Commons",
-      form: <SetCowHealthForm submitAction={submitSetCowHealthJob} />,
-    },
-    {
-      name: "Update Cow Health",
-      form: <UpdateCowHealthForm submitAction={submitUpdateCowHealthJob} />,
-    },
-    {
-      name: "Milk The Cows",
-      form: <MilkCowsJobForm submitAction={submitMilkTheCowsJob} />,
-    },
-    {
-      name: "Instructor Report",
-      form: <InstructorReportForm submitAction={submitInstuctorReportJob} />
-    },
-  ];
+  // *** Instructor Report job ***
 
-  return (
-    <BasicLayout>
-      <h2 className="p-3">Launch Jobs</h2>
-      <Accordion>
-        {jobLaunchers.map((jobLauncher, index) => (
-          <Accordion.Item eventKey={index} key={index}>
-            <Accordion.Header>{jobLauncher.name}</Accordion.Header>
-            <Accordion.Body>{jobLauncher.form}</Accordion.Body>
-          </Accordion.Item>
-        ))}
-      </Accordion>
+  const objectToAxiosParamsInstructorReportJob = () => ({
+    url: `/api/jobs/launch/instructorreport`,
+    method: "POST",
+  });
 
-      <h2 className="p-3">Job Status</h2>
-      <JobsTable jobs={jobs} />
-    </BasicLayout>
+  // Stryker disable all
+  const InstructorReportMutation = useBackendMutation(
+    objectToAxiosParamsInstructorReportJob,
+    {},
+    ["/api/jobs/all"]
   );
+  // Stryker restore all
+
+  const submitInstructorReportJob = async () => {
+    toast("Submitted Job: Instructor Report");
+    InstructorReportMutation.mutate();
+  }
+
+  // *** Instructor Report (Specific Commons) job ***
+
+  const objectToAxiosParamsInstructorReportSpecificCommonsJob = (data) => {
+    return ({
+      url: `/api/jobs/launch/instructorreportsinglecommons?commonsId=${data.selectedCommons}`,
+      method: "POST",
+    });
+
+  };
+  
+// Stryker disable all
+const InstructorReportSpecificCommonsMutation = useBackendMutation(
+  objectToAxiosParamsInstructorReportSpecificCommonsJob,
+  {},
+  ["/api/jobs/all"]
+);
+// Stryker restore all
+
+const submitInstructorReportSpecificCommonsJob = async (data) => {
+  toast("Submitted Job: Instructor Report (Specific Commons)");
+  InstructorReportSpecificCommonsMutation.mutate(data);
+}
+
+const jobLaunchers = [
+  {
+    name: "Test Job",
+    form: <TestJobForm submitAction={submitTestJob} />,
+  },
+  {
+    name: "Set Cow Health for a Specific Commons",
+    form: <SetCowHealthForm submitAction={submitSetCowHealthJob} />,
+  },
+  {
+    name: "Update Cow Health",
+    form: <UpdateCowHealthForm submitAction={submitUpdateCowHealthJob} />,
+  },
+  {
+    name: "Milk The Cows",
+    form: <MilkCowsJobForm submitAction={submitMilkTheCowsJob} />,
+  },
+  {
+    name: "Instructor Report",
+    form: <InstructorReportForm submitAction={submitInstructorReportJob} />
+  },
+  {
+    name: "Instructor Report (for specific commons)",
+    form: <InstructorReportSpecificCommonsForm submitAction={submitInstructorReportSpecificCommonsJob} />
+  },
+];
+
+return (
+  <BasicLayout>
+    <h2 className="p-3">Launch Jobs</h2>
+    <Accordion>
+      {jobLaunchers.map((jobLauncher, index) => (
+        <Accordion.Item eventKey={index} key={index}>
+          <Accordion.Header>{jobLauncher.name}</Accordion.Header>
+          <Accordion.Body>{jobLauncher.form}</Accordion.Body>
+        </Accordion.Item>
+      ))}
+    </Accordion>
+
+    <h2 className="p-3">Job Status</h2>
+    <JobsTable jobs={jobs} />
+  </BasicLayout>
+);
 };
 
 export default AdminJobsPage;

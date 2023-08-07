@@ -17,7 +17,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate
 }));
 
-describe("HealthUpdateStrategiesDropdown tests", () => {
+describe("CommonsForm tests", () => {
   const axiosMock = new AxiosMockAdapter(axios);
 
   beforeEach(() => {

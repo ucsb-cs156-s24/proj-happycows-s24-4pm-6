@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import jobsFixtures from "fixtures/jobsFixtures";
 import SetCowHealthForm from "main/components/Jobs/SetCowHealthForm";
 import { QueryClient, QueryClientProvider } from "react-query";
 import AxiosMockAdapter from "axios-mock-adapter";
@@ -29,7 +28,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm />
         </Router>
       </QueryClientProvider>
     );
@@ -48,7 +47,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm  />
         </Router>
       </QueryClientProvider>
     );
@@ -84,7 +83,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm  />
         </Router>
       </QueryClientProvider>
     );
@@ -120,7 +119,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm />
         </Router>
       </QueryClientProvider>
     );
@@ -158,7 +157,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm />
         </Router>
       </QueryClientProvider>
     );
@@ -198,7 +197,6 @@ describe("SetCowHealthForm tests", () => {
         <Router>
           <SetCowHealthForm
             submitAction={submitAction}
-            jobs={jobsFixtures.sixJobs}
           />
         </Router>
       </QueryClientProvider>
@@ -243,7 +241,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm />
         </Router>
       </QueryClientProvider>
     );
@@ -267,7 +265,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm />
         </Router>
       </QueryClientProvider>
     );
@@ -294,7 +292,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm  />
         </Router>
       </QueryClientProvider>
     );
@@ -328,7 +326,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm  />
         </Router>
       </QueryClientProvider>
     );
@@ -351,7 +349,7 @@ describe("SetCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <SetCowHealthForm jobs={jobsFixtures.sixJobs} />
+          <SetCowHealthForm />
         </Router>
       </QueryClientProvider>
     );
