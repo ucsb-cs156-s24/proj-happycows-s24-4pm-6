@@ -6,6 +6,7 @@ import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import { rest } from 'msw';
 import userCommonsFixtures from 'fixtures/userCommonsFixtures';
+import commonsFixtures from 'fixtures/commonsFixtures';
 
 export default {
     title: 'pages/LeaderboardPage',
@@ -13,14 +14,7 @@ export default {
 };
 
 export const OrdinaryUser = () => {
-    return (
-        <Routes>
-            <Route
-                element={<LeaderboardPage />}
-                path="/leaderboard/:commonsId"
-            />
-        </Routes>
-    )
+    return (<LeaderboardPage />)
 }
 
 OrdinaryUser.parameters = {
@@ -31,7 +25,10 @@ OrdinaryUser.parameters = {
         rest.get('/api/systemInfo', (_req, res, ctx) => {
             return res(ctx.json(systemInfoFixtures.showingNeither));
         }),
-        rest.get('/api/usercommons/commons/all?commonsId=17', (_req, res, ctx) => {
+        rest.get('/api/commons', (_req, res, ctx) => {
+            return res(ctx.json(commonsFixtures.threeCommons[0]));
+        }),
+        rest.get('/api/usercommons/commons/all', (_req, res, ctx) => {
             return res(ctx.json(userCommonsFixtures.tenUserCommons));
         }),
     ]
@@ -39,12 +36,7 @@ OrdinaryUser.parameters = {
 
 export const AdminUser = () => {
     return (
-        <Routes>
-            <Route
-                element={<LeaderboardPage />}
-                path="/leaderboard/:commonsId"
-            />
-        </Routes>
+       <LeaderboardPage />
     )
 }
 
@@ -56,8 +48,11 @@ AdminUser.parameters = {
         rest.get('/api/systemInfo', (_req, res, ctx) => {
             return res(ctx.json(systemInfoFixtures.showingNeither));
         }),
-        rest.get('/api/usercommons/commons/all?commonsId=17', (_req, res, ctx) => {
+        rest.get('/api/usercommons/commons/all', (_req, res, ctx) => {
             return res(ctx.json(userCommonsFixtures.tenUserCommons));
+        }),
+        rest.get('/api/commons', (_req, res, ctx) => {
+            return res(ctx.json(commonsFixtures.threeCommons[0]));
         }),
     ]
 }

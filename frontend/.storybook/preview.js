@@ -31,12 +31,7 @@ const queryClient = new QueryClient();
 export const decorators = [
   (Story) => (
     <QueryClientProvider client={queryClient}>
-      {/* 
-          The initialEntries must be modified to include the
-          expected path for any stories that
-          rely on the useParams hook, e.g. AdminViewReportPage
-       */}
-      <MemoryRouter initialEntries={['/admin/report/108', '/leaderboard/17']}>
+      <MemoryRouter>
         <Story />
       </MemoryRouter>
     </QueryClientProvider>
