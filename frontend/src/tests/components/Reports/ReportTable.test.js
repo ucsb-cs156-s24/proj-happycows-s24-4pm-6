@@ -74,6 +74,7 @@ describe("ReportTable tests", () => {
 
     expect(screen.getByTestId(`${testId}-cell-row-0-col-View Report-button`)).toBeInTheDocument();
     const viewButton = screen.getByTestId(`${testId}-cell-row-0-col-View Report-button`);
+    expect(viewButton).toHaveClass("btn-secondary");
     viewButton.click();
     expect(mockNavigate).toHaveBeenCalledWith("/admin/report/1");
 
