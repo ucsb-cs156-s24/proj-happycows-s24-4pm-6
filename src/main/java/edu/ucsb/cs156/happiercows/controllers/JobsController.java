@@ -9,6 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJob;
@@ -68,6 +73,17 @@ public class JobsController extends ApiController {
     @GetMapping("/all")
     public Iterable<Job> allJobs() {
         Iterable<Job> jobs = jobsRepository.findAll();
+        return jobs;
+    }
+
+    @Operation(summary = "List all jobs")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/all/pageable")
+    public Page<Job> allJobsPaged(
+         @Parameter(name="page") @RequestParam int page,
+         @Parameter(name="size") @RequestParam int size
+    ) {
+        Page<Job> jobs = jobsRepository.findAll(PageRequest.of(page, size));
         return jobs;
     }
 
