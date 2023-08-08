@@ -42,8 +42,8 @@ describe("AdminViewReportPage tests", () => {
 
         // assert
 
-        waitFor( () => {
-           expect(axiosMock.history.get.length).toBe(3);
+        await waitFor( () => {
+            expect(axiosMock.history.get.length).toBe(3);
         })
 
         expect(axiosMock.history.get[0].url).toBe("/api/currentUser");
