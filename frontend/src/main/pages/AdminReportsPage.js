@@ -2,7 +2,6 @@ import React from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import { useBackend } from 'main/utils/useBackend';
 import ReportTable  from 'main/components/Reports/ReportTable';
-// import { useCurrentUser } from "main/utils/currentUser";
 
 export default function AdminReportsPage()
 {
