@@ -8,6 +8,8 @@ import AdminViewReportPage from "main/pages/AdminViewReportPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import reportFixtures from "fixtures/reportFixtures";
+import reportLineFixtures from "fixtures/reportLineFixtures";
+
 const mockedNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
@@ -30,6 +32,7 @@ describe("AdminViewReportPage tests", () => {
         setupAdminUser();
         const queryClient = new QueryClient();
         axiosMock.onGet("/api/reports/byReportId").reply(200, reportFixtures.threeReports[0]);
+        axiosMock.onGet("/api/reports/lines").reply(200, reportLineFixtures.twoReportLines);
 
         // act
         render(
@@ -43,12 +46,13 @@ describe("AdminViewReportPage tests", () => {
         // assert
 
         await waitFor( () => {
-            expect(axiosMock.history.get.length).toBe(3);
+            expect(axiosMock.history.get.length).toBe(4);
         })
 
         expect(axiosMock.history.get[0].url).toBe("/api/currentUser");
         expect(axiosMock.history.get[1].url).toBe("/api/systemInfo");
         expect(axiosMock.history.get[2].url).toBe("/api/reports/byReportId");
+        expect(axiosMock.history.get[3].url).toBe("/api/reports/lines");
 
         expect(screen.getByText("Instructor Report")).toBeInTheDocument();
         expect(screen.getByText("Back to Reports")).toBeInTheDocument();
