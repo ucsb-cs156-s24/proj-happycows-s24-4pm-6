@@ -6,7 +6,6 @@ import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 import AdminReportsPage from "main/pages/AdminReportsPage";
-// import reportLineFixtures from "fixtures/reportLineFixtures";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
