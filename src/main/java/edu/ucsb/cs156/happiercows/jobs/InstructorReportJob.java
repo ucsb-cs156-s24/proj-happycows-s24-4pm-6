@@ -1,26 +1,14 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
-import java.util.Optional;
-
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.Report;
-import edu.ucsb.cs156.happiercows.entities.User;
-import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
-import edu.ucsb.cs156.happiercows.repositories.ReportLineRepository;
-import edu.ucsb.cs156.happiercows.repositories.ReportRepository;
-import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
-import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
-
 import edu.ucsb.cs156.happiercows.services.ReportService;
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @AllArgsConstructor
 public class InstructorReportJob implements JobContextConsumer {
 
