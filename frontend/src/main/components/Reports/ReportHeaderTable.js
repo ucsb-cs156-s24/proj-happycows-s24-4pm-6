@@ -31,7 +31,7 @@ export default function ReportHeaderTable({ report  }) {
             accessor: 'carryingCapacity',
         },
         {
-            Header: 'Degrad. Rate',
+            Header: 'Degrad Rate',
             accessor: 'degradationRate',
         },
         {

@@ -19,16 +19,7 @@ jest.mock('react-router-dom', () => ({
 
 describe("AdminReportsPage tests", () => {
     const axiosMock = new AxiosMockAdapter(axios);
-
-    const testId = "CommonsTable";
-
-    const setupUserOnly = () => {
-        axiosMock.reset();
-        axiosMock.resetHistory();
-        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
-        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
-    };
-
+    
     const setupAdminUser = () => {
         axiosMock.reset();
         axiosMock.resetHistory();
