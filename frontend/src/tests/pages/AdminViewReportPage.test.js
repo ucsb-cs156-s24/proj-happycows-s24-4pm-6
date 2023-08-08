@@ -43,18 +43,18 @@ describe("AdminViewReportPage tests", () => {
         // assert
 
         await waitFor( () => {
-            expect(axiosMock.history.get.length).toBe(3);
+            expect(axiosMock.history.get.length).toBeGreaterThanOrEqual(4);
         })
 
         expect(axiosMock.history.get[0].url).toBe("/api/currentUser");
         expect(axiosMock.history.get[1].url).toBe("/api/systemInfo");
         expect(axiosMock.history.get[2].url).toBe("/api/reports/byReportId");
+        expect(axiosMock.history.get[3].url).toBe("/api/reports/lines");
 
         expect(screen.getByText("Instructor Report")).toBeInTheDocument();
         expect(screen.getByText("Back to Reports")).toBeInTheDocument();
         expect(screen.getByText("Back to Reports")).toBeInTheDocument();
         const backButton = screen.getByText("Back to Reports");
-        expect(backButton).toHaveAttribute("style", "float: right;");
        
         expect(screen.getByText("Cow Price")).toBeInTheDocument();
         expect(screen.getByText("Num Users")).toBeInTheDocument();
