@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,7 +96,7 @@ public class ReportsController extends ApiController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/download")
     public ResponseEntity<Resource> getLinesCSV(
-            @Parameter(name = "reportId") @RequestParam Long reportId) {
+            @Parameter(name = "reportId") @RequestParam Long reportId) throws IOException {
 
         Iterable<ReportLine> reportLines = reportLineRepository.findAllByReportId(reportId);
 

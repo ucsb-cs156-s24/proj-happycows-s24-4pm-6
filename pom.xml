@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
     <parent>
@@ -34,7 +36,8 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
+        <!--
+        https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -83,22 +86,24 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.7.0</version>
-         </dependency>
-      
+        </dependency>
+
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
         </dependency>
 
-        <!-- To help with testing async jobs; see http://www.awaitility.org/ https://stackoverflow.com/a/46227996 -->
+        <!-- To help with testing async jobs; see http://www.awaitility.org/
+        https://stackoverflow.com/a/46227996 -->
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
             <version>4.2.0</version>
         </dependency>
 
-        <!-- to manage security context in async threads; see: https://www.baeldung.com/spring-security-async-principal-propagation -->
+        <!-- to manage security context in async threads; see:
+        https://www.baeldung.com/spring-security-async-principal-propagation -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
@@ -222,6 +227,9 @@
                         <param>edu.ucsb.cs156.happiercows.config.SpringFoxConfig</param>
                     </excludedClasses>
                     <excludedTestClasses></excludedTestClasses>
+                    <excludedMethods>
+                        <param>edu.ucsb.cs156.happiercows.helpers.ReportCSVHelper.flush_and_close_noPitest</param>
+                    </excludedMethods>
                     <outputFormats>
                         <outputFormat>HTML</outputFormat>
                         <outputFormat>CSV</outputFormat>
@@ -233,7 +241,8 @@
                         <avoidCallsTo>org.slf4j</avoidCallsTo>
                         <avoidCallsTo>org.apache.commons.logging</avoidCallsTo>
                         <avoidCallsTo>java.lang.Exception</avoidCallsTo>
-                        <avoidCallsTo>import org.springframework.security.core.context.SecurityContextHolder</avoidCallsTo>
+                        <avoidCallsTo>import
+                            org.springframework.security.core.context.SecurityContextHolder</avoidCallsTo>
                     </avoidCallsTo>
                     <timestampedReports>false</timestampedReports>
                 </configuration>

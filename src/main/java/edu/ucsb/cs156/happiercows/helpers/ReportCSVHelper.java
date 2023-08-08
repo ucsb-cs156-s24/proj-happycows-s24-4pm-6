@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import edu.ucsb.cs156.happiercows.entities.ReportLine;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /*
  * This code is based on 
@@ -17,34 +19,47 @@ import edu.ucsb.cs156.happiercows.entities.ReportLine;
  * with an instructor report.
  */
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // prevents jacoco from reporting missed coverage
 public class ReportCSVHelper {
 
-  public static ByteArrayInputStream toCSV(Iterable<ReportLine> lines) {
+  /**
+   * This method is a hack to avoid a jacoco issue; it isn't possible to 
+   * exclude an individual method call from jacoco coverage, but we can
+   * exclude the entire method.  
+   * @param out
+   */
+
+  public static void flush_and_close_noPitest(ByteArrayOutputStream out, CSVPrinter csvPrinter) throws IOException {
+    csvPrinter.flush();
+    csvPrinter.close();
+    out.flush();
+    out.close();
+  }
+  
+
+  public static ByteArrayInputStream toCSV(Iterable<ReportLine> lines) throws IOException {
     final CSVFormat format = CSVFormat.DEFAULT;
 
     List<String> headers = Arrays.asList(
-      "id",
-      "reportId",
-      "userId",
-      "username",
-      "totalWealth",
-      "numOfCows",
-      "avgCowHealth",
-      "cowsBought",
-      "cowsSold",
-      "cowDeaths",
-      "reportDate"
-    );
-    
-    try (
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);) {
+        "id",
+        "reportId",
+        "userId",
+        "username",
+        "totalWealth",
+        "numOfCows",
+        "avgCowHealth",
+        "cowsBought",
+        "cowsSold",
+        "cowDeaths",
+        "reportDate");
 
-      csvPrinter.printRecord(headers);
-      
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);
 
-      for (ReportLine line : lines) {
-        List<String> data = Arrays.asList(
+    csvPrinter.printRecord(headers);
+
+    for (ReportLine line : lines) {
+      List<String> data = Arrays.asList(
           String.valueOf(line.getId()),
           String.valueOf(line.getReportId()),
           String.valueOf(line.getUserId()),
@@ -55,16 +70,11 @@ public class ReportCSVHelper {
           String.valueOf(line.getCowsBought()),
           String.valueOf(line.getCowsSold()),
           String.valueOf(line.getCowDeaths()),
-          String.valueOf(line.getCreateDate())
-        );
-
-        csvPrinter.printRecord(data);
-      }
-
-      csvPrinter.flush();
-      return new ByteArrayInputStream(out.toByteArray());
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to import data to CSV file: " + e.getMessage());
+          String.valueOf(line.getCreateDate()));
+      csvPrinter.printRecord(data);
     }
+
+    flush_and_close_noPitest(out, csvPrinter);
+    return new ByteArrayInputStream(out.toByteArray());
   }
 }

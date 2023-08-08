@@ -59,8 +59,6 @@ describe("AdminViewReportPage tests", () => {
 
         expect(screen.getByText("Instructor Report")).toBeInTheDocument();
         expect(screen.getByText("Back to Reports")).toBeInTheDocument();
-        expect(screen.getByText("Back to Reports")).toBeInTheDocument();
-        const backButton = screen.getByText("Back to Reports");
        
         expect(screen.getByText("Cow Price")).toBeInTheDocument();
         expect(screen.getByText("Num Users")).toBeInTheDocument();
