@@ -132,31 +132,6 @@ public class JobsControllerTests extends ControllerTestCase {
 
                 Page<Job> expectedJobPage = new PageImpl<>(expectedJobs, pageRequest, expectedJobs.size());
 
-                // Paged<Job> expectedJobPage = new Paged<Job>();
-                // expectedJobPage.setContent(expectedJobs);
-                // Sort sort = Sort.builder().empty(true).sorted(false).unsorted(true).build();
-                // expectedJobPage.setPageable(
-                //         Pageable.builder()
-                //         .sort(sort)
-                //         .offset(0)
-                //         .pageNumber(0)
-                //         .pageSize(5)
-                //         .paged(true)
-                //         .unpaged(false)
-                //         .build()
-                //         );
-
-                // expectedJobPage.setTotalPages(18);
-                // expectedJobPage.setTotalElements(87L);
-                // expectedJobPage.setLast(false);
-                // expectedJobPage.setSize(5);
-                // expectedJobPage.setNumber(0);
-                // expectedJobPage.setSort(sort);
-                // expectedJobPage.setNumberOfElements(5);
-                // expectedJobPage.setFirst(true);
-                // expectedJobPage.setEmpty(false);
-
-             
                 when(jobsRepository.findAll(any())).thenReturn(expectedJobPage);
 
                 // act

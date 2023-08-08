@@ -18,7 +18,7 @@ describe("PagedJobsTable tests", () => {
     axiosMock.resetHistory();
   });
 
-  test("renders correct content ", async () => {
+  test("renders correct content", async () => {
 
     // arrange
 
@@ -83,7 +83,7 @@ describe("PagedJobsTable tests", () => {
     expect(previousButton).toBeDisabled();
   });
 
-  test("buttons are disabled where there are zero pages ", async () => {
+  test("buttons are disabled where there are zero pages", async () => {
 
     // arrange
 
