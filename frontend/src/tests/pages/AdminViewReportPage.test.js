@@ -14,7 +14,10 @@ const mockedNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockedNavigate
+    useNavigate: () => mockedNavigate,
+    useParams: () => ({
+        reportId: 17
+    }),
 }));
 
 describe("AdminViewReportPage tests", () => {
@@ -87,6 +90,24 @@ describe("AdminViewReportPage tests", () => {
         
         expect(mockedNavigate).toHaveBeenCalledTimes(1);
         expect(mockedNavigate).toHaveBeenCalledWith("/admin/reports");
+    });
+
+    test("CSV button has correct address", async () => {
+        setupAdminUser();
+        const queryClient = new QueryClient();
+        axiosMock.onGet("/api/reports/byReportId").reply(200, reportFixtures.threeReports[0]);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminViewReportPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(screen.getByText("Download as CSV")).toBeInTheDocument();
+        const csvButton = screen.getByText("Download as CSV");
+        expect(csvButton).toHaveAttribute("href", "/api/reports/download?reportId=17");
     });
 
    
