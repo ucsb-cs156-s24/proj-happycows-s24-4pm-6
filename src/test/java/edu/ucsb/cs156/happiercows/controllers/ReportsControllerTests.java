@@ -121,12 +121,46 @@ public class ReportsControllerTests extends ControllerTestCase {
                         .cowDeaths(6)
                         .build();
 
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void get_all_report_headers() throws Exception {
+                List<Report> reports = List.of(expectedReportHeader);
+                when(reportRepository.findAll(any())).thenReturn(reports);
+               
+                MvcResult response = mockMvc.perform(get("/api/reports")).andDo(print())
+                                .andExpect(status().isOk()).andReturn();
+
+                verify(reportRepository, times(1)).findAll(any());
+
+                String responseString = response.getResponse().getContentAsString();
+                List<Report> actualReports = objectMapper.readValue(responseString, new TypeReference<List<Report>>() {
+                });
+                assertEquals(reports, actualReports);
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void get_specific_report_header() throws Exception {
+                Optional<Report> optionalReport = Optional.of(expectedReportHeader);
+                when(reportRepository.findById(eq(432L))).thenReturn(optionalReport);
+               
+                MvcResult response = mockMvc.perform(get("/api/reports/byReportId?reportId=432")).andDo(print())
+                                .andExpect(status().isOk()).andReturn();
+
+                verify(reportRepository, times(1)).findById(eq(432L));
+
+                String responseString = response.getResponse().getContentAsString();
+                Optional<Report> actualReports = objectMapper.readValue(responseString, new TypeReference<Optional<Report>>() {
+                });
+                assertEquals(optionalReport, actualReports);
+        }
+                        
         @WithMockUser(roles = { "ADMIN" })
         @Test
         public void get_reports_headers_commonId() throws Exception {
                 List<Report> reports = List.of(expectedReportHeader);
                 when(reportRepository.findAllByCommonsId(17L)).thenReturn(reports);
-                // when(reportLineRepository.findAllByReportId(432L)).thenReturn(List.of(expectedReportLine));
                
                 MvcResult response = mockMvc.perform(get("/api/reports/headers?commonsId=17")).andDo(print())
                                 .andExpect(status().isOk()).andReturn();
