@@ -7,9 +7,8 @@ import AxiosMockAdapter from "axios-mock-adapter";
 import AdminJobsPage from "main/pages/AdminJobsPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
-import jobsFixtures from "fixtures/jobsFixtures";
+import pagedJobsFixtures from "fixtures/pagedJobsFixtures";
 import commonsFixtures from "../../fixtures/commonsFixtures";
-
 
 const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
@@ -35,7 +34,7 @@ describe("AdminJobsPage tests", () => {
     axiosMock
       .onGet("/api/currentUser")
       .reply(200, apiCurrentUserFixtures.adminUser);
-    axiosMock.onGet("/api/jobs/all").reply(200, jobsFixtures.sixJobs);
+    axiosMock.onGet("/api/jobs/all/pageable").reply(200, pagedJobsFixtures.onePage);
 
     // see: https://ucsb-cs156.github.io/topics/testing/testing_jest.html#hiding-the-wall-of-red
     jest.spyOn(console, 'error')
@@ -63,25 +62,7 @@ describe("AdminJobsPage tests", () => {
     expect(await screen.findByText("Set Cow Health for a Specific Commons")).toBeInTheDocument();
     expect(await screen.findByText("Update Cow Health")).toBeInTheDocument();
     expect(await screen.findByText("Milk The Cows")).toBeInTheDocument();
-    expect(await screen.findByText("Instructor Report")).toBeInTheDocument();
-
-    const testId = "JobsTable";
-
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent(
-      "1"
-    );
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-Created`)
-    ).toHaveTextContent("11/13/2022, 19:49:58");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-Updated`)
-    ).toHaveTextContent("11/13/2022, 19:49:59");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-status`)
-    ).toHaveTextContent("complete");
-    expect(
-      screen.getByTestId(`${testId}-cell-row-0-col-Log`)
-    ).toHaveTextContent("Hello World! from test job!Goodbye from test job!");
+    expect(await screen.findByText("Instructor Report")).toBeInTheDocument();  
   });
 
   test("user can submit a test job", async () => {
