@@ -37,7 +37,7 @@ describe("ReportHeaderTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-0-col-cowPrice`)).toHaveTextContent("100");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-milkPrice`)).toHaveTextContent("5");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-startingBalance`)).toHaveTextContent("10000");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-startingDate`)).toHaveTextContent("2023-08-06");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-startingDate`)).toHaveTextContent(/^2023-08-06$/);
     expect(screen.getByTestId(`${testId}-cell-row-0-col-showLeaderboard`)).toHaveTextContent("true");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-carryingCapacity`)).toHaveTextContent("10");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-degradationRate`)).toHaveTextContent("0.1");
