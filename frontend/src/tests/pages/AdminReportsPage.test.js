@@ -1,5 +1,4 @@
 import {  render, screen } from "@testing-library/react";
-// import mockConsole from "jest-mock-console";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
