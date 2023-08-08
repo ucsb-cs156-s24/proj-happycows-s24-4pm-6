@@ -8,6 +8,8 @@ import AdminViewReportPage from "main/pages/AdminViewReportPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import reportFixtures from "fixtures/reportFixtures";
+import reportLineFixtures from "fixtures/reportLineFixtures";
+
 const mockedNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
@@ -30,6 +32,7 @@ describe("AdminViewReportPage tests", () => {
         setupAdminUser();
         const queryClient = new QueryClient();
         axiosMock.onGet("/api/reports/byReportId").reply(200, reportFixtures.threeReports[0]);
+        axiosMock.onGet("/api/reports/lines").reply(200, reportLineFixtures.twoReportLines);
 
         // act
         render(
