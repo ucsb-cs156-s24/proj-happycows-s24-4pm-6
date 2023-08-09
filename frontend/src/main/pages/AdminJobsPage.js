@@ -1,7 +1,6 @@
 import React from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
-import JobsTable from "main/components/Jobs/JobsTable";
-import { useBackend } from "main/utils/useBackend";
+import PagedJobsTable from "main/components/Jobs/PagedJobsTable";
 import Accordion from "react-bootstrap/Accordion";
 import TestJobForm from "main/components/Jobs/TestJobForm";
 import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
@@ -14,7 +13,6 @@ import { useBackendMutation } from "main/utils/useBackend";
 import SetCowHealthForm from "main/components/Jobs/SetCowHealthForm";
 
 const AdminJobsPage = () => {
-  const refreshJobsIntervalMilliseconds = 5000;
 
   // *** Test job ***
 
@@ -34,22 +32,7 @@ const AdminJobsPage = () => {
     testJobMutation.mutate(data);
   };
 
-  // Stryker disable all
-  const {
-    data: jobs,
-    error: _error,
-    status: _status,
-  } = useBackend(
-    ["/api/jobs/all"],
-    {
-      method: "GET",
-      url: "/api/jobs/all",
-    },
-    [],
-    { refetchInterval: refreshJobsIntervalMilliseconds }
-  );
-  // Stryker restore  all
-
+  
   // *** SetCowHealth job ***
 
   const objectToAxiosParamsSetCowHealthJob = (data) => ({
@@ -194,7 +177,7 @@ return (
     </Accordion>
 
     <h2 className="p-3">Job Status</h2>
-    <JobsTable jobs={jobs} />
+    <PagedJobsTable />
   </BasicLayout>
 );
 };

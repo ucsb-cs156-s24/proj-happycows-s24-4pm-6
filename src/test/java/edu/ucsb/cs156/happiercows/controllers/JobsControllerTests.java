@@ -25,6 +25,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -54,228 +57,263 @@ import lombok.extern.slf4j.Slf4j;
 @AutoConfigureDataJpa
 public class JobsControllerTests extends ControllerTestCase {
 
-    @MockBean
-    JobsRepository jobsRepository;
+        @MockBean
+        JobsRepository jobsRepository;
 
-    @MockBean
-    UserRepository userRepository;
+        @MockBean
+        UserRepository userRepository;
 
-    @Autowired
-    JobService jobService;
+        @Autowired
+        JobService jobService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+        @Autowired
+        ObjectMapper objectMapper;
 
-    @MockBean
-    CommonsRepository commonsRepository;
+        @MockBean
+        CommonsRepository commonsRepository;
 
-    @MockBean
-    UserCommonsRepository userCommonsRepository;
+        @MockBean
+        UserCommonsRepository userCommonsRepository;
 
-    @MockBean
-    UpdateCowHealthJobFactory updateCowHealthJobFactory;
+        @MockBean
+        UpdateCowHealthJobFactory updateCowHealthJobFactory;
 
-    @MockBean
-    MilkTheCowsJobFactory milkTheCowsJobFactory;
+        @MockBean
+        MilkTheCowsJobFactory milkTheCowsJobFactory;
 
-    @MockBean
-    SetCowHealthJobFactory setCowHealthJobFactory;
+        @MockBean
+        SetCowHealthJobFactory setCowHealthJobFactory;
 
-    @MockBean
-    InstructorReportJobFactory instructorReportJobFactory;
+        @MockBean
+        InstructorReportJobFactory instructorReportJobFactory;
 
-    @MockBean
-    InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
+        @MockBean
+        InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
 
-    @WithMockUser(roles = { "ADMIN" })
-    @Test
-    public void admin_can_get_all_jobs() throws Exception {
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_get_all_jobs() throws Exception {
 
-        // arrange
+                // arrange
 
-        Job job1 = Job.builder().log("this is job 1").build();
-        Job job2 = Job.builder().log("this is job 2").build();
+                Job job1 = Job.builder().log("this is job 1").build();
+                Job job2 = Job.builder().log("this is job 2").build();
 
-        ArrayList<Job> expectedJobs = new ArrayList<>();
-        expectedJobs.addAll(Arrays.asList(job1, job2));
+                ArrayList<Job> expectedJobs = new ArrayList<>();
+                expectedJobs.addAll(Arrays.asList(job1, job2));
 
-        when(jobsRepository.findAll()).thenReturn(expectedJobs);
+                when(jobsRepository.findAll()).thenReturn(expectedJobs);
 
-        // act
-        MvcResult response = mockMvc.perform(get("/api/jobs/all"))
-                .andExpect(status().isOk()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(get("/api/jobs/all"))
+                                .andExpect(status().isOk()).andReturn();
 
-        // assert
+                // assert
 
-        verify(jobsRepository, atLeastOnce()).findAll();
-        String expectedJson = mapper.writeValueAsString(expectedJobs);
-        String responseString = response.getResponse().getContentAsString();
-        assertEquals(expectedJson, responseString);
-    }
+                verify(jobsRepository, atLeastOnce()).findAll();
+                String expectedJson = mapper.writeValueAsString(expectedJobs);
+                String responseString = response.getResponse().getContentAsString();
+                assertEquals(expectedJson, responseString);
+        }
 
-    @WithMockUser(roles = { "ADMIN" })
-    @Test
-    public void admin_can_launch_test_job() throws Exception {
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_get_all_jobs_paged() throws Exception {
 
-        // arrange
+                // arrange
 
-        User user = currentUserService.getUser();
+                PageRequest pageRequest = PageRequest.of(0, 5);
 
-        Job jobStarted = Job.builder()
-                .id(0L)
-                .createdBy(user)
-                .createdAt(null)
-                .updatedAt(null)
-                .status("running")
-                .log("Hello World! from test job!\nauthentication is not null")
-                .build();
+                Job job1 = Job.builder().log("this is job 1").build();
+                Job job2 = Job.builder().log("this is job 2").build();
 
-        Job jobCompleted = Job.builder()
-                .id(0L)
-                .createdBy(user)
-                .createdAt(null)
-                .updatedAt(null)
-                .status("complete")
-                .log("Hello World! from test job!\nauthentication is not null\nGoodbye from test job!")
-                .build();
+                ArrayList<Job> expectedJobs = new ArrayList<>();
+                expectedJobs.addAll(Arrays.asList(job1, job2));
 
-        when(jobsRepository.save(any(Job.class))).thenReturn(jobStarted).thenReturn(jobCompleted);
+                Page<Job> expectedJobPage = new PageImpl<>(expectedJobs, pageRequest, expectedJobs.size());
 
-        // act
-        MvcResult response = mockMvc.perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=2000").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
+                when(jobsRepository.findAll(any())).thenReturn(expectedJobPage);
 
-        // assert
-        String responseString = response.getResponse().getContentAsString();
-        Job jobReturned = objectMapper.readValue(responseString, Job.class);
+                // act
+                MvcResult response = mockMvc.perform(get("/api/jobs/all/pageable?page=0&size=10"))
+                                .andExpect(status().isOk()).andReturn();
 
-        assertEquals("running", jobReturned.getStatus());
+                // assert
 
-        await().atMost(1, SECONDS)
-                .untilAsserted(() -> verify(jobsRepository, times(3)).save(eq(jobStarted)));
-        await().atMost(10, SECONDS)
-                .untilAsserted(() -> verify(jobsRepository, times(5)).save(eq(jobCompleted)));
-    }
+                verify(jobsRepository, atLeastOnce()).findAll(any());
 
-    @WithMockUser(roles = { "ADMIN" })
-    @Test
-    public void admin_can_launch_test_job_that_fails() throws Exception {
+                String expectedJson = mapper.writeValueAsString(expectedJobPage);
+                String responseString = response.getResponse().getContentAsString();
+                assertEquals(expectedJson, responseString);
+        }
 
-        // arrange
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_test_job() throws Exception {
 
-        User user = currentUserService.getUser();
+                // arrange
 
-        Job jobStarted = Job.builder()
-                .id(0L)
-                .createdBy(user)
-                .createdAt(null)
-                .updatedAt(null)
-                .status("running")
-                .log("Hello World! from test job!\nauthentication is not null")
-                .build();
+                User user = currentUserService.getUser();
 
-        Job jobFailed = Job.builder()
-                .id(0L)
-                .createdBy(user)
-                .createdAt(null)
-                .updatedAt(null)
-                .status("error")
-                .log("Hello World! from test job!\nauthentication is not null\nFail!")
-                .build();
+                Job jobStarted = Job.builder()
+                                .id(0L)
+                                .createdBy(user)
+                                .createdAt(null)
+                                .updatedAt(null)
+                                .status("running")
+                                .log("Hello World! from test job!\nauthentication is not null")
+                                .build();
 
-        when(jobsRepository.save(any(Job.class))).thenReturn(jobStarted).thenReturn(jobFailed);
+                Job jobCompleted = Job.builder()
+                                .id(0L)
+                                .createdBy(user)
+                                .createdAt(null)
+                                .updatedAt(null)
+                                .status("complete")
+                                .log("Hello World! from test job!\nauthentication is not null\nGoodbye from test job!")
+                                .build();
 
-        // act
-        MvcResult response = mockMvc.perform(post("/api/jobs/launch/testjob?fail=true&sleepMs=4000").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
+                when(jobsRepository.save(any(Job.class))).thenReturn(jobStarted).thenReturn(jobCompleted);
 
-        String responseString = response.getResponse().getContentAsString();
-        Job jobReturned = objectMapper.readValue(responseString, Job.class);
+                // act
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=2000").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
 
-        assertEquals("running", jobReturned.getStatus());
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
 
-        await().atMost(1, SECONDS)
-                .untilAsserted(() -> verify(jobsRepository, times(3)).save(eq(jobStarted)));
+                assertEquals("running", jobReturned.getStatus());
 
-        await().atMost(10, SECONDS)
-                .untilAsserted(() -> verify(jobsRepository, times(4)).save(eq(jobFailed)));
-    }
+                await().atMost(1, SECONDS)
+                                .untilAsserted(() -> verify(jobsRepository, times(3)).save(eq(jobStarted)));
+                await().atMost(10, SECONDS)
+                                .untilAsserted(() -> verify(jobsRepository, times(5)).save(eq(jobCompleted)));
+        }
 
-    @WithMockUser(roles = { "ADMIN" })
-    @Test
-    public void admin_can_launch_milk_the_cows_job() throws Exception {
-        
-        // act
-        MvcResult response = mockMvc.perform(post("/api/jobs/launch/milkthecowjob").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_test_job_that_fails() throws Exception {
 
-        // assert
-        String responseString = response.getResponse().getContentAsString();
-        log.info("responseString={}", responseString);
-        Job jobReturned = objectMapper.readValue(responseString, Job.class);
+                // arrange
 
-        assertNotNull(jobReturned.getStatus());
-    }
+                User user = currentUserService.getUser();
 
-    @WithMockUser(roles = { "ADMIN" })
-    @Test
-    public void admin_can_launch_instructor_report_job() throws Exception {
-        // act
-        MvcResult response = mockMvc.perform(post("/api/jobs/launch/instructorreport").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
+                Job jobStarted = Job.builder()
+                                .id(0L)
+                                .createdBy(user)
+                                .createdAt(null)
+                                .updatedAt(null)
+                                .status("running")
+                                .log("Hello World! from test job!\nauthentication is not null")
+                                .build();
 
-        // assert
-        String responseString = response.getResponse().getContentAsString();
-        log.info("responseString={}", responseString);
-        Job jobReturned = objectMapper.readValue(responseString, Job.class);
+                Job jobFailed = Job.builder()
+                                .id(0L)
+                                .createdBy(user)
+                                .createdAt(null)
+                                .updatedAt(null)
+                                .status("error")
+                                .log("Hello World! from test job!\nauthentication is not null\nFail!")
+                                .build();
 
-        assertNotNull(jobReturned.getStatus());
-    }
+                when(jobsRepository.save(any(Job.class))).thenReturn(jobStarted).thenReturn(jobFailed);
 
-    @WithMockUser(roles = { "ADMIN" })
-    @Test
-    public void admin_can_launch_update_cow_health_job() throws Exception {
-        // act
-        MvcResult response = mockMvc.perform(post("/api/jobs/launch/updatecowhealth").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
+                // act
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=true&sleepMs=4000").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
 
-        // assert
-        String responseString = response.getResponse().getContentAsString();
-        log.info("responseString={}", responseString);
-        Job jobReturned = objectMapper.readValue(responseString, Job.class);
+                String responseString = response.getResponse().getContentAsString();
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
 
-        assertNotNull(jobReturned.getStatus());
-    }
+                assertEquals("running", jobReturned.getStatus());
 
-    @WithMockUser(roles = { "ADMIN" })
-    @Test
-    public void admin_can_launch_set_cow_health_job() throws Exception {
-        // act
-        MvcResult response = mockMvc.perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=20").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
+                await().atMost(1, SECONDS)
+                                .untilAsserted(() -> verify(jobsRepository, times(3)).save(eq(jobStarted)));
 
-        // assert
-        String responseString = response.getResponse().getContentAsString();
-        log.info("responseString={}", responseString);
-        Job jobReturned = objectMapper.readValue(responseString, Job.class);
+                await().atMost(10, SECONDS)
+                                .untilAsserted(() -> verify(jobsRepository, times(4)).save(eq(jobFailed)));
+        }
 
-        assertNotNull(jobReturned.getStatus());
-    }
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_milk_the_cows_job() throws Exception {
 
-    @WithMockUser(roles = { "ADMIN" })
-    @Test
-    public void admin_can_launch_instructor_report_single_commons_job() throws Exception {
-        // act
-        MvcResult response = mockMvc.perform(post("/api/jobs/launch/instructorreportsinglecommons?commonsId=1").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
+                // act
+                MvcResult response = mockMvc.perform(post("/api/jobs/launch/milkthecowjob").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
 
-        // assert
-        String responseString = response.getResponse().getContentAsString();
-        log.info("responseString={}", responseString);
-        Job jobReturned = objectMapper.readValue(responseString, Job.class);
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
 
-        assertNotNull(jobReturned.getStatus());
-    }
+                assertNotNull(jobReturned.getStatus());
+        }
 
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_instructor_report_job() throws Exception {
+                // act
+                MvcResult response = mockMvc.perform(post("/api/jobs/launch/instructorreport").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+                assertNotNull(jobReturned.getStatus());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_update_cow_health_job() throws Exception {
+                // act
+                MvcResult response = mockMvc.perform(post("/api/jobs/launch/updatecowhealth").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+                assertNotNull(jobReturned.getStatus());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_set_cow_health_job() throws Exception {
+                // act
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=20").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+                assertNotNull(jobReturned.getStatus());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_instructor_report_single_commons_job() throws Exception {
+                // act
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/instructorreportsinglecommons?commonsId=1")
+                                                .with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+                assertNotNull(jobReturned.getStatus());
+        }
 
 }
