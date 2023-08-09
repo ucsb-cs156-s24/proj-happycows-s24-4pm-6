@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -188,6 +190,26 @@ public class ReportsControllerTests extends ControllerTestCase {
                 List<ReportLine> actualLines = objectMapper.readValue(responseString, new TypeReference<List<ReportLine>>() {
                 });
                 assertEquals(lines, actualLines);
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void test_get_csv() throws Exception {
+                when(reportLineRepository.findAllByReportId(432L)).thenReturn(List.of(expectedReportLine));
+               
+                MvcResult response = mockMvc.perform(get("/api/reports/download?reportId=432")).andDo(print())
+                                .andExpect(status().isOk()).andReturn();
+
+                verify(reportLineRepository, times(1)).findAllByReportId(eq(432L));
+                String responseString = response.getResponse().getContentAsString();
+
+                assertEquals("application/csv", response.getResponse().getContentType());
+
+                String expected = 
+                        "id,reportId,userId,username,totalWealth,numOfCows,avgCowHealth,cowsBought,cowsSold,cowDeaths,reportDate\r\n" +
+                        "0,432,42,Chris Gaucho,300.0,123,10.0,78,23,6,null\r\n";
+                                         
+                assertEquals(expected, responseString);
         }
 
 

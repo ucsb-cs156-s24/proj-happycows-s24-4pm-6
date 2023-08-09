@@ -5,7 +5,7 @@ import ReportTable from "main/components/Reports/ReportTable";
 import ReportHeaderTable from "main/components/Reports/ReportHeaderTable";
 import ReportLineTable from "main/components/Reports/ReportLineTable";
 import { useBackend } from 'main/utils/useBackend';
-import { Button } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminViewReportPage() {
@@ -13,7 +13,7 @@ export default function AdminViewReportPage() {
   const navigate = useNavigate();
 
   // Stryker disable  all 
-  const { data: reportHeader} =
+  const { data: reportHeader } =
     useBackend(
       ["/api/reports/byReportId"],
       {
@@ -23,7 +23,7 @@ export default function AdminViewReportPage() {
       []
     );
 
-  const { data: reportLines} =
+  const { data: reportLines } =
     useBackend(
       ["/api/reports/lines"],
       {
@@ -37,12 +37,25 @@ export default function AdminViewReportPage() {
   return (
     <BasicLayout>
       <div className="pt-2">
-        <Button style={{float: "right"}} variant="primary" onClick={() => navigate("/admin/reports")} >Back to Reports</Button>
-        <h1>Instructor Report</h1>
-        <ReportTable reports={[reportHeader]} buttons={false}  /> 
-        <ReportHeaderTable report={reportHeader}  /> 
-        <h2>Farmers</h2>
-        <ReportLineTable reportLines={reportLines}  /> 
+        <Row>
+          <Col>
+            <h1>Instructor Report</h1>
+          </Col>
+          <Col>
+            <Button variant="primary" onClick={() => navigate("/admin/reports")} >Back to Reports</Button>
+          </Col>
+        </Row>
+        <ReportTable reports={[reportHeader]} buttons={false} />
+        <ReportHeaderTable report={reportHeader} />
+        <Row  className="pt-5">
+          <Col>
+            <h2>Farmers</h2>
+          </Col>
+          <Col>
+            <Button variant="secondary" href={`/api/reports/download?reportId=${reportId}`} >Download as CSV</Button>
+          </Col>
+        </Row>
+        <ReportLineTable reportLines={reportLines} />
       </div>
     </BasicLayout>
   )
