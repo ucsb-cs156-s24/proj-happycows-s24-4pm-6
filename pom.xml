@@ -228,7 +228,7 @@
                     </excludedClasses>
                     <excludedTestClasses></excludedTestClasses>
                     <excludedMethods>
-                        <param>edu.ucsb.cs156.happiercows.helpers.ReportCSVHelper.flush_and_close_noPitest</param>
+                        <param>flush_and_close_noPitest</param>
                     </excludedMethods>
                     <outputFormats>
                         <outputFormat>HTML</outputFormat>

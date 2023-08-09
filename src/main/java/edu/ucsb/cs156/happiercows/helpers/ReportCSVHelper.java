@@ -19,8 +19,9 @@ import lombok.NoArgsConstructor;
  * with an instructor report.
  */
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // prevents jacoco from reporting missed coverage
 public class ReportCSVHelper {
+
+  private ReportCSVHelper() {}
 
   /**
    * This method is a hack to avoid a jacoco issue; it isn't possible to 
@@ -36,7 +37,6 @@ public class ReportCSVHelper {
     out.close();
   }
   
-
   public static ByteArrayInputStream toCSV(Iterable<ReportLine> lines) throws IOException {
     final CSVFormat format = CSVFormat.DEFAULT;
 
