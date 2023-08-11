@@ -4,7 +4,7 @@ import { hasRole } from "main/utils/currentUser";
 // should take in a players list from a commons
 export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
 
-    let USD = new Intl.NumberFormat("en-US", {
+    const USD = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD"
     });
