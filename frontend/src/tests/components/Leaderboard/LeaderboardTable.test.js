@@ -98,7 +98,6 @@ describe("LeaderboardTable tests", () => {
 
   test("Total wealth is formatted correctly", () => {
     const currentUser = currentUserFixtures.adminUser;
-    const testId = "LeaderboardTable";
 
     render(
       <QueryClientProvider client={queryClient}>
