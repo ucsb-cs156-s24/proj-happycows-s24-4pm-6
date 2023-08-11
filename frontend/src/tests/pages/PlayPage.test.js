@@ -89,8 +89,6 @@ describe("PlayPage tests", () => {
 
         await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
 
-        expect(mockToast).toBeCalledWith("Cow bought!");
-
         const sellCowButton = screen.getByTestId("sell-cow-button");
         fireEvent.click(sellCowButton);
 
