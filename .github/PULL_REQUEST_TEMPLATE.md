@@ -1,7 +1,6 @@
-<!-- See https://github.com/ucsb-cs156-m23/m23-10am-4-NOTES/blob/main/masterDoc.md for more info-->
 ## Overview
 <!--A paragraph of the PR and related content-->
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+In this PR, (insert a brief description of what this PR enables for the end user as well as coders. If this placeholder text is still in place, this PR is not yet ready for review).
 
 ## Screenshots (Optional)
 <!--Necessary screenshots and any necessary captions here. Delete if not needed.-->
@@ -9,25 +8,34 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 ## Feedback Request (Optional)
 <!--Anywhere specific you want reviewers to take a look at and give suggestions. Delete if not needed.-->
-None needed. I am the best.
+Please give suggestions on the following:
+- This method might not be the best way to do things. What do you think?
+- The way this is implemented is the best I can think of. Is it acceptable?
+- Where should these things go? I put them here, but it feels out of place.
 
 ## Future Possibilities (Optional)
 <!--What do you think this project could become? Delete if not needed.-->
-This will go to the moon if we invest all our life savings into this concept!!!
+Some possible points could be:
+- This is the beginning/part of (insert feature).
+- We can extend this to add (something beyond current functions).
+- This can make things easier to (insert project).
 
 ## Validation (Optional)
 <!--Steps that someone else could take to make sure everything is working-->
-Just trust me, bro. :)
+1. Download this branch.
+2. Run the project.
+3. Go to this page.
+4. Test this function.
 
 ## Tests
 <!--Add any additional tests or required tests-->
-- [ ] Unit tests pass
-- [ ] Test coverage is at 100%
-- [ ] Mutation tests show a rate of 100% 
-
-## ChangeLog
-<!--Every changed file should be listed here with a one-line description-->
-- `file/path/with/extension` A one-line explanation of everything that has changed.
+- [ ] Backend Unit tests (`mvn test`) pass
+- [ ] Backend Test coverage (`mvn test jacoco:report`) 100%
+- [ ] Backend Mutation tests (`mvn test pitest:mutationCoverage`) 100% 
+- [ ] Frontend Unit tests (`npm test`) pass
+- [ ] Frontend Test coverage (`npm run coverage`) 100%
+- [ ] Frontend Mutation tests (`npx stryker run`) 100% 
+- [ ] Frontend Linting (`npx eslint --fix src`) 
 
 ## Linked Issues
 <!--Issues related to the PR-->
