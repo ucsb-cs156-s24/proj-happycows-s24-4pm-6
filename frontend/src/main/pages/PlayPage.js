@@ -61,10 +61,6 @@ export default function PlayPage() {
   // Stryker restore all 
 
 
-  const onSuccessBuy = () => {
-    toast(`Cow bought!`);
-  }
-
   // Stryker disable all (can't check if commonsId is null because it is mocked)
   const objectToAxiosParamsBuy = (newUserCommons) => ({
     url: "/api/usercommons/buy",
