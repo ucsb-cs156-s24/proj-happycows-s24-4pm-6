@@ -23,7 +23,11 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
             id: 'totalWealth',
             accessor: (row, _rowIndex) => {
                 return USD.format(row.totalWealth);
-            }
+            },
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{props.value}</div>)
+                  },
         },
         {
             Header: 'Cows Owned',
