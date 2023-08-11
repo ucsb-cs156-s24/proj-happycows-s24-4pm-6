@@ -61,10 +61,6 @@ export default function PlayPage() {
   // Stryker restore all 
 
 
-  const onSuccessBuy = () => {
-    toast(`Cow bought!`);
-  }
-
   // Stryker disable all (can't check if commonsId is null because it is mocked)
   const objectToAxiosParamsBuy = (newUserCommons) => ({
     url: "/api/usercommons/buy",
@@ -80,7 +76,7 @@ export default function PlayPage() {
   // Stryker disable all 
   const mutationbuy = useBackendMutation(
     objectToAxiosParamsBuy,
-    { onSuccess: onSuccessBuy },
+    null,
     // Stryker disable next-line all : hard to set up test for caching
     [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
   );
