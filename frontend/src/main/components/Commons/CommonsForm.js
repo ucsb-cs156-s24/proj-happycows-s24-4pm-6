@@ -139,7 +139,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
           data-testid={`${testid}-degradationRate`}
           id="degradationRate"
           type="number"
-          step="0.01"
+          step="0.001"
           isInvalid={!!errors.degradationRate}
           {...register("degradationRate", {
             valueAsNumber: true,
