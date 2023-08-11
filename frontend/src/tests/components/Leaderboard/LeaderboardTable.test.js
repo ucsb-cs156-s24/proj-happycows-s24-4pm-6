@@ -96,5 +96,23 @@ describe("LeaderboardTable tests", () => {
 
   });
 
+  test("Total wealth is formatted correctly", () => {
+    const currentUser = currentUserFixtures.adminUser;
+    const testId = "LeaderboardTable";
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <LeaderboardTable leaderboardUsers={leaderboardFixtures.threeUserCommonsLB} currentUser={currentUser} />
+        </MemoryRouter>
+      </QueryClientProvider>
+
+    );
+
+    expect(screen.getAllByText("$1,000.00")[0]).toHaveStyle("text-align: right;");
+
+  });
+    
+
 });
 
