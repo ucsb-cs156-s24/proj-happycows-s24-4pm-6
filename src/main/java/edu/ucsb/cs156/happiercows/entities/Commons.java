@@ -2,6 +2,8 @@ package edu.ucsb.cs156.happiercows.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +30,8 @@ public class Commons {
     private double startingBalance;
     private LocalDateTime startingDate;
     private boolean showLeaderboard;
-
+    
+    private int capacityPerUser;
     private int carryingCapacity;
     private double degradationRate;
 
@@ -44,4 +47,9 @@ public class Commons {
     @OneToMany(mappedBy = "commons", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<UserCommons> joinedUsers;
+
+    @JsonValue
+    public int getEffectiveCapacity() {
+        return Math.max(capacityPerUser * joinedUsers.size(), carryingCapacity);
+    }
 }
