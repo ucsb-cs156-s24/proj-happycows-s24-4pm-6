@@ -898,8 +898,6 @@ public class CommonsControllerTests extends ControllerTestCase {
     public void testEffectiveCapacityCarryingCapacityBiggerThanPerUser() throws Exception {
         LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
 
-
-
         Commons commons = Commons.builder()
                 .name("Jackson's Commons")
                 .cowPrice(500.99)
@@ -925,6 +923,28 @@ public class CommonsControllerTests extends ControllerTestCase {
         
         assertEquals(commons.getEffectiveCapacity(), 15);
         }
+
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void testCommonsReturnsCarryingCapacityWhenNoUsers() throws Exception {
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+
+        Commons commons = Commons.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .startingDate(someTime)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .capacityPerUser(5)
+                .carryingCapacity(15)
+                .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+                .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+                .build();
+
+        assertEquals(commons.getEffectiveCapacity(), 15);
+    }
 
 }
 
