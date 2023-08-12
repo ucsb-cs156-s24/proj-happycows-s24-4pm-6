@@ -1,8 +1,7 @@
 package edu.ucsb.cs156.happiercows.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonGetter;
 
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
 import lombok.AllArgsConstructor;
@@ -48,7 +47,7 @@ public class Commons {
     @JsonIgnore
     private List<UserCommons> joinedUsers;
 
-    @JsonValue
+    @JsonGetter("effectiveCapacity")
     public int getEffectiveCapacity() {
         if (joinedUsers == null) {
             return carryingCapacity;
