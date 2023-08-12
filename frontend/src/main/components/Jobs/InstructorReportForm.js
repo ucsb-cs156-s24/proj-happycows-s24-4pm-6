@@ -10,7 +10,7 @@ function InstructorReportForm( {submitAction} ) {
   return (
     <Form onSubmit={handleSubmit(submitAction)}>
       <p>Click this button to generate an instructor report!</p>
-      <Button type="submit" data-testid="InstructorReport-Submit-Button">Submit</Button>
+      <Button type="submit" data-testid="InstructorReport-Submit-Button">Generate</Button>
     </Form>
   );
 }
