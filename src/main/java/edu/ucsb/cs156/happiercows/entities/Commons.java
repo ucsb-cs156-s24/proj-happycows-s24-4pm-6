@@ -50,6 +50,11 @@ public class Commons {
 
     @JsonValue
     public int getEffectiveCapacity() {
+        if (joinedUsers == null) {
+            return carryingCapacity;
+        } else {
+
         return Math.max(capacityPerUser * joinedUsers.size(), carryingCapacity);
+        }
     }
 }
