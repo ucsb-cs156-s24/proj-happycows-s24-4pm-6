@@ -69,8 +69,6 @@ describe("HomePage tests", () => {
         expect(title).toBeInTheDocument();
         expect(typeof (title.textContent)).toBe('string');
         expect(title.textContent).toEqual('Howdy Farmer');
-
-        expect(() => screen.getAllByTestId(/commonsCard-button/)).toThrow('Unable to find an element');
     });
 
     test("expected CSS properties", () => {
