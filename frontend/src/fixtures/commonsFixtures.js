@@ -11,6 +11,7 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 10,
             "carryingCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Noop",
             "aboveCapacityHealthUpdateStrategy": "Noop"
@@ -26,6 +27,7 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 11,
             "carryingCapacity": 123,
             "belowCapacityHealthUpdateStrategy": "Linear",
             "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -41,6 +43,7 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 13,
             "carryingCapacity": 42,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -59,6 +62,7 @@ const commonsFixtures = {
                 "milkPrice": 10,
                 "degradationRate": .5,
                 "showLeaderboard": true,
+                "capacityPerUser": 50,
                 "carryingCapacity": 314,
                 "belowCapacityHealthUpdateStrategy": "Constant",
                 "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -74,6 +78,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 50,
             "carryingCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -86,6 +91,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 50,
             "carryingCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -98,6 +104,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 50,
             "carryingCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -110,6 +117,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 50,
             "carryingCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -122,6 +130,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 50,
             "carryingCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -134,6 +143,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 50,
             "carryingCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
@@ -146,6 +156,7 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 50,
             "carryingCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
