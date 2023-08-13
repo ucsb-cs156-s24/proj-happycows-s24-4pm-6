@@ -874,20 +874,14 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(false)
-                .capacityPerUser(10)
+                .capacityPerUser(5)
                 .carryingCapacity(15)
                 .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
                 .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
                 .build();
         
-        UserCommons user1 = new UserCommons(null, null, commons, null, 0, 0, 0, 0, 0, 0);
-        UserCommons user2 = new UserCommons(null, null, commons, null, 0, 0, 0, 0, 0, 0);
-        
-        List<UserCommons> joinedUsers = new ArrayList<>();
-        joinedUsers.add(user1);
-        joinedUsers.add(user2);
-
-        commons.setJoinedUsers(joinedUsers);
+        //simmulate 4 users
+        commons.setNumUsers(4);
         
         assertEquals(commons.getEffectiveCapacity(), 20);
         
@@ -912,14 +906,9 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
                 .build();
         
-        UserCommons user1 = new UserCommons(null, null, commons, null, 0, 0, 0, 0, 0, 0);
-        UserCommons user2 = new UserCommons(null, null, commons, null, 0, 0, 0, 0, 0, 0);
         
-        List<UserCommons> joinedUsers = new ArrayList<>();
-        joinedUsers.add(user1);
-        joinedUsers.add(user2);
-
-        commons.setJoinedUsers(joinedUsers);
+        //simmulate 2 users
+        commons.setNumUsers(2);
         
         assertEquals(commons.getEffectiveCapacity(), 15);
         }
