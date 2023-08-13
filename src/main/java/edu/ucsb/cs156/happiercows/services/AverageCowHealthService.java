@@ -16,19 +16,33 @@ public class AverageCowHealthService {
     @Autowired
     UserCommonsRepository userCommonsRepository;
 
+    public int getTotalNumCows(Long commonsId) {
+        commonsRepository.findById(commonsId).orElseThrow(() -> new IllegalArgumentException(String.format("Commons with id %d not found", commonsId)));
+
+        Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commonsId);
+
+        int totalNumCows = 0;
+
+        for (UserCommons userCommons : allUserCommons) {
+            totalNumCows += userCommons.getNumOfCows();
+        }
+
+        return totalNumCows;
+    }
+
     public double getAverageCowHealth(Long commonsId) {
-        commonsRepository.findById(commonsId).orElseThrow(() -> new RuntimeException(String.format("Commons with id %d not found", commonsId)));
+        commonsRepository.findById(commonsId).orElseThrow(() -> new IllegalArgumentException(String.format("Commons with id %d not found", commonsId)));
 
         Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commonsId);
 
         double totalHealth = 0;
-        int numCows = 0;
 
         for (UserCommons userCommons : allUserCommons) {
             totalHealth += userCommons.getCowHealth() * userCommons.getNumOfCows();
-            numCows += userCommons.getNumOfCows();
         }
 
-        return totalHealth / numCows;
+        return totalHealth / getTotalNumCows(commonsId);
     }
+
+    
 }

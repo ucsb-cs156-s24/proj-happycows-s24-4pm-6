@@ -94,45 +94,70 @@ public class AverageCowHealthServiceTests {
         .cowDeaths(6)
         .build();
 
+    private User user2 = User
+        .builder()
+        .id(43L)
+        .fullName("John Doe")
+        .email("jdoe@example.org")
+        .build();
+
+    UserCommons userCommons2 = UserCommons
+        .builder()
+        .user(user2)
+        .username("John Doe")
+        .commons(commons)
+        .totalWealth(300)
+        .numOfCows(100)
+        .cowHealth(22)
+        .cowsBought(20)
+        .cowsSold(12)
+        .cowDeaths(2)
+        .build();
+
+
     @BeforeEach
     void setup() {
-      userCommons1.setId(new UserCommonsKey(user1.getId(), commons.getId()));
+        userCommons1.setId(new UserCommonsKey(user1.getId(), commons.getId()));
+        userCommons2.setId(new UserCommonsKey(user2.getId(), commons.getId()));
     }
 
     @Test
     void test_getAverageCowHealthOneUser() {
-        when(userCommonsRepository.findByCommonsId(commons.getId())).thenReturn(Arrays.asList(userCommons1));
+        // arrange
 
-        assertEquals(10, averageCowHealthService.getAverageCowHealth(commons.getId()));
+        when(commonsRepository.findById(17L)).thenReturn(Optional.of(commons));
+        when(userCommonsRepository.findByCommonsId(commons.getId()))
+                .thenReturn(Arrays.asList(userCommons1));
+        when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
+        when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(Integer.valueOf(20)));
+        when(userRepository.findById(42L)).thenReturn(Optional.of(user1));
+
+        // act
+
+        double averageCowHealth = averageCowHealthService.getAverageCowHealth(17L);
+
+        // assert
+        assertEquals(10, averageCowHealth);
     }
 
     @Test
     void test_getAverageCowHealthMultipleUsers() {
+        // arrange
 
-        User user2 = User
-            .builder()
-            .id(43L)
-            .fullName("John Doe")
-            .email("jdoe@example.org")
-            .build();
-        UserCommons userCommons2 = UserCommons
-            .builder()
-            .user(user2)
-            .username("John Doe")
-            .commons(commons)
-            .totalWealth(300)
-            .numOfCows(100)
-            .cowHealth(22)
-            .cowsBought(20)
-            .cowsSold(12)
-            .cowDeaths(2)
-            .build();
-        userCommons2.setId(new UserCommonsKey(user2.getId(), commons.getId()));
+        when(commonsRepository.findById(17L)).thenReturn(Optional.of(commons));
+        when(userCommonsRepository.findByCommonsId(commons.getId()))
+                .thenReturn(Arrays.asList(userCommons1,userCommons2));
+        when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
+        when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(Integer.valueOf(120)));
+        when(userRepository.findById(42L)).thenReturn(Optional.of(user1));
+        when(userRepository.findById(43L)).thenReturn(Optional.of(user2));
 
-        when(userCommonsRepository.findByCommonsId(commons.getId())).thenReturn(Arrays.asList(userCommons1, userCommons2));
+        // act
 
-        assertEquals(20, averageCowHealthService.getAverageCowHealth(commons.getId()));
+        double averageCowHealth = averageCowHealthService.getAverageCowHealth(17L);
 
+        // assert
+        assertEquals(20, averageCowHealth);
     }
 
     @Test
@@ -141,6 +166,15 @@ public class AverageCowHealthServiceTests {
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             averageCowHealthService.getAverageCowHealth(1L);
+        });
+    }
+
+    @Test
+    void test_getTotalNumCowsThrowsException() {
+        when(userCommonsRepository.findByCommonsId(1L)).thenReturn(Arrays.asList());
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            averageCowHealthService.getTotalNumCows(1L);
         });
     }
 }
