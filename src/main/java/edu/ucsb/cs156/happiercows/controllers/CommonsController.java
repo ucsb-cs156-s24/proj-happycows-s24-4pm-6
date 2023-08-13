@@ -261,8 +261,7 @@ public class CommonsController extends ApiController {
 
         String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
         
-        Commons exitedCommon = commonsRepository.findById(commonsId)
-                .orElseThrow(() -> new EntityNotFoundException(Commons.class, commonsId));
+        Commons exitedCommon = commonsRepository.findById(commonsId).orElse(null);
         
         exitedCommon.setNumUsers(exitedCommon.getNumUsers() - 1);
         commonsRepository.save(exitedCommon);
