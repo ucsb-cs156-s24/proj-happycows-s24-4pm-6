@@ -649,7 +649,9 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .cowHealth(100)
                 .build();
 
+        
 
+        
         when(userCommonsRepository.findByCommonsIdAndUserId(anyLong(), anyLong())).thenReturn(Optional.empty());
         when(userCommonsRepository.save(eq(uc))).thenReturn(uc);
         when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
@@ -660,11 +662,13 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
         verify(userCommonsRepository, times(1)).save(uc);
+
         
         String responseString = response.getResponse().getContentAsString();
         String cAsJson = mapper.writeValueAsString(c);
 
         assertEquals(responseString, cAsJson);
+        assertEquals(c.getNumUsers(),1);
     }
 
     @WithMockUser(roles = {"USER"})
@@ -796,6 +800,9 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .numOfCows(1)
                 .build();
 
+        //simulating the user being in the common already
+        c.setNumUsers(1);
+
         String requestBody = mapper.writeValueAsString(uc);
 
         when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(uc));
@@ -814,6 +821,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         String expectedString = "{\"message\":\"user with id 1 deleted from commons with id 2, 0 users remain\"}";
 
         assertEquals(responseString, expectedString);
+        assertEquals(c.getNumUsers(), 0);
     }
 
     @WithMockUser(roles = {"ADMIN"})
