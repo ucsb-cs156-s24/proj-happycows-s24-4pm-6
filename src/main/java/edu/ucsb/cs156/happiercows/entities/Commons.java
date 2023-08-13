@@ -13,6 +13,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,13 +50,11 @@ public class Commons {
     @JsonIgnore
     private List<UserCommons> joinedUsers;
 
+    @JsonIgnore
+    private int numUsers;
+
     @JsonGetter("effectiveCapacity")
     public int getEffectiveCapacity() {
-        if (joinedUsers == null) {
-            return carryingCapacity;
-        } else {
-
-        return Math.max(capacityPerUser * joinedUsers.size(), carryingCapacity);
-        }
+        return Math.max(capacityPerUser * numUsers, carryingCapacity);
     }
 }
