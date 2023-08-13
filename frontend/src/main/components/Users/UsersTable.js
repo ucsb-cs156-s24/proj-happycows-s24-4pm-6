@@ -21,7 +21,8 @@ const columns = [
     },
     {
         Header: 'Last Online',
-        accessor: 'lastOnline',
+        id: 'lastOnline',
+        accessor: (row) => formatTime(row.lastOnline),
     },
     {
         Header: 'Admin',
