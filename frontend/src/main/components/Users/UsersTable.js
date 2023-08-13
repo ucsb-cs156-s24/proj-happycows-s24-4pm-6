@@ -32,12 +32,7 @@ const columns = [
 
 export default function UsersTable({ users }) {
     return <OurTable
-        data={users && users.map(user => {
-            return {
-                ...user, 
-                lastOnline: formatTime(user.lastOnline),
-            };
-        })}
+        data={users}
         columns={columns}
         testid={"UsersTable"} />;
 };
