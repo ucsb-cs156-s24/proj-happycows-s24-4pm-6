@@ -11,7 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 
-//compute the stats for all games in progress and create one new row in the CommonsStats table for each commons. It will use the Average Cow Health Service to compute the cowhealth for each commons.
+//compute the stats for all games in progress and create one new row in the CommonsStats table for each commons. 
+//It will use the Average Cow Health Service to compute the cowhealth for each commons.
+
 @AllArgsConstructor
 public class RecordCommonStatsJob implements JobContextConsumer {
 
