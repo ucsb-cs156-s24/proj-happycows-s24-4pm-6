@@ -50,7 +50,7 @@ public class RecordCommonStatsJobTests {
 
         // Act
         RecordCommonStatsJob recordCommonStatsJob = 
-                new RecordCommonStatsJob(averageCowHealthService, commonStatsService, commonsRepository);
+                new RecordCommonStatsJob(commonStatsService, commonsRepository);
         recordCommonStatsJob.accept(ctx);
 
         // Assert
@@ -76,7 +76,7 @@ public class RecordCommonStatsJobTests {
 
         // Act
         RecordCommonStatsJob recordCommonStatsJob = 
-                new RecordCommonStatsJob(averageCowHealthService, commonStatsService, commonsRepository);
+                new RecordCommonStatsJob(commonStatsService, commonsRepository);
         recordCommonStatsJob.accept(ctx);
 
         // Assert

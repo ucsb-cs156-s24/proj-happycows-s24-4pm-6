@@ -6,7 +6,6 @@ import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.services.CommonStatsService;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
-import edu.ucsb.cs156.happiercows.services.AverageCowHealthService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,13 +16,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RecordCommonStatsJob implements JobContextConsumer {
 
-    @Getter
-    private AverageCowHealthService averageCowHealthService;
 
-    @Getter
     private CommonStatsService commonStatsService;
 
-    @Getter
     private CommonsRepository commonsRepository;
 
     @Override
