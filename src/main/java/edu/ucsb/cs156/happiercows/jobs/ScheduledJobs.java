@@ -25,32 +25,45 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ScheduledJobs {
 
-    @Autowired
-    private JobService jobService;
+   @Autowired
+   private JobService jobService;
 
-    @Autowired
-    UpdateCowHealthJobFactory updateCowHealthJobFactory;
+   @Autowired
+   UpdateCowHealthJobFactory updateCowHealthJobFactory;
 
-    @Autowired
-    MilkTheCowsJobFactory milkTheCowsJobFactory;
-    
-    @Scheduled(cron = "${app.updateCowHealth.cron}")
-    public void runUpdateCowHealthJobBasedOnCron() {
-       log.info("runUpdateCowHealthJobBasedOnCron: running");
+   @Autowired
+   MilkTheCowsJobFactory milkTheCowsJobFactory;
 
-       JobContextConsumer updateCowHealthJob = updateCowHealthJobFactory.create();
-       jobService.runAsJob(updateCowHealthJob);
-    
-       log.info("runUpdateCowHealthJobBasedOnCron: launched job");
-    }
+   @Autowired
+   RecordCommonStatsJobFactory recordCommonStatsJobFactory;
+   
+   @Scheduled(cron = "${app.updateCowHealth.cron}")
+   public void runUpdateCowHealthJobBasedOnCron() {
+      log.info("runUpdateCowHealthJobBasedOnCron: running");
 
-    @Scheduled(cron = "${app.milkTheCows.cron}")
-    public void runMilkTheCowsJobBasedOnCron() {
-       log.info("runMilkTheCowsJobBasedOnCron: running");
+      JobContextConsumer updateCowHealthJob = updateCowHealthJobFactory.create();
+      jobService.runAsJob(updateCowHealthJob);
+   
+      log.info("runUpdateCowHealthJobBasedOnCron: launched job");
+   }
 
-       JobContextConsumer milkTheCowsJob = milkTheCowsJobFactory.create();
-       jobService.runAsJob(milkTheCowsJob);
-    
-       log.info("runMilkTheCowsJobBasedOnCron: launched job");
-    }
+   @Scheduled(cron = "${app.milkTheCows.cron}")
+   public void runMilkTheCowsJobBasedOnCron() {
+      log.info("runMilkTheCowsJobBasedOnCron: running");
+
+      JobContextConsumer milkTheCowsJob = milkTheCowsJobFactory.create();
+      jobService.runAsJob(milkTheCowsJob);
+   
+      log.info("runMilkTheCowsJobBasedOnCron: launched job");
+   }
+
+   @Scheduled(cron = "${app.recordCommonStats.cron}")
+   public void runRecordCommonStatsJobBasedOnCron() {
+      log.info("runRecordCommonStatsJobBasedOnCron: running");
+
+      JobContextConsumer recordCommonStatsJob = recordCommonStatsJobFactory.create();
+      jobService.runAsJob(recordCommonStatsJob);
+
+      log.info("runRecordCommonStatsJobBasedOnCron: launched job");
+   }
 }

@@ -16,9 +16,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RecordCommonStatsJob implements JobContextConsumer {
 
-
+    @Getter
     private CommonStatsService commonStatsService;
 
+    @Getter
     private CommonsRepository commonsRepository;
 
     @Override
