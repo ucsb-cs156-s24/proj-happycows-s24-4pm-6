@@ -5,6 +5,7 @@ import {useBackend} from "main/utils/useBackend";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
+
     // Stryker disable all
     const {
         register,
