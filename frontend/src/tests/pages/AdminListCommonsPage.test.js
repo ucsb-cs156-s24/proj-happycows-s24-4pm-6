@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
-import {spyOn} from "jest-mock";
 
 import AdminListCommonPage from "main/pages/AdminListCommonPage";
 import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
