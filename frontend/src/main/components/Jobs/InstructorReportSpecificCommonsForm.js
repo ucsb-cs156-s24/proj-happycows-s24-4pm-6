@@ -46,7 +46,7 @@ function InstructorReportSpecificCommonsForm({  submitAction }) {
     <Form onSubmit={handleSubmit(onSubmit)}>
       <CommonsSelect commons={commons} selectedCommons={selectedCommons} handleCommonsSelection={handleCommonsSelection} testid={testid} />
       <p>Click this button to generate an instructor report for the selected commons.</p>
-      <Button type="submit" data-testid="InstructorReportSpecificCommonsForm-Submit-Button">Submit</Button>
+      <Button type="submit" data-testid="InstructorReportSpecificCommonsForm-Submit-Button">Generate</Button>
     </Form>
   );
 }
