@@ -29,7 +29,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     const today = curr.toISOString().substr(0, 10);
     const DefaultVals = {
         name: "", startingBalance: "10000", cowPrice: "100",
-        milkPrice: "1", degradationRate: "", carryingCapacity: "", startingDate: today
+        milkPrice: "1", degradationRate: null, carryingCapacity: null, startingDate: today
     };
 
     const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
@@ -54,7 +54,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
             <div className="border-bottom mb-3"></div>
 
-            <Row className="flex justify-content-start" style={{width: '80%'}}>
+            <Row className="flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r0`}>
                 <Col className="" md={6}>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="name">Commons Name</Form.Label>
@@ -94,7 +94,6 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 isInvalid={!!errors.startingBalance}
                                 {...register("startingBalance", {
                                     valueAsNumber: true,
-                                    required: "Starting Balance is required",
                                     min: {value: 0.0, message: "Starting Balance must be ≥ 0.00"},
                                 })}
                             />
@@ -106,7 +105,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
-            <Row className="flex justify-content-start" style={{width: '80%'}}>
+            <Row className="flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r1`}>
                 <Col md={6}>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="cowPrice">Cow Price</Form.Label>
@@ -168,7 +167,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
             </Row>
 
 
-            <Row className="mt-1 flex justify-content-start" style={{width: '80%'}}>
+            <Row className="mt-1 flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r2`}>
                 <Col md={6}>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="degradationRate">Degradation Rate</Form.Label>
@@ -215,7 +214,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
             </Row>
 
 
-            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}}>
+            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
                 <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
                 <Form.Control
                     data-testid={`${testid}-startingDate`}
@@ -225,9 +224,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     isInvalid={!!errors.startingDate}
                     {...register("startingDate", {
                         valueAsDate: true,
-                        validate: {
-                            isPresent: (v) => !isNaN(v) || "Starting date is required",
-                        },
+                        validate: {isPresent: (v) => !isNaN(v)},
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
