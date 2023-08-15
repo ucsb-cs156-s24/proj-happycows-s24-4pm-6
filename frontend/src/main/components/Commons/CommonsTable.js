@@ -2,7 +2,7 @@ import React from "react";
 import OurTable, {ButtonColumn} from "main/components/OurTable";
 import { useBackendMutation } from "main/utils/useBackend";
 import { cellToAxiosParamsDelete, onDeleteSuccess } from "main/utils/commonsUtils"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, } from "react-router-dom";
 import { hasRole } from "main/utils/currentUser";
 
 export default function CommonsTable({ commons, currentUser }) {
@@ -24,8 +24,16 @@ export default function CommonsTable({ commons, currentUser }) {
     }
 
     const leaderboardCallback = (cell) => {
-        navigate(`/leaderboard/${cell.row.values["commons.id"]}`)
+        const route = `/leaderboard/${cell.row.values["commons.id"]}`
+        navigate(route)
     }
+
+    // Stryker disable all:difficult to test window.location.href
+    const statsCallback = (cell) => {
+        const route = `/api/commonstats/download?commonsId=${cell.row.values["commons.id"]}`
+        window.location.href=route;
+    }
+    // Stryker restore all
 
     const columns = [
         {
@@ -82,12 +90,10 @@ export default function CommonsTable({ commons, currentUser }) {
 
     const columnsIfAdmin = [
         ...columns,
-        ButtonColumn("Edit",
-"primary", editCallback, testid),
-        ButtonColumn("Delete",
-"danger", deleteCallback, testid),
-        ButtonColumn("Leaderboard",
-"secondary", leaderboardCallback, testid)
+        ButtonColumn("Edit", "primary", editCallback, testid),
+        ButtonColumn("Delete", "danger", deleteCallback, testid),
+        ButtonColumn("Leaderboard", "secondary", leaderboardCallback, testid),
+        ButtonColumn("Stats CSV", "success", statsCallback, testid),
     ];
 
     const columnsToDisplay = hasRole(currentUser,"ROLE_ADMIN") ? columnsIfAdmin : columns;

@@ -149,4 +149,25 @@ public class CommonStatsControllerTests extends ControllerTestCase {
             assertEquals(expected, responseString);
     }
 
+    @WithMockUser(roles = { "ADMIN" })
+    @Test
+    public void test_get_all_csv() throws Exception {
+            when(commonStatsRepository.findAll()).thenReturn(List.of(expectedStats1, expectedStats2));
+            
+            MvcResult response = mockMvc.perform(get("/api/commonstats/downloadAll")).andDo(print())
+                            .andExpect(status().isOk()).andReturn();
+
+            verify(commonStatsRepository, times(1)).findAll();
+            String responseString = response.getResponse().getContentAsString();
+
+            assertEquals("application/csv", response.getResponse().getContentType());
+
+            String expected = 
+                    "id,commonsId,numCows,avgHealth,createDate\r\n" +
+                    "0,17,20,10.0,null\r\n" +
+                    "0,42,120,20.0,null\r\n";
+                                        
+            assertEquals(expected, responseString);
+    }
+
 }

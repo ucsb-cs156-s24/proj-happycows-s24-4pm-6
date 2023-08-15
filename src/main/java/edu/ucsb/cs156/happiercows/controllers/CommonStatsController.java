@@ -71,5 +71,22 @@ public class CommonStatsController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                 .contentType(MediaType.parseMediaType("application/csv")).body(isr);
     }
+
+    @Operation(summary = "Get all stats for all commons as csv")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping(value = "/downloadAll")
+    public ResponseEntity<Resource> getAllCSV() throws IOException {
+
+        Iterable<CommonStats> commonStats = commonStatsRepository.findAll();
+                
+        String filename = String.format("CommonStats.csv");
+
+        ByteArrayInputStream bais = CommonStatsCSVHelper.toCSV(commonStats);
+        InputStreamResource isr = new InputStreamResource(bais);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType("application/csv")).body(isr);
+    }
     
 }

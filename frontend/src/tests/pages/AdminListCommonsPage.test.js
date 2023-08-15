@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
+import {spyOn} from "jest-mock";
 
 import AdminListCommonPage from "main/pages/AdminListCommonPage";
 import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
@@ -90,6 +91,7 @@ describe("AdminListCommonPage tests", () => {
         expect(await screen.findByTestId(`${testId}-cell-row-0-col-commons.id`)).toHaveTextContent("1");
         expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.id`)).toHaveTextContent("2");
         expect(screen.getByTestId(`${testId}-cell-row-2-col-commons.id`)).toHaveTextContent("3");
+        expect(screen.getByText(`Download All Stats`)).toBeInTheDocument();
     });
 
     test("renders empty table when backend unavailable, user only", async () => {
@@ -112,6 +114,7 @@ describe("AdminListCommonPage tests", () => {
         restoreConsole();
 
         expect(screen.queryByTestId(`${testId}-cell-row-0-col-commons.id`)).not.toBeInTheDocument();
+        expect(screen.getByText(`Download All Stats`)).toBeInTheDocument();
     });
 
     test("what happens when you click delete, admin", async () => {
