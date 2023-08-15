@@ -95,7 +95,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 {...register("startingBalance", {
                                     valueAsNumber: true,
                                     required: "Starting Balance is required",
-                                    min: {value: 0.0, message: "Starting Balance must be >= 0.00"},
+                                    min: {value: 0.0, message: "Starting Balance must be ≥ 0.00"},
                                 })}
                             />
                         </OverlayTrigger>

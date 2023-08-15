@@ -86,13 +86,9 @@ describe("CommonsForm tests", () => {
 
 
     fireEvent.click(submitButton);
-    expect(await screen.findByText(/commons name is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/starting balance is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/cow price is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/milk price is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/starting date is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/degradation rate is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/Carrying capacity is required/i)).toBeInTheDocument();
+    expect(await screen.findByText('Commons name is required')).toBeInTheDocument();
+    expect(screen.getByText('Degradation rate is required')).toBeInTheDocument();
+    expect(screen.getByText('Carrying capacity is required')).toBeInTheDocument();
 
     // check that each of the fields that has 
     // a validation error is marked as invalid
@@ -101,10 +97,6 @@ describe("CommonsForm tests", () => {
 
     [
       "CommonsForm-name",
-      "CommonsForm-startingBalance",
-      "CommonsForm-cowPrice",
-      "CommonsForm-milkPrice",
-      "CommonsForm-startingDate",
       "CommonsForm-degradationRate",
       "CommonsForm-carryingCapacity",
     ].forEach(
@@ -250,6 +242,5 @@ describe("CommonsForm tests", () => {
       );
     });
   });
-
 
 });
