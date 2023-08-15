@@ -190,4 +190,25 @@ describe("AdminListCommonPage tests", () => {
 
         await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith('/leaderboard/1'));
     })
+
+    test("correct href for stats csv button as an admin", async () => {
+        setupAdminUser();
+
+        const queryClient = new QueryClient();
+        axiosMock.onGet("/api/commons/allplus").reply(200, commonsPlusFixtures.threeCommonsPlus);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminListCommonPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByTestId(`${testId}-cell-row-0-col-commons.id`)).toHaveTextContent("1");
+      
+        const statsCSVButton = screen.getByTestId(`${testId}-cell-row-0-col-Stats CSV-button`);
+        expect(statsCSVButton).toHaveAttribute("href", "/api/commonstats/download?commonsId=1");
+
+    })
 });
