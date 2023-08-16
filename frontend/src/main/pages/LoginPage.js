@@ -23,7 +23,8 @@ const LoginCard = () => {
 
 export default function LoginPage() {
 
-  const Background = getBackgroundImage();
+  const time = new Date().getHours();
+  const Background = getBackgroundImage(time);
   
   return (
     <div  style={

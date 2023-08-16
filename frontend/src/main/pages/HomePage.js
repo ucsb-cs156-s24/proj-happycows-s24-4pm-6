@@ -56,7 +56,8 @@ export default function HomePage() {
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
 
   // Get the current time and set the background image accordingly
-  const Background = getBackgroundImage();
+  const time = new Date().getHours();
+  const Background = getBackgroundImage(time);
   
   return (
     <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>

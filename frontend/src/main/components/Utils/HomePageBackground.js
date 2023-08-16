@@ -4,9 +4,7 @@ import BackgroundMorning from './../../../assets/HomePageBackground-morning.png'
 import BackgroundNight from './../../../assets/HomePageBackground-night.png';
 
 // istanbul ignore next: trivial function to ignore from coverage due to how it is structured. Should be refactored in the future so that it can be tested.
-export default function getBackgroundImage() {
-    const time = new Date().getHours();
-    
+export default function getBackgroundImage(time) {
     if (time >= 6 && time < 9) {
       return BackgroundMorning;
     } else if (time >= 9 && time < 18) {
