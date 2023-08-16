@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
-import Background from './../../assets/HomePageBackground.jpg';
+import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
 const LoginCard = () => {
   return (
@@ -22,6 +22,8 @@ const LoginCard = () => {
 }
 
 export default function LoginPage() {
+
+  const Background = getBackgroundImage();
   
   return (
     <div  style={

@@ -6,8 +6,8 @@ import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import CommonsList from "main/components/Commons/CommonsList";
 import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
-import Background from './../../assets/HomePageBackground.jpg';
 import { commonsNotJoined } from "main/utils/commonsUtils";
+import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
 export default function HomePage() {
   const [commonsJoined, setCommonsJoined] = useState([]);
@@ -53,8 +53,10 @@ export default function HomePage() {
   const visitButtonClick = (id) => { navigate("/play/" + id) };
 
   //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
- 
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
+
+  // Get the current time and set the background image accordingly
+  const Background = getBackgroundImage();
   
   return (
     <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
