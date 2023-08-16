@@ -21,7 +21,7 @@ function App() {
   const { data: currentUser } = useCurrentUser();
 
   return (
-    <HashRouter>
+    <HashRouter basename="/">
       <Routes>
         {
           (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) && <Route path="/" element={<HomePage />} />
