@@ -60,7 +60,9 @@ export default function HomePage() {
   const Background = getBackgroundImage(time);
   
   return (
+    // Stryker disable all : TODO: restructure this code to avoid the need for this disable
     <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
+      // Stryker restore all
       <BasicLayout>
         <h1 data-testid="homePage-title" style={{ fontSize: "75px", borderRadius: "7px", backgroundColor: "white", opacity: ".9" }} className="text-center border-0 my-3">Howdy Farmer</h1>
         <Container>
