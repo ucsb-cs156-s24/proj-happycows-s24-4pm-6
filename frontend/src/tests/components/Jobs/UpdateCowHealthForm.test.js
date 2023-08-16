@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
 import jobsFixtures from "fixtures/jobsFixtures";
 

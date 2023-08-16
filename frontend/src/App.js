@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import HomePage from "main/pages/HomePage";
 import LoginPage from "main/pages/LoginPage";
 import ProfilePage from "main/pages/ProfilePage";
@@ -21,7 +21,7 @@ function App() {
   const { data: currentUser } = useCurrentUser();
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {
           (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) && <Route path="/" element={<HomePage />} />
@@ -55,7 +55,7 @@ function App() {
         }
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

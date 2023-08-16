@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import CommonsForm from "main/components/Commons/CommonsForm";
 import { QueryClient, QueryClientProvider } from "react-query";
 import commonsFixtures from "fixtures/commonsFixtures"
