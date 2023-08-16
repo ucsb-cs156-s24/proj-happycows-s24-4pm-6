@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { HashRouter as Router } from "react-router-dom";
+import { MemoryRouter as Router } from "react-router-dom";
 import InstructorReportForm from "main/components/Jobs/InstructorReportForm";
 import jobsFixtures from "fixtures/jobsFixtures";
 
