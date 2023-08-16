@@ -42,7 +42,6 @@ describe("HomePage tests", () => {
 
         const mainDiv = screen.getByTestId("HomePage-main-div");
         expect(mainDiv).toBeInTheDocument();
-        // expect(mainDiv).toHaveAttribute("style", "background-size: cover; background-image: url(HomePageBackground.jpg);");
 
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
@@ -63,7 +62,6 @@ describe("HomePage tests", () => {
 
         const mainDiv = screen.getByTestId("HomePage-main-div");
         expect(mainDiv).toBeInTheDocument();
-        // expect(mainDiv).toHaveAttribute("style", "background-size: cover; background-image: url(HomePageBackground.jpg);");
 
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
