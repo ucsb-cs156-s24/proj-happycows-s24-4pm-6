@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useContext, createContext } from 'react';
 import HomePage from "main/pages/HomePage";
 import LoginPage from "main/pages/LoginPage";
 import ProfilePage from "main/pages/ProfilePage";
@@ -73,7 +73,6 @@ function App() {
       <NavigationContext.Provider value={{ handleRouteChange }}>
         {currentComponent ? currentComponent : (
           <Routes>
-            {isLoading && currentComponent}
             {homeRoute}
             {adminRoutes}
             {userRoutes}
