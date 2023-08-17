@@ -24,12 +24,12 @@ const useNavigation = () => {
   const [currentComponent, setCurrentComponent] = useState(null);
   const [isNavigating, setIsNavigating] = useState(false);
 
-  const handleNavigationStart = () => {
+  const handleNavigationStart = (Component) => {
+    setCurrentComponent(<Component />);
     setIsNavigating(true);
   };
 
-  const handleNavigationEnd = (Component) => {
-    setCurrentComponent(<Component />);
+  const handleNavigationEnd = () => {
     setIsNavigating(false);
   };
 
@@ -40,12 +40,12 @@ function RouteWrapper({ component: Component, ...props }) {
   const { handleNavigationStart, handleNavigationEnd } = useContext(NavigationContext);
 
   useEffect(() => {
-    handleNavigationStart();
+    handleNavigationStart(Component);
 
     // You might want to use a more specific way to determine when navigation has ended.
     // This is just an example; the actual implementation will depend on your routing logic.
     const timer = setTimeout(() => {
-      handleNavigationEnd(Component);
+      handleNavigationEnd();
     }, 500); // This delay should match the time it takes for the component to load.
 
     return () => clearTimeout(timer);
