@@ -1,8 +1,6 @@
 package edu.ucsb.cs156.happiercows.controllers;
 
-import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.models.CurrentUser;
-import edu.ucsb.cs156.happiercows.services.CurrentUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 
