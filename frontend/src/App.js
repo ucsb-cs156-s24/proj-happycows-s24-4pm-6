@@ -59,45 +59,41 @@ function App() {
   const { data: currentUser } = useCurrentUser();
   const { currentComponent, isNavigating, handleNavigationStart, handleNavigationEnd } = useNavigation();
 
-  // Define admin routes
-  const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
-    <>
-      <Route path="/admin/users" element={<RouteWrapper component={AdminUsersPage} />} />
-      <Route path="/admin/jobs" element={<RouteWrapper component={AdminJobsPage} />} />
-      <Route path="/admin/reports" element={<RouteWrapper component={AdminReportsPage} />} />
-      <Route path="/admin/report/:reportId" element={<RouteWrapper component={AdminViewReportPage} />} />
-      <Route path="/admin/createcommons" element={<RouteWrapper component={AdminCreateCommonsPage} />} />
-      <Route path="/admin/listcommons" element={<RouteWrapper component={AdminListCommonsPage} />} />
-      <Route path="/admin/editcommons/:id" element={<RouteWrapper component={AdminEditCommonsPage} />} />
-    </>
-  ) : null;
-
-  // Define user routes
-  const userRoutes = hasRole(currentUser, "ROLE_USER") ? (
-    <>
-      <Route path="/profile" element={<RouteWrapper component={ProfilePage} />} />
-      <Route path="/leaderboard/:commonsId" element={<RouteWrapper component={LeaderboardPage} />}/>
-      <Route path="/play/:commonsId" element={<RouteWrapper component={PlayPage} />} />
-    </>
-  ) : null;
-
-  // Choose the homepage based on roles
-  const homeRoute = (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) 
-    ? <Route path="/" element={<RouteWrapper component={HomePage} />} /> 
-    : <Route path="/" element={<RouteWrapper component={LoginPage} />} />;
-
   return (
     <BrowserRouter>
-      <NavigationContext.Provider value={{ handleNavigationStart, handleNavigationEnd }}>
-        {isNavigating ? currentComponent : (
-          <Routes>
-            {homeRoute}
-            {adminRoutes}
-            {userRoutes}
-            <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
-          </Routes>
-        )}
-      </NavigationContext.Provider>
+      <Routes>
+        {
+          (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) && <Route path="/" element={<HomePage />} />
+        }
+        {
+          !(hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) && <Route path="/" element={<LoginPage />} />
+        }
+        {
+          hasRole(currentUser, "ROLE_ADMIN") && 
+          (
+            <>
+              <Route path="/admin/users" element={<AdminUsersPage />} />
+              <Route path="/admin/jobs" element={<AdminJobsPage />} />
+              <Route path="/admin/reports" element={<AdminReportsPage />} />
+              <Route path="/admin/report/:reportId" element={<AdminViewReportPage />} />
+              <Route path="/admin/createcommons" element={<AdminCreateCommonsPage />} />
+              <Route path="/admin/listcommons" element={<AdminListCommonsPage />} />
+              <Route path="/admin/editcommons/:id" element={<AdminEditCommonsPage />} />
+            </>
+          )
+        }
+        {
+          hasRole(currentUser, "ROLE_USER") && 
+          (
+            <>
+             <Route path="/profile" element={<ProfilePage />} />
+             <Route path="/leaderboard/:commonsId" element={<LeaderboardPage />}/>
+             <Route path="/play/:commonsId" element={<PlayPage />} />
+           </>
+          )
+        }
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </BrowserRouter>
   );
 }
