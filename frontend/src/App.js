@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, createContext } from 'react';
 import HomePage from "main/pages/HomePage";
 import LoginPage from "main/pages/LoginPage";
 import ProfilePage from "main/pages/ProfilePage";
@@ -19,27 +19,45 @@ import NotFoundPage from "main/pages/NotFoundPage";
 
 const NavigationContext = createContext();
 
-function RouteWrapper({ component: Component, ...props }) {
-  const { handleRouteChange } = useContext(NavigationContext);
+// Custom hook to handle navigation
+const useNavigation = () => {
+  const [currentComponent, setCurrentComponent] = useState(null);
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  const handleNavigate = () => {
-    handleRouteChange(<Component {...props} />);
+  const handleNavigationStart = () => {
+    setIsNavigating(true);
   };
 
-  return <Component {...props} onNavigate={handleNavigate} />;
+  const handleNavigationEnd = (Component) => {
+    setCurrentComponent(<Component />);
+    setIsNavigating(false);
+  };
+
+  return { currentComponent, isNavigating, handleNavigationStart, handleNavigationEnd };
+};
+
+function RouteWrapper({ component: Component, ...props }) {
+  const { handleNavigationStart, handleNavigationEnd } = useContext(NavigationContext);
+
+  useEffect(() => {
+    handleNavigationStart();
+
+    // You might want to use a more specific way to determine when navigation has ended.
+    // This is just an example; the actual implementation will depend on your routing logic.
+    const timer = setTimeout(() => {
+      handleNavigationEnd(Component);
+    }, 500); // This delay should match the time it takes for the component to load.
+
+    return () => clearTimeout(timer);
+  }, [Component, handleNavigationStart, handleNavigationEnd]);
+
+  return <Component {...props} />;
 }
 
 function App() {
 
   const { data: currentUser } = useCurrentUser();
-  const [currentComponent, setCurrentComponent] = useState(null);
-
-  const handleRouteChange = (component) => {
-    // Keep the old component rendered with a delay
-    setTimeout(() => {
-      setCurrentComponent(component);
-    }, 5000);
-  };
+  const { currentComponent, isNavigating, handleNavigationStart, handleNavigationEnd } = useNavigation();
 
   // Define admin routes
   const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
@@ -70,8 +88,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      <NavigationContext.Provider value={{ handleRouteChange }}>
-        {currentComponent ? currentComponent : (
+      <NavigationContext.Provider value={{ handleNavigationStart, handleNavigationEnd }}>
+        {isNavigating ? currentComponent : (
           <Routes>
             {homeRoute}
             {adminRoutes}
