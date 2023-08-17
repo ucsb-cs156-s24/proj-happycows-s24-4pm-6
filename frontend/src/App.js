@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import HomePage from "main/pages/HomePage";
 import LoginPage from "main/pages/LoginPage";
 import ProfilePage from "main/pages/ProfilePage";
@@ -17,7 +18,19 @@ import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
 
 function App() {
+
   const { data: currentUser } = useCurrentUser();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsLoading(false);
+    }
+  }, [currentUser]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Replace with your actual loading component or spinner
+  }
 
   // Define admin routes
   const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
