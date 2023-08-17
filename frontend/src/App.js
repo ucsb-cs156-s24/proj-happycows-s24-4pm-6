@@ -38,7 +38,7 @@ function App() {
     // Keep the old component rendered with a delay
     setTimeout(() => {
       setCurrentComponent(component);
-    }, 200);
+    }, 5000);
   };
 
   // Define admin routes
