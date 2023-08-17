@@ -150,6 +150,9 @@ describe("Modal tests", () => {
   test("Clicking Permanently Delete button deletes the commons", async () => {
     const currentUser = currentUserFixtures.adminUser;
 
+    // https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
+    const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
+
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
@@ -165,7 +168,16 @@ describe("Modal tests", () => {
     fireEvent.click(permanentlyDeleteButton);
 
     await waitFor(() => {
-      expect(mockMutate).toHaveBeenCalled();
+      expect(useBackendMutationSpy).toHaveBeenCalledWith(
+        cellToAxiosParamsDelete,
+        { onSuccess: onDeleteSuccess },
+        ["/api/commons/allplus"]
+      );
+    });
+
+    // Verify that the modal is hidden by checking for the absence of the "modal-open" class
+    await waitFor(() => {
+      expect(document.body).not.toHaveClass('modal-open');
     });
   });
 
