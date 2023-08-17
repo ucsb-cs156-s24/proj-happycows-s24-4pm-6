@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 import edu.ucsb.cs156.happiercows.entities.ChatMessage;
 
 @Repository
@@ -18,5 +20,5 @@ public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long>
     Iterable<ChatMessage> findAllByCommonsId(Long commonsId);
 
     @Query("SELECT cm FROM chat_message cm WHERE cm.id = :id")
-    ChatMessage findById(long id);
+    Optional<ChatMessage> findById(long id);
 }
