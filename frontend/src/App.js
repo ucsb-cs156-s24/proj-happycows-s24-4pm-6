@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import HomePage from "main/pages/HomePage";
 import LoginPage from "main/pages/LoginPage";
 import ProfilePage from "main/pages/ProfilePage";
@@ -16,10 +17,19 @@ import { hasRole, useCurrentUser } from "main/utils/currentUser";
 import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
 
-function AdminRoutes() {
+function App() {
   const { data: currentUser } = useCurrentUser();
-  if (!hasRole(currentUser, "ROLE_ADMIN")) return null;
-  return (
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Delay setting the loading state to false
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 200); // 200ms delay
+  }, []);
+
+  // Define admin routes
+  const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
     <>
       <Route path="/admin/users" element={<AdminUsersPage />} />
       <Route path="/admin/jobs" element={<AdminJobsPage />} />
@@ -29,36 +39,34 @@ function AdminRoutes() {
       <Route path="/admin/listcommons" element={<AdminListCommonsPage />} />
       <Route path="/admin/editcommons/:id" element={<AdminEditCommonsPage />} />
     </>
-  );
-}
+  ) : null;
 
-function UserRoutes() {
-  const { data: currentUser } = useCurrentUser();
-  if (!hasRole(currentUser, "ROLE_USER")) return null;
-  return (
+  // Define user routes
+  const userRoutes = hasRole(currentUser, "ROLE_USER") ? (
     <>
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/leaderboard/:commonsId" element={<LeaderboardPage />}/>
       <Route path="/play/:commonsId" element={<PlayPage />} />
     </>
-  );
-}
+  ) : null;
 
-function HomeRoutes() {
-  const {data: currentUser } = useCurrentUser();
-  return hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER") 
-  ? <HomePage /> : <LoginPage />;
-}
+  // Choose the homepage based on roles
+  const homeRoute = (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) 
+    ? <Route path="/" element={<HomePage />} /> 
+    : <Route path="/" element={<LoginPage />} />;
 
-function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomeRoutes />} /> {/* Home page routing */}
-        <Route path="*" element={<AdminRoutes />} />
-        <Route path="*" element={<UserRoutes />} />
-        <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
-      </Routes>
+      {isLoading ? (
+          <div>Loading...</div> // Loading screen
+        ) : (
+        <Routes>
+          {homeRoute}
+          {adminRoutes}
+          {userRoutes}
+          <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
+        </Routes>
+      )}
     </BrowserRouter>
   );
 }
