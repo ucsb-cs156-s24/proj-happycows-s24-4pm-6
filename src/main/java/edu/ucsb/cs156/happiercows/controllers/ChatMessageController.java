@@ -2,12 +2,14 @@ package edu.ucsb.cs156.happiercows.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,11 +22,15 @@ import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 
+import org.springframework.security.core.Authentication;
+
+
 import java.util.Optional;
 
 @Tag(name = "Chat Message")
 @RequestMapping("/api/chat")
 @RestController
+@Slf4j
 public class ChatMessageController extends ApiController{
 
     @Autowired
@@ -36,20 +42,24 @@ public class ChatMessageController extends ApiController{
     @Autowired
     ObjectMapper mapper;
 
-    @Operation(summary = "Get all chat messages", description = "Get all chat messages associated with a specific commons")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Get all chat messages", description = "Get all chat messages associated with a specific commons. Returns a page.")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/get")
     public ResponseEntity<Object> getAllChatMessages(@Parameter(description = "The id of the common") @RequestParam Long commonsId,
                                             @Parameter(name="page") @RequestParam int page,
                                             @Parameter(name="size") @RequestParam int size) {
         
         // Make sure the user is part of the commons or is an admin
-        User u = getCurrentUser().getUser();
-        Long userId = u.getId();
-        Optional<UserCommons> userCommonsLookup = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+            log.info("User is not an admin");
+            User u = getCurrentUser().getUser();
+            Long userId = u.getId();
+            Optional<UserCommons> userCommonsLookup = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId);
 
-        if (!userCommonsLookup.isPresent() && !u.isAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            if (!userCommonsLookup.isPresent()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }
 
         // Return the list of non-hidden chat messages
@@ -57,7 +67,7 @@ public class ChatMessageController extends ApiController{
         return ResponseEntity.ok(messages);
     }
 
-    @Operation(summary = "Get all chat messages", description = "Get all chat messages associated with a specific commons, even the hidden ones")
+    @Operation(summary = "Get all chat messages", description = "Get all chat messages associated with a specific commons, even the hidden ones. Returns an iterable")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/get/all")
     public ResponseEntity<Object> getAllChatMessages(@Parameter(description = "The id of the common") @RequestParam Long commonsId) {
@@ -68,18 +78,24 @@ public class ChatMessageController extends ApiController{
     }
 
     @Operation(summary = "Create a chat message", description = "Create a chat message associated with a specific commons")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/post")
     public ResponseEntity<Object> createChatMessage(@Parameter(description = "The id of the common") @RequestParam Long commonsId,
                                                     @Parameter(description = "The message to be sent") @RequestParam String content) {
         
-        // Make sure the user is part of the commons
+        // Get user info
         User u = getCurrentUser().getUser();
         Long userId = u.getId();
-        Optional<UserCommons> userCommonsLookup = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId);
 
-        if (!userCommonsLookup.isPresent() && !u.isAdmin()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        // Make sure the user is part of the commons or is an admin
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+            log.info("User is not an admin");
+            Optional<UserCommons> userCommonsLookup = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId);
+
+            if (!userCommonsLookup.isPresent()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }
 
         // Create the chat message
@@ -91,6 +107,9 @@ public class ChatMessageController extends ApiController{
         .dm(false)
         .toUserId(0)
         .build();
+
+        // Save the message
+        chatMessageRepository.save(chatMessage);
 
         return ResponseEntity.ok(chatMessage);
     }
