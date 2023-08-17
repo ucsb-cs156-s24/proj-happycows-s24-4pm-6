@@ -308,4 +308,24 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         assertEquals(expectedResponseString, responseString);
     }
 
+    // Cannot delete chat messages that don't exist
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void adminCannotDeleteChatMessagesThatDontExist() throws Exception {
+        
+        // arrange
+        Long messageId = 0L;
+
+        when(chatMessageRepository.findById(messageId)).thenReturn(Optional.empty());
+
+        //act 
+        mockMvc.perform(delete("/api/chat/delete?chatMessageId={messageId}", messageId).with(csrf()))
+            .andExpect(status().isNotFound()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, atLeastOnce()).findById(messageId);
+        verify(chatMessageRepository, times(0)).save(any(ChatMessage.class));
+    }
+
+
 }
