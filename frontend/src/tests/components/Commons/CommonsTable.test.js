@@ -103,12 +103,10 @@ describe("UserTable tests", () => {
   });
 
   test("the modal appears when Delete is clicked", async () => {
-
-    const currentUser = currentUserFixtures.adminUser;
-
-
-    // https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
+    jest.restoreAllMocks();
     const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
+    const currentUser = currentUserFixtures.adminUser;
+    // const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -131,76 +129,87 @@ describe("UserTable tests", () => {
     expect(screen.getByTestId("CommonsTable-Modal-Cancel")).toBeInTheDocument();
     expect(screen.getByTestId("CommonsTable-Modal-Delete")).toBeInTheDocument();
     expect(screen.getByText("Are you sure you want to delete this commons?")).toBeInTheDocument();
+
   });
 
-  // test("the modal delete calls the correct backend mutation", async () => {
+  test("the modal delete (confirm) calls the correct backend mutation", async () => {
+    jest.restoreAllMocks();
+    const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
+    const currentUser = currentUserFixtures.adminUser;
+      render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter>
+            <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+          </MemoryRouter>
+        </QueryClientProvider>
+      );
 
-  //   const currentUser = currentUserFixtures.adminUser;
+    await waitFor(() => {
+      expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
+    });
 
-  //   // https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
-  //   const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
+    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+    console.log(deleteButton);
+    fireEvent.click(deleteButton);
 
-  //   render(
-  //     <QueryClientProvider client={queryClient}>
-  //       <MemoryRouter>
-  //         <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
-  //       </MemoryRouter>
-  //     </QueryClientProvider>
-  //   );
+    await waitFor(() => {
+      expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
+    });
 
-  //   await waitFor(() => {
-  //     expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
-  //   });
+    await waitFor(() => {
+      expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
+    });
+    expect(screen.getByTestId("CommonsTable-Modal-Cancel")).toBeInTheDocument();
+    expect(screen.getByTestId("CommonsTable-Modal-Delete")).toBeInTheDocument();
+    expect(screen.getByText("Are you sure you want to delete this commons?")).toBeInTheDocument();
 
-  //   const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
-  //   fireEvent.click(deleteButton);
+    const confirmButton = screen.getByTestId("CommonsTable-Modal-Delete");
+    expect(confirmButton).toBeInTheDocument();
+    fireEvent.click(confirmButton);
 
-  //   await waitFor(() => {
-  //     expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
-  //   });
 
-  //   const modalDelete = screen.getByTestId("CommonsTable-Modal-Delete");
-  //   fireEvent.click(modalDelete);
+    expect(useBackendMutationSpy).toHaveBeenCalledWith(
+      cellToAxiosParamsDelete,
+      { onSuccess: onDeleteSuccess },
+      ["/api/commons/allplus"],
+    );
+  });
 
-  //   expect(useBackendMutationSpy).toHaveBeenCalledWith(
-  //     cellToAxiosParamsDelete,
-  //     { onSuccess: onDeleteSuccess },
-  //     ["/api/commons/allplus"]
-  //   );
-  // });
+  test("the modal cancel hides the modal", async () => {
+      const currentUser = currentUserFixtures.adminUser;
+        render(
+          <QueryClientProvider client={queryClient}>
+            <MemoryRouter>
+              <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+            </MemoryRouter>
+          </QueryClientProvider>
+        );
 
-  // test("the modal cancel hides the modal", async () => {
+      await waitFor(() => {
+        expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
+      });
 
-  //   const currentUser = currentUserFixtures.adminUser;
+      const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+      console.log(deleteButton);
+      fireEvent.click(deleteButton);
 
-  //   // https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
-  //   const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
+      await waitFor(() => {
+        expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
+      });
 
-  //   render(
-  //     <QueryClientProvider client={queryClient}>
-  //       <MemoryRouter>
-  //         <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
-  //       </MemoryRouter>
-  //     </QueryClientProvider>
-  //   );
+      await waitFor(() => {
+        expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
+      });
+      expect(screen.getByTestId("CommonsTable-Modal-Cancel")).toBeInTheDocument();
+      expect(screen.getByTestId("CommonsTable-Modal-Delete")).toBeInTheDocument();
+      expect(screen.getByText("Are you sure you want to delete this commons?")).toBeInTheDocument();
 
-  //   await waitFor(() => {
-  //     expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
-  //   });
+      const cancelButton = screen.getByTestId("CommonsTable-Modal-Cancel");
+      expect(cancelButton).toBeInTheDocument();
+      fireEvent.click(cancelButton);
 
-  //   const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
-  //   fireEvent.click(deleteButton);
-
-  //   await waitFor(() => {
-  //     expect(screen.getByTestId("CommonsTable-Modal")).toBeTruthy();
-  //   });
-
-  //   const modalCancel = screen.getByTestId("CommonsTable-Modal-Cancel");
-  //   fireEvent.click(modalCancel);
-
-  //   // await waitFor(() => {
-  //   //   expect(setShowModalSpy).toHaveBeenCalledWith("false");
-  //   // });
-  // });
-
+      await waitFor(() => {
+        expect(screen.queryByTestId("CommonsTable-Modal")).not.toBeInTheDocument();
+      });
+  });
 });
