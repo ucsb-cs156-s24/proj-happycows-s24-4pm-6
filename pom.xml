@@ -11,10 +11,10 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>edu.ucsb.cs156</groupId>
-    <artifactId>example</artifactId>
+    <artifactId>happiercows</artifactId>
     <version>1.1.0</version>
-    <name>example</name>
-    <description>Spring Boot + React Example</description>
+    <name>happiercows</name>
+    <description>A Simulation Game of the Tragedy of the Commons.</description>
     <properties>
         <java.version>17</java.version>
     </properties>
