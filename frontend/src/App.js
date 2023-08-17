@@ -16,7 +16,6 @@ import AdminReportsPage from "main/pages/AdminReportsPage";
 import { hasRole, useCurrentUser } from "main/utils/currentUser";
 import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
-import { NavigationContext } from "main/contexts/NavigationContext";
 
 const NavigationContext = createContext();
 
@@ -44,9 +43,13 @@ function App() {
     }
   }, [currentUser]);
 
-  // if (isLoading) {
-  //   return <div>Loading...</div>; // Replace with actual loading component or spinner
-  // }
+  // Define a state to handle the current component
+  const [currentComponent, setCurrentComponent] = useState(null);
+
+  // Define a function that you want to make available to all routes
+  const handleRouteChange = (component) => {
+    setCurrentComponent(component);
+  };
 
   // Define admin routes
   const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
@@ -79,10 +82,11 @@ function App() {
     <BrowserRouter>
       <NavigationContext.Provider value={{ handleRouteChange }}>
         <Routes>
+          {isLoading && currentComponent}
           {homeRoute}
           {adminRoutes}
           {userRoutes}
-          !isLoading && <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
+          !{isLoading} && <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
         </Routes>
       </NavigationContext.Provider>
     </BrowserRouter>
