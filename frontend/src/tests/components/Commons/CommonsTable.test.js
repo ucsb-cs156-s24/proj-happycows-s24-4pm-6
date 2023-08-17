@@ -132,6 +132,32 @@ describe("UserTable tests", () => {
 
   });
 
+  test("the modal appears when Delete is not clicked", async () => {
+    jest.restoreAllMocks();
+    const currentUser = currentUserFixtures.adminUser;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
+    });
+
+    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+    // fireEvent.click(deleteButton);
+
+    expect(screen.queryByTestId("CommonsTable-Modal")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("CommonsTable-Modal-Cancel")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("CommonsTable-Modal-Delete")).not.toBeInTheDocument();
+    expect(screen.queryByText("Are you sure you want to delete this commons?")).not.toBeInTheDocument();
+
+  });
+
   test("the modal delete (confirm) calls the correct backend mutation", async () => {
     jest.restoreAllMocks();
     const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
@@ -149,7 +175,6 @@ describe("UserTable tests", () => {
     });
 
     const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
-    console.log(deleteButton);
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -190,7 +215,6 @@ describe("UserTable tests", () => {
       });
 
       const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
-      console.log(deleteButton);
       fireEvent.click(deleteButton);
 
       await waitFor(() => {
