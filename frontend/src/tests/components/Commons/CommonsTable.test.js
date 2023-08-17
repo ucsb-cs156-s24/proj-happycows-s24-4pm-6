@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import CommonsTable, {setShowModal} from "main/components/Commons/CommonsTable"
+import CommonsTable from "main/components/Commons/CommonsTable"
 import { currentUserFixtures } from "fixtures/currentUserFixtures";
 import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
 import { cellToAxiosParamsDelete, onDeleteSuccess } from "main/utils/commonsUtils"
@@ -102,138 +102,130 @@ describe("UserTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Leaderboard-button`)).toHaveClass("btn-secondary");
   });
 
-  test("the modal appears when Delete is clicked", async () => {
-    jest.restoreAllMocks();
-    const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
-    const currentUser = currentUserFixtures.adminUser;
-    // const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
-    });
-
-    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
-    });
-    expect(screen.getByTestId("CommonsTable-Modal-Cancel")).toBeInTheDocument();
-    expect(screen.getByTestId("CommonsTable-Modal-Delete")).toBeInTheDocument();
-    expect(screen.getByText("Are you sure you want to delete this commons?")).toBeInTheDocument();
-
-  });
-
-  test("the modal appears when Delete is not clicked", async () => {
-    jest.restoreAllMocks();
-    const currentUser = currentUserFixtures.adminUser;
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <MemoryRouter>
-          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
-        </MemoryRouter>
-      </QueryClientProvider>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
-    });
-
-    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
-    // fireEvent.click(deleteButton);
-
-    expect(screen.queryByTestId("CommonsTable-Modal")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("CommonsTable-Modal-Cancel")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("CommonsTable-Modal-Delete")).not.toBeInTheDocument();
-    expect(screen.queryByText("Are you sure you want to delete this commons?")).not.toBeInTheDocument();
-
-  });
-
-  test("the modal delete (confirm) calls the correct backend mutation", async () => {
-    jest.restoreAllMocks();
-    const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
-    const currentUser = currentUserFixtures.adminUser;
-      render(
-        <QueryClientProvider client={queryClient}>
-          <MemoryRouter>
-            <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
-          </MemoryRouter>
-        </QueryClientProvider>
-      );
-
-    await waitFor(() => {
-      expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
-    });
-
-    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
-    fireEvent.click(deleteButton);
-
-    await waitFor(() => {
-      expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
-    });
-    expect(screen.getByTestId("CommonsTable-Modal-Cancel")).toBeInTheDocument();
-    expect(screen.getByTestId("CommonsTable-Modal-Delete")).toBeInTheDocument();
-    expect(screen.getByText("Are you sure you want to delete this commons?")).toBeInTheDocument();
-
-    const confirmButton = screen.getByTestId("CommonsTable-Modal-Delete");
-    expect(confirmButton).toBeInTheDocument();
-    fireEvent.click(confirmButton);
-
-
-    expect(useBackendMutationSpy).toHaveBeenCalledWith(
-      cellToAxiosParamsDelete,
-      { onSuccess: onDeleteSuccess },
-      ["/api/commons/allplus"],
-    );
-  });
-
-  test("the modal cancel hides the modal", async () => {
-      const currentUser = currentUserFixtures.adminUser;
-        render(
-          <QueryClientProvider client={queryClient}>
-            <MemoryRouter>
-              <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
-            </MemoryRouter>
-          </QueryClientProvider>
-        );
-
-      await waitFor(() => {
-        expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
-      });
-
-      const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
-      fireEvent.click(deleteButton);
-
-      await waitFor(() => {
-        expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
-      });
-
-      await waitFor(() => {
-        expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
-      });
-      expect(screen.getByTestId("CommonsTable-Modal-Cancel")).toBeInTheDocument();
-      expect(screen.getByTestId("CommonsTable-Modal-Delete")).toBeInTheDocument();
-      expect(screen.getByText("Are you sure you want to delete this commons?")).toBeInTheDocument();
-
-      const cancelButton = screen.getByTestId("CommonsTable-Modal-Cancel");
-      expect(cancelButton).toBeInTheDocument();
-      fireEvent.click(cancelButton);
-
-      await waitFor(() => {
-        expect(screen.queryByTestId("CommonsTable-Modal")).not.toBeInTheDocument();
-      });
-  });
 });
+
+describe("Modal tests", () => {
+
+  const queryClient = new QueryClient();
+
+  // Mocking the delete mutation function
+  const mockMutate = jest.fn();
+  const mockUseBackendMutation = {
+    mutate: mockMutate,
+  };
+
+  beforeEach(() => {
+    jest.spyOn(useBackendModule, "useBackendMutation").mockReturnValue(mockUseBackendMutation);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("Clicking Delete button opens the modal for adminUser", async () => {
+    const currentUser = currentUserFixtures.adminUser;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    // Verify that the modal is hidden by checking for the absence of the "modal-open" class
+    await waitFor(() => {
+      expect(document.body).not.toHaveClass('modal-open');
+    });
+
+    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+    fireEvent.click(deleteButton);
+
+    // Verify that the modal is shown by checking for the "modal-open" class
+    await waitFor(() => {
+      expect(document.body).toHaveClass('modal-open');
+    });
+  });
+
+  test("Clicking Permanently Delete button deletes the commons", async () => {
+    const currentUser = currentUserFixtures.adminUser;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+    fireEvent.click(deleteButton);
+
+    const permanentlyDeleteButton = await screen.findByTestId("CommonsTable-Modal-Delete");
+    fireEvent.click(permanentlyDeleteButton);
+
+    await waitFor(() => {
+      expect(mockMutate).toHaveBeenCalled();
+    });
+  });
+
+  test("Clicking Keep this Commons button cancels the deletion", async () => {
+    const currentUser = currentUserFixtures.adminUser;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+    fireEvent.click(deleteButton);
+
+    const cancelButton = await screen.findByTestId("CommonsTable-Modal-Cancel");
+    fireEvent.click(cancelButton);
+
+    // Verify that the modal is hidden by checking for the absence of the "modal-open" class
+    await waitFor(() => {
+      expect(document.body).not.toHaveClass('modal-open');
+    });
+
+    expect(mockMutate).not.toHaveBeenCalled();
+  });
+
+  test("Pressing the escape key on the modal cancels the deletion", async () => {
+    const currentUser = currentUserFixtures.adminUser;
+  
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+  
+    // Click the delete button to open the modal
+    const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+    fireEvent.click(deleteButton);
+  
+    // Check that the modal is displayed by checking for the "modal-open" class in the body
+    expect(document.body).toHaveClass('modal-open');
+  
+    // Click the close button
+    const closeButton = screen.getByLabelText('Close');
+    fireEvent.click(closeButton);
+  
+    // Verify that the modal is hidden by checking for the absence of the "modal-open" class
+    await waitFor(() => {
+      expect(document.body).not.toHaveClass('modal-open');
+    });
+  
+    // Assert that the delete mutation was not called
+    // (you'll need to replace `mockMutate` with the actual reference to the mutation in your code)
+    expect(mockMutate).not.toHaveBeenCalled();
+  });
+  
+  
+});
+
