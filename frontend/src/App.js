@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext, createContext } from 'react';
 import HomePage from "main/pages/HomePage";
 import LoginPage from "main/pages/LoginPage";
 import ProfilePage from "main/pages/ProfilePage";
@@ -18,6 +18,8 @@ import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
 import { NavigationContext } from "main/contexts/NavigationContext";
 
+const NavigationContext = createContext();
+
 function RouteWrapper({ component: Component, ...props }) {
   const { handleRouteChange } = useContext(NavigationContext);
 
@@ -27,8 +29,6 @@ function RouteWrapper({ component: Component, ...props }) {
 
   return <Component {...props} onNavigate={handleNavigate} />;
 }
-
-const NavigationContext = createContext();
 
 function App() {
 
