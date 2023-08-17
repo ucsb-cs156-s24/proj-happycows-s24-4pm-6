@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import HomePage from "main/pages/HomePage";
+import LoadingPage from "main/pages/LoadingPage";
 import LoginPage from "main/pages/LoginPage";
 import ProfilePage from "main/pages/ProfilePage";
 import LeaderboardPage from "main/pages/LeaderboardPage";
@@ -58,7 +59,7 @@ function App() {
   return (
     <BrowserRouter>
       {isLoading ? (
-          <div>Loading...</div> // Loading screen
+          <LoadingPage /> // Loading screen
         ) : (
         <Routes>
           {homeRoute}
