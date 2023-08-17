@@ -1,7 +1,6 @@
 package edu.ucsb.cs156.happiercows.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
