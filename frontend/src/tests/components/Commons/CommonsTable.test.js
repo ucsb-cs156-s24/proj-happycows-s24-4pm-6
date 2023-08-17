@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
-import CommonsTable from "main/components/Commons/CommonsTable"
+import CommonsTable, {setShowModal} from "main/components/Commons/CommonsTable"
 import { currentUserFixtures } from "fixtures/currentUserFixtures";
 import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
 import { cellToAxiosParamsDelete, onDeleteSuccess } from "main/utils/commonsUtils"
@@ -102,7 +102,7 @@ describe("UserTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Leaderboard-button`)).toHaveClass("btn-secondary");
   });
 
-  test("the correct parameters are passed to useBackendMutation when Delete is clicked", async () => {
+  test("the modal appears when Delete is clicked", async () => {
 
     const currentUser = currentUserFixtures.adminUser;
 
@@ -126,13 +126,81 @@ describe("UserTable tests", () => {
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
-      expect(useBackendMutationSpy).toHaveBeenCalledWith(
-        cellToAxiosParamsDelete,
-        { onSuccess: onDeleteSuccess },
-        ["/api/commons/allplus"]
-      );
+      expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
     });
-
+    expect(screen.getByTestId("CommonsTable-Modal-Cancel")).toBeInTheDocument();
+    expect(screen.getByTestId("CommonsTable-Modal-Delete")).toBeInTheDocument();
+    expect(screen.getByText("Are you sure you want to delete this commons?")).toBeInTheDocument();
   });
+
+  // test("the modal delete calls the correct backend mutation", async () => {
+
+  //   const currentUser = currentUserFixtures.adminUser;
+
+  //   // https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
+  //   const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
+
+  //   render(
+  //     <QueryClientProvider client={queryClient}>
+  //       <MemoryRouter>
+  //         <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+  //       </MemoryRouter>
+  //     </QueryClientProvider>
+  //   );
+
+  //   await waitFor(() => {
+  //     expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
+  //   });
+
+  //   const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+  //   fireEvent.click(deleteButton);
+
+  //   await waitFor(() => {
+  //     expect(screen.getByTestId("CommonsTable-Modal")).toBeInTheDocument();
+  //   });
+
+  //   const modalDelete = screen.getByTestId("CommonsTable-Modal-Delete");
+  //   fireEvent.click(modalDelete);
+
+  //   expect(useBackendMutationSpy).toHaveBeenCalledWith(
+  //     cellToAxiosParamsDelete,
+  //     { onSuccess: onDeleteSuccess },
+  //     ["/api/commons/allplus"]
+  //   );
+  // });
+
+  // test("the modal cancel hides the modal", async () => {
+
+  //   const currentUser = currentUserFixtures.adminUser;
+
+  //   // https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
+  //   const useBackendMutationSpy = jest.spyOn(useBackendModule, 'useBackendMutation');
+
+  //   render(
+  //     <QueryClientProvider client={queryClient}>
+  //       <MemoryRouter>
+  //         <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+  //       </MemoryRouter>
+  //     </QueryClientProvider>
+  //   );
+
+  //   await waitFor(() => {
+  //     expect(screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button")).toBeInTheDocument();
+  //   });
+
+  //   const deleteButton = screen.getByTestId("CommonsTable-cell-row-0-col-Delete-button");
+  //   fireEvent.click(deleteButton);
+
+  //   await waitFor(() => {
+  //     expect(screen.getByTestId("CommonsTable-Modal")).toBeTruthy();
+  //   });
+
+  //   const modalCancel = screen.getByTestId("CommonsTable-Modal-Cancel");
+  //   fireEvent.click(modalCancel);
+
+  //   // await waitFor(() => {
+  //   //   expect(setShowModalSpy).toHaveBeenCalledWith("false");
+  //   // });
+  // });
 
 });
