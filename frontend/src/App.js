@@ -16,57 +16,75 @@ import AdminReportsPage from "main/pages/AdminReportsPage";
 import { hasRole, useCurrentUser } from "main/utils/currentUser";
 import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
+import { NavigationContext } from "main/contexts/NavigationContext";
+
+function RouteWrapper({ component: Component, ...props }) {
+  const { handleRouteChange } = useContext(NavigationContext);
+
+  const handleNavigate = () => {
+    handleRouteChange(<Component {...props} />);
+  };
+
+  return <Component {...props} onNavigate={handleNavigate} />;
+}
+
+const NavigationContext = createContext();
 
 function App() {
 
   const { data: currentUser } = useCurrentUser();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
-      setIsLoading(false);
+      // Delay setting the loading state to false
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 200); // Adjust the delay as needed
     }
   }, [currentUser]);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Replace with your actual loading component or spinner
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>; // Replace with actual loading component or spinner
+  // }
 
   // Define admin routes
   const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
     <>
-      <Route path="/admin/users" element={<AdminUsersPage />} />
-      <Route path="/admin/jobs" element={<AdminJobsPage />} />
-      <Route path="/admin/reports" element={<AdminReportsPage />} />
-      <Route path="/admin/report/:reportId" element={<AdminViewReportPage />} />
-      <Route path="/admin/createcommons" element={<AdminCreateCommonsPage />} />
-      <Route path="/admin/listcommons" element={<AdminListCommonsPage />} />
-      <Route path="/admin/editcommons/:id" element={<AdminEditCommonsPage />} />
+      <Route path="/admin/users" element={<RouteWrapper component={AdminUsersPage} />} />
+      <Route path="/admin/jobs" element={<RouteWrapper component={AdminJobsPage} />} />
+      <Route path="/admin/reports" element={<RouteWrapper component={AdminReportsPage} />} />
+      <Route path="/admin/report/:reportId" element={<RouteWrapper component={AdminViewReportPage} />} />
+      <Route path="/admin/createcommons" element={<RouteWrapper component={AdminCreateCommonsPage} />} />
+      <Route path="/admin/listcommons" element={<RouteWrapper component={AdminListCommonsPage} />} />
+      <Route path="/admin/editcommons/:id" element={<RouteWrapper component={AdminEditCommonsPage} />} />
     </>
   ) : null;
 
   // Define user routes
   const userRoutes = hasRole(currentUser, "ROLE_USER") ? (
     <>
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/leaderboard/:commonsId" element={<LeaderboardPage />}/>
-      <Route path="/play/:commonsId" element={<PlayPage />} />
+      <Route path="/profile" element={<RouteWrapper component={ProfilePage} />} />
+      <Route path="/leaderboard/:commonsId" element={<RouteWrapper component={LeaderboardPage} />}/>
+      <Route path="/play/:commonsId" element={<RouteWrapper component={PlayPage} />} />
     </>
   ) : null;
 
   // Choose the homepage based on roles
   const homeRoute = (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) 
-    ? <Route path="/" element={<HomePage />} /> 
-    : <Route path="/" element={<LoginPage />} />;
+    ? <Route path="/" element={<RouteWrapper component={HomePage} />} /> 
+    : <Route path="/" element={<RouteWrapper component={LoginPage} />} />;
 
   return (
     <BrowserRouter>
-      <Routes>
-        {homeRoute}
-        {adminRoutes}
-        {userRoutes}
-        <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
-      </Routes>
+      <NavigationContext.Provider value={{ handleRouteChange }}>
+        <Routes>
+          {homeRoute}
+          {adminRoutes}
+          {userRoutes}
+          !isLoading && <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
+        </Routes>
+      </NavigationContext.Provider>
     </BrowserRouter>
   );
 }
