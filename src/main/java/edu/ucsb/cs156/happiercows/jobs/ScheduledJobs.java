@@ -34,7 +34,7 @@ public class ScheduledJobs {
     @Autowired
     MilkTheCowsJobFactory milkTheCowsJobFactory;
     
-    @Scheduled(cron = "${app.updateCowHealth.cron}", zone = "America/Los_Angeles")
+    @Scheduled(cron = "${app.updateCowHealth.cron}", zone = "${spring.jackson.time-zone}")
     public void runUpdateCowHealthJobBasedOnCron() {
        log.info("runUpdateCowHealthJobBasedOnCron: running");
 
@@ -44,7 +44,7 @@ public class ScheduledJobs {
       log.info("runUpdateCowHealthJobBasedOnCron: launched job");
    }
 
-    @Scheduled(cron = "${app.milkTheCows.cron}", zone = "America/Los_Angeles")
+    @Scheduled(cron = "${app.milkTheCows.cron}", zone = "${spring.jackson.time-zone}")
     public void runMilkTheCowsJobBasedOnCron() {
        log.info("runMilkTheCowsJobBasedOnCron: running");
 
