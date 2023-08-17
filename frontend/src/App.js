@@ -32,23 +32,13 @@ function RouteWrapper({ component: Component, ...props }) {
 function App() {
 
   const { data: currentUser } = useCurrentUser();
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (currentUser) {
-      // Delay setting the loading state to false
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 200); // Adjust the delay as needed
-    }
-  }, [currentUser]);
-
-  // Define a state to handle the current component
   const [currentComponent, setCurrentComponent] = useState(null);
 
-  // Define a function that you want to make available to all routes
   const handleRouteChange = (component) => {
-    setCurrentComponent(component);
+    // Keep the old component rendered with a delay
+    setTimeout(() => {
+      setCurrentComponent(component);
+    }, 200);
   };
 
   // Define admin routes
@@ -81,13 +71,15 @@ function App() {
   return (
     <BrowserRouter>
       <NavigationContext.Provider value={{ handleRouteChange }}>
-        <Routes>
-          {isLoading && currentComponent}
-          {homeRoute}
-          {adminRoutes}
-          {userRoutes}
-          !{isLoading} && <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
-        </Routes>
+        {currentComponent ? currentComponent : (
+          <Routes>
+            {isLoading && currentComponent}
+            {homeRoute}
+            {adminRoutes}
+            {userRoutes}
+            <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
+          </Routes>
+        )}
       </NavigationContext.Provider>
     </BrowserRouter>
   );
