@@ -16,11 +16,10 @@ import { hasRole, useCurrentUser } from "main/utils/currentUser";
 import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
 
-function App() {
+function AdminRoutes() {
   const { data: currentUser } = useCurrentUser();
-
-  // Define admin routes
-  const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
+  if (!hasRole(currentUser, "ROLE_ADMIN")) return null;
+  return (
     <>
       <Route path="/admin/users" element={<AdminUsersPage />} />
       <Route path="/admin/jobs" element={<AdminJobsPage />} />
@@ -30,28 +29,34 @@ function App() {
       <Route path="/admin/listcommons" element={<AdminListCommonsPage />} />
       <Route path="/admin/editcommons/:id" element={<AdminEditCommonsPage />} />
     </>
-  ) : null;
+  );
+}
 
-  // Define user routes
-  const userRoutes = hasRole(currentUser, "ROLE_USER") ? (
+function UserRoutes() {
+  const { data: currentUser } = useCurrentUser();
+  if (!hasRole(currentUser, "ROLE_USER")) return null;
+  return (
     <>
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/leaderboard/:commonsId" element={<LeaderboardPage />}/>
       <Route path="/play/:commonsId" element={<PlayPage />} />
     </>
-  ) : null;
+  );
+}
 
-  // Choose the homepage based on roles
-  const homeRoute = (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) 
-    ? <Route path="/" element={<HomePage />} /> 
-    : <Route path="/" element={<LoginPage />} />;
+function HomeRoutes() {
+  const {data: currentUser } = useCurrentUser();
+  return hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER") 
+  ? <HomePage /> : <LoginPage />;
+}
 
+function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {homeRoute}
-        {adminRoutes}
-        {userRoutes}
+        <Route path="/" element={<HomeRoutes />} /> {/* Home page routing */}
+        <Route path="*" element={<AdminRoutes />} />
+        <Route path="*" element={<UserRoutes />} />
         <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
       </Routes>
     </BrowserRouter>
