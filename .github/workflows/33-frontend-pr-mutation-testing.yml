@@ -68,7 +68,6 @@ jobs:
             xargs printf '%s,' |                                    # convert to comma separated list
             sed 's/.$//' |                                          # remove trailing comma
             xargs -r npx stryker run --mutate                       # run stryker on changed files
-
         working-directory: ./frontend
 
       - name: Set path for github pages deploy when there is a PR num
