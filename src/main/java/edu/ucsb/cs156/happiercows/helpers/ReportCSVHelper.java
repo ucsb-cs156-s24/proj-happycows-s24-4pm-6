@@ -9,8 +9,6 @@ import java.util.List;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import edu.ucsb.cs156.happiercows.entities.ReportLine;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 /*
  * This code is based on 
