@@ -91,6 +91,11 @@ public class JobsController extends ApiController {
         .sleepMs(sleepMs)
         .build();
 
+        // Reference: frontend/src/components/Jobs/TestJobForm.js
+        if (sleepMs < 0 || sleepMs > 60000) {
+            throw new IllegalArgumentException("sleepMs must be between 0 and 60000");
+        }
+
         return jobService.runAsJob(testJob);
     }
 
