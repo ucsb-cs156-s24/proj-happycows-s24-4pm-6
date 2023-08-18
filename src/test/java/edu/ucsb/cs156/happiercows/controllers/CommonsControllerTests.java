@@ -979,4 +979,181 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         verify(commonsRepository, times(1)).save(any(Commons.class));
     }
+
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void UpdateCommonsTest_withIllegalParameters() throws Exception {
+        // we first create a commons to update
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+        Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .carryingCapacity(100)
+        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+        .build();
+
+        when(commonsRepository.findById(0L))
+                .thenReturn(Optional.of(commons));
+
+        // name is empty
+        CreateCommonsParams parameters = CreateCommonsParams.builder()
+                .name("")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        String requestBody = objectMapper.writeValueAsString(parameters);
+
+        MvcResult response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+        
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Cow price is < 0.01
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(0.009)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Milk price is < 0.01
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(0.009)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Starting balance is < 0
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(-1.0)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Carrying capacity is < 1
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(0)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+    }
+
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void UpdateCommonsTest_withBoundaryParameters() throws Exception {
+        // we first create a commons to update
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+        Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .carryingCapacity(100)
+        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+        .build();
+
+        when(commonsRepository.findById(0L))
+                .thenReturn(Optional.of(commons));
+
+        // We're using boundary values, so we expect these to work
+        CreateCommonsParams parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(0.01)
+                .milkPrice(0.01)
+                .startingBalance(0.0)
+                .degradationRate(0.0)
+                .showLeaderboard(false)
+                .carryingCapacity(1)
+                .build();
+
+        String requestBody = objectMapper.writeValueAsString(parameters);
+
+        MvcResult response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isNoContent()).andReturn();
+
+        verify(commonsRepository, times(1)).save(any(Commons.class));
+        
+    }
 }
