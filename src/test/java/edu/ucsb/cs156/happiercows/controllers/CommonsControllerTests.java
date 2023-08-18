@@ -13,6 +13,8 @@ import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
+import lombok.With;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
@@ -838,4 +840,143 @@ public class CommonsControllerTests extends ControllerTestCase {
         assertEquals(actualCommonsPlus, expectedCommonsPlus);
     }
 
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void createCommonsTest_withIllegalParameters() throws Exception {
+        // name is empty
+        CreateCommonsParams parameters = CreateCommonsParams.builder()
+                .name("")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        String requestBody = objectMapper.writeValueAsString(parameters);
+
+        MvcResult response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+        
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Cow price is < 0.01
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(0.009)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+        
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Milk price is < 0.01
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(0.009)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+        
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Starting balance is < 0
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(-1.0)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+        
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+        
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Carrying capacity is < 1
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(0)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+    }
+    
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void createCommonsTest_withBoundaryParameters() throws Exception {
+        // We're using boundary values, so we expect these to work
+        CreateCommonsParams parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(0.01)
+                .milkPrice(0.01)
+                .startingBalance(0.0)
+                .degradationRate(0.0)
+                .showLeaderboard(false)
+                .carryingCapacity(1)
+                .build();
+
+        String requestBody = objectMapper.writeValueAsString(parameters);
+
+        MvcResult response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isOk()).andReturn();
+
+        verify(commonsRepository, times(1)).save(any(Commons.class));
+    }
 }
