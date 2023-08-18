@@ -47,6 +47,8 @@ export default function HomePage() {
       }
     }, [currentUser]
   );
+
+  const firstName = currentUser?.root ? currentUser?.root?.user?.givenName : "";
   // Stryker restore all
 
   let navigate = useNavigate();
@@ -59,7 +61,7 @@ export default function HomePage() {
   return (
     <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
       <BasicLayout>
-        <h1 data-testid="homePage-title" style={{ fontSize: "75px", borderRadius: "7px", backgroundColor: "white", opacity: ".9" }} className="text-center border-0 my-3">Howdy Farmer</h1>
+        <h1 data-testid="homePage-title" style={{ fontSize: "75px", borderRadius: "7px", backgroundColor: "white", opacity: ".9" }} className="text-center border-0 my-3">Howdy Farmer {firstName}</h1>
         <Container>
           <Row>
             <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} /></Col>
