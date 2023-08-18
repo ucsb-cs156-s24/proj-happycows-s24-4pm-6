@@ -125,6 +125,12 @@ public class JobsController extends ApiController {
         @Parameter(name="health") @RequestParam double health
     ) { 
         JobContextConsumer setCowHealthJob = setCowHealthJobFactory.create(commonsID, health);
+
+        // Reference: frontend/src/components/Jobs/SetCowHealthForm.js
+        if (health < 0 || health > 100) {
+            throw new IllegalArgumentException("health must be between 0 and 100");
+        }
+
         return jobService.runAsJob(setCowHealthJob);
     }
 
