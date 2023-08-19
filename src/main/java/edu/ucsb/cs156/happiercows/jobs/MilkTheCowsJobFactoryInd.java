@@ -24,10 +24,8 @@ public class MilkTheCowsJobFactoryInd {
     @Autowired
     private ProfitRepository profitRepository;
 
-    @Autowired
-    private long commonsID;
 
-    public JobContextConsumer create() {
+    public JobContextConsumer create(Long commonsID) {
         return new MilkTheCowsJobInd(
                 commonsRepository,
                 userCommonsRepository,
