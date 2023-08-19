@@ -55,54 +55,8 @@ public class ChatMessageControllerTests extends ControllerTestCase {
     @Autowired
     ObjectMapper mapper;
 
-    @WithMockUser(roles = {"ADMIN"})
-    @Test
-    public void adminCanGetAllChatMessages() throws Exception {
-        
-        // arrange
-        Long commonsId = 1L;
 
-        ChatMessage chatMessage1 = ChatMessage.builder().id(1L).commonsId(commonsId).build();
-        ChatMessage chatMessage2 = ChatMessage.builder().id(2L).commonsId(commonsId).build();
-
-        Iterable<ChatMessage> iterableOfChatMessages = Arrays.asList(chatMessage1, chatMessage2);
-
-        when(chatMessageRepository.findAllByCommonsId(commonsId)).thenReturn(iterableOfChatMessages);
-
-        // act
-        MvcResult response = mockMvc.perform(get("/api/chat/get/all?commonsId={commonsId}", commonsId))
-            .andExpect(status().isOk()).andReturn();
-
-        // assert
-        verify(chatMessageRepository, atLeastOnce()).findAllByCommonsId(commonsId);
-        String responseString = response.getResponse().getContentAsString();
-        String expectedResponseString = mapper.writeValueAsString(iterableOfChatMessages);
-        log.info("Got back from API: {}",responseString);
-        assertEquals(expectedResponseString, responseString);
-    }
-
-    @WithMockUser(roles = {"USER"})
-    @Test
-    public void userCannotUseGetAllAPIEndpoint() throws Exception {
-        
-        // arrange
-        Long commonsId = 1L;
-
-        ChatMessage chatMessage1 = ChatMessage.builder().id(1L).commonsId(commonsId).build();
-        ChatMessage chatMessage2 = ChatMessage.builder().id(2L).commonsId(commonsId).build();
-
-        Iterable<ChatMessage> iterableOfChatMessages = Arrays.asList(chatMessage1, chatMessage2);
-
-        when(chatMessageRepository.findAllByCommonsId(commonsId)).thenReturn(iterableOfChatMessages);
-
-        // act
-        mockMvc.perform(get("/api/chat/get/all?commonsId={commonsId}", commonsId))
-            .andExpect(status().isForbidden()).andReturn();
-
-        // assert
-        verify(chatMessageRepository, times(0)).findAllByCommonsId(commonsId);
-    }
-
+    //* */ get tests
     @WithMockUser(roles = {"USER"})
     @Test
     public void userInCommonsCanGetChatMessages() throws Exception {
@@ -124,6 +78,35 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.of(userCommons));
 
 
+        // act
+        MvcResult response = mockMvc.perform(get("/api/chat/get?commonsId={commonsId}&page={page}&size={size}", commonsId, page, size))
+            .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, atLeastOnce()).findByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
+        String responseString = response.getResponse().getContentAsString();
+        String expectedResponseString = mapper.writeValueAsString(pageOfChatMessages);
+        log.info("Got back from API: {}",responseString);
+        assertEquals(expectedResponseString, responseString);
+    }
+
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void adminCanGetChatMessages() throws Exception {
+        
+        // arrange
+        Long commonsId = 1L;
+        Long userId = 1L;
+        int page = 0;
+        int size = 10;
+
+        ChatMessage chatMessage1 = ChatMessage.builder().id(1L).commonsId(commonsId).userId(userId).build();
+        ChatMessage chatMessage2 = ChatMessage.builder().id(2L).commonsId(commonsId).userId(userId).build();
+
+        Page<ChatMessage> pageOfChatMessages = new PageImpl<ChatMessage>(Arrays.asList(chatMessage1, chatMessage2));
+
+        when(chatMessageRepository.findByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()))).thenReturn(pageOfChatMessages);
+        
         // act
         MvcResult response = mockMvc.perform(get("/api/chat/get?commonsId={commonsId}&page={page}&size={size}", commonsId, page, size))
             .andExpect(status().isOk()).andReturn();
@@ -163,7 +146,114 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         verify(chatMessageRepository, times(0)).findByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
 
     }
+    
+    //* */ admin/get tests
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void adminCanGetAllChatMessages() throws Exception {
+        
+        // arrange
+        Long commonsId = 1L;
+        int page = 0;
+        int size = 10;
 
+        ChatMessage chatMessage1 = ChatMessage.builder().id(1L).commonsId(commonsId).build();
+        ChatMessage chatMessage2 = ChatMessage.builder().id(2L).commonsId(commonsId).build();
+
+        Page<ChatMessage> pageOfChatMessages = new PageImpl<ChatMessage>(Arrays.asList(chatMessage1, chatMessage2));
+
+        when(chatMessageRepository.findAllByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()))).thenReturn(pageOfChatMessages);
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/chat/get/all?commonsId={commonsId}", commonsId))
+            .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, atLeastOnce()).findAllByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
+        String responseString = response.getResponse().getContentAsString();
+        String expectedResponseString = mapper.writeValueAsString(pageOfChatMessages);
+        log.info("Got back from API: {}",responseString);
+        assertEquals(expectedResponseString, responseString);
+    }
+
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void userCannotUseAdminGetAPIEndpoint() throws Exception {
+        
+        // arrange
+        Long commonsId = 1L;
+        int page = 0;
+        int size = 10;
+
+        ChatMessage chatMessage1 = ChatMessage.builder().id(1L).commonsId(commonsId).build();
+        ChatMessage chatMessage2 = ChatMessage.builder().id(2L).commonsId(commonsId).build();
+
+        Page<ChatMessage> pageOfChatMessages = new PageImpl<ChatMessage>(Arrays.asList(chatMessage1, chatMessage2));
+
+        when(chatMessageRepository.findAllByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()))).thenReturn(pageOfChatMessages);
+
+        // act
+        mockMvc.perform(get("/api/chat/get/all?commonsId={commonsId}", commonsId))
+            .andExpect(status().isForbidden()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, times(0)).findAllByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
+    }
+
+    //* */ admin/hidden tests
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void adminCanGetHiddenChatMessages() throws Exception {
+        
+        // arrange
+        Long commonsId = 1L;
+        int page = 0;
+        int size = 10;
+
+        ChatMessage chatMessage1 = ChatMessage.builder().id(1L).commonsId(commonsId).hidden(true).build();
+        ChatMessage chatMessage2 = ChatMessage.builder().id(2L).commonsId(commonsId).hidden(true).build();
+
+        Page<ChatMessage> pageOfChatMessages = new PageImpl<ChatMessage>(Arrays.asList(chatMessage1, chatMessage2));
+
+        when(chatMessageRepository.findByCommonsIdAndHidden(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()))).thenReturn(pageOfChatMessages);
+
+        // act
+        MvcResult response = mockMvc.perform(get("/api/chat/admin/hidden?commonsId={commonsId}&page={page}&size={size}", commonsId, page, size))
+            .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, atLeastOnce()).findByCommonsIdAndHidden(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
+        String responseString = response.getResponse().getContentAsString();
+        String expectedResponseString = mapper.writeValueAsString(pageOfChatMessages);
+        log.info("Got back from API: {}",responseString);
+        assertEquals(expectedResponseString, responseString);
+    }
+
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void userCannotGetHiddenChatMessages() throws Exception {
+        
+        // arrange
+        Long commonsId = 1L;
+        int page = 0;
+        int size = 10;
+
+        ChatMessage chatMessage1 = ChatMessage.builder().id(1L).commonsId(commonsId).hidden(true).build();
+        ChatMessage chatMessage2 = ChatMessage.builder().id(2L).commonsId(commonsId).hidden(true).build();
+
+        Page<ChatMessage> pageOfChatMessages = new PageImpl<ChatMessage>(Arrays.asList(chatMessage1, chatMessage2));
+
+        when(chatMessageRepository.findByCommonsIdAndHidden(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()))).thenReturn(pageOfChatMessages);
+
+        // act
+        mockMvc.perform(get("/api/chat/admin/hidden?commonsId={commonsId}&page={page}&size={size}", commonsId, page, size))
+            .andExpect(status().isForbidden()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, times(0)).findByCommonsIdAndHidden(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
+    }
+
+    //* */ post tests
     @WithMockUser(roles = {"USER"})
     @Test
     public void userInCommonsCanPostChatMessages() throws Exception {
@@ -191,7 +281,7 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         log.info("Got back from API: {}",responseString);
         assertEquals(expectedResponseString, responseString);
     }
-    
+
     @WithMockUser(roles = {"USER"})
     @Test
     public void userNotInCommonsCannotPostChatMessages() throws Exception {
@@ -213,74 +303,6 @@ public class ChatMessageControllerTests extends ControllerTestCase {
 
         // assert
         verify(chatMessageRepository, times(0)).save(any(ChatMessage.class));
-    }
-
-    @WithMockUser(roles = {"USER"})
-    @Test
-    public void userCannotDeleteChatMessages() throws Exception {
-        
-        // arrange
-        Long messageId = 0L;
-
-        //act 
-        mockMvc.perform(delete("/api/chat/delete?chatMessageId={messageId}", messageId).with(csrf()))
-            .andExpect(status().isForbidden()).andReturn();
-
-        // assert
-        verify(chatMessageRepository, times(0)).delete(any(ChatMessage.class));
-    }
-
-    @WithMockUser(roles = {"ADMIN"})
-    @Test
-    public void adminCanDeleteChatMessages() throws Exception {
-        
-        // arrange
-        Long messageId = 0L;
-
-        ChatMessage chatMessage = ChatMessage.builder().id(messageId).build();
-        when(chatMessageRepository.findById(messageId)).thenReturn(Optional.of(chatMessage));
-
-        //act 
-        MvcResult response = mockMvc.perform(delete("/api/chat/delete?chatMessageId={messageId}", messageId).with(csrf()))
-            .andExpect(status().isOk()).andReturn();
-
-        // assert
-        verify(chatMessageRepository, atLeastOnce()).findById(messageId);
-        verify(chatMessageRepository, atLeastOnce()).save(any(ChatMessage.class));
-        String responseString = response.getResponse().getContentAsString();
-        chatMessage.setHidden(true);
-        String expectedResponseString = mapper.writeValueAsString(chatMessage);
-        log.info("Got back from API: {}",responseString);
-        assertEquals(expectedResponseString, responseString);
-    }
-
-    @WithMockUser(roles = {"ADMIN"})
-    @Test
-    public void adminCanGetChatMessages() throws Exception {
-        
-        // arrange
-        Long commonsId = 1L;
-        Long userId = 1L;
-        int page = 0;
-        int size = 10;
-
-        ChatMessage chatMessage1 = ChatMessage.builder().id(1L).commonsId(commonsId).userId(userId).build();
-        ChatMessage chatMessage2 = ChatMessage.builder().id(2L).commonsId(commonsId).userId(userId).build();
-
-        Page<ChatMessage> pageOfChatMessages = new PageImpl<ChatMessage>(Arrays.asList(chatMessage1, chatMessage2));
-
-        when(chatMessageRepository.findByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()))).thenReturn(pageOfChatMessages);
-        
-        // act
-        MvcResult response = mockMvc.perform(get("/api/chat/get?commonsId={commonsId}&page={page}&size={size}", commonsId, page, size))
-            .andExpect(status().isOk()).andReturn();
-
-        // assert
-        verify(chatMessageRepository, atLeastOnce()).findByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
-        String responseString = response.getResponse().getContentAsString();
-        String expectedResponseString = mapper.writeValueAsString(pageOfChatMessages);
-        log.info("Got back from API: {}",responseString);
-        assertEquals(expectedResponseString, responseString);
     }
 
     @WithMockUser(roles = {"ADMIN"})
@@ -308,10 +330,10 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         assertEquals(expectedResponseString, responseString);
     }
 
-    // Cannot delete chat messages that don't exist
+    //* */ hide tests
     @WithMockUser(roles = {"ADMIN"})
     @Test
-    public void adminCannotDeleteChatMessagesThatDontExist() throws Exception {
+    public void adminCannotHideChatMessagesThatDontExist() throws Exception {
         
         // arrange
         Long messageId = 0L;
@@ -319,7 +341,7 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         when(chatMessageRepository.findById(messageId)).thenReturn(Optional.empty());
 
         //act 
-        mockMvc.perform(delete("/api/chat/delete?chatMessageId={messageId}", messageId).with(csrf()))
+        mockMvc.perform(put("/api/chat/hide?chatMessageId={messageId}", messageId).with(csrf()))
             .andExpect(status().isNotFound()).andReturn();
 
         // assert
@@ -327,5 +349,72 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         verify(chatMessageRepository, times(0)).save(any(ChatMessage.class));
     }
 
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void adminCanHideChatMessages() throws Exception {
+        
+        // arrange
+        Long messageId = 0L;
 
+        ChatMessage chatMessage = ChatMessage.builder().id(messageId).build();
+        when(chatMessageRepository.findById(messageId)).thenReturn(Optional.of(chatMessage));
+
+        //act 
+        MvcResult response = mockMvc.perform(put("/api/chat/hide?chatMessageId={messageId}", messageId).with(csrf()))
+            .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, atLeastOnce()).findById(messageId);
+        verify(chatMessageRepository, atLeastOnce()).save(any(ChatMessage.class));
+        String responseString = response.getResponse().getContentAsString();
+        chatMessage.setHidden(true);
+        String expectedResponseString = mapper.writeValueAsString(chatMessage);
+        log.info("Got back from API: {}",responseString);
+        assertEquals(expectedResponseString, responseString);
+    }
+
+    // Users can hide messages that are their own
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void userCanDeleteTheirOwnChatMessages() throws Exception {
+        
+        // arrange
+        Long messageId = 0L;
+
+        ChatMessage chatMessage = ChatMessage.builder().id(messageId).userId(1L).build();
+        when(chatMessageRepository.findById(messageId)).thenReturn(Optional.of(chatMessage));
+
+        //act 
+        MvcResult response = mockMvc.perform(put("/api/chat/hide?chatMessageId={messageId}", messageId).with(csrf()))
+            .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, atLeastOnce()).findById(messageId);
+        verify(chatMessageRepository, atLeastOnce()).save(any(ChatMessage.class));
+        String responseString = response.getResponse().getContentAsString();
+        chatMessage.setHidden(true);
+        String expectedResponseString = mapper.writeValueAsString(chatMessage);
+        log.info("Got back from API: {}",responseString);
+        assertEquals(expectedResponseString, responseString);
+    }
+
+    // Users cannot hide messages hat aren't their own
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void userCannotDeleteOtherUsersChatMessages() throws Exception {
+        
+        // arrange
+        Long messageId = 0L;
+
+        ChatMessage chatMessage = ChatMessage.builder().id(messageId).userId(2L).build();
+        when(chatMessageRepository.findById(messageId)).thenReturn(Optional.of(chatMessage));
+
+        //act 
+        mockMvc.perform(put("/api/chat/hide?chatMessageId={messageId}", messageId).with(csrf()))
+            .andExpect(status().isForbidden()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, atLeastOnce()).findById(messageId);
+        verify(chatMessageRepository, times(0)).save(any(ChatMessage.class));
+    }
 }
