@@ -165,7 +165,7 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         when(chatMessageRepository.findAllByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()))).thenReturn(pageOfChatMessages);
 
         // act
-        MvcResult response = mockMvc.perform(get("/api/chat/get/all?commonsId={commonsId}", commonsId))
+        MvcResult response = mockMvc.perform(get("/api/chat/admin/get?commonsId={commonsId}&page={page}&size={size}", commonsId, page, size))
             .andExpect(status().isOk()).andReturn();
 
         // assert
@@ -193,7 +193,7 @@ public class ChatMessageControllerTests extends ControllerTestCase {
         when(chatMessageRepository.findAllByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()))).thenReturn(pageOfChatMessages);
 
         // act
-        mockMvc.perform(get("/api/chat/get/all?commonsId={commonsId}", commonsId))
+        mockMvc.perform(get("/api/chat/admin/get?commonsId={commonsId}&page={page}&size={size}", commonsId, page, size))
             .andExpect(status().isForbidden()).andReturn();
 
         // assert
