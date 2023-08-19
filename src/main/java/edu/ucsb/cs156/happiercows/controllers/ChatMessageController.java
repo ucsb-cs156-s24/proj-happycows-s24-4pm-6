@@ -67,7 +67,7 @@ public class ChatMessageController extends ApiController{
         return ResponseEntity.ok(messages);
     }
 
-    @Operation(summary = "Get all chat messages (Admins)", description = "Get all chat messages associated with a specific commons, even the hidden ones. Used only for admins")
+    @Operation(summary = "Get all chat messages (Admins)", description = "Get all chat messages associated with a specific commons, even the hidden ones. Used only by admins")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/admin/get")
     public ResponseEntity<Object> getAllChatMessages(@Parameter(description = "The id of the common") @RequestParam Long commonsId,
@@ -79,6 +79,20 @@ public class ChatMessageController extends ApiController{
         return ResponseEntity.ok(messages);
     }
 
+    
+    @Operation(summary = "Get hidden chat messages", description = "Get all hidden chat messages associated with a specific commons. Used only by admins")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin/hidden")
+    public ResponseEntity<Object> getHiddenChatMessages(@Parameter(description = "The id of the common") @RequestParam Long commonsId,
+                                                    @Parameter(name="page") @RequestParam int page,
+                                                    @Parameter(name="size") @RequestParam int size) {
+        
+        // Return the list of hidden chat messages
+        Page<ChatMessage> messages = chatMessageRepository.findByCommonsIdAndHidden(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
+        return ResponseEntity.ok(messages);
+    }
+    
+    
     @Operation(summary = "Create a chat message", description = "Create a chat message associated with a specific commons")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/post")
