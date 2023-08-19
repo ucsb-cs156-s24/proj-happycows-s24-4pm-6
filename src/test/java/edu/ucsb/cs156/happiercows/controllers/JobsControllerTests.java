@@ -20,6 +20,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -45,6 +46,7 @@ import edu.ucsb.cs156.happiercows.services.jobs.JobService;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommonsFactory;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactoryInd;
 import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -89,6 +91,9 @@ public class JobsControllerTests extends ControllerTestCase {
 
         @MockBean
         InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
+
+        @MockBean
+        MilkTheCowsJobFactoryInd milkTheCowsJobFactoryInd;
 
         @WithMockUser(roles = { "ADMIN" })
         @Test
@@ -244,6 +249,21 @@ public class JobsControllerTests extends ControllerTestCase {
                 // act
                 MvcResult response = mockMvc.perform(post("/api/jobs/launch/milkthecowjob").with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
+
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+                assertNotNull(jobReturned.getStatus());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_milk_the_cows_individual_job() throws Exception {
+
+                // act
+                MvcResult response = mockMvc.perform(post("/api/jobs/launch/milkthecowjobsinglecommons?commonsId=1").with(csrf())).andExpect(status().isOk()).andReturn();
 
                 // assert
                 String responseString = response.getResponse().getContentAsString();
