@@ -131,17 +131,31 @@ public class ChatMessageController extends ApiController{
     }
 
     @Operation(summary = "Delete a chat message", description = "Delete a chat message associated with a specific commons")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/delete")
-    public ResponseEntity<Object> deleteChatMessage(@Parameter(description = "The id of the chat message") @RequestParam Long chatMessageId) {
-        
-        // Delete the chat message
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PutMapping("/hide")
+    public ResponseEntity<Object> hideChatMessage(@Parameter(description = "The id of the chat message") @RequestParam Long chatMessageId) {
+
+        // Try to get the chat message
         Optional<ChatMessage> chatMessageLookup = chatMessageRepository.findById(chatMessageId);
         if (!chatMessageLookup.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
         ChatMessage chatMessage = chatMessageLookup.get();
+
+        // Get user info
+        User u = getCurrentUser().getUser();
+        Long userId = u.getId();
+
+        // Check if the user is the author of the message
+        if (chatMessage.getUserId() != userId) {
+            // Check if the user is an admin
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
+
+        // Hide the message
         chatMessage.setHidden(true);
         chatMessageRepository.save(chatMessage);
 
