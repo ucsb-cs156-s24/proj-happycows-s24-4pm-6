@@ -42,10 +42,10 @@ public class ChatMessageController extends ApiController{
     @Autowired
     ObjectMapper mapper;
 
-    @Operation(summary = "Get all chat messages", description = "Get all chat messages associated with a specific commons. Returns a page.")
+    @Operation(summary = "Get all chat messages", description = "Get all chat messages associated with a specific commons.")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/get")
-    public ResponseEntity<Object> getAllChatMessages(@Parameter(description = "The id of the common") @RequestParam Long commonsId,
+    public ResponseEntity<Object> getChatMessages(@Parameter(description = "The id of the common") @RequestParam Long commonsId,
                                             @Parameter(name="page") @RequestParam int page,
                                             @Parameter(name="size") @RequestParam int size) {
         
@@ -67,13 +67,15 @@ public class ChatMessageController extends ApiController{
         return ResponseEntity.ok(messages);
     }
 
-    @Operation(summary = "Get all chat messages", description = "Get all chat messages associated with a specific commons, even the hidden ones. Returns an iterable")
+    @Operation(summary = "Get all chat messages (Admins)", description = "Get all chat messages associated with a specific commons, even the hidden ones. Used only for admins")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/get/all")
-    public ResponseEntity<Object> getAllChatMessages(@Parameter(description = "The id of the common") @RequestParam Long commonsId) {
+    @GetMapping("/admin/get")
+    public ResponseEntity<Object> getAllChatMessages(@Parameter(description = "The id of the common") @RequestParam Long commonsId,
+                                                    @Parameter(name="page") @RequestParam int page,
+                                                    @Parameter(name="size") @RequestParam int size) {
         
         // Return the list of chat messages
-        Iterable<ChatMessage> messages = chatMessageRepository.findAllByCommonsId(commonsId);
+        Page<ChatMessage> messages = chatMessageRepository.findAllByCommonsId(commonsId, PageRequest.of(page, size, Sort.by("timestamp").descending()));
         return ResponseEntity.ok(messages);
     }
 

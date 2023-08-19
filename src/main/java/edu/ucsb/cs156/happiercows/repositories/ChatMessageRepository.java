@@ -17,7 +17,7 @@ public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long>
     Page<ChatMessage> findByCommonsId(Long commonsId, Pageable pageable);
 
     @Query(value = "SELECT cm FROM chat_message cm WHERE cm.commonsId = :commonsId")
-    Iterable<ChatMessage> findAllByCommonsId(Long commonsId);
+    Page<ChatMessage> findAllByCommonsId(Long commonsId, Pageable pageable);
 
     @Query("SELECT cm FROM chat_message cm WHERE cm.id = :id")
     Optional<ChatMessage> findById(long id);
