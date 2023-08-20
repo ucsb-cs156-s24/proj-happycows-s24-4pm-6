@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useBackend } from "main/utils/useBackend";
 import CommonsSelect from "main/components/Commons/CommonsSelect";
 
-function UpdateCowHealthForm( { submitAction=()=>{}, testid = "UpdateCowHealthForm" } ) {
+function UpdateCowHealthForm( { submitAction, testid = "UpdateCowHealthForm" } ) {
 
   // Stryker restore all
 

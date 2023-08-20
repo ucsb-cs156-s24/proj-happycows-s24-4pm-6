@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
-import UpdateCowHealthForm from "main/components/Jobs/UpdateCowHealthForm";
+import MilkTheCowsForm from "main/components/Jobs/MilkCowsJobForm";
 import jobsFixtures from "fixtures/jobsFixtures";
 import { QueryClient, QueryClientProvider } from "react-query";
 import AxiosMockAdapter from "axios-mock-adapter";
@@ -17,7 +17,7 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedNavigate,
 }));
 
-describe("UpdateCowHealthForm tests", () => {
+describe("MilkTheCowsForm tests", () => {
   const axiosMock = new AxiosMockAdapter(axios);
 
   it("user can sucessfully submit the job", async () => {
@@ -33,7 +33,7 @@ describe("UpdateCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <UpdateCowHealthForm
+          <MilkTheCowsForm
             submitAction={submitAction}
           />
         </Router>
@@ -41,12 +41,12 @@ describe("UpdateCowHealthForm tests", () => {
     );
 
     const commonsRadio = await screen.findByTestId(
-      "UpdateCowHealthForm-commons-1"
+      "MilkTheCowsForm-commons-1"
     );
     expect(commonsRadio).toBeInTheDocument();
     fireEvent.click(commonsRadio);
 
-    const submitButton = screen.getByTestId("UpdateCowHealthForm-Submit-Button");
+    const submitButton = screen.getByTestId("MilkTheCowsForm-Submit-Button");
 
     expect(submitButton).toBeInTheDocument();
 
@@ -74,13 +74,13 @@ describe("UpdateCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <UpdateCowHealthForm  />
+          <MilkTheCowsForm  />
         </Router>
       </QueryClientProvider>
     );
 
     const defaultId = 0;
-    const testIdForFirstItem = `UpdateCowHealthForm-commons-${defaultId}`;
+    const testIdForFirstItem = `MilkTheCowsForm-commons-${defaultId}`;
     await waitFor(() => {
       expect(screen.getByTestId(testIdForFirstItem)).toBeInTheDocument();
     });
@@ -97,7 +97,7 @@ describe("UpdateCowHealthForm tests", () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
         <Router>
-          <UpdateCowHealthForm />
+          <MilkTheCowsForm />
         </Router>
       </QueryClientProvider>
     );
