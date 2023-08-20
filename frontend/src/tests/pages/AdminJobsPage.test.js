@@ -181,6 +181,46 @@ describe("AdminJobsPage tests", () => {
 
   });
 
+  test("user can submit update cow health job for all commons", async () => {
+    axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    getItemSpy.mockImplementation(() => null);
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AdminJobsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText("Update Cow Health")).toBeInTheDocument();
+
+    const UpdateCowHealthJobButton = screen.getByText("Update Cow Health");
+    expect(UpdateCowHealthJobButton).toBeInTheDocument();
+    UpdateCowHealthJobButton.click();
+    
+    const commonsRadio = await screen.findByTestId("UpdateCowHealthForm-commons-0");
+    expect(commonsRadio).toBeInTheDocument();
+    fireEvent.click(commonsRadio);
+    
+    const submitButton = screen.getByTestId("UpdateCowHealthForm-Submit-Button");
+
+    expect(submitButton).toBeInTheDocument();
+    
+    submitButton.click();
+
+    await waitFor(() => {
+      expect(axiosMock.history.post[0].url).toBe(
+        `/api/jobs/launch/updatecowhealth`
+      );
+    })
+
+    expect(mockToast).toHaveBeenCalledWith(`Submitted Job: Update Cow Health`);
+
+  });
+
   test("user can submit milk the cows job", async () => {
     axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
 
@@ -216,6 +256,43 @@ describe("AdminJobsPage tests", () => {
     })
 
     expect(mockToast).toHaveBeenCalledWith(`Submitted Job: Milk The Cows! (Commons: Anika's Commons)`);
+  });
+
+  test("user can submit milk the cows job for all commons", async () => {
+    axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    getItemSpy.mockImplementation(() => null);
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AdminJobsPage />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText("Milk The Cows")).toBeInTheDocument();
+
+    const MilkTheCowsJobButton = screen.getByText("Milk The Cows");
+    expect(MilkTheCowsJobButton).toBeInTheDocument();
+    MilkTheCowsJobButton.click();
+
+    const commonsRadio = await screen.findByTestId("MilkTheCowsForm-commons-0");
+    expect(commonsRadio).toBeInTheDocument();
+    fireEvent.click(commonsRadio);
+
+    const submitButton = screen.getByTestId("MilkTheCowsForm-Submit-Button");
+    expect(submitButton).toBeInTheDocument();
+    submitButton.click();
+
+    await waitFor(() => {
+      expect(axiosMock.history.post[0].url).toBe(
+        `/api/jobs/launch/milkthecowjob`
+      );
+    })
+
+    expect(mockToast).toHaveBeenCalledWith("Submitted Job: Milk The Cows!");
   });
 
 
