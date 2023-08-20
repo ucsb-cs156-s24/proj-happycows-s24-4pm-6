@@ -65,7 +65,7 @@ public class UpdateCowHealthJobInd implements JobContextConsumer {
             }
         
         
-        ctx.log("Cow health has been updated!");
+            ctx.log("Cow health has been updated!");
         } else {
             ctx.log(String.format("No commons found for id %d", commonsID));
         }
