@@ -14,7 +14,7 @@ function UpdateCowHealthForm( { submitAction, testid = "UpdateCowHealthForm" } )
     []
   );
 
-  const allCommonsProp = {"id":0,"name":"All Commons","cowPrice":10.0,"milkPrice":10.0,"startingBalance":100.0,"startingDate":"2023-08-20T00:00:00","showLeaderboard":false,"carryingCapacity":20,"degradationRate":0.008,"belowCapacityHealthUpdateStrategy":"Constant","aboveCapacityHealthUpdateStrategy":"Linear"}
+  const allCommonsProp = {"id":0,"name":"All Commons"}
   
   const commons = [allCommonsProp, ...commonsAll]
 
