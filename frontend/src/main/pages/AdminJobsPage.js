@@ -80,7 +80,7 @@ const AdminJobsPage = () => {
   // Stryker restore all
 
   const submitUpdateCowHealthJob = async (data) => {
-    if (data.selectedCommonsName == "All Commons") {
+    if (data.selectedCommonsName === "All Commons") {
       toast("Submitted Job: Update Cow Health");
     UpdateCowHealthMutation.mutate();
     } else {
@@ -118,7 +118,7 @@ const AdminJobsPage = () => {
   // Stryker restore all
 
   const submitMilkTheCowsJob = async (data) => {
-    if (data.selectedCommonsName == "All Commons") {
+    if (data.selectedCommonsName === "All Commons") {
       toast("Submitted Job: Milk The Cows!");
       MilkTheCowsMutation.mutate();
     } else {
