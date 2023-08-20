@@ -35,10 +35,6 @@ function UpdateCowHealthForm( { submitAction=()=>{}, testid = "UpdateCowHealthFo
     submitAction(params);
   };
 
-  if (!commons || commons.length === 0) {
-    return <div>There are no commons on which to run this job.</div>;
-  }
-
   if (selectedCommons === null) {
     setSelectedCommons(commons[0].id);
     setSelectedCommonsName(commons[0].name);
