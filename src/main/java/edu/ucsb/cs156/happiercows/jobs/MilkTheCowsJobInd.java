@@ -15,6 +15,7 @@ import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import java.util.Optional;
 
 @AllArgsConstructor
 public class MilkTheCowsJobInd implements JobContextConsumer {
@@ -37,21 +38,25 @@ public class MilkTheCowsJobInd implements JobContextConsumer {
     @Override
     public void accept(JobContext ctx) throws Exception {
         ctx.log("Starting to milk the cows");
+        Optional<Commons> commonMilkedOpt = commonsRepository.findById(commonsID);
 
-        Commons commonMilked = commonsRepository.findById(commonsID).orElseThrow(() -> new EntityNotFoundException(Commons.class, commonsID));
+        if(commonMilkedOpt.isPresent()){
+            Commons commonMilked = commonMilkedOpt.get();
+            String name = commonMilked.getName();
+            double milkPrice = commonMilked.getMilkPrice();
+            ctx.log("Milking cows for Commons: " + name + ", Milk Price: " + formatDollars(milkPrice));
 
-        String name = commonMilked.getName();
-        double milkPrice = commonMilked.getMilkPrice();
-        ctx.log("Milking cows for Commons: " + name + ", Milk Price: " + formatDollars(milkPrice));
+            Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commonMilked.getId());
 
-        Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commonMilked.getId());
+            for (UserCommons userCommons : allUserCommons) {
+                milkCows(ctx, commonMilked, userCommons);
+            }
+            
 
-        for (UserCommons userCommons : allUserCommons) {
-            milkCows(ctx, commonMilked, userCommons);
+            ctx.log("Cows have been milked!");
+        } else {
+            ctx.log(String.format("No commons found for id %d", commonsID));
         }
-        
-
-        ctx.log("Cows have been milked!");
     }
 
     /** This method performs the function of milking the cows for a single userCommons.
