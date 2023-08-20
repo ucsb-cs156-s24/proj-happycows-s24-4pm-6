@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useBackend } from "main/utils/useBackend";
 import CommonsSelect from "main/components/Commons/CommonsSelect";
 
-function MilkTheCowsForm( { submitAction=()=>{}, testid = "MilkCowsForm" } ) {
+function MilkTheCowsForm( { submitAction=()=>{}, testid = "MilkTheCowsForm" } ) {
 
   // Stryker restore all
 
@@ -54,7 +54,7 @@ function MilkTheCowsForm( { submitAction=()=>{}, testid = "MilkCowsForm" } ) {
 
       <CommonsSelect commons={commons} selectedCommons={selectedCommons} handleCommonsSelection={handleCommonsSelection} testid={testid} />
 
-      <Button type="submit" data-testid="SetCowHealthForm-Submit-Button">
+      <Button type="submit" data-testid="MilkTheCowsForm-Submit-Button">
         Milk the cows!
       </Button>
      

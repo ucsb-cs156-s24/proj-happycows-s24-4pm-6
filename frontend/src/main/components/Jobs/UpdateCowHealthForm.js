@@ -54,7 +54,7 @@ function UpdateCowHealthForm( { submitAction=()=>{}, testid = "UpdateCowHealthFo
 
       <CommonsSelect commons={commons} selectedCommons={selectedCommons} handleCommonsSelection={handleCommonsSelection} testid={testid} />
 
-      <Button type="submit" data-testid="SetCowHealthForm-Submit-Button">
+      <Button type="submit" data-testid="UpdateCowHealthForm-Submit-Button">
         Update
       </Button>
      

@@ -142,6 +142,11 @@ describe("AdminJobsPage tests", () => {
   });
 
   test("user can submit update cow health job", async () => {
+    axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    getItemSpy.mockImplementation(() => null);
+
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
@@ -155,25 +160,33 @@ describe("AdminJobsPage tests", () => {
     const UpdateCowHealthJobButton = screen.getByText("Update Cow Health");
     expect(UpdateCowHealthJobButton).toBeInTheDocument();
     UpdateCowHealthJobButton.click();
-
-    const submitButton = screen.getByTestId(
-      "UpdateCowHealthForm-Submit-Button"
-    );
+    
+    const commonsRadio = await screen.findByTestId("UpdateCowHealthForm-commons-1");
+    expect(commonsRadio).toBeInTheDocument();
+    fireEvent.click(commonsRadio);
+    
+    const submitButton = screen.getByTestId("UpdateCowHealthForm-Submit-Button");
 
     expect(submitButton).toBeInTheDocument();
+    
     submitButton.click();
 
-    await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
+    await waitFor(() => {
+      expect(axiosMock.history.post[0].url).toBe(
+        `/api/jobs/launch/updatecowhealthsinglecommons?commonsId=1`
+      );
+    })
 
-    expect(axiosMock.history.post[0].url).toBe(
-      "/api/jobs/launch/updatecowhealth"
-    );
-
-    expect(mockToast).toHaveBeenCalledWith("Submitted Job: Update Cow Health");
+    expect(mockToast).toHaveBeenCalledWith(`Submitted Job: Update Cow Health (Commons: Anika's Commons)`);
 
   });
 
   test("user can submit milk the cows job", async () => {
+    axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    getItemSpy.mockImplementation(() => null);
+
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
@@ -188,18 +201,21 @@ describe("AdminJobsPage tests", () => {
     expect(MilkTheCowsJobButton).toBeInTheDocument();
     MilkTheCowsJobButton.click();
 
-    const submitButton = screen.getByTestId("MilkTheCowsForm-Submit-Button");
+    const commonsRadio = await screen.findByTestId("MilkTheCowsForm-commons-1");
+    expect(commonsRadio).toBeInTheDocument();
+    fireEvent.click(commonsRadio);
 
+    const submitButton = screen.getByTestId("MilkTheCowsForm-Submit-Button");
     expect(submitButton).toBeInTheDocument();
     submitButton.click();
 
-    await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
+    await waitFor(() => {
+      expect(axiosMock.history.post[0].url).toBe(
+        `/api/jobs/launch/milkthecowjobsinglecommons?commonsId=1`
+      );
+    })
 
-    expect(axiosMock.history.post[0].url).toBe(
-      "/api/jobs/launch/milkthecowjob"
-    );
-
-    expect(mockToast).toHaveBeenCalledWith("Submitted Job: Milk The Cows");
+    expect(mockToast).toHaveBeenCalledWith(`Submitted Job: Milk The Cows! (Commons: Anika's Commons)`);
   });
 
 

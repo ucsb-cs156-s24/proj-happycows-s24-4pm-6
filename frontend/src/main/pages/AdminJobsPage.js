@@ -84,7 +84,7 @@ const AdminJobsPage = () => {
       toast("Submitted Job: Update Cow Health");
     UpdateCowHealthMutation.mutate();
     } else {
-    toast(`Submitted Job: Update Cow Health (Commons: ${data.selectedCommonsName}`);
+    toast(`Submitted Job: Update Cow Health (Commons: ${data.selectedCommonsName})`);
     UpdateCowHealthSingleMutation.mutate(data);
     }
   };
@@ -122,7 +122,7 @@ const AdminJobsPage = () => {
       toast("Submitted Job: Milk The Cows!");
       MilkTheCowsMutation.mutate();
     } else {
-    toast(`Submitted Job: Milk The Cows! (Commons: ${data.selectedCommonsName}`);
+    toast(`Submitted Job: Milk The Cows! (Commons: ${data.selectedCommonsName})`);
     MilkTheCowsSingleMutation.mutate(data);
     }
   };
