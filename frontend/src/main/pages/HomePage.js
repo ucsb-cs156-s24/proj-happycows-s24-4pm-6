@@ -9,7 +9,7 @@ import { useCurrentUser } from "main/utils/currentUser";
 import { commonsNotJoined } from "main/utils/commonsUtils";
 import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
-export default function HomePage() {
+export default function HomePage({hour=null}) {
   const [commonsJoined, setCommonsJoined] = useState([]);
   const { data: currentUser } = useCurrentUser();
 
@@ -56,7 +56,7 @@ export default function HomePage() {
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
 
   // Get the current time and set the background image accordingly
-  const time = new Date().getHours();
+  const time = (hour===null) ? new Date().getHours() : hour;
   const Background = getBackgroundImage(time);
   
   // Stryker disable all : TODO: restructure this code to avoid the need for this disable
