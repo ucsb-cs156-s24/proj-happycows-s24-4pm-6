@@ -90,7 +90,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 id="startingBalance"
                                 data-testid={`${testid}-startingBalance`}
                                 type="number"
-                                step="0.001"
+                                step="0.01"
                                 defaultValue={DefaultVals.startingBalance}
                                 isInvalid={!!errors.startingBalance}
                                 {...register("startingBalance", {
@@ -176,7 +176,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                             data-testid={`${testid}-degradationRate`}
                             id="degradationRate"
                             type="number"
-                            step="0.01"
+                            step="0.0001"
                             defaultValue={DefaultVals.degradationRate}
 
                             isInvalid={!!errors.degradationRate}
