@@ -91,7 +91,7 @@ describe("UserTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.cowPrice`)).toHaveTextContent("1");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.milkPrice`)).toHaveTextContent("2");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.degradationRate`)).toHaveTextContent("0.01");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.capacityPerUser`)).toHaveTextContent("50");
+    expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.capacityPerUser`)).toHaveTextContent("5");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.carryingCapacity`)).toHaveTextContent("42");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.effectiveCapacity`)).toHaveTextContent("42");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.startingBalance`)).toHaveTextContent("10");
