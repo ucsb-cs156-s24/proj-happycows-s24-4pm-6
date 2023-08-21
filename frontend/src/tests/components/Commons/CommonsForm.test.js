@@ -104,9 +104,7 @@ describe("CommonsForm tests", () => {
     fireEvent.click(submitButton);
 
     //Await
-    // eslint-disable-next-line no-unused-vars
-    const milkPriceInput = await screen.findByTestId('CommonsForm-milkPrice');
-
+    await screen.findByTestId('CommonsForm-milkPrice');
 
     [
       "CommonsForm-name",
