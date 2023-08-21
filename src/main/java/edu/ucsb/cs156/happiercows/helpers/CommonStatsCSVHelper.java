@@ -24,7 +24,7 @@ public class CommonStatsCSVHelper {
   /**
    * This method is a hack to avoid a pitest issue; it isn't possible to 
    * exclude an individual method call from jacoco coverage, but we can
-   * exclude the entire method.  
+   * exclude the entire method by name in the pom.xml
    * @param out
    */
 
