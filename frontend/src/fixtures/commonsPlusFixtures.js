@@ -30,7 +30,7 @@ const commonsPlusFixtures = {
                 "endingDate": null,
                 "degradationRate": 0.01,
                 "showLeaderboard": true,
-                "capacityPerUser": 50,
+                "capacityPerUser": 5,
                 "carryingCapacity": 42,
                 "effectiveCapacity": 42,
             },
