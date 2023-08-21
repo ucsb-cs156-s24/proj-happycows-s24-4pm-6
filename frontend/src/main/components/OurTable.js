@@ -116,6 +116,23 @@ export function ButtonColumn(label, variant, callback, testid) {
   return column;
 }
 
+export function HrefButtonColumn(label, variant, href, testid) {
+  const column = {
+    Header: label,
+    id: label,
+    Cell: ({ cell }) => (
+      <Button
+        variant={variant}
+        href={`${href}${cell.row.values["commons.id"]}`}
+        data-testid={`${testid}-cell-row-${cell.row.index}-col-${cell.column.id}-button`}
+      >
+        {label}
+      </Button>
+    )
+  }
+  return column;
+}
+
 export function PlaintextColumn(label, getText) {
   const column = {
     Header: label,

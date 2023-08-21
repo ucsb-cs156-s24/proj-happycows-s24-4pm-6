@@ -90,6 +90,7 @@ describe("AdminListCommonPage tests", () => {
         expect(await screen.findByTestId(`${testId}-cell-row-0-col-commons.id`)).toHaveTextContent("1");
         expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.id`)).toHaveTextContent("2");
         expect(screen.getByTestId(`${testId}-cell-row-2-col-commons.id`)).toHaveTextContent("3");
+        expect(screen.getByText(`Download All Stats`)).toBeInTheDocument();
     });
 
     test("renders empty table when backend unavailable, user only", async () => {
@@ -112,6 +113,7 @@ describe("AdminListCommonPage tests", () => {
         restoreConsole();
 
         expect(screen.queryByTestId(`${testId}-cell-row-0-col-commons.id`)).not.toBeInTheDocument();
+        expect(screen.getByText(`Download All Stats`)).toBeInTheDocument();
     });
 
     test("what happens when you click delete, admin", async () => {
@@ -186,5 +188,26 @@ describe("AdminListCommonPage tests", () => {
         fireEvent.click(leaderboardButton);
 
         await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith('/leaderboard/1'));
+    })
+
+    test("correct href for stats csv button as an admin", async () => {
+        setupAdminUser();
+
+        const queryClient = new QueryClient();
+        axiosMock.onGet("/api/commons/allplus").reply(200, commonsPlusFixtures.threeCommonsPlus);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminListCommonPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByTestId(`${testId}-cell-row-0-col-commons.id`)).toHaveTextContent("1");
+      
+        const statsCSVButton = screen.getByTestId(`${testId}-cell-row-0-col-Stats CSV-button`);
+        expect(statsCSVButton).toHaveAttribute("href", "/api/commonstats/download?commonsId=1");
+
     })
 });

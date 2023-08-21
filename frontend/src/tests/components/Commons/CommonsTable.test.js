@@ -102,6 +102,8 @@ describe("UserTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Edit-button`)).toHaveClass("btn-primary");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Delete-button`)).toHaveClass("btn-danger");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Leaderboard-button`)).toHaveClass("btn-secondary");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-Stats CSV-button`)).toHaveClass("btn-success");
+
   });
 
   test("the correct parameters are passed to useBackendMutation when Delete is clicked", async () => {
