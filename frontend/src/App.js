@@ -20,7 +20,6 @@ import NotFoundPage from "main/pages/NotFoundPage";
 function App() {
   const { data: currentUser } = useCurrentUser();
 
-  // Define admin routes
   const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
     <>
       <Route path="/admin/users" element={<AdminUsersPage />} />
@@ -33,7 +32,6 @@ function App() {
     </>
   ) : null;
 
-  // Define user routes
   const userRoutes = hasRole(currentUser, "ROLE_USER") ? (
     <>
       <Route path="/profile" element={<ProfilePage />} />
@@ -42,16 +40,14 @@ function App() {
     </>
   ) : null;
 
-  // Choose the homepage based on roles
   const homeRoute = (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) 
     ? <Route path="/" element={<HomePage />} /> 
     : <Route path="/" element={<LoginPage />} />;
-
+    
+  /* Display the LoadingPage while awaiting currentUser response */
   return (
     <BrowserRouter>
-      {currentUser?.initialData ? (
-          <LoadingPage />
-        ) : (
+      {currentUser?.initialData ? ( <LoadingPage /> ) : ( 
         <Routes>
           {homeRoute}
           {adminRoutes}
