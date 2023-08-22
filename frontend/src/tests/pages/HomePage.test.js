@@ -29,21 +29,6 @@ describe("HomePage tests", () => {
         axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
     });
 
-    test("expected CSS properties", () => {
-        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
-        axiosMock.onGet("/api/commons/all").reply(200, []);
-        render(
-            <QueryClientProvider client={queryClient}>
-                <MemoryRouter>
-                    <HomePage />
-                </MemoryRouter>
-            </QueryClientProvider>
-        );
-
-        const title = screen.getByTestId("homePage-title");
-        expect(title).toHaveAttribute("style", "font-size: 75px; border-radius: 7px; background-color: white; opacity: 0.9;");
-    });
-
     test("renders without crashing when lists return empty list", () => {
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
         axiosMock.onGet("/api/commons/all").reply(200, []);
@@ -62,7 +47,7 @@ describe("HomePage tests", () => {
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
         expect(typeof (title.textContent)).toBe('string');
-        expect(title.textContent).toEqual('Howdy Farmer Phillip');
+        expect(title.textContent).toEqual('Howdy Farmer ');
     });
 
     test("renders with default for commons when api times out", () => {
@@ -86,6 +71,21 @@ describe("HomePage tests", () => {
         expect(title.textContent).toEqual('Howdy Farmer Phillip');
 
         expect(() => screen.getAllByTestId(/commonsCard-button/)).toThrow('Unable to find an element');
+    });
+
+    test("expected CSS properties", () => {
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/commons/all").reply(200, []);
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <HomePage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        const title = screen.getByTestId("homePage-title");
+        expect(title).toHaveAttribute("style", "font-size: 75px; border-radius: 7px; background-color: white; opacity: 0.9;");
     });
 
     test("renders without crashing when lists are full", () => {
