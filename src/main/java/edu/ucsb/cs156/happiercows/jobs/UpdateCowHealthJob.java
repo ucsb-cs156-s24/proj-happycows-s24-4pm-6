@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
 import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -27,9 +28,13 @@ public class UpdateCowHealthJob implements JobContextConsumer {
         ctx.log("Updating cow health...");
 
         Iterable<Commons> allCommons = commonsRepository.findAll();
+        Iterable<CommonsPlus> allCommonsPlus = CommonsPlus.convertToCommonsPlus(allCommons);
 
-        for (Commons commons : allCommons) {
-            ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", effectiveCapacity: " + commons.getEffectiveCapacity());
+        for (CommonsPlus commonsPlus : allCommonsPlus) {
+
+            Commons commons = commonsPlus.getCommons();
+
+            ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", effectiveCapacity: " + commonsPlus.getEffectiveCapacity());
             int numUsers = commonsRepository.getNumUsers(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumUsers(" + commons.getId() + ")"));
 
             if (numUsers==0) {
@@ -37,7 +42,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
                 continue;
             }
 
-            int carryingCapacity = commons.getEffectiveCapacity();
+            int carryingCapacity = commonsPlus.getEffectiveCapacity();
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
 
             Integer totalCows = commonsRepository.getNumCows(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumCows(" + commons.getId() + ")"));
@@ -65,7 +70,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
     // exposed for testing
     public static double calculateNewCowHealthUsingStrategy(
             CowHealthUpdateStrategy strategy,
-            Commons commons,
+            CommonsPlus commons,
             UserCommons userCommons,
             int totalCows
     ) {
