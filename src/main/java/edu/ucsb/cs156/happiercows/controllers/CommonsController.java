@@ -109,6 +109,7 @@ public class CommonsController extends ApiController {
         updated.setStartingDate(params.getStartingDate());
         updated.setShowLeaderboard(params.getShowLeaderboard());
         updated.setDegradationRate(params.getDegradationRate());
+        updated.setCapacityPerUser(params.getCapacityPerUser());
         updated.setCarryingCapacity(params.getCarryingCapacity());
         if (params.getAboveCapacityHealthUpdateStrategy() != null) {
             updated.setAboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(params.getAboveCapacityHealthUpdateStrategy()));
@@ -121,6 +122,26 @@ public class CommonsController extends ApiController {
             throw new IllegalArgumentException("Degradation Rate cannot be negative");
         }
 
+        // Reference: frontend/src/main/components/Commons/CommonsForm.js
+        if (params.getName().equals("")) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        if (params.getCowPrice() < 0.01) {
+            throw new IllegalArgumentException("Cow Price cannot be less than 0.01");
+        }
+
+        if (params.getMilkPrice() < 0.01) {
+            throw new IllegalArgumentException("Milk Price cannot be less than 0.01");
+        }
+
+        if (params.getStartingBalance() < 0) {
+            throw new IllegalArgumentException("Starting Balance cannot be negative");
+        }
+
+        if (params.getCarryingCapacity() < 1) {
+            throw new IllegalArgumentException("Carrying Capacity cannot be less than 1");
+        }
         commonsRepository.save(updated);
 
         return ResponseEntity.status(status).build();
@@ -153,6 +174,7 @@ public class CommonsController extends ApiController {
                 .startingDate(params.getStartingDate())
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
+                .capacityPerUser(params.getCapacityPerUser())
                 .carryingCapacity(params.getCarryingCapacity());
 
         // ok to set null values for these, so old backend still works
@@ -165,10 +187,30 @@ public class CommonsController extends ApiController {
 
         Commons commons = builder.build();
 
+        // Reference: frontend/src/main/components/Commons/CommonsForm.js
+        if (params.getName().equals("")) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        if (params.getCowPrice() < 0.01) {
+            throw new IllegalArgumentException("Cow Price cannot be less than 0.01");
+        }
+
+        if (params.getMilkPrice() < 0.01) {
+            throw new IllegalArgumentException("Milk Price cannot be less than 0.01");
+        }
+
+        if (params.getStartingBalance() < 0) {
+            throw new IllegalArgumentException("Starting Balance cannot be negative");
+        }
 
         // throw exception for degradation rate
         if (params.getDegradationRate() < 0) {
             throw new IllegalArgumentException("Degradation Rate cannot be negative");
+        }
+
+        if (params.getCarryingCapacity() < 1) {
+            throw new IllegalArgumentException("Carrying Capacity cannot be less than 1");
         }
 
         Commons saved = commonsRepository.save(commons);
@@ -221,6 +263,9 @@ public class CommonsController extends ApiController {
 
         userCommonsRepository.save(uc);
 
+        joinedCommons.setNumUsers(joinedCommons.getNumUsers() + 1);
+        commonsRepository.save(joinedCommons);
+
         String body = mapper.writeValueAsString(joinedCommons);
         return ResponseEntity.ok().body(body);
     }
@@ -255,7 +300,12 @@ public class CommonsController extends ApiController {
         userCommonsRepository.delete(userCommons);
 
         String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
-
+        
+        Commons exitedCommon = commonsRepository.findById(commonsId).orElse(null);
+        
+        exitedCommon.setNumUsers(exitedCommon.getNumUsers() - 1);
+        commonsRepository.save(exitedCommon);
+        
         return genericMessage(responseString);
     }
 

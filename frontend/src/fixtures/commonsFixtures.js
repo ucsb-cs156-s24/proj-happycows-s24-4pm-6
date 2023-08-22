@@ -11,7 +11,9 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 10,
             "carryingCapacity": 100,
+            "effectiveCapacity": 500,
             "belowCapacityHealthUpdateStrategy": "Noop",
             "aboveCapacityHealthUpdateStrategy": "Noop"
         },
@@ -26,7 +28,9 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 11,
             "carryingCapacity": 123,
+            "effectiveCapacity": 550,
             "belowCapacityHealthUpdateStrategy": "Linear",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         },
@@ -41,7 +45,9 @@ const commonsFixtures = {
             "milkPrice": 10,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 13,
             "carryingCapacity": 42,
+            "effectiveCapacity": 650,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         }
@@ -59,7 +65,9 @@ const commonsFixtures = {
                 "milkPrice": 10,
                 "degradationRate": .5,
                 "showLeaderboard": true,
+                "capacityPerUser": 5,
                 "carryingCapacity": 314,
+                "effectiveCapacity": 314,
                 "belowCapacityHealthUpdateStrategy": "Constant",
                 "aboveCapacityHealthUpdateStrategy": "Linear"
             }
@@ -74,7 +82,9 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 1,
             "carryingCapacity": 100,
+            "effectiveCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         },
@@ -86,7 +96,9 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 5,
             "carryingCapacity": 100,
+            "effectiveCapacity": 250,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         },
@@ -98,7 +110,9 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 5,
             "carryingCapacity": 100,
+            "effectiveCapacity": 250,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         },
@@ -110,7 +124,9 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 2,
             "carryingCapacity": 100,
+            "effectiveCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         },
@@ -122,7 +138,9 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 2,
             "carryingCapacity": 100,
+            "effectiveCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         },
@@ -134,7 +152,9 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 2,
             "carryingCapacity": 100,
+            "effectiveCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         },
@@ -146,7 +166,9 @@ const commonsFixtures = {
             "cowPrice": 15,
             "degradationRate": .5,
             "showLeaderboard": true,
+            "capacityPerUser": 2,
             "carryingCapacity": 100,
+            "effectiveCapacity": 100,
             "belowCapacityHealthUpdateStrategy": "Constant",
             "aboveCapacityHealthUpdateStrategy": "Linear"
         }
