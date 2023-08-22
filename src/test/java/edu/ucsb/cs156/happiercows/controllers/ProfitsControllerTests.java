@@ -11,6 +11,10 @@ import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
@@ -21,15 +25,19 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(controllers = ProfitsController.class)
 @Import(ProfitsController.class)
@@ -63,6 +71,20 @@ public class ProfitsControllerTests extends ControllerTestCase {
 
     @WithMockUser(roles = {"USER"})
     @Test
+    public void get_profits_all_commons_nonexistent_using_commons_id() throws Exception {
+        MvcResult response = mockMvc.perform(get("/api/profits/all/commonsid?commonsId=2").contentType("application/json"))
+                .andExpect(status().isNotFound()).andReturn();
+
+        verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
+
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("EntityNotFoundException", json.get("type"));
+        assertEquals("UserCommons with commonsId 2 and userId 1 not found",
+                json.get("message"));
+    }
+
+    @WithMockUser(roles = {"USER"})
+    @Test
     public void get_profits_all_commons_using_commons_id() throws Exception {
         UserCommons expectedUserCommons = p1.getUserCommons();
         when(profitRepository.findAllByUserCommons(uc1)).thenReturn(profits);
@@ -79,6 +101,7 @@ public class ProfitsControllerTests extends ControllerTestCase {
 
         // json serialized result doesn't include userCommons.user or userCommons.commons,
         // so we exclude them from expected
+        System.out.println("Hello world");
         p1.getUserCommons().setUser(null);
         p1.getUserCommons().setCommons(null);
 
@@ -87,16 +110,28 @@ public class ProfitsControllerTests extends ControllerTestCase {
 
     @WithMockUser(roles = {"USER"})
     @Test
-    public void get_profits_all_commons_nonexistent_using_commons_id() throws Exception {
-        MvcResult response = mockMvc.perform(get("/api/profits/all/commonsid?commonsId=2").contentType("application/json"))
-                .andExpect(status().isNotFound()).andReturn();
+    public void get_profits_all_commons_using_commons_id_with_pagination() throws Exception {
+        UserCommons expectedUserCommons = p1.getUserCommons();
 
-        verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
+        when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(expectedUserCommons));
 
-        Map<String, Object> json = responseToJson(response);
-        assertEquals("EntityNotFoundException", json.get("type"));
-        assertEquals("UserCommons with commonsId 2 and userId 1 not found",
-                json.get("message"));
+        // Mocking the behavior for pagination
+        Page<Profit> profitPage = new PageImpl<>(profits);
+        when(profitRepository.findAllByUserCommons(eq(uc1))).thenReturn(profitPage);
+
+        MvcResult response = mockMvc.perform(get("/api/profits/paged/commonsid?commonsId=2&pageNumber=0&pageSize=7"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.totalElements").value(profitPage.getTotalElements()))
+                .andExpect(jsonPath("$.content[0].amount").value(p1.getAmount())) // Example check for an attribute
+                .andReturn();
+
+        String responseString = response.getResponse().getContentAsString();
+        JsonNode jsonResponse = objectMapper.readTree(responseString);
+
+        assertEquals(0, jsonResponse.get("number").asInt());
+        assertEquals(7, jsonResponse.get("size").asInt());
+        assertEquals(1, jsonResponse.get("totalPages").asInt());
     }
-
 }
