@@ -11,7 +11,7 @@ const LoginCard = () => {
       { width: '18rem' }
     }>
       <Card.Body>
-        <Card.Title data-testid="loginPage-cardTitle">Welcome to Happier Cows!</Card.Title>
+        <Card.Title data-testid="loginPage-cardTitle">Welcome to Happy Cows!</Card.Title>
         <Card.Text>
           In order to start playing, please login.
         </Card.Text>
