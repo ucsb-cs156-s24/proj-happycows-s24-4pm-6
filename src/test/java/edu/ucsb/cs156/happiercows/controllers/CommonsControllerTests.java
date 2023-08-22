@@ -13,6 +13,7 @@ import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 import lombok.With;
 
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,9 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     @MockBean
     CommonsRepository commonsRepository;
+
+    @MockBean
+    CommonsPlusBuilderService commonsPlusBuilderService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -562,19 +566,20 @@ public class CommonsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void getCommonsPlusByIdTest_valid() throws Exception {
-        Commons Commons1 = Commons.builder()
+        Commons commons1 = Commons.builder()
                 .name("TestCommons2")
                 .id(18L)
                 .build();
         CommonsPlus commonsPlus = CommonsPlus.builder()
-                .commons(Commons1)
+                .commons(commons1)
                 .totalCows(5)
                 .totalUsers(2)
                 .build();
                 
-        when(commonsRepository.findById(eq(18L))).thenReturn(Optional.of(Commons1));
+        when(commonsRepository.findById(eq(18L))).thenReturn(Optional.of(commons1));
         when(commonsRepository.getNumCows(18L)).thenReturn(Optional.of(5));
         when(commonsRepository.getNumUsers(18L)).thenReturn(Optional.of(2));
+        when(commonsPlusBuilderService.toCommonsPlus(eq(commons1))).thenReturn(commonsPlus);
 
         MvcResult response = mockMvc.perform(get("/api/commons/plus?id=18"))
                 .andExpect(status().isOk()).andReturn();
@@ -670,7 +675,6 @@ public class CommonsControllerTests extends ControllerTestCase {
         String cAsJson = mapper.writeValueAsString(c);
 
         assertEquals(responseString, cAsJson);
-        assertEquals(c.getNumUsers(),1);
     }
 
     @WithMockUser(roles = {"USER"})
@@ -802,8 +806,6 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .numOfCows(1)
                 .build();
 
-        //simulating the user being in the common already
-        c.setNumUsers(1);
 
         String requestBody = mapper.writeValueAsString(uc);
 
@@ -823,7 +825,6 @@ public class CommonsControllerTests extends ControllerTestCase {
         String expectedString = "{\"message\":\"user with id 1 deleted from commons with id 2, 0 users remain\"}";
 
         assertEquals(responseString, expectedString);
-        assertEquals(c.getNumUsers(), 0);
     }
 
     @WithMockUser(roles = {"ADMIN"})
@@ -856,7 +857,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         when(commonsRepository.findAll()).thenReturn(expectedCommons);
         when(commonsRepository.getNumCows(1L)).thenReturn(Optional.of(50));
         when(commonsRepository.getNumUsers(1L)).thenReturn(Optional.of(20));
-
+        when(commonsPlusBuilderService.convertToCommonsPlus(eq(expectedCommons))).thenReturn(expectedCommonsPlus);
         MvcResult response = mockMvc.perform(get("/api/commons/allplus").contentType("application/json"))
                 .andExpect(status().isOk()).andReturn();
 
@@ -1141,32 +1142,6 @@ public class CommonsControllerTests extends ControllerTestCase {
         assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
     }
 
-        @WithMockUser(roles = {"ADMIN"})
-        @Test
-        public void testEffectiveCapacityPerUserBiggerThanCarryingCapacity() throws Exception {
-        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-
-
-
-        Commons commons = Commons.builder()
-                .name("Jackson's Commons")
-                .cowPrice(500.99)
-                .milkPrice(8.99)
-                .startingBalance(1020.10)
-                .startingDate(someTime)
-                .degradationRate(50.0)
-                .showLeaderboard(false)
-                .capacityPerUser(5)
-                .carryingCapacity(15)
-                .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
-                .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
-                .build();
-
-        //simmulate 4 users
-        commons.setNumUsers(4);
-
-        assertEquals(commons.getEffectiveCapacity(), 20);
-    }
 
     @WithMockUser(roles = {"ADMIN"})
     @Test
@@ -1213,52 +1188,5 @@ public class CommonsControllerTests extends ControllerTestCase {
         
     }
 
-    @WithMockUser(roles = {"ADMIN"})
-    @Test
-    public void testEffectiveCapacityCarryingCapacityBiggerThanPerUser() throws Exception {
-        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-
-        Commons commons = Commons.builder()
-                .name("Jackson's Commons")
-                .cowPrice(500.99)
-                .milkPrice(8.99)
-                .startingBalance(1020.10)
-                .startingDate(someTime)
-                .degradationRate(50.0)
-                .showLeaderboard(false)
-                .capacityPerUser(5)
-                .carryingCapacity(15)
-                .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
-                .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
-                .build();
-        
-        
-        //simmulate 2 users
-        commons.setNumUsers(2);
-        
-        assertEquals(commons.getEffectiveCapacity(), 15);
-        }
-
-    @WithMockUser(roles = {"ADMIN"})
-    @Test
-    public void testCommonsReturnsCarryingCapacityWhenNoUsers() throws Exception {
-        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-
-        Commons commons = Commons.builder()
-                .name("Jackson's Commons")
-                .cowPrice(500.99)
-                .milkPrice(8.99)
-                .startingBalance(1020.10)
-                .startingDate(someTime)
-                .degradationRate(50.0)
-                .showLeaderboard(false)
-                .capacityPerUser(5)
-                .carryingCapacity(15)
-                .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
-                .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
-                .build();
-
-        assertEquals(commons.getEffectiveCapacity(), 15);
-    }
 }
 
