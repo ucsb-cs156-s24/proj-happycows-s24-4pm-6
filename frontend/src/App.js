@@ -24,9 +24,11 @@ function App() {
 
   // Delay setting the loading state to false
   useEffect(() => {
+    if (!currentUser?.initialData)
+      setIsLoading(false);
     setTimeout(() => {
       setIsLoading(false);
-    }, 200); // 200ms delay
+    }, 2000); // 2000ms delay
   }, []);
 
   // Define admin routes
