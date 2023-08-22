@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from 'react';
 import HomePage from "main/pages/HomePage";
 import LoadingPage from "main/pages/LoadingPage";
 import LoginPage from "main/pages/LoginPage";
@@ -20,12 +19,6 @@ import NotFoundPage from "main/pages/NotFoundPage";
 
 function App() {
   const { data: currentUser } = useCurrentUser();
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Delay setting the loading state to false
-  useEffect(() => {
-    setIsLoading(currentUser?.initialData);
-  }, [currentUser]);
 
   // Define admin routes
   const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
@@ -56,14 +49,14 @@ function App() {
 
   return (
     <BrowserRouter>
-      {isLoading ? (
-          <LoadingPage /> // Loading screen
+      {currentUser?.initialData ? (
+          <LoadingPage />
         ) : (
         <Routes>
           {homeRoute}
           {adminRoutes}
           {userRoutes}
-          <Route path="*" element={<NotFoundPage />} /> {/* Fallback 404 route */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}
     </BrowserRouter>
