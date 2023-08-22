@@ -48,7 +48,7 @@ export default function HomePage() {
     }, [currentUser]
   );
 
-  const firstName = currentUser?.root ? currentUser?.root?.user?.givenName : "";
+  const firstName = (currentUser?.root?.user?.givenName) || "";
   // Stryker restore all
 
   let navigate = useNavigate();
