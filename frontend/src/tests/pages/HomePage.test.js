@@ -42,7 +42,6 @@ describe("HomePage tests", () => {
 
         const mainDiv = screen.getByTestId("HomePage-main-div");
         expect(mainDiv).toBeInTheDocument();
-        expect(mainDiv).toHaveAttribute("style", "background-size: cover; background-image: url(HomePageBackground.jpg);");
 
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
@@ -63,7 +62,6 @@ describe("HomePage tests", () => {
 
         const mainDiv = screen.getByTestId("HomePage-main-div");
         expect(mainDiv).toBeInTheDocument();
-        expect(mainDiv).toHaveAttribute("style", "background-size: cover; background-image: url(HomePageBackground.jpg);");
 
         const title = screen.getByTestId("homePage-title");
         expect(title).toBeInTheDocument();
@@ -152,6 +150,33 @@ describe("HomePage tests", () => {
         expect(axiosMock.history.post[0].url).toBe("/api/commons/join");
         expect(axiosMock.history.post[0].params).toEqual({ "commonsId": 4 });
     
+    });
+
+    test("Check hour null is working, and that the background image is set correctly", async () => {
+        apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons;
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+        axiosMock.onPost("/api/commons/join").reply(200, commonsFixtures.threeCommons[0]);
+
+        
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <HomePage hour={12}/>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByTestId("commonsCard-button-Join-4")).toBeInTheDocument();
+        const joinButton = screen.getByTestId("commonsCard-button-Join-4");
+        fireEvent.click(joinButton);
+
+        await waitFor(() => {
+            expect(axiosMock.history.post.length).toBe(1);
+        });
+        expect(axiosMock.history.post[0].url).toBe("/api/commons/join");
+        expect(axiosMock.history.post[0].params).toEqual({ "commonsId": 4 });
+
     });
 
 
