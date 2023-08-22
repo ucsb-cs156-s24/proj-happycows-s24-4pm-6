@@ -95,8 +95,7 @@ export default function CommonsTable({ commons, currentUser }) {
         },
         {
             Header: 'Effective Capacity',
-            accessor: row => row.commons.effectiveCapacity,
-            id: 'effectiveCapacity'
+            accessor: 'effectiveCapacity'
         }
     ];
 
