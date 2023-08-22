@@ -43,8 +43,9 @@ function App() {
   const homeRoute = (hasRole(currentUser, "ROLE_ADMIN") || hasRole(currentUser, "ROLE_USER")) 
     ? <Route path="/" element={<HomePage />} /> 
     : <Route path="/" element={<LoginPage />} />;
-    
-  /* Display the LoadingPage while awaiting currentUser response */
+
+  /*  Display the LoadingPage while awaiting currentUser 
+      response to prevent the NotFoundPage from displaying */
   return (
     <BrowserRouter>
       {currentUser?.initialData ? ( <LoadingPage /> ) : ( 
