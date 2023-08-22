@@ -27,6 +27,8 @@ import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.TestJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.RecordCommonStatsJob;
+import edu.ucsb.cs156.happiercows.jobs.RecordCommonStatsJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
@@ -59,6 +61,9 @@ public class JobsController extends ApiController {
 
     @Autowired
     InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
+
+    @Autowired
+    RecordCommonStatsJobFactory recordCommonStatsJobFactory;
 
     @Operation(summary = "List all jobs")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -141,5 +146,15 @@ public class JobsController extends ApiController {
 
         InstructorReportJobSingleCommons instructorReportJobSingleCommons = (InstructorReportJobSingleCommons) instructorReportJobSingleCommonsFactory.create(commonsId);
         return jobService.runAsJob(instructorReportJobSingleCommons);
+    }
+
+    @Operation(summary = "Launch Job to Record the Stats of all Commons")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/recordcommonstats")
+    public Job recordCommonStats(
+    ) { 
+
+        RecordCommonStatsJob recordCommonStatsJob = (RecordCommonStatsJob) recordCommonStatsJobFactory.create();
+        return jobService.runAsJob(recordCommonStatsJob);
     }
 }

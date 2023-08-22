@@ -58,7 +58,8 @@ public class UserCommons {
     public void setId(UserCommonsKey id) {
         this.id = id;
     }
-     public UserCommonsKey getId() {
+    
+    public UserCommonsKey getId() {
         return this.id;
     }
 }

@@ -10,6 +10,8 @@ import { useBackend } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
 import Background from "../../assets/PlayPageBackground.png";
 
+import { useNavigate } from 'react-router-dom'
+import { Button } from 'react-bootstrap';
 
 export default function LeaderboardPage() {
 
@@ -46,6 +48,8 @@ export default function LeaderboardPage() {
     );
   // Stryker restore all 
 
+  const navigate = useNavigate();
+
   const showLeaderboard = (hasRole(currentUser, "ROLE_ADMIN") || commons.showLeaderboard );
   return (
     <div data-testid={"LeaderboardPage-main-div"} style={{backgroundSize: 'cover', backgroundImage: `url(${Background})`}}>
@@ -58,6 +62,9 @@ export default function LeaderboardPage() {
                   (<p>You're not authorized to see the leaderboard.</p>)
                 }
                 </div>
+                <Button onClick={() => navigate(-1)} data-testid="LeaderboardPage-back-button" >
+                    Back
+                </Button>
         </BasicLayout>
     </div>
   )

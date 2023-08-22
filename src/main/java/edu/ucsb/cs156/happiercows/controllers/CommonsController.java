@@ -109,6 +109,7 @@ public class CommonsController extends ApiController {
         updated.setStartingDate(params.getStartingDate());
         updated.setShowLeaderboard(params.getShowLeaderboard());
         updated.setDegradationRate(params.getDegradationRate());
+        updated.setCapacityPerUser(params.getCapacityPerUser());
         updated.setCarryingCapacity(params.getCarryingCapacity());
         if (params.getAboveCapacityHealthUpdateStrategy() != null) {
             updated.setAboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(params.getAboveCapacityHealthUpdateStrategy()));
@@ -153,6 +154,7 @@ public class CommonsController extends ApiController {
                 .startingDate(params.getStartingDate())
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
+                .capacityPerUser(params.getCapacityPerUser())
                 .carryingCapacity(params.getCarryingCapacity());
 
         // ok to set null values for these, so old backend still works
@@ -221,6 +223,9 @@ public class CommonsController extends ApiController {
 
         userCommonsRepository.save(uc);
 
+        joinedCommons.setNumUsers(joinedCommons.getNumUsers() + 1);
+        commonsRepository.save(joinedCommons);
+
         String body = mapper.writeValueAsString(joinedCommons);
         return ResponseEntity.ok().body(body);
     }
@@ -255,7 +260,12 @@ public class CommonsController extends ApiController {
         userCommonsRepository.delete(userCommons);
 
         String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
-
+        
+        Commons exitedCommon = commonsRepository.findById(commonsId).orElse(null);
+        
+        exitedCommon.setNumUsers(exitedCommon.getNumUsers() - 1);
+        commonsRepository.save(exitedCommon);
+        
         return genericMessage(responseString);
     }
 

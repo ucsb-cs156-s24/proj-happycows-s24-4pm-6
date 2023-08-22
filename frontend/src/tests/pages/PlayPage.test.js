@@ -107,7 +107,7 @@ describe("PlayPage tests", () => {
         );
 
         expect(await screen.findByText(/Announcements/)).toBeInTheDocument();
-        expect(await screen.findByText(/Welcome Farmer/)).toBeInTheDocument();
+        expect(await screen.findByTestId("CommonsPlay")).toBeInTheDocument();
     });
 
     test("Make sure div has correct attributes", async () => {
