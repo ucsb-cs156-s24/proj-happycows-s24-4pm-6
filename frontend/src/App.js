@@ -21,10 +21,11 @@ import NotFoundPage from "main/pages/NotFoundPage";
 function App() {
   const useCurrentUserReturn = useCurrentUser();
   const { data: currentUser } = useCurrentUserReturn;
-  const [isLoading, setIsLoading] = useState(!currentUser?.root);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Delay setting the loading state to false
   useEffect(() => {
+    setIsLoading(!currentUser?.root);
     setTimeout(() => {
       setIsLoading(false);
     }, 2000); // 2000ms delay
