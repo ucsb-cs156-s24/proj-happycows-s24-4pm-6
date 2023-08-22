@@ -7,7 +7,7 @@ public interface CowHealthUpdateStrategy {
 
     public double calculateNewCowHealth(
             CommonsPlus commonsPlus,
-            UserCommons user,
+            UserCommons uC,
             int totalCows
     );
 

@@ -42,8 +42,8 @@ public class CommonsController extends ApiController {
     @Autowired
     ObjectMapper mapper;
 
-    
-    CommonsPlusBuilderService commonsPlusBuilderService = new CommonsPlusBuilderService();
+    @Autowired
+    CommonsPlusBuilderService commonsPlusBuilderService;
 
 
 
@@ -64,14 +64,7 @@ public class CommonsController extends ApiController {
 
         // convert Iterable to List for the purposes of using a Java Stream & lambda
         // below
-        List<Commons> commonsList = new ArrayList<Commons>();
-        commonsListIter.forEach(commonsList::add);
-
-        List<CommonsPlus> commonsPlusList1 = commonsList.stream()
-                .map(c -> commonsPlusBuilderService.toCommonsPlus(c))
-                .collect(Collectors.toList());
-
-        ArrayList<CommonsPlus> commonsPlusList = new ArrayList<CommonsPlus>(commonsPlusList1);
+        Iterable<CommonsPlus> commonsPlusList = commonsPlusBuilderService.convertToCommonsPlus(commonsListIter);
 
         String body = mapper.writeValueAsString(commonsPlusList);
         return ResponseEntity.ok().body(body);
