@@ -4,7 +4,7 @@ import PagedJobsTable from "main/components/Jobs/PagedJobsTable";
 import jobsFixtures from "fixtures/jobsFixtures";
 
 export default {
-    title: 'components/Leaderboard/PagedJobsTable',
+    title: 'components/Jobs/PagedJobsTable',
     component: PagedJobsTable
 };
 
