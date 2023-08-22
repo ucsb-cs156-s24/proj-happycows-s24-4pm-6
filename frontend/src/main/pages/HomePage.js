@@ -47,6 +47,10 @@ export default function HomePage({hour=null}) {
       }
     }, [currentUser]
   );
+
+  const time = (hour===null) ? new Date().getHours() : hour;
+  const Background = getBackgroundImage(time);
+
   // Stryker restore all
 
   let navigate = useNavigate();
@@ -54,10 +58,6 @@ export default function HomePage({hour=null}) {
 
   //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
-
-  // Get the current time and set the background image accordingly
-  const time = (hour===null) ? new Date().getHours() : hour;
-  const Background = getBackgroundImage(time);
   
   // Stryker disable all : TODO: restructure this code to avoid the need for this disable
   return (
