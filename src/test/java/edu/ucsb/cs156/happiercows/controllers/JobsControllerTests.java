@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.happiercows.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
@@ -321,6 +322,59 @@ public class JobsControllerTests extends ControllerTestCase {
                 assertNotNull(jobReturned.getStatus());
         }
 
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_launch_set_cow_health_job_with_invalid_parameter() throws Exception {
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=-1").with(csrf()))
+                                .andExpect(status().isBadRequest()).andReturn();
+                assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+                response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=101").with(csrf()))
+                                .andExpect(status().isBadRequest()).andReturn();
+                assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_launch_test_job_with_invalid_parameter() throws Exception {
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=-1").with(csrf()))
+                                .andExpect(status().isBadRequest()).andReturn();
+                assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+                response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=60001").with(csrf()))
+                                .andExpect(status().isBadRequest()).andReturn();
+                assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_launch_set_cow_health_job_with_boundary_parameter() throws Exception {
+                // boundary are 0 and 100
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=0").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+                
+                response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=100").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();        
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_launch_test_job_with_boundary_parameter() throws Exception {
+                // boundary are 0 and 60000
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=0").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=60000").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();        
+        }
         @WithMockUser(roles = { "ADMIN" })
         @Test
         public void admin_can_launch_record_common_stats_job() throws Exception {

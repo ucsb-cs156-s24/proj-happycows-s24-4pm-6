@@ -122,6 +122,26 @@ public class CommonsController extends ApiController {
             throw new IllegalArgumentException("Degradation Rate cannot be negative");
         }
 
+        // Reference: frontend/src/main/components/Commons/CommonsForm.js
+        if (params.getName().equals("")) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        if (params.getCowPrice() < 0.01) {
+            throw new IllegalArgumentException("Cow Price cannot be less than 0.01");
+        }
+
+        if (params.getMilkPrice() < 0.01) {
+            throw new IllegalArgumentException("Milk Price cannot be less than 0.01");
+        }
+
+        if (params.getStartingBalance() < 0) {
+            throw new IllegalArgumentException("Starting Balance cannot be negative");
+        }
+
+        if (params.getCarryingCapacity() < 1) {
+            throw new IllegalArgumentException("Carrying Capacity cannot be less than 1");
+        }
         commonsRepository.save(updated);
 
         return ResponseEntity.status(status).build();
@@ -167,10 +187,30 @@ public class CommonsController extends ApiController {
 
         Commons commons = builder.build();
 
+        // Reference: frontend/src/main/components/Commons/CommonsForm.js
+        if (params.getName().equals("")) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        if (params.getCowPrice() < 0.01) {
+            throw new IllegalArgumentException("Cow Price cannot be less than 0.01");
+        }
+
+        if (params.getMilkPrice() < 0.01) {
+            throw new IllegalArgumentException("Milk Price cannot be less than 0.01");
+        }
+
+        if (params.getStartingBalance() < 0) {
+            throw new IllegalArgumentException("Starting Balance cannot be negative");
+        }
 
         // throw exception for degradation rate
         if (params.getDegradationRate() < 0) {
             throw new IllegalArgumentException("Degradation Rate cannot be negative");
+        }
+
+        if (params.getCarryingCapacity() < 1) {
+            throw new IllegalArgumentException("Carrying Capacity cannot be less than 1");
         }
 
         Commons saved = commonsRepository.save(commons);

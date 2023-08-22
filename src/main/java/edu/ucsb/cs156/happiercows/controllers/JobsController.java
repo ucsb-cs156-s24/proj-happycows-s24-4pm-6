@@ -96,6 +96,11 @@ public class JobsController extends ApiController {
         .sleepMs(sleepMs)
         .build();
 
+        // Reference: frontend/src/components/Jobs/TestJobForm.js
+        if (sleepMs < 0 || sleepMs > 60000) {
+            throw new IllegalArgumentException("sleepMs must be between 0 and 60000");
+        }
+
         return jobService.runAsJob(testJob);
     }
 
@@ -125,6 +130,12 @@ public class JobsController extends ApiController {
         @Parameter(name="health") @RequestParam double health
     ) { 
         JobContextConsumer setCowHealthJob = setCowHealthJobFactory.create(commonsID, health);
+
+        // Reference: frontend/src/components/Jobs/SetCowHealthForm.js
+        if (health < 0 || health > 100) {
+            throw new IllegalArgumentException("health must be between 0 and 100");
+        }
+
         return jobService.runAsJob(setCowHealthJob);
     }
 
