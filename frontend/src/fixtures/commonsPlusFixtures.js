@@ -13,10 +13,10 @@ const commonsPlusFixtures = {
                 "showLeaderboard": false,
                 "capacityPerUser": 50,
                 "carryingCapacity": 100,
-                "effectiveCapacity": 100,
             },
             "totalCows": 10,
-            "totalUsers": 2
+            "totalUsers": 2,
+            "effectiveCapacity": 100
         },
         {
             "commons":
@@ -32,10 +32,10 @@ const commonsPlusFixtures = {
                 "showLeaderboard": true,
                 "capacityPerUser": 5,
                 "carryingCapacity": 42,
-                "effectiveCapacity": 42,
             },
             "totalCows": 0,
-            "totalUsers": 1
+            "totalUsers": 1,
+            "effectiveCapacity": 42
         },
         {
             "commons":
@@ -51,10 +51,10 @@ const commonsPlusFixtures = {
                 "showLeaderboard": true,
                 "capacityPerUser": 50,
                 "carryingCapacity": 123,
-                "effectiveCapacity": 123,
             },
             "totalCows": 0,
-            "totalUsers": 1
+            "totalUsers": 1,
+            "effectiveCapacity": 123
         },
 
     ],
@@ -73,10 +73,10 @@ const commonsPlusFixtures = {
                 "showLeaderboard": false,
                 "capacityPerUser": 1,
                 "carryingCapacity": 23,
-                "effectiveCapacity": 23,
             },
             "totalCows": 0,
-            "totalUsers": 0
+            "totalUsers": 0,
+            "effectiveCapacity": 23
         }
     ]
 }
