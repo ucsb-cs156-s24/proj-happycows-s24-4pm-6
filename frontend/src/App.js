@@ -19,17 +19,13 @@ import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
 
 function App() {
-  const useCurrentUserReturn = useCurrentUser();
-  const { data: currentUser } = useCurrentUserReturn;
+  const { data: currentUser } = useCurrentUser();
   const [isLoading, setIsLoading] = useState(true);
 
   // Delay setting the loading state to false
   useEffect(() => {
-    setIsLoading(!currentUser?.root);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000); // 2000ms delay
-  }, []);
+    setIsLoading(currentUser?.initialData);
+  }, [currentUser]);
 
   // Define admin routes
   const adminRoutes = hasRole(currentUser, "ROLE_ADMIN") ? (
