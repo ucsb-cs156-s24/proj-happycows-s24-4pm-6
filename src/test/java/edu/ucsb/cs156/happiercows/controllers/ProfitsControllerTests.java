@@ -66,8 +66,11 @@ public class ProfitsControllerTests extends ControllerTestCase {
     LocalDateTime t1 = LocalDateTime.parse("2022-03-05T15:50:10");
 
     Profit p1 = Profit.builder().id(41).amount(123.45).timestamp(t1).userCommons(uc1).numCows(1).avgCowHealth(80).build();
+    Profit p2 = Profit.builder().id(42).amount(23.45).timestamp(t1).userCommons(uc1).numCows(1).avgCowHealth(80).build();
+    Profit p3 = Profit.builder().id(43).amount(3.45).timestamp(t1).userCommons(uc1).numCows(1).avgCowHealth(80).build();
 
     List<Profit> profits = List.of(p1);
+    List<Profit> profits2 = List.of(p1, p2, p3);
 
     @WithMockUser(roles = {"USER"})
     @Test
@@ -108,6 +111,21 @@ public class ProfitsControllerTests extends ControllerTestCase {
         assertEquals(profits, actualProfits);
     }
 
+
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void get_profits_all_commons_nonexistent_using_commons_id_with_pagination() throws Exception {
+        MvcResult response = mockMvc.perform(get("/api/profits/paged/commonsid?commonsId=2").contentType("application/json"))
+                .andExpect(status().isNotFound()).andReturn();
+
+        verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
+
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("EntityNotFoundException", json.get("type"));
+        assertEquals("UserCommons with commonsId 2 and userId 1 not found",
+                json.get("message"));
+    }
+
     @WithMockUser(roles = {"USER"})
     @Test
     public void get_profits_all_commons_using_commons_id_with_pagination() throws Exception {
@@ -133,5 +151,30 @@ public class ProfitsControllerTests extends ControllerTestCase {
         assertEquals(0, jsonResponse.get("number").asInt());
         assertEquals(7, jsonResponse.get("size").asInt());
         assertEquals(1, jsonResponse.get("totalPages").asInt());
+    }
+
+    @WithMockUser(roles = {"USER"})
+    @Test
+    public void get_profits_all_commons_using_commons_id_with_pagination_2() throws Exception {
+        UserCommons expectedUserCommons = p1.getUserCommons();
+
+        when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(expectedUserCommons));
+
+        // Mocking the behavior for pagination
+        Page<Profit> profitPage = new PageImpl<>(profits2);
+        when(profitRepository.findAllByUserCommons(eq(uc1))).thenReturn(profitPage);
+
+        MvcResult response = mockMvc.perform(get("/api/profits/paged/commonsid?commonsId=2&pageNumber=1&pageSize=2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andReturn();
+
+        String responseString = response.getResponse().getContentAsString();
+        JsonNode jsonResponse = objectMapper.readTree(responseString);
+
+        assertEquals(3, jsonResponse.get("totalElements").asInt());
+        assertEquals(2, jsonResponse.get("totalPages").asInt());
+        assertEquals(p3.getAmount(), jsonResponse.get("content").get(0).get("amount").asDouble(), 0.01);
     }
 }
