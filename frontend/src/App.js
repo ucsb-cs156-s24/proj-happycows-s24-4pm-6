@@ -21,7 +21,7 @@ import NotFoundPage from "main/pages/NotFoundPage";
 function App() {
   const useCurrentUserReturn = useCurrentUser();
   const { data: currentUser } = useCurrentUserReturn;
-  const [isLoading, setIsLoading] = useState(useCurrentUserReturn?.initialData);
+  const [isLoading, setIsLoading] = useState(!currentUser?.root);
 
   // Delay setting the loading state to false
   useEffect(() => {
