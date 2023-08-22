@@ -19,13 +19,12 @@ import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
 
 function App() {
-  const { data: currentUser } = useCurrentUser();
-  const [isLoading, setIsLoading] = useState(true);
+  const useCurrentUserReturn = useCurrentUser();
+  const { data: currentUser } = useCurrentUserReturn;
+  const [isLoading, setIsLoading] = useState(useCurrentUserReturn?.initialData);
 
   // Delay setting the loading state to false
   useEffect(() => {
-    if (!currentUser?.initialData)
-      setIsLoading(false);
     setTimeout(() => {
       setIsLoading(false);
     }, 2000); // 2000ms delay
