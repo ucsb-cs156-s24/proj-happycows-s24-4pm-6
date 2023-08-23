@@ -155,9 +155,7 @@ public class MilkTheCowsJobTests {
 
 
         // Act
-        MilkTheCowsJob milkTheCowsJob = new MilkTheCowsJob(commonsRepository, userCommonsRepository,
-                userRepository, profitRepository);
-        milkTheCowsJob.milkCows(ctx, testCommons, origUserCommons);
+        MilkTheCowsJob.milkCows(ctx, testCommons, origUserCommons, profitRepository, userCommonsRepository);
 
         // Assert
 
