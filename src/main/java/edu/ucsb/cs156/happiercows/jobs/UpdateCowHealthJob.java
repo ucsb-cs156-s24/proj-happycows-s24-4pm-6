@@ -37,36 +37,9 @@ public class UpdateCowHealthJob implements JobContextConsumer {
         for (CommonsPlus commonsPlus : allCommonsPlus) {
 
             Commons commons = commonsPlus.getCommons();
-
-            ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", effectiveCapacity: " + commonsPlus.getEffectiveCapacity());
-            int numUsers = commonsRepository.getNumUsers(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumUsers(" + commons.getId() + ")"));
-
-            if (numUsers==0) {
-                ctx.log("No users in this commons, skipping");
-                continue;
-            }
-
-            int carryingCapacity = commonsPlus.getEffectiveCapacity();
-            Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
-
-            Integer totalCows = commonsRepository.getNumCows(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumCows(" + commons.getId() + ")"));
-
-            var isAboveCapacity = totalCows > carryingCapacity;
-            var cowHealthUpdateStrategy = isAboveCapacity ? commons.getAboveCapacityHealthUpdateStrategy() : commons.getBelowCapacityHealthUpdateStrategy();
-
-            for (UserCommons userCommons : allUserCommons) {
-                User user = userCommons.getUser();
-
-                var newCowHealth = calculateNewCowHealthUsingStrategy(cowHealthUpdateStrategy, commonsPlusBuilderService.toCommonsPlus(commons), userCommons, totalCows);
-                ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
-
-                double oldHealth = userCommons.getCowHealth();
-                userCommons.setCowHealth(newCowHealth);
-                calculateCowDeaths(userCommons, ctx);
-
-                ctx.log(" old cow health: " + oldHealth + ", new cow health: " + userCommons.getCowHealth());
-                userCommonsRepository.save(userCommons);
-            }
+            
+            runUpdateJobInCommons(commons, commonsPlus, commonsPlusBuilderService, commonsRepository, userCommonsRepository, ctx);
+            
         }
 
         ctx.log("Cow health has been updated!");
@@ -91,5 +64,37 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
             ctx.log(" " + userCommons.getCowDeaths() + " cows for this user died." );
         }
+    }
+
+    public static void runUpdateJobInCommons(Commons commons, CommonsPlus commonsPlus, CommonsPlusBuilderService commonsPlusBuilderService, CommonsRepository commonsRepository, UserCommonsRepository userCommonsRepository, JobContext ctx){
+        ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", effectiveCapacity: " + commonsPlus.getEffectiveCapacity());
+            int numUsers = commonsRepository.getNumUsers(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumUsers(" + commons.getId() + ")"));
+
+            if (numUsers==0) {
+                ctx.log("No users in this commons, skipping");
+                return;
+            }
+
+            int carryingCapacity = commonsPlus.getEffectiveCapacity();
+            Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
+
+            Integer totalCows = commonsRepository.getNumCows(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumCows(" + commons.getId() + ")"));
+
+            var isAboveCapacity = totalCows > carryingCapacity;
+            var cowHealthUpdateStrategy = isAboveCapacity ? commons.getAboveCapacityHealthUpdateStrategy() : commons.getBelowCapacityHealthUpdateStrategy();
+
+            for (UserCommons userCommons : allUserCommons) {
+                User user = userCommons.getUser();
+
+                var newCowHealth = calculateNewCowHealthUsingStrategy(cowHealthUpdateStrategy, commonsPlusBuilderService.toCommonsPlus(commons), userCommons, totalCows);
+                ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
+
+                double oldHealth = userCommons.getCowHealth();
+                userCommons.setCowHealth(newCowHealth);
+                calculateCowDeaths(userCommons, ctx);
+
+                ctx.log(" old cow health: " + oldHealth + ", new cow health: " + userCommons.getCowHealth());
+                userCommonsRepository.save(userCommons);
+            }
     }
 }
