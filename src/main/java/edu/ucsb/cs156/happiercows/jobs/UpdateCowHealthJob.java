@@ -13,10 +13,8 @@ import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
-@Slf4j
 public class UpdateCowHealthJob implements JobContextConsumer {
 
     @Getter
@@ -35,10 +33,6 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
         Iterable<Commons> allCommons = commonsRepository.findAll();
         Iterable<CommonsPlus> allCommonsPlus = commonsPlusBuilderService.convertToCommonsPlus(allCommons);
-        log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        log.info("allCommons={}",allCommons);
-        log.info("allCommonsPlus={}",allCommonsPlus);
-        log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
         for (CommonsPlus commonsPlus : allCommonsPlus) {
 
