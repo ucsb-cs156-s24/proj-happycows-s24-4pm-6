@@ -1188,5 +1188,53 @@ public class CommonsControllerTests extends ControllerTestCase {
         
     }
 
+
+    @WithMockUser(roles = {"USER"})
+    @Test void test_capacity_with_lower_per_user() throws Exception{
+        
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+        Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .capacityPerUser(5)
+        .carryingCapacity(10)
+        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+        .build();
+
+        CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalUsers(1).totalCows(5).build();
+
+        assertEquals(10, commonsPlus.getEffectiveCapacity());
+    }
+
+    @WithMockUser(roles = {"USER"})
+    @Test void test_capacity_with_higher_per_user() throws Exception{
+        
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+        Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .capacityPerUser(50)
+        .carryingCapacity(10)
+        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+        .build();
+
+        CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalUsers(2).totalCows(5).build();
+
+        assertEquals(100, commonsPlus.getEffectiveCapacity());
+    }
+
+
 }
 
