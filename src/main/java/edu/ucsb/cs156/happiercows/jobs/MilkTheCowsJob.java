@@ -27,7 +27,7 @@ public class MilkTheCowsJob implements JobContextConsumer {
     @Getter
     private ProfitRepository profitRepository;
 
-    public String formatDollars(double amount) {
+    public static String formatDollars(double amount) {
         return  String.format("$%.2f", amount);
     }
 
@@ -45,7 +45,7 @@ public class MilkTheCowsJob implements JobContextConsumer {
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
 
             for (UserCommons userCommons : allUserCommons) {
-                milkCows(ctx, commons, userCommons);
+                milkCows(ctx, commons, userCommons, profitRepository, userCommonsRepository);
             }
         }
 
@@ -60,7 +60,7 @@ public class MilkTheCowsJob implements JobContextConsumer {
      *
      */
 
-    public void milkCows(JobContext ctx, Commons commons, UserCommons userCommons) {
+    public static void milkCows(JobContext ctx, Commons commons, UserCommons userCommons, ProfitRepository profitRepository, UserCommonsRepository userCommonsRepository) {
         User user = userCommons.getUser();
 
         ctx.log("User: " + user.getFullName()

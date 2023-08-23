@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
 @RestClientTest(UpdateCowHealthJobFactoryInd.class)
 @AutoConfigureDataJpa
@@ -26,6 +27,9 @@ public class UpdateCowHealthJobFactoryIndTests {
     @MockBean
     UserRepository userRepository;
 
+    @MockBean
+    CommonsPlusBuilderService commonsPlusBuilderService;
+
     @Autowired
     UpdateCowHealthJobFactoryInd updateCowHealthJobFactoryInd;
 
@@ -39,6 +43,7 @@ public class UpdateCowHealthJobFactoryIndTests {
         assertEquals(commonsRepository,updateCowHealthJobInd.getCommonsRepository());
         assertEquals(userCommonsRepository,updateCowHealthJobInd.getUserCommonsRepository());
         assertEquals(userRepository,updateCowHealthJobInd.getUserRepository());
+        assertEquals(commonsPlusBuilderService,updateCowHealthJobInd.getCommonsPlusBuilderService());
 
     }
 }

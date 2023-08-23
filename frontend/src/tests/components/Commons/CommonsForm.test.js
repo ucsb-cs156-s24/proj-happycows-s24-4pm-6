@@ -47,6 +47,7 @@ describe("CommonsForm tests", () => {
       /Milk Price/,
       /Starting Date/,
       /Degradation Rate/,
+      /Capacity Per User/,
       /Carrying Capacity/,
       /Show Leaderboard\?/,
       /When below capacity/,
@@ -92,6 +93,7 @@ describe("CommonsForm tests", () => {
     expect(screen.getByText(/milk price is required/i)).toBeInTheDocument();
     expect(screen.getByText(/starting date is required/i)).toBeInTheDocument();
     expect(screen.getByText(/degradation rate is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/Capacity Per User is required/i)).toBeInTheDocument();
     expect(screen.getByText(/Carrying capacity is required/i)).toBeInTheDocument();
 
     // check that each of the fields that has 
@@ -106,6 +108,7 @@ describe("CommonsForm tests", () => {
       "CommonsForm-milkPrice",
       "CommonsForm-startingDate",
       "CommonsForm-degradationRate",
+      "CommonsForm-capacityPerUser",
       "CommonsForm-carryingCapacity",
     ].forEach(
       (testid) => {

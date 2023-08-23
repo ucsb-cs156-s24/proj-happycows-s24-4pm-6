@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,7 +78,6 @@ public class MilkTheCowsJobIndTests {
         assertEquals(expected, jobStarted.getLog());
     }
 
-
     @Test
     void test_log_output_with_commons_and_user_commons() throws Exception {
 
@@ -94,16 +94,18 @@ public class MilkTheCowsJobIndTests {
                 .cowHealth(10)
                 .build();
 
-        when(commonsRepository.findById(1L)).thenReturn(Optional.of(testCommons));
+        when(commonsRepository.findAll()).thenReturn(Arrays.asList(testCommons));
         when(userCommonsRepository.findByCommonsId(testCommons.getId()))
                 .thenReturn(Arrays.asList(origUserCommons));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(commonsRepository.findById(eq(1L))).thenReturn(Optional.of(testCommons));
 
         // Act
-        MilkTheCowsJobInd MilkTheCowsJobInd = new MilkTheCowsJobInd(commonsRepository, userCommonsRepository,
+        MilkTheCowsJobInd milkTheCowsJobInd = new MilkTheCowsJobInd(commonsRepository, userCommonsRepository,
                 userRepository, profitRepository, 1L);
-        MilkTheCowsJobInd.accept(ctx);
+        milkTheCowsJobInd.accept(ctx);
+        
 
         // Assert
 
@@ -117,52 +119,4 @@ public class MilkTheCowsJobIndTests {
         assertEquals(expected, jobStarted.getLog());
     }
 
-    @Test
-    void test_milk_cows() throws Exception {
-
-        // Arrange
-        Job jobStarted = Job.builder().build();
-        JobContext ctx = new JobContext(null, jobStarted);
-
-        UserCommons origUserCommons = UserCommons
-                .builder()
-                .user(user)
-                .commons(testCommons)
-                .totalWealth(300)
-                .numOfCows(1)
-                .cowHealth(10)
-                .build();
-
-        UserCommons updatedUserCommons = UserCommons
-                .builder()
-                .user(user)
-                .commons(testCommons)
-                .totalWealth(300.20)
-                .numOfCows(1)
-                .cowHealth(10)
-                .build();
-
-        UserCommons userCommonsTemp[] = {origUserCommons};
-        when(commonsRepository.findById(1L)).thenReturn(Optional.of(testCommons));
-        when(userCommonsRepository.findByCommonsId(testCommons.getId()))
-                .thenReturn(Arrays.asList(userCommonsTemp));
-        when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userCommonsRepository.save(updatedUserCommons)).thenReturn(updatedUserCommons);
-
-
-        // Act
-        MilkTheCowsJobInd milkTheCowsJobInd = new MilkTheCowsJobInd(commonsRepository, userCommonsRepository,
-                userRepository, profitRepository, 1L);
-        milkTheCowsJobInd.milkCows(ctx, testCommons, origUserCommons);
-
-        // Assert
-
-        String expected = """
-                User: Chris Gaucho, numCows: 1, cowHealth: 10.0, totalWealth: $300.00
-                Profit for user: Chris Gaucho is: $0.20, newWealth: $300.20""";
-
-        verify(userCommonsRepository).save(updatedUserCommons);
-        assertEquals(expected, jobStarted.getLog());
-    }
 }
