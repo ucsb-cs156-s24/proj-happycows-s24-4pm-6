@@ -23,6 +23,8 @@ public class CreateCommonsParams {
     @Builder.Default
     private Boolean showLeaderboard = false;
     @NumberFormat
+    private int capacityPerUser;
+    @NumberFormat
     private int carryingCapacity;
     @NumberFormat
     private double degradationRate;

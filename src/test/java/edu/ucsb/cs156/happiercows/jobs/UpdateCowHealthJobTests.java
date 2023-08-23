@@ -53,6 +53,7 @@ public class UpdateCowHealthJobTests {
                         .milkPrice(2)
                         .startingBalance(300)
                         .startingDate(LocalDateTime.now())
+                        .capacityPerUser(0)
                         .carryingCapacity(100)
                         .degradationRate(1)
                         .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
@@ -107,7 +108,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
                                  old cow health: 10.0, new cow health: 9.0
                                 Cow health has been updated!""";
@@ -125,7 +126,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
                                  old cow health: 10.0, new cow health: 11.0
                                 Cow health has been updated!""";
@@ -144,7 +145,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
                                  old cow health: 10.0, new cow health: 11.0
                                 Cow health has been updated!""";
@@ -199,7 +200,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
                                  old cow health: 10.0, new cow health: 11.0
                                 User: Chris Gaucho, numCows: 6, cowHealth: 20.0
@@ -279,7 +280,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 5, cowHealth: -1.0
                                  5 cows for this user died.
                                  old cow health: -1.0, new cow health: 100.0
@@ -304,7 +305,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 No users in this commons, skipping
                                 Cow health has been updated!""";
 

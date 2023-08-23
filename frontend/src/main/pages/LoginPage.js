@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
-import Background from './../../assets/HomePageBackground.jpg';
+import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
 const LoginCard = () => {
   return (
@@ -11,7 +11,7 @@ const LoginCard = () => {
       { width: '18rem' }
     }>
       <Card.Body>
-        <Card.Title data-testid="loginPage-cardTitle">Welcome to Happier Cows!</Card.Title>
+        <Card.Title data-testid="loginPage-cardTitle">Welcome to Happy Cows!</Card.Title>
         <Card.Text>
           In order to start playing, please login.
         </Card.Text>
@@ -22,6 +22,9 @@ const LoginCard = () => {
 }
 
 export default function LoginPage() {
+
+  const time = new Date().getHours();
+  const Background = getBackgroundImage(time);
   
   return (
     <div  style={
