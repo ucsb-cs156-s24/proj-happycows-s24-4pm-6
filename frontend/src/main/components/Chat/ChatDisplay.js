@@ -13,7 +13,7 @@ const ChatDisplay = ({ commonsId }) => {
     const {
         data: messagesPage
         } = useBackend(
-            [`/api/chat/get?page=0&size=${initialMessagePageSize}&commonsId=${commonsId}`],
+            [`/api/chat/get`],
             {
                 method: "GET",
                 url: `/api/chat/get`,
@@ -23,14 +23,14 @@ const ChatDisplay = ({ commonsId }) => {
                     size: initialMessagePageSize
                 }
             },
-            {content: []},
+            { content: [] },
             { refetchInterval: refreshRate }
         );
   
       const {
         data: userCommonsList
         } = useBackend(
-            [`/api/usercommons/all?commonsId=${commonsId}`],
+            [`/api/usercommons/commons/all`],
             {
                 method: "GET",
                 url: "/api/usercommons/commons/all",

@@ -3,8 +3,18 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "react-query";
 import ChatPanel from 'main/components/Chat/ChatPanel';
 
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
+
 describe('ChatPanel', () => {
+    const axiosMock = new AxiosMockAdapter(axios);
+
     const commonsId = 1;
+  
+    beforeEach(() => {
+      axiosMock.reset();
+      axiosMock.resetHistory();
+    });
 
     const queryClient = new QueryClient();
 
