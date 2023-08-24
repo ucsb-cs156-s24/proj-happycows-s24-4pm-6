@@ -20,12 +20,13 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class MilkTheCowsJobTests {
+public class MilkTheCowsJobIndTests {
     @Mock
     CommonsRepository commonsRepository;
 
@@ -56,27 +57,24 @@ public class MilkTheCowsJobTests {
             .degradationRate(0.01)
             .build();
 
-
     @Test
-    void test_log_output_no_commons() throws Exception {
+    void error_msg_when_no_commons_found() throws Exception {
 
         // Arrange
-
         Job jobStarted = Job.builder().build();
         JobContext ctx = new JobContext(null, jobStarted);
 
-        // Act
-        MilkTheCowsJob milkTheCowsJob = new MilkTheCowsJob(commonsRepository, userCommonsRepository,
-                userRepository, profitRepository);
+        when(commonsRepository.findById(1L)).thenReturn(Optional.empty());
 
-        milkTheCowsJob.accept(ctx);
+        // Act
+        MilkTheCowsJobInd MilkTheCowsJobInd = new MilkTheCowsJobInd(commonsRepository, userCommonsRepository,
+                userRepository, profitRepository, 1L);
+        MilkTheCowsJobInd.accept(ctx);
 
         // Assert
-
         String expected = """
                 Starting to milk the cows
-                Cows have been milked!""";
-
+                No commons found for id 1""";
         assertEquals(expected, jobStarted.getLog());
     }
 
@@ -101,11 +99,13 @@ public class MilkTheCowsJobTests {
                 .thenReturn(Arrays.asList(origUserCommons));
         when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(commonsRepository.findById(eq(1L))).thenReturn(Optional.of(testCommons));
 
         // Act
-        MilkTheCowsJob MilkTheCowsJob = new MilkTheCowsJob(commonsRepository, userCommonsRepository,
-                userRepository, profitRepository);
-        MilkTheCowsJob.accept(ctx);
+        MilkTheCowsJobInd milkTheCowsJobInd = new MilkTheCowsJobInd(commonsRepository, userCommonsRepository,
+                userRepository, profitRepository, 1L);
+        milkTheCowsJobInd.accept(ctx);
+        
 
         // Assert
 
@@ -119,51 +119,4 @@ public class MilkTheCowsJobTests {
         assertEquals(expected, jobStarted.getLog());
     }
 
-    @Test
-    void test_milk_cows() throws Exception {
-
-        // Arrange
-        Job jobStarted = Job.builder().build();
-        JobContext ctx = new JobContext(null, jobStarted);
-
-        UserCommons origUserCommons = UserCommons
-                .builder()
-                .user(user)
-                .commons(testCommons)
-                .totalWealth(300)
-                .numOfCows(1)
-                .cowHealth(10)
-                .build();
-
-        UserCommons updatedUserCommons = UserCommons
-                .builder()
-                .user(user)
-                .commons(testCommons)
-                .totalWealth(300.20)
-                .numOfCows(1)
-                .cowHealth(10)
-                .build();
-
-        Commons commonsTemp[] = {testCommons};
-        UserCommons userCommonsTemp[] = {origUserCommons};
-        when(commonsRepository.findAll()).thenReturn(Arrays.asList(commonsTemp));
-        when(userCommonsRepository.findByCommonsId(testCommons.getId()))
-                .thenReturn(Arrays.asList(userCommonsTemp));
-        when(commonsRepository.getNumCows(testCommons.getId())).thenReturn(Optional.of(Integer.valueOf(1)));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userCommonsRepository.save(updatedUserCommons)).thenReturn(updatedUserCommons);
-
-
-        // Act
-        MilkTheCowsJob.milkCows(ctx, testCommons, origUserCommons, profitRepository, userCommonsRepository);
-
-        // Assert
-
-        String expected = """
-                User: Chris Gaucho, numCows: 1, cowHealth: 10.0, totalWealth: $300.00
-                Profit for user: Chris Gaucho is: $0.20, newWealth: $300.20""";
-
-        verify(userCommonsRepository).save(updatedUserCommons);
-        assertEquals(expected, jobStarted.getLog());
-    }
 }

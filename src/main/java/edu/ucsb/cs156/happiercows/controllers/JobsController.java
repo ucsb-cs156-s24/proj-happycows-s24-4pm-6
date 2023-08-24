@@ -24,7 +24,9 @@ import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommons;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommonsFactory;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactoryInd;
 import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactoryInd;
 import edu.ucsb.cs156.happiercows.jobs.TestJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.RecordCommonStatsJob;
@@ -58,6 +60,9 @@ public class JobsController extends ApiController {
     MilkTheCowsJobFactory milkTheCowsJobFactory;
 
     @Autowired
+    MilkTheCowsJobFactoryInd milkTheCowsJobFactoryInd;
+
+    @Autowired
     SetCowHealthJobFactory setCowHealthJobFactory;
 
     @Autowired
@@ -65,6 +70,9 @@ public class JobsController extends ApiController {
 
     @Autowired
     InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
+
+    @Autowired
+    UpdateCowHealthJobFactoryInd updateCowHealthJobFactoryInd;
 
     @Autowired
     RecordCommonStatsJobFactory recordCommonStatsJobFactory;
@@ -117,6 +125,16 @@ public class JobsController extends ApiController {
         return jobService.runAsJob(milkTheCowsJob);
     }
 
+    @Operation(summary = "Launch Job to Milk the Cows for a single commons")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/milkthecowjobsinglecommons")
+    public Job launchTestJob(
+         @Parameter(name="commonsId") @RequestParam Long commonsId
+    ) {
+        JobContextConsumer milkTheCowsJobInd = milkTheCowsJobFactoryInd.create(commonsId);
+        return jobService.runAsJob(milkTheCowsJobInd);
+    }
+
     @Operation(summary = "Launch Job to Update Cow Health")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/launch/updatecowhealth")
@@ -124,6 +142,16 @@ public class JobsController extends ApiController {
     ) { 
         JobContextConsumer updateCowHealthJob = updateCowHealthJobFactory.create();
         return jobService.runAsJob(updateCowHealthJob);
+    }
+
+    @Operation(summary = "Launch Job to Update Cow Health for a single commons")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/updatecowhealthsinglecommons")
+    public Job updateCowHealth(
+         @Parameter(name="commonsId") @RequestParam Long commonsId
+    ) { 
+        JobContextConsumer updateCowHealthJobInd = updateCowHealthJobFactoryInd.create(commonsId);
+        return jobService.runAsJob(updateCowHealthJobInd);
     }
 
     @Operation(summary = "Launch Job to Set Cow Health")
