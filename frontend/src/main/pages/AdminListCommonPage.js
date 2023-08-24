@@ -3,6 +3,7 @@ import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import CommonsTable from 'main/components/Commons/CommonsTable';
 import { useBackend } from 'main/utils/useBackend';
 import { useCurrentUser } from "main/utils/currentUser";
+import { Button, Row, Col } from "react-bootstrap";
 
 export default function AdminListCommonsPage()
 {
@@ -20,7 +21,16 @@ export default function AdminListCommonsPage()
   return (
     <BasicLayout>
       <div className="pt-2">
-        <h1>List Commons</h1>
+        <Row  className="pt-5">
+          <Col>
+            <h2>Commons</h2>
+          </Col>
+          <Col>
+            <Button href='/api/commonstats/downloadAll'>
+              Download All Stats
+            </Button>
+          </Col>
+        </Row>
         <CommonsTable commons={commons} currentUser={currentUser} />
       </div>
     </BasicLayout>

@@ -21,11 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Tag(name = "Commons")
@@ -40,6 +40,11 @@ public class CommonsController extends ApiController {
 
     @Autowired
     ObjectMapper mapper;
+
+    @Autowired
+    CommonsPlusBuilderService commonsPlusBuilderService;
+
+
 
     @Operation(summary = "Get a list of all commons")
     @GetMapping("/all")
@@ -58,14 +63,7 @@ public class CommonsController extends ApiController {
 
         // convert Iterable to List for the purposes of using a Java Stream & lambda
         // below
-        List<Commons> commonsList = new ArrayList<Commons>();
-        commonsListIter.forEach(commonsList::add);
-
-        List<CommonsPlus> commonsPlusList1 = commonsList.stream()
-                .map(c -> toCommonsPlus(c))
-                .collect(Collectors.toList());
-
-        ArrayList<CommonsPlus> commonsPlusList = new ArrayList<CommonsPlus>(commonsPlusList1);
+        Iterable<CommonsPlus> commonsPlusList = commonsPlusBuilderService.convertToCommonsPlus(commonsListIter);
 
         String body = mapper.writeValueAsString(commonsPlusList);
         return ResponseEntity.ok().body(body);
@@ -76,7 +74,7 @@ public class CommonsController extends ApiController {
     @GetMapping("/plus")
     public CommonsPlus getCommonsPlusById(
             @Parameter(name="id") @RequestParam long id) throws JsonProcessingException {
-                CommonsPlus commonsPlus = toCommonsPlus(commonsRepository.findById(id)
+                CommonsPlus commonsPlus = commonsPlusBuilderService.toCommonsPlus(commonsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Commons.class, id)));
 
         return commonsPlus;
@@ -109,6 +107,7 @@ public class CommonsController extends ApiController {
         updated.setStartingDate(params.getStartingDate());
         updated.setShowLeaderboard(params.getShowLeaderboard());
         updated.setDegradationRate(params.getDegradationRate());
+        updated.setCapacityPerUser(params.getCapacityPerUser());
         updated.setCarryingCapacity(params.getCarryingCapacity());
         if (params.getAboveCapacityHealthUpdateStrategy() != null) {
             updated.setAboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(params.getAboveCapacityHealthUpdateStrategy()));
@@ -121,6 +120,26 @@ public class CommonsController extends ApiController {
             throw new IllegalArgumentException("Degradation Rate cannot be negative");
         }
 
+        // Reference: frontend/src/main/components/Commons/CommonsForm.js
+        if (params.getName().equals("")) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        if (params.getCowPrice() < 0.01) {
+            throw new IllegalArgumentException("Cow Price cannot be less than 0.01");
+        }
+
+        if (params.getMilkPrice() < 0.01) {
+            throw new IllegalArgumentException("Milk Price cannot be less than 0.01");
+        }
+
+        if (params.getStartingBalance() < 0) {
+            throw new IllegalArgumentException("Starting Balance cannot be negative");
+        }
+
+        if (params.getCarryingCapacity() < 1) {
+            throw new IllegalArgumentException("Carrying Capacity cannot be less than 1");
+        }
         commonsRepository.save(updated);
 
         return ResponseEntity.status(status).build();
@@ -153,6 +172,7 @@ public class CommonsController extends ApiController {
                 .startingDate(params.getStartingDate())
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
+                .capacityPerUser(params.getCapacityPerUser())
                 .carryingCapacity(params.getCarryingCapacity());
 
         // ok to set null values for these, so old backend still works
@@ -165,10 +185,30 @@ public class CommonsController extends ApiController {
 
         Commons commons = builder.build();
 
+        // Reference: frontend/src/main/components/Commons/CommonsForm.js
+        if (params.getName().equals("")) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
+
+        if (params.getCowPrice() < 0.01) {
+            throw new IllegalArgumentException("Cow Price cannot be less than 0.01");
+        }
+
+        if (params.getMilkPrice() < 0.01) {
+            throw new IllegalArgumentException("Milk Price cannot be less than 0.01");
+        }
+
+        if (params.getStartingBalance() < 0) {
+            throw new IllegalArgumentException("Starting Balance cannot be negative");
+        }
 
         // throw exception for degradation rate
         if (params.getDegradationRate() < 0) {
             throw new IllegalArgumentException("Degradation Rate cannot be negative");
+        }
+
+        if (params.getCarryingCapacity() < 1) {
+            throw new IllegalArgumentException("Carrying Capacity cannot be less than 1");
         }
 
         Commons saved = commonsRepository.save(commons);
@@ -259,14 +299,5 @@ public class CommonsController extends ApiController {
         return genericMessage(responseString);
     }
 
-    public CommonsPlus toCommonsPlus(Commons c) {
-        Optional<Integer> numCows = commonsRepository.getNumCows(c.getId());
-        Optional<Integer> numUsers = commonsRepository.getNumUsers(c.getId());
-
-        return CommonsPlus.builder()
-                .commons(c)
-                .totalCows(numCows.orElse(0))
-                .totalUsers(numUsers.orElse(0))
-                .build();
-    }
+    
 }

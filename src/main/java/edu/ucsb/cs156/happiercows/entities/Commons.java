@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +29,8 @@ public class Commons {
     private double startingBalance;
     private LocalDateTime startingDate;
     private boolean showLeaderboard;
-
+    
+    private int capacityPerUser;
     private int carryingCapacity;
     private double degradationRate;
 
@@ -43,4 +46,6 @@ public class Commons {
     @OneToMany(mappedBy = "commons", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<UserCommons> joinedUsers;
+
+    
 }

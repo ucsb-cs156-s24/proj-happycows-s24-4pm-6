@@ -13,6 +13,9 @@ import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
+import lombok.With;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
@@ -31,6 +34,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -49,6 +53,9 @@ public class CommonsControllerTests extends ControllerTestCase {
     @MockBean
     CommonsRepository commonsRepository;
 
+    @MockBean
+    CommonsPlusBuilderService commonsPlusBuilderService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -65,6 +72,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
                 .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
@@ -78,6 +86,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant.name())
                 .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear.name())
@@ -116,6 +125,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -127,6 +137,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -166,6 +177,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(0)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -177,6 +189,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(0)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -212,6 +225,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingBalance(1020.10)
                 .startingDate(someTime)
                 .degradationRate(-8.49)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -222,6 +236,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingBalance(1020.10)
                 .startingDate(someTime)
                 .degradationRate(-8.49)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -272,6 +287,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(true)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant.name())
                 .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear.name())
@@ -285,6 +301,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(true)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
                 .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
@@ -310,6 +327,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         commons.setDegradationRate(parameters.getDegradationRate());
         parameters.setShowLeaderboard(false);
         commons.setShowLeaderboard(parameters.getShowLeaderboard());
+        parameters.setCapacityPerUser(12);
+        commons.setCapacityPerUser(parameters.getCapacityPerUser());
         parameters.setCarryingCapacity(123);
         commons.setCarryingCapacity(parameters.getCarryingCapacity());
         parameters.setAboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear.name());
@@ -348,6 +367,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(true)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -359,6 +379,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(true)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
                 .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
@@ -400,6 +421,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(8.49)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -411,6 +433,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(8.49)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -432,6 +455,8 @@ public class CommonsControllerTests extends ControllerTestCase {
         commons.setMilkPrice(parameters.getMilkPrice());
         parameters.setDegradationRate(0);
         commons.setDegradationRate(parameters.getDegradationRate());
+        parameters.setCapacityPerUser(10);
+        commons.setCapacityPerUser(parameters.getCapacityPerUser());
         parameters.setCarryingCapacity(123);
         commons.setCarryingCapacity(parameters.getCarryingCapacity());
 
@@ -466,6 +491,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(8.49)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -477,6 +503,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .startingDate(someTime)
                 .degradationRate(8.49)
                 .showLeaderboard(false)
+                .capacityPerUser(10)
                 .carryingCapacity(100)
                 .build();
 
@@ -539,19 +566,20 @@ public class CommonsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void getCommonsPlusByIdTest_valid() throws Exception {
-        Commons Commons1 = Commons.builder()
+        Commons commons1 = Commons.builder()
                 .name("TestCommons2")
                 .id(18L)
                 .build();
         CommonsPlus commonsPlus = CommonsPlus.builder()
-                .commons(Commons1)
+                .commons(commons1)
                 .totalCows(5)
                 .totalUsers(2)
                 .build();
                 
-        when(commonsRepository.findById(eq(18L))).thenReturn(Optional.of(Commons1));
+        when(commonsRepository.findById(eq(18L))).thenReturn(Optional.of(commons1));
         when(commonsRepository.getNumCows(18L)).thenReturn(Optional.of(5));
         when(commonsRepository.getNumUsers(18L)).thenReturn(Optional.of(2));
+        when(commonsPlusBuilderService.toCommonsPlus(eq(commons1))).thenReturn(commonsPlus);
 
         MvcResult response = mockMvc.perform(get("/api/commons/plus?id=18"))
                 .andExpect(status().isOk()).andReturn();
@@ -628,7 +656,9 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .cowHealth(100)
                 .build();
 
+        
 
+        
         when(userCommonsRepository.findByCommonsIdAndUserId(anyLong(), anyLong())).thenReturn(Optional.empty());
         when(userCommonsRepository.save(eq(uc))).thenReturn(uc);
         when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
@@ -639,6 +669,7 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
         verify(userCommonsRepository, times(1)).save(uc);
+
         
         String responseString = response.getResponse().getContentAsString();
         String cAsJson = mapper.writeValueAsString(c);
@@ -775,6 +806,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .numOfCows(1)
                 .build();
 
+
         String requestBody = mapper.writeValueAsString(uc);
 
         when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(uc));
@@ -825,7 +857,7 @@ public class CommonsControllerTests extends ControllerTestCase {
         when(commonsRepository.findAll()).thenReturn(expectedCommons);
         when(commonsRepository.getNumCows(1L)).thenReturn(Optional.of(50));
         when(commonsRepository.getNumUsers(1L)).thenReturn(Optional.of(20));
-
+        when(commonsPlusBuilderService.convertToCommonsPlus(eq(expectedCommons))).thenReturn(expectedCommonsPlus);
         MvcResult response = mockMvc.perform(get("/api/commons/allplus").contentType("application/json"))
                 .andExpect(status().isOk()).andReturn();
 
@@ -838,4 +870,371 @@ public class CommonsControllerTests extends ControllerTestCase {
         assertEquals(actualCommonsPlus, expectedCommonsPlus);
     }
 
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void createCommonsTest_withIllegalParameters() throws Exception {
+        // name is empty
+        CreateCommonsParams parameters = CreateCommonsParams.builder()
+                .name("")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        String requestBody = objectMapper.writeValueAsString(parameters);
+
+        MvcResult response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+        
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Cow price is < 0.01
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(0.009)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+        
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Milk price is < 0.01
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(0.009)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+        
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Starting balance is < 0
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(-1.0)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+        
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+        
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Carrying capacity is < 1
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(0)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+    }
+    
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void createCommonsTest_withBoundaryParameters() throws Exception {
+        // We're using boundary values, so we expect these to work
+        CreateCommonsParams parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(0.01)
+                .milkPrice(0.01)
+                .startingBalance(0.0)
+                .degradationRate(0.0)
+                .showLeaderboard(false)
+                .carryingCapacity(1)
+                .build();
+
+        String requestBody = objectMapper.writeValueAsString(parameters);
+
+        MvcResult response = mockMvc
+                .perform(post("/api/commons/new").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isOk()).andReturn();
+
+        verify(commonsRepository, times(1)).save(any(Commons.class));
+    }
+
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void UpdateCommonsTest_withIllegalParameters() throws Exception {
+        // we first create a commons to update
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+        Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .carryingCapacity(100)
+        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+        .build();
+
+        when(commonsRepository.findById(0L))
+                .thenReturn(Optional.of(commons));
+
+        // name is empty
+        CreateCommonsParams parameters = CreateCommonsParams.builder()
+                .name("")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        String requestBody = objectMapper.writeValueAsString(parameters);
+
+        MvcResult response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+        
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Cow price is < 0.01
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(0.009)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Milk price is < 0.01
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(0.009)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Starting balance is < 0
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(-1.0)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(100)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+        // Carrying capacity is < 1
+        parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(500.99)
+                .milkPrice(8.99)
+                .startingBalance(1020.10)
+                .degradationRate(50.0)
+                .showLeaderboard(false)
+                .carryingCapacity(0)
+                .build();
+
+        requestBody = objectMapper.writeValueAsString(parameters);
+
+        response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+    }
+
+
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void UpdateCommonsTest_withBoundaryParameters() throws Exception {
+        // we first create a commons to update
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+        Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .carryingCapacity(100)
+        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+        .build();
+
+        when(commonsRepository.findById(0L))
+                .thenReturn(Optional.of(commons));
+
+        // We're using boundary values, so we expect these to work
+        CreateCommonsParams parameters = CreateCommonsParams.builder()
+                .name("Jackson's Commons")
+                .cowPrice(0.01)
+                .milkPrice(0.01)
+                .startingBalance(0.0)
+                .degradationRate(0.0)
+                .showLeaderboard(false)
+                .carryingCapacity(1)
+                .build();
+
+        String requestBody = objectMapper.writeValueAsString(parameters);
+
+        MvcResult response = mockMvc
+                .perform(put("/api/commons/update?id=0").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(requestBody))
+                .andExpect(status().isNoContent()).andReturn();
+
+        verify(commonsRepository, times(1)).save(any(Commons.class));
+        
+    }
+
+
+    @WithMockUser(roles = {"USER"})
+    @Test void test_capacity_with_lower_per_user() throws Exception{
+        
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+        Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .capacityPerUser(5)
+        .carryingCapacity(10)
+        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+        .build();
+
+        CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalUsers(1).totalCows(5).build();
+
+        assertEquals(10, commonsPlus.getEffectiveCapacity());
+    }
+
+    @WithMockUser(roles = {"USER"})
+    @Test void test_capacity_with_higher_per_user() throws Exception{
+        
+        LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+        Commons commons = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .capacityPerUser(50)
+        .carryingCapacity(10)
+        .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Constant)
+        .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear)
+        .build();
+
+        CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalUsers(2).totalCows(5).build();
+
+        assertEquals(100, commonsPlus.getEffectiveCapacity());
+    }
+
+
 }
+

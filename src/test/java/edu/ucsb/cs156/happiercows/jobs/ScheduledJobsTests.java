@@ -31,6 +31,9 @@ public class ScheduledJobsTests {
     @MockBean
     MilkTheCowsJobFactory milkTheCowsJobFactory;
 
+    @MockBean
+    RecordCommonStatsJobFactory recordCommonStatsJobFactory;
+
     @Autowired
     private ScheduledJobs scheduledJobs;
 
@@ -78,6 +81,28 @@ public class ScheduledJobsTests {
 
         verify(jobService, times(1)).runAsJob(mockJob);
         verify(milkTheCowsJobFactory, times(1)).create();
+
+    }
+
+    @Test
+    void test_runRecordCommonStatsJobBasedOnCron() throws Exception {
+
+        // Arrange
+
+        Job job = Job.builder().build();
+        MockJobContextConsumer mockJob = new MockJobContextConsumer();
+
+       when(recordCommonStatsJobFactory.create()).thenReturn(mockJob);
+       when(jobService.runAsJob(any())).thenReturn(job);
+
+        // Act
+
+        scheduledJobs.runRecordCommonStatsJobBasedOnCron();
+
+        // Assert
+
+        verify(jobService, times(1)).runAsJob(mockJob);
+        verify(recordCommonStatsJobFactory, times(1)).create();
 
     }
 

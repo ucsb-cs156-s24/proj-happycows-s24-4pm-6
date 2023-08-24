@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.happiercows.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -42,11 +44,16 @@ import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommonsFactory;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactoryInd;
 import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactoryInd;
+import edu.ucsb.cs156.happiercows.jobs.RecordCommonStatsJob;
+import edu.ucsb.cs156.happiercows.jobs.RecordCommonStatsJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -89,6 +96,18 @@ public class JobsControllerTests extends ControllerTestCase {
 
         @MockBean
         InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
+
+        @MockBean
+        MilkTheCowsJobFactoryInd milkTheCowsJobFactoryInd;
+
+        @MockBean
+        UpdateCowHealthJobFactoryInd updateCowHealthJobFactoryInd;
+
+        @MockBean
+        RecordCommonStatsJobFactory recordCommonStatsJobFactory;
+
+        @MockBean
+        CommonsPlusBuilderService commonsPlusBuilderService;
 
         @WithMockUser(roles = { "ADMIN" })
         @Test
@@ -255,6 +274,21 @@ public class JobsControllerTests extends ControllerTestCase {
 
         @WithMockUser(roles = { "ADMIN" })
         @Test
+        public void admin_can_launch_milk_the_cows_individual_job() throws Exception {
+
+                // act
+                MvcResult response = mockMvc.perform(post("/api/jobs/launch/milkthecowjobsinglecommons?commonsId=1").with(csrf())).andExpect(status().isOk()).andReturn();
+
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+                assertNotNull(jobReturned.getStatus());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
         public void admin_can_launch_instructor_report_job() throws Exception {
                 // act
                 MvcResult response = mockMvc.perform(post("/api/jobs/launch/instructorreport").with(csrf()))
@@ -273,6 +307,21 @@ public class JobsControllerTests extends ControllerTestCase {
         public void admin_can_launch_update_cow_health_job() throws Exception {
                 // act
                 MvcResult response = mockMvc.perform(post("/api/jobs/launch/updatecowhealth").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+                assertNotNull(jobReturned.getStatus());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_update_cow_health_job_individual() throws Exception {
+                // act
+                MvcResult response = mockMvc.perform(post("/api/jobs/launch/updatecowhealthsinglecommons?commonsId=1").with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
@@ -306,6 +355,74 @@ public class JobsControllerTests extends ControllerTestCase {
                 MvcResult response = mockMvc
                                 .perform(post("/api/jobs/launch/instructorreportsinglecommons?commonsId=1")
                                                 .with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                // assert
+                String responseString = response.getResponse().getContentAsString();
+                log.info("responseString={}", responseString);
+                Job jobReturned = objectMapper.readValue(responseString, Job.class);
+
+                assertNotNull(jobReturned.getStatus());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_launch_set_cow_health_job_with_invalid_parameter() throws Exception {
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=-1").with(csrf()))
+                                .andExpect(status().isBadRequest()).andReturn();
+                assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+                response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=101").with(csrf()))
+                                .andExpect(status().isBadRequest()).andReturn();
+                assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_launch_test_job_with_invalid_parameter() throws Exception {
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=-1").with(csrf()))
+                                .andExpect(status().isBadRequest()).andReturn();
+                assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+
+                response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=60001").with(csrf()))
+                                .andExpect(status().isBadRequest()).andReturn();
+                assertInstanceOf(IllegalArgumentException.class, response.getResolvedException());
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_launch_set_cow_health_job_with_boundary_parameter() throws Exception {
+                // boundary are 0 and 100
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=0").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+                
+                response = mockMvc
+                                .perform(post("/api/jobs/launch/setcowhealth?commonsID=1&health=100").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();        
+        }
+
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_launch_test_job_with_boundary_parameter() throws Exception {
+                // boundary are 0 and 60000
+                MvcResult response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=0").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();
+
+                response = mockMvc
+                                .perform(post("/api/jobs/launch/testjob?fail=false&sleepMs=60000").with(csrf()))
+                                .andExpect(status().isOk()).andReturn();        
+        }
+        @WithMockUser(roles = { "ADMIN" })
+        @Test
+        public void admin_can_launch_record_common_stats_job() throws Exception {
+                // act
+                MvcResult response = mockMvc.perform(post("/api/jobs/launch/recordcommonstats").with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert

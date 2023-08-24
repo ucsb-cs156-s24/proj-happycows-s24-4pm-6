@@ -24,12 +24,17 @@ import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommons;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommonsFactory;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactoryInd;
 import edu.ucsb.cs156.happiercows.jobs.SetCowHealthJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactoryInd;
 import edu.ucsb.cs156.happiercows.jobs.TestJob;
 import edu.ucsb.cs156.happiercows.jobs.UpdateCowHealthJobFactory;
+import edu.ucsb.cs156.happiercows.jobs.RecordCommonStatsJob;
+import edu.ucsb.cs156.happiercows.jobs.RecordCommonStatsJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
 
 @Tag(name = "Jobs")
@@ -43,6 +48,9 @@ public class JobsController extends ApiController {
     private JobService jobService;
 
     @Autowired
+    private CommonsPlusBuilderService commonsPlusBuilderService;
+
+    @Autowired
     ObjectMapper mapper;
 
     @Autowired
@@ -52,6 +60,9 @@ public class JobsController extends ApiController {
     MilkTheCowsJobFactory milkTheCowsJobFactory;
 
     @Autowired
+    MilkTheCowsJobFactoryInd milkTheCowsJobFactoryInd;
+
+    @Autowired
     SetCowHealthJobFactory setCowHealthJobFactory;
 
     @Autowired
@@ -59,6 +70,12 @@ public class JobsController extends ApiController {
 
     @Autowired
     InstructorReportJobSingleCommonsFactory instructorReportJobSingleCommonsFactory;
+
+    @Autowired
+    UpdateCowHealthJobFactoryInd updateCowHealthJobFactoryInd;
+
+    @Autowired
+    RecordCommonStatsJobFactory recordCommonStatsJobFactory;
 
     @Operation(summary = "List all jobs")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -91,6 +108,11 @@ public class JobsController extends ApiController {
         .sleepMs(sleepMs)
         .build();
 
+        // Reference: frontend/src/components/Jobs/TestJobForm.js
+        if (sleepMs < 0 || sleepMs > 60000) {
+            throw new IllegalArgumentException("sleepMs must be between 0 and 60000");
+        }
+
         return jobService.runAsJob(testJob);
     }
 
@@ -103,6 +125,16 @@ public class JobsController extends ApiController {
         return jobService.runAsJob(milkTheCowsJob);
     }
 
+    @Operation(summary = "Launch Job to Milk the Cows for a single commons")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/milkthecowjobsinglecommons")
+    public Job launchTestJob(
+         @Parameter(name="commonsId") @RequestParam Long commonsId
+    ) {
+        JobContextConsumer milkTheCowsJobInd = milkTheCowsJobFactoryInd.create(commonsId);
+        return jobService.runAsJob(milkTheCowsJobInd);
+    }
+
     @Operation(summary = "Launch Job to Update Cow Health")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/launch/updatecowhealth")
@@ -110,6 +142,16 @@ public class JobsController extends ApiController {
     ) { 
         JobContextConsumer updateCowHealthJob = updateCowHealthJobFactory.create();
         return jobService.runAsJob(updateCowHealthJob);
+    }
+
+    @Operation(summary = "Launch Job to Update Cow Health for a single commons")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/updatecowhealthsinglecommons")
+    public Job updateCowHealth(
+         @Parameter(name="commonsId") @RequestParam Long commonsId
+    ) { 
+        JobContextConsumer updateCowHealthJobInd = updateCowHealthJobFactoryInd.create(commonsId);
+        return jobService.runAsJob(updateCowHealthJobInd);
     }
 
     @Operation(summary = "Launch Job to Set Cow Health")
@@ -120,6 +162,12 @@ public class JobsController extends ApiController {
         @Parameter(name="health") @RequestParam double health
     ) { 
         JobContextConsumer setCowHealthJob = setCowHealthJobFactory.create(commonsID, health);
+
+        // Reference: frontend/src/components/Jobs/SetCowHealthForm.js
+        if (health < 0 || health > 100) {
+            throw new IllegalArgumentException("health must be between 0 and 100");
+        }
+
         return jobService.runAsJob(setCowHealthJob);
     }
 
@@ -141,5 +189,15 @@ public class JobsController extends ApiController {
 
         InstructorReportJobSingleCommons instructorReportJobSingleCommons = (InstructorReportJobSingleCommons) instructorReportJobSingleCommonsFactory.create(commonsId);
         return jobService.runAsJob(instructorReportJobSingleCommons);
+    }
+
+    @Operation(summary = "Launch Job to Record the Stats of all Commons")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/launch/recordcommonstats")
+    public Job recordCommonStats(
+    ) { 
+
+        RecordCommonStatsJob recordCommonStatsJob = (RecordCommonStatsJob) recordCommonStatsJobFactory.create();
+        return jobService.runAsJob(recordCommonStatsJob);
     }
 }
