@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, CardGroup } from "react-bootstrap";
+import React, {useState} from "react";
+import { Container, CardGroup, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -12,6 +12,7 @@ import Profits from "main/components/Commons/Profits";
 import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
 import Background from "../../assets/PlayPageBackground.png";
+import ChatPanel from "main/components/Chat/ChatPanel";
 
 export default function PlayPage() {
 
@@ -117,6 +118,30 @@ export default function PlayPage() {
     mutationsell.mutate(userCommons)
   };
 
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const toggleChatWindow = () => {
+    setIsChatOpen((prevState) => !prevState);
+  };
+
+  const chatButtonStyle = {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    backgroundColor: 'lightblue',
+    color: 'black',
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
+  };
+
+  const chatContainerStyle = {
+    width: '550px',
+    position: 'fixed',
+    bottom: '100px',
+    right: '20px',
+  };
+
   return (
     <div style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }} data-testid="playpage-div">
       <BasicLayout >
@@ -133,6 +158,12 @@ export default function PlayPage() {
           }
         </Container>
       </BasicLayout>
+      <div style={chatContainerStyle} data-testid="playpage-chat-div">
+        {!!isChatOpen && <ChatPanel commonsId={commonsId}/>}
+        <Button style={chatButtonStyle} onClick={toggleChatWindow} data-testid="playpage-chat-toggle">
+          {!!isChatOpen ? '▼' : '▲'}
+        </Button>
+      </div>
     </div>
   )
 }
