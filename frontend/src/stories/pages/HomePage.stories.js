@@ -35,7 +35,7 @@ noUser.parameters = {
   ]
 }
 
-export const userWithNoName = () => {
+export const userWithNoGivenName = () => {
   return (<HomePage />)
 }
 userWithNoName.parameters = {
