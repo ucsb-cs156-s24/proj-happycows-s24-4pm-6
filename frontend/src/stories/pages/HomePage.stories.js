@@ -41,7 +41,7 @@ export const userWithNoGivenName = () => {
 userWithNoName.parameters = {
   msw: [
     rest.get('/api/currentUser', (_req, res, ctx) => {
-        return res(ctx.json(apiCurrentUserFixtures.userNoName));
+        return res(ctx.json(apiCurrentUserFixtures.userNoGivenName));
     }),
     rest.get('/api/systemInfo', (_req, res, ctx) => {
       return res(ctx.json(systemInfoFixtures.showingNeither));
