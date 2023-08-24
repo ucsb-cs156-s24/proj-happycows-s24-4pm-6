@@ -95,6 +95,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 isInvalid={!!errors.startingBalance}
                                 {...register("startingBalance", {
                                     valueAsNumber: true,
+                                    required: "Starting Balance is required",
                                     min: {value: 0.0, message: "Starting Balance must be ≥ 0.00"},
                                 })}
                             />
@@ -169,7 +170,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
 
             <Row className="mt-1 flex justify-content-start" style={{width: '80%'}} data-testid={`${testid}-r2`}>
-                <Col md={6}>
+                <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="degradationRate">Degradation Rate</Form.Label>
                         <Form.Control
@@ -191,7 +192,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         </Form.Control.Feedback>
                     </Form.Group>
                 </Col>
-                <Col md={6}>
+                <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="carryingCapacity">Carrying Capacity</Form.Label>
                         <Form.Control
@@ -209,6 +210,25 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         />
                         <Form.Control.Feedback type="invalid">
                             {errors.carryingCapacity?.message}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+                </Col>
+                <Col md={4}>
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="capacityPerUser">Capacity Per User</Form.Label>
+                        <Form.Control
+                            data-testid={`${testid}-capacityPerUser`}
+                            id="capacityPerUser"
+                            type="number"
+                            step="1"
+                            isInvalid={!!errors.capacityPerUser}
+                            {...register("capacityPerUser", {
+                                valueAsNumber: true,
+                                required: "Capacity Per User is required",
+                            })}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.capacityPerUser?.message}
                         </Form.Control.Feedback>
                     </Form.Group>
                 </Col>
@@ -233,23 +253,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Form.Control.Feedback>
             </Form.Group>
             
-      <Form.Group className="mb-3">
-        <Form.Label htmlFor="capacityPerUser">Capacity Per User</Form.Label>
-        <Form.Control
-          data-testid={`${testid}-capacityPerUser`}
-          id="capacityPerUser"
-          type="number"
-          step="1"
-          isInvalid={!!errors.capacityPerUser}
-          {...register("capacityPerUser", {
-            valueAsNumber: true,
-            required: "Capacity Per User is required",
-          })}
-        />
-        <Form.Control.Feedback type="invalid">
-          {errors.capacityPerUser?.message}
-        </Form.Control.Feedback>
-      </Form.Group>
+
 
 
             <h5>Health update formula</h5>

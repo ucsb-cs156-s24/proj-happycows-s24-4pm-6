@@ -90,12 +90,15 @@ describe("CommonsForm tests", () => {
     expect(await screen.findByText('Commons name is required')).toBeInTheDocument();
     expect(screen.getByText('Degradation rate is required')).toBeInTheDocument();
     expect(screen.getByText('Carrying capacity is required')).toBeInTheDocument();
+    expect(screen.getByText('Capacity Per User is required')).toBeInTheDocument();
 
     //Clear Default Values
     fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "" } });
     fireEvent.change(screen.getByTestId("CommonsForm-cowPrice"), { target: { value: "" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-startingBalance"), { target: { value: "" } });
     expect(await screen.findByText('Cow price is required')).toBeInTheDocument();
     expect(screen.getByText('Milk price is required')).toBeInTheDocument();
+    expect(screen.getByText('Starting Balance is required')).toBeInTheDocument();
 
     //Reset to Invalid Values
     fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "-1" } });
@@ -106,14 +109,6 @@ describe("CommonsForm tests", () => {
 
     //Await
     await screen.findByTestId('CommonsForm-milkPrice');
-    expect(await screen.findByText(/commons name is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/starting balance is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/cow price is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/milk price is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/starting date is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/degradation rate is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/Capacity Per User is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/Carrying capacity is required/i)).toBeInTheDocument();
 
     [
       "CommonsForm-name",
