@@ -1,7 +1,7 @@
 package edu.ucsb.cs156.happiercows.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+
 
 @Data
 @AllArgsConstructor
@@ -28,7 +30,8 @@ public class Commons {
     private double startingBalance;
     private LocalDateTime startingDate;
     private boolean showLeaderboard;
-
+    
+    private int capacityPerUser;
     private int carryingCapacity;
     private double degradationRate;
 
@@ -44,4 +47,6 @@ public class Commons {
     @OneToMany(mappedBy = "commons", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<UserCommons> joinedUsers;
+
+    
 }

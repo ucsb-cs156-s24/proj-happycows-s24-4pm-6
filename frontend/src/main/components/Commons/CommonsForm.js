@@ -232,6 +232,24 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                     {errors.startingDate?.message}
                 </Form.Control.Feedback>
             </Form.Group>
+            
+      <Form.Group className="mb-3">
+        <Form.Label htmlFor="capacityPerUser">Capacity Per User</Form.Label>
+        <Form.Control
+          data-testid={`${testid}-capacityPerUser`}
+          id="capacityPerUser"
+          type="number"
+          step="1"
+          isInvalid={!!errors.capacityPerUser}
+          {...register("capacityPerUser", {
+            valueAsNumber: true,
+            required: "Capacity Per User is required",
+          })}
+        />
+        <Form.Control.Feedback type="invalid">
+          {errors.capacityPerUser?.message}
+        </Form.Control.Feedback>
+      </Form.Group>
 
 
             <h5>Health update formula</h5>
@@ -274,10 +292,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         style={{width: '30%'}}
                 >{buttonLabel}</Button>
             </Row>
-
-
         </Form>
     );
 }
-
 export default CommonsForm;

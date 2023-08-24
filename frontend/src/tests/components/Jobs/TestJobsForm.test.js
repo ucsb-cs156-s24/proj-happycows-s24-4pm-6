@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { MemoryRouter as Router } from "react-router-dom";
 import TestJobsForm from "main/components/Jobs/TestJobForm";
 import jobsFixtures from "fixtures/jobsFixtures";
 

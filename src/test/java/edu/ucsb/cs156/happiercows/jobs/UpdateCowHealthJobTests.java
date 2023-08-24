@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
 import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
@@ -8,6 +9,7 @@ import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategy;
 import org.junit.jupiter.api.Assertions;
@@ -24,6 +26,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +42,9 @@ public class UpdateCowHealthJobTests {
         @Mock
         UserRepository userRepository;
 
+        @Mock
+        CommonsPlusBuilderService commonsPlusBuilderService;
+
         private final User user = User
                         .builder()
                         .id(1L)
@@ -53,11 +59,14 @@ public class UpdateCowHealthJobTests {
                         .milkPrice(2)
                         .startingBalance(300)
                         .startingDate(LocalDateTime.now())
+                        .capacityPerUser(0)
                         .carryingCapacity(100)
                         .degradationRate(1)
                         .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
                         .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Noop)
                         .build();
+
+
 
         private final UserCommons userCommons = UserCommons
                         .builder()
@@ -68,12 +77,14 @@ public class UpdateCowHealthJobTests {
                         .cowHealth(10.0)
                         .build();
 
+
+
         private final Job job = Job.builder().build();
         private final JobContext ctx = new JobContext(null, job);
 
         private void runUpdateCowHealthJob() throws Exception {
                 var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository, userCommonsRepository,
-                                userRepository);
+                                userRepository, commonsPlusBuilderService);
                 updateCowHealthJob.accept(ctx);
         }
 
@@ -88,11 +99,18 @@ public class UpdateCowHealthJobTests {
         }
 
     private void setupUpdateCowHealthTestOnCommons(int totalCows, int numUsers) {
-        when(commonsRepository.findAll()).thenReturn(List.of(commons));
+        List<Commons> listOfCommons = List.of(commons); 
+        CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalCows(totalCows).totalUsers(numUsers).build();
+
+        List<CommonsPlus> listOfCommonsPlus = List.of(commonsPlus);
+        
+        when(commonsRepository.findAll()).thenReturn(listOfCommons);
         when(userCommonsRepository.findByCommonsId(commons.getId())).thenReturn(List.of(userCommons));
         when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(totalCows));
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(commonsRepository.getNumUsers(commons.getId())).thenReturn(Optional.of(numUsers));
+        when(commonsPlusBuilderService.convertToCommonsPlus(eq(listOfCommons))).thenReturn(listOfCommonsPlus);
+        when(commonsPlusBuilderService.toCommonsPlus(eq(commons))).thenReturn(commonsPlus);
     }
 
         @Test
@@ -107,7 +125,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
                                  old cow health: 10.0, new cow health: 9.0
                                 Cow health has been updated!""";
@@ -125,7 +143,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
                                  old cow health: 10.0, new cow health: 11.0
                                 Cow health has been updated!""";
@@ -144,7 +162,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
                                  old cow health: 10.0, new cow health: 11.0
                                 Cow health has been updated!""";
@@ -157,7 +175,7 @@ public class UpdateCowHealthJobTests {
                 when(mockStrategy.calculateNewCowHealth(any(), any(), anyInt())).thenReturn(-1.0);
                 var newHealth = UpdateCowHealthJob.calculateNewCowHealthUsingStrategy(
                                 mockStrategy,
-                                commons,
+                                commonsPlusBuilderService.toCommonsPlus(commons),
                                 userCommons,
                                 1);
                 assertEquals(0.0, newHealth);
@@ -169,7 +187,7 @@ public class UpdateCowHealthJobTests {
                 when(mockStrategy.calculateNewCowHealth(any(), any(), anyInt())).thenReturn(101.0);
                 var newHealth = UpdateCowHealthJob.calculateNewCowHealthUsingStrategy(
                                 mockStrategy,
-                                commons,
+                                commonsPlusBuilderService.toCommonsPlus(commons),
                                 userCommons,
                                 1);
                 assertEquals(100.0, newHealth);
@@ -187,8 +205,15 @@ public class UpdateCowHealthJobTests {
                                 .cowHealth(20)
                                 .build();
                 commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear);
+                
+                CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalCows(6).totalUsers(1).build();
 
-                when(commonsRepository.findAll()).thenReturn(List.of(commons));
+                List<CommonsPlus> commonsPlusList = List.of(commonsPlus);
+                List<Commons> commonsList = List.of(commons);
+
+                when(commonsRepository.findAll()).thenReturn(commonsList);
+                when(commonsPlusBuilderService.convertToCommonsPlus(eq(commonsList))).thenReturn(commonsPlusList);
+                when(commonsPlusBuilderService.toCommonsPlus(eq(commons))).thenReturn(commonsPlus);
                 when(userCommonsRepository.findByCommonsId(commons.getId()))
                                 .thenReturn(List.of(userCommons1, userCommons2));
                 when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(99));
@@ -199,7 +224,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 1, cowHealth: 10.0
                                  old cow health: 10.0, new cow health: 11.0
                                 User: Chris Gaucho, numCows: 6, cowHealth: 20.0
@@ -269,6 +294,14 @@ public class UpdateCowHealthJobTests {
                                 .build();
                 commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear);
 
+                CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalCows(5).totalUsers(1).build();
+
+                List<CommonsPlus> commonsPlusList = List.of(commonsPlus);
+                List<Commons> commonsList = List.of(commons);
+
+                when(commonsPlusBuilderService.convertToCommonsPlus(eq(commonsList))).thenReturn(commonsPlusList);
+                when(commonsPlusBuilderService.toCommonsPlus(eq(commons))).thenReturn(commonsPlus);
+
                 when(commonsRepository.findAll()).thenReturn(List.of(commons));
                 when(userCommonsRepository.findByCommonsId(commons.getId())).thenReturn(List.of(userCommons));
                 when(commonsRepository.getNumCows(commons.getId())).thenReturn(Optional.of(99));
@@ -279,7 +312,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 User: Chris Gaucho, numCows: 5, cowHealth: -1.0
                                  5 cows for this user died.
                                  old cow health: -1.0, new cow health: 100.0
@@ -294,7 +327,13 @@ public class UpdateCowHealthJobTests {
 
         @Test
         void test_skipping_job_when_commons_has_zero_users() throws Exception {
+                CommonsPlus commonsPlus = CommonsPlus.builder().commons(commons).totalCows(5).totalUsers(1).build();
 
+                List<CommonsPlus> commonsPlusList = List.of(commonsPlus);
+                List<Commons> commonsList = List.of(commons);
+
+                when(commonsPlusBuilderService.convertToCommonsPlus(eq(commonsList))).thenReturn(commonsPlusList);
+                when(commonsPlusBuilderService.toCommonsPlus(eq(commons))).thenReturn(commonsPlus);
                 commons.setBelowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.Linear);
 
                 when(commonsRepository.findAll()).thenReturn(List.of(commons));
@@ -304,7 +343,7 @@ public class UpdateCowHealthJobTests {
 
                 String expected = """
                                 Updating cow health...
-                                Commons test commons, degradationRate: 1.0, carryingCapacity: 100
+                                Commons test commons, degradationRate: 1.0, effectiveCapacity: 100
                                 No users in this commons, skipping
                                 Cow health has been updated!""";
 
@@ -320,7 +359,7 @@ public class UpdateCowHealthJobTests {
 
                 var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository,
                                 userCommonsRepository,
-                                userRepository);
+                                userRepository, commonsPlusBuilderService);
 
                 var thrown = Assertions.assertThrows(RuntimeException.class, () -> {
                         updateCowHealthJob.accept(ctx);
@@ -338,7 +377,7 @@ public class UpdateCowHealthJobTests {
 
                 var updateCowHealthJob = new UpdateCowHealthJob(commonsRepository,
                                 userCommonsRepository,
-                                userRepository);
+                                userRepository, commonsPlusBuilderService);
 
                 var thrown = Assertions.assertThrows(RuntimeException.class, () -> {
                         updateCowHealthJob.accept(ctx);

@@ -11,10 +11,12 @@ const commonsPlusFixtures = {
                 "endingDate": null,
                 "degradationRate": 0.01,
                 "showLeaderboard": false,
+                "capacityPerUser": 50,
                 "carryingCapacity": 100,
             },
             "totalCows": 10,
-            "totalUsers": 2
+            "totalUsers": 2,
+            "effectiveCapacity": 100
         },
         {
             "commons":
@@ -28,10 +30,12 @@ const commonsPlusFixtures = {
                 "endingDate": null,
                 "degradationRate": 0.01,
                 "showLeaderboard": true,
+                "capacityPerUser": 5,
                 "carryingCapacity": 42,
             },
             "totalCows": 0,
-            "totalUsers": 1
+            "totalUsers": 1,
+            "effectiveCapacity": 42
         },
         {
             "commons":
@@ -45,10 +49,12 @@ const commonsPlusFixtures = {
                 "endingDate": null,
                 "degradationRate": 5.0,
                 "showLeaderboard": true,
+                "capacityPerUser": 50,
                 "carryingCapacity": 123,
             },
             "totalCows": 0,
-            "totalUsers": 1
+            "totalUsers": 1,
+            "effectiveCapacity": 123
         },
 
     ],
@@ -65,10 +71,12 @@ const commonsPlusFixtures = {
                 "endingDate": null,
                 "degradationRate": 3.0,
                 "showLeaderboard": false,
+                "capacityPerUser": 1,
                 "carryingCapacity": 23,
             },
             "totalCows": 0,
-            "totalUsers": 0
+            "totalUsers": 0,
+            "effectiveCapacity": 23
         }
     ]
 }

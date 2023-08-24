@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { MemoryRouter as Router } from "react-router-dom";
 import CommonsForm from "main/components/Commons/CommonsForm";
 import { QueryClient, QueryClientProvider } from "react-query";
 import commonsFixtures from "fixtures/commonsFixtures"
@@ -47,6 +47,7 @@ describe("CommonsForm tests", () => {
       /Milk Price/,
       /Starting Date/,
       /Degradation Rate/,
+      /Capacity Per User/,
       /Carrying Capacity/,
       /Show Leaderboard\?/,
       /When below capacity/,
@@ -105,10 +106,19 @@ describe("CommonsForm tests", () => {
 
     //Await
     await screen.findByTestId('CommonsForm-milkPrice');
+    expect(await screen.findByText(/commons name is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/starting balance is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/cow price is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/milk price is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/starting date is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/degradation rate is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/Capacity Per User is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/Carrying capacity is required/i)).toBeInTheDocument();
 
     [
       "CommonsForm-name",
       "CommonsForm-degradationRate",
+      "CommonsForm-capacityPerUser",
       "CommonsForm-carryingCapacity",
       "CommonsForm-milkPrice",
       "CommonsForm-cowPrice",
