@@ -23,6 +23,7 @@ const ChatDisplay = ({ commonsId }) => {
                     size: initialMessagePageSize
                 }
             },
+            {content: []},
             { refetchInterval: refreshRate }
         );
   
@@ -37,19 +38,18 @@ const ChatDisplay = ({ commonsId }) => {
                     commonsId: commonsId,
                 }
             },
+            [],
             { refetchInterval: refreshRate }
       );
       
     // Stryker restore all
   
-    const sortedMessages = Array.isArray(messagesPage.content) && messagesPage.content.sort((a, b) => b.id - a.id);
+    const sortedMessages = messagesPage.content.sort((a, b) => b.id - a.id);
 
-    const userIdToUsername = Array.isArray(userCommonsList)
-    ? userCommonsList.reduce((acc, user) => {
+    const userIdToUsername = userCommonsList.reduce((acc, user) => {
         acc[user.userId] = user.username || "";
         return acc;
-        }, {})
-    : {};
+        }, {});
 
     return (
       <div style={{ display: "flex", flexDirection: "column-reverse", overflowY: "scroll", maxHeight: "300px" }} data-testid="ChatDisplay" >
