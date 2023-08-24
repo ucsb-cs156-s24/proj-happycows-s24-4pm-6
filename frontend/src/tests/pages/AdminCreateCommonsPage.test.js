@@ -120,9 +120,9 @@ describe("AdminCreateCommonsPage tests", () => {
             cowPrice: 10,
             milkPrice: 5,
             degradationRate: 30.4,
-            capacityPerUser: 10,
             carryingCapacity: 25,
-            startingDate: '2022-03-05T00:00:00.000Z', // [1]
+            startingDate: '2022-03-05T00:00:00.000Z',
+            capacityPerUser: 10,
             showLeaderboard: false,
             aboveCapacityHealthUpdateStrategy: "strat2",
             belowCapacityHealthUpdateStrategy: "strat3",
