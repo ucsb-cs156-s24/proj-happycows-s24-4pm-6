@@ -71,4 +71,20 @@ describe("ChatMessageDisplay tests", () => {
         expect(screen.getByTestId("ChatMessageDisplay-1-Date")).toHaveTextContent("");
     });
 
+    test("renders correct content with no message", async () => {
+
+        // act
+        render(
+            <ChatMessageDisplay />
+        );
+
+        // assert
+        await waitFor(() => {
+            expect(screen.getByTestId("ChatMessageDisplay-undefined-Message")).toHaveTextContent("");
+        });
+
+        expect(screen.getByTestId("ChatMessageDisplay-undefined-User")).toHaveTextContent("Anonymous ()");
+        expect(screen.getByTestId("ChatMessageDisplay-undefined-Date")).toHaveTextContent("");
+    });
+
 });
