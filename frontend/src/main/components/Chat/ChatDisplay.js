@@ -2,7 +2,7 @@ import ChatMessageDisplay from "main/components/Chat/ChatMessageDisplay";
 
 //ChatDisplay Template
 
-const ChatDisplay = ({  }) => {
+const ChatDisplay = () => {
 
     return (
       <div data-testid="ChatDisplay" >

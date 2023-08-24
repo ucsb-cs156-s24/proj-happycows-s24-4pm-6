@@ -1,6 +1,6 @@
 import { Card } from 'react-bootstrap';
 
-const ChatMessageDisplay = ({ }) => {
+const ChatMessageDisplay = () => {
 
     const testId = "ChatMessageDisplay";
 

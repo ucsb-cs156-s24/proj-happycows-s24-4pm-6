@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 
 //ChatMessageCreate template
 
-const ChatMessageCreate = ({ }) => {
+const ChatMessageCreate = () => {
 
     const testid = "ChatMessageCreate";
 
