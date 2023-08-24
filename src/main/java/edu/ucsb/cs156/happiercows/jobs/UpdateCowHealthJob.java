@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
 import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
@@ -8,6 +9,7 @@ import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,15 +23,22 @@ public class UpdateCowHealthJob implements JobContextConsumer {
     private UserCommonsRepository userCommonsRepository;
     @Getter
     private UserRepository userRepository;
+    @Getter
+    private CommonsPlusBuilderService commonsPlusBuilderService;
 
     @Override
     public void accept(JobContext ctx) throws Exception {
         ctx.log("Updating cow health...");
 
-        Iterable<Commons> allCommons = commonsRepository.findAll();
 
-        for (Commons commons : allCommons) {
-            ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", effectiveCapacity: " + commons.getEffectiveCapacity());
+        Iterable<Commons> allCommons = commonsRepository.findAll();
+        Iterable<CommonsPlus> allCommonsPlus = commonsPlusBuilderService.convertToCommonsPlus(allCommons);
+
+        for (CommonsPlus commonsPlus : allCommonsPlus) {
+
+            Commons commons = commonsPlus.getCommons();
+
+            ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", effectiveCapacity: " + commonsPlus.getEffectiveCapacity());
             int numUsers = commonsRepository.getNumUsers(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumUsers(" + commons.getId() + ")"));
 
             if (numUsers==0) {
@@ -37,7 +46,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
                 continue;
             }
 
-            int carryingCapacity = commons.getEffectiveCapacity();
+            int carryingCapacity = commonsPlus.getEffectiveCapacity();
             Iterable<UserCommons> allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());
 
             Integer totalCows = commonsRepository.getNumCows(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumCows(" + commons.getId() + ")"));
@@ -47,7 +56,8 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
             for (UserCommons userCommons : allUserCommons) {
                 User user = userCommons.getUser();
-                var newCowHealth = calculateNewCowHealthUsingStrategy(cowHealthUpdateStrategy, commons, userCommons, totalCows);
+
+                var newCowHealth = calculateNewCowHealthUsingStrategy(cowHealthUpdateStrategy, commonsPlusBuilderService.toCommonsPlus(commons), userCommons, totalCows);
                 ctx.log("User: " + user.getFullName() + ", numCows: " + userCommons.getNumOfCows() + ", cowHealth: " + userCommons.getCowHealth());
 
                 double oldHealth = userCommons.getCowHealth();
@@ -65,11 +75,11 @@ public class UpdateCowHealthJob implements JobContextConsumer {
     // exposed for testing
     public static double calculateNewCowHealthUsingStrategy(
             CowHealthUpdateStrategy strategy,
-            Commons commons,
+            CommonsPlus commonsPlus,
             UserCommons userCommons,
             int totalCows
     ) {
-        var health = strategy.calculateNewCowHealth(commons, userCommons, totalCows);
+        var health = strategy.calculateNewCowHealth(commonsPlus, userCommons, totalCows);
         return Math.max(0, Math.min(health, 100));
     }
 

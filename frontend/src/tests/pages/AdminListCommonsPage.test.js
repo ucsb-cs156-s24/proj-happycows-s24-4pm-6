@@ -139,6 +139,13 @@ describe("AdminListCommonPage tests", () => {
        
         fireEvent.click(deleteButton);
 
+        await waitFor(() => {
+            expect(screen.getByTestId("CommonsTable-Modal-Delete")).toBeInTheDocument();
+        });
+    
+        const modalDelete = screen.getByTestId("CommonsTable-Modal-Delete");
+        fireEvent.click(modalDelete);
+
         await waitFor(() => { expect(mockToast).toBeCalledWith("Commons with id 1 was deleted") });
     });
 

@@ -6,10 +6,10 @@ import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import CommonsList from "main/components/Commons/CommonsList";
 import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
-import Background from './../../assets/HomePageBackground.jpg';
 import { commonsNotJoined } from "main/utils/commonsUtils";
+import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
-export default function HomePage() {
+export default function HomePage({hour=null}) {
   const [commonsJoined, setCommonsJoined] = useState([]);
   const { data: currentUser } = useCurrentUser();
 
@@ -47,19 +47,24 @@ export default function HomePage() {
       }
     }, [currentUser]
   );
+
+  const firstName = (currentUser?.root?.user?.givenName) || "";
+  const time = (hour===null) ? new Date().getHours() : hour;
+  const Background = getBackgroundImage(time);
+
   // Stryker restore all
 
   let navigate = useNavigate();
   const visitButtonClick = (id) => { navigate("/play/" + id) };
 
   //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
- 
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
   
+  // Stryker disable all : TODO: restructure this code to avoid the need for this disable
   return (
     <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
       <BasicLayout>
-        <h1 data-testid="homePage-title" style={{ fontSize: "75px", borderRadius: "7px", backgroundColor: "white", opacity: ".9" }} className="text-center border-0 my-3">Howdy Farmer</h1>
+        <h1 data-testid="homePage-title" style={{ fontSize: "75px", borderRadius: "7px", backgroundColor: "white", opacity: ".9" }} className="text-center border-0 my-3">Howdy Farmer {firstName}</h1>
         <Container>
           <Row>
             <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} /></Col>
@@ -69,4 +74,5 @@ export default function HomePage() {
       </BasicLayout>
     </div>
   )
+  // Stryker restore all
 }
