@@ -3,7 +3,7 @@ import OurTable, { PlaintextColumn, DateColumn } from "main/components/OurTable"
 import { Button } from "react-bootstrap";
 import { useBackend } from "main/utils/useBackend";
 
-const PagedJobsTable = ({jobs: jobsProp}) => {
+const PagedJobsTable = () => {
 
     const testId = "PagedJobsTable";
     const refreshJobsIntervalMilliseconds = 5000;
@@ -29,8 +29,6 @@ const PagedJobsTable = ({jobs: jobsProp}) => {
         { refetchInterval: refreshJobsIntervalMilliseconds }
     );
     // Stryker restore  all
-
-    page.content = jobsProp || page.content;
 
     const testid = "PagedJobsTable";
 
