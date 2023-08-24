@@ -1,6 +1,7 @@
 package edu.ucsb.cs156.happiercows.strategies;
 
-import edu.ucsb.cs156.happiercows.entities.Commons;
+
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,24 +19,24 @@ public enum CowHealthUpdateStrategies implements CowHealthUpdateStrategy {
 
     Linear("Linear", "Cow health increases/decreases proportionally to the number of cows over/under the carrying capacity.") {
         @Override
-        public double calculateNewCowHealth(Commons commons, UserCommons user, int totalCows) {
-            return user.getCowHealth() - (totalCows - commons.getEffectiveCapacity()) * commons.getDegradationRate();
+        public double calculateNewCowHealth(CommonsPlus commonsPlus, UserCommons uC, int totalCows) {
+            return uC.getCowHealth() - (totalCows - commonsPlus.getEffectiveCapacity()) * commonsPlus.getCommons().getDegradationRate();
         }
     },
     Constant("Constant", "Cow health changes increases/decreases by the degradation rate, depending on if the number of cows exceeds the carrying capacity.") {
         @Override
-        public double calculateNewCowHealth(Commons commons, UserCommons user, int totalCows) {
-            if (totalCows <= commons.getEffectiveCapacity()) {
-                return user.getCowHealth() + commons.getDegradationRate();
+        public double calculateNewCowHealth(CommonsPlus commonsPlus, UserCommons uC, int totalCows) {
+            if (totalCows <= commonsPlus.getEffectiveCapacity()) {
+                return uC.getCowHealth() + commonsPlus.getCommons().getDegradationRate();
             } else {
-                return user.getCowHealth() - commons.getDegradationRate();
+                return uC.getCowHealth() - commonsPlus.getCommons().getDegradationRate();
             }
         }
     },
     Noop("Do nothing", "Cow health does not change.") {
         @Override
-        public double calculateNewCowHealth(Commons commons, UserCommons user, int totalCows) {
-            return user.getCowHealth();
+        public double calculateNewCowHealth(CommonsPlus commonsPlus, UserCommons uC, int totalCows) {
+            return uC.getCowHealth();
         }
     };
 

@@ -32,6 +32,7 @@ import edu.ucsb.cs156.happiercows.jobs.RecordCommonStatsJobFactory;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
 
 @Tag(name = "Jobs")
@@ -43,6 +44,9 @@ public class JobsController extends ApiController {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private CommonsPlusBuilderService commonsPlusBuilderService;
 
     @Autowired
     ObjectMapper mapper;

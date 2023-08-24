@@ -43,6 +43,7 @@ import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.repositories.jobs.JobsRepository;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobFactory;
 import edu.ucsb.cs156.happiercows.jobs.InstructorReportJobSingleCommonsFactory;
 import edu.ucsb.cs156.happiercows.jobs.MilkTheCowsJobFactory;
@@ -95,6 +96,9 @@ public class JobsControllerTests extends ControllerTestCase {
 
         @MockBean
         RecordCommonStatsJobFactory recordCommonStatsJobFactory;
+
+        @MockBean
+        CommonsPlusBuilderService commonsPlusBuilderService;
 
         @WithMockUser(roles = { "ADMIN" })
         @Test

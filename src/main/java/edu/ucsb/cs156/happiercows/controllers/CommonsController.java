@@ -21,11 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Tag(name = "Commons")
@@ -40,6 +40,11 @@ public class CommonsController extends ApiController {
 
     @Autowired
     ObjectMapper mapper;
+
+    @Autowired
+    CommonsPlusBuilderService commonsPlusBuilderService;
+
+
 
     @Operation(summary = "Get a list of all commons")
     @GetMapping("/all")
@@ -58,14 +63,7 @@ public class CommonsController extends ApiController {
 
         // convert Iterable to List for the purposes of using a Java Stream & lambda
         // below
-        List<Commons> commonsList = new ArrayList<Commons>();
-        commonsListIter.forEach(commonsList::add);
-
-        List<CommonsPlus> commonsPlusList1 = commonsList.stream()
-                .map(c -> toCommonsPlus(c))
-                .collect(Collectors.toList());
-
-        ArrayList<CommonsPlus> commonsPlusList = new ArrayList<CommonsPlus>(commonsPlusList1);
+        Iterable<CommonsPlus> commonsPlusList = commonsPlusBuilderService.convertToCommonsPlus(commonsListIter);
 
         String body = mapper.writeValueAsString(commonsPlusList);
         return ResponseEntity.ok().body(body);
@@ -76,7 +74,7 @@ public class CommonsController extends ApiController {
     @GetMapping("/plus")
     public CommonsPlus getCommonsPlusById(
             @Parameter(name="id") @RequestParam long id) throws JsonProcessingException {
-                CommonsPlus commonsPlus = toCommonsPlus(commonsRepository.findById(id)
+                CommonsPlus commonsPlus = commonsPlusBuilderService.toCommonsPlus(commonsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Commons.class, id)));
 
         return commonsPlus;
@@ -263,9 +261,6 @@ public class CommonsController extends ApiController {
 
         userCommonsRepository.save(uc);
 
-        joinedCommons.setNumUsers(joinedCommons.getNumUsers() + 1);
-        commonsRepository.save(joinedCommons);
-
         String body = mapper.writeValueAsString(joinedCommons);
         return ResponseEntity.ok().body(body);
     }
@@ -300,23 +295,9 @@ public class CommonsController extends ApiController {
         userCommonsRepository.delete(userCommons);
 
         String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
-        
-        Commons exitedCommon = commonsRepository.findById(commonsId).orElse(null);
-        
-        exitedCommon.setNumUsers(exitedCommon.getNumUsers() - 1);
-        commonsRepository.save(exitedCommon);
-        
+
         return genericMessage(responseString);
     }
 
-    public CommonsPlus toCommonsPlus(Commons c) {
-        Optional<Integer> numCows = commonsRepository.getNumCows(c.getId());
-        Optional<Integer> numUsers = commonsRepository.getNumUsers(c.getId());
-
-        return CommonsPlus.builder()
-                .commons(c)
-                .totalCows(numCows.orElse(0))
-                .totalUsers(numUsers.orElse(0))
-                .build();
-    }
+    
 }
