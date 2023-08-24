@@ -87,7 +87,7 @@ const apiCurrentUserFixtures = {
         ]
 
     },
-    userNoName: {
+    userNoGivenName: {
 
         "user": {
             "id": 2,
