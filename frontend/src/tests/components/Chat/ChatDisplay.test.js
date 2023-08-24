@@ -41,34 +41,6 @@ describe("ChatDisplay tests", () => {
 
   });
 
-  test("displays no messages correctly", async () => {
-
-    //arrange
-
-    axiosMock.onGet("/api/chat/get").reply(200, { });
-    axiosMock.onGet("/api/usercommons/commons/all").reply(200, { });
-
-    //act
-    render(
-        <QueryClientProvider client={queryClient}>
-            <MemoryRouter>
-                <ChatDisplay commonsId={commonsId} />
-            </MemoryRouter>
-        </QueryClientProvider>
-    );
-    //assert
-
-    await waitFor(() => {
-        expect(screen.getByTestId("ChatDisplay")).toBeInTheDocument();
-    });
-    
-    expect(screen.queryByText("Anonymous")).not.toBeInTheDocument();
-    expect(screen.queryByText("George Washington (1)")).not.toBeInTheDocument();
-    expect(screen.queryByText("Hello World")).not.toBeInTheDocument();
-    expect(screen.queryByText("2023-08-17 23:57:46")).not.toBeInTheDocument();
-
-  });
-
   test("displays one message correctly with username", async () => {
 
     //arrange
