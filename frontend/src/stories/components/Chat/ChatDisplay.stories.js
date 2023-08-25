@@ -26,11 +26,11 @@ Empty.parameters = {
     msw: [
         /* eslint-disable-next-line no-unused-vars */
         rest.get('/api/chat/get?page=0&size=10&commonsId=1', (req, res, ctx) => {
-            return res(ctx.status(200),ctx.json({ }));
+            return res(ctx.status(200),ctx.json({ content: [] }));
         }),
         /* eslint-disable-next-line no-unused-vars */
         rest.get('/api/usercommons/all?commonsId=1', (req, res, ctx) => {
-            return res(ctx.status(200),ctx.json({ }));
+            return res(ctx.status(200),ctx.json( [] ));
         }),
     ]
 };

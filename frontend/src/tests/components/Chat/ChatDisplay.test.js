@@ -45,9 +45,6 @@ describe("ChatDisplay tests", () => {
 
     //arrange
 
-    axiosMock.onGet("/api/chat/get").reply(200, { });
-    axiosMock.onGet("/api/usercommons/commons/all").reply(200, { });
-
     //act
     render(
         <QueryClientProvider client={queryClient}>
