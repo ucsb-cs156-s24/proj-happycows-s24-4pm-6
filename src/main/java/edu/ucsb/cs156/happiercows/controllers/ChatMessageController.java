@@ -99,9 +99,8 @@ public class ChatMessageController extends ApiController{
     public ResponseEntity<Object> createChatMessage(@Parameter(description = "The id of the common") @RequestParam Long commonsId,
                                                     @Parameter(description = "The message to be sent") @RequestParam String content) {
         
-        // Get user info
-        User u = getCurrentUser().getUser();
-        Long userId = u.getId();
+        User user = getCurrentUser().getUser();
+        Long userId = user.getId();
 
         // Make sure the user is part of the commons or is an admin
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
