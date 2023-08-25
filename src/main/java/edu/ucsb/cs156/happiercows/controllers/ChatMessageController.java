@@ -53,8 +53,8 @@ public class ChatMessageController extends ApiController{
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
             log.info("User is not an admin");
-            User u = getCurrentUser().getUser();
-            Long userId = u.getId();
+            User user = getCurrentUser().getUser();
+            Long userId = user.getId();
             Optional<UserCommons> userCommonsLookup = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId);
 
             if (!userCommonsLookup.isPresent()) {
