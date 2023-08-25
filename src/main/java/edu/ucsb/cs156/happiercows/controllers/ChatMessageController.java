@@ -141,9 +141,8 @@ public class ChatMessageController extends ApiController{
         }
         ChatMessage chatMessage = chatMessageLookup.get();
 
-        // Get user info
-        User u = getCurrentUser().getUser();
-        Long userId = u.getId();
+        User user = getCurrentUser().getUser();
+        Long userId = user.getId();
 
         // Check if the user is the author of the message
         if (chatMessage.getUserId() != userId) {
