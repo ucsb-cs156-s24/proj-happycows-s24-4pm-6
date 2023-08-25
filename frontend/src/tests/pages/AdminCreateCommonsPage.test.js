@@ -119,10 +119,10 @@ describe("AdminCreateCommonsPage tests", () => {
             startingBalance: 500,
             cowPrice: 10,
             milkPrice: 5,
-            startingDate: '2022-03-05T00:00:00.000Z', // [1]
             degradationRate: 30.4,
-            capacityPerUser: 10,
             carryingCapacity: 25,
+            capacityPerUser: 10,
+            startingDate: '2022-03-05T00:00:00.000Z',
             showLeaderboard: false,
             aboveCapacityHealthUpdateStrategy: "strat2",
             belowCapacityHealthUpdateStrategy: "strat3",
