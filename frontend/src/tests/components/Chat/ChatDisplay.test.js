@@ -41,6 +41,43 @@ describe("ChatDisplay tests", () => {
 
   });
 
+  test("displays no messages correctly", async () => {
+
+    //arrange
+
+    axiosMock.onGet("/api/chat/get").reply(200, { });
+    axiosMock.onGet("/api/usercommons/commons/all").reply(200, { });
+
+    //act
+    render(
+        <QueryClientProvider client={queryClient}>
+            <MemoryRouter>
+                <ChatDisplay commonsId={commonsId} />
+            </MemoryRouter>
+        </QueryClientProvider>
+    );
+    //assert
+
+    //assert
+    await waitFor(() => {
+        expect(axiosMock.history.get.length).toBe(2);
+    });
+    expect(axiosMock.history.get[0].url).toBe("/api/chat/get");
+    expect(axiosMock.history.get[0].params).toEqual({ commonsId: 1, page: 0, size: 10 });
+    expect(axiosMock.history.get[1].url).toBe("/api/usercommons/commons/all");
+    expect(axiosMock.history.get[1].params).toEqual({ commonsId: 1 });
+
+    await waitFor(() => {
+        expect(screen.getByTestId("ChatDisplay")).toBeInTheDocument();
+    });
+    
+    expect(screen.queryByText("Anonymous")).not.toBeInTheDocument();
+    expect(screen.queryByText("George Washington (1)")).not.toBeInTheDocument();
+    expect(screen.queryByText("Hello World")).not.toBeInTheDocument();
+    expect(screen.queryByText("2023-08-17 23:57:46")).not.toBeInTheDocument();
+
+  });
+
   test("displays three messages correctly with usernames in the correct order", async () => {
 
     //arrange
