@@ -260,6 +260,23 @@ describe("CommonsForm tests", () => {
     expect(screen.getByTestId("belowCapacityHealthUpdateStrategy-Noop")).toBeInTheDocument();
   });
 
+  it("renders correctly with date cut off", async () => {
+    axiosMock
+      .onGet("/api/commons/all-health-update-strategies")
+      .reply(200, healthUpdateStrategyListFixtures.real);
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <CommonsForm initialCommons={commonsFixtures.threeCommons[0]} />
+        </Router>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText(/Id/)).toBeInTheDocument();
+    expect(screen.getByTestId("CommonsForm-startingDate")).toHaveValue(commonsFixtures.threeCommons[0].startingDate);
+  });
+
   it("renders correctly when an initialCommons is not passed in", async () => {
 
     axiosMock
@@ -308,5 +325,4 @@ describe("CommonsForm tests", () => {
       );
     });
   });
-
 });
