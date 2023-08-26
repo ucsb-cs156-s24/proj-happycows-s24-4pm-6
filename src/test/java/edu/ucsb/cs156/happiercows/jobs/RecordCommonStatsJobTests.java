@@ -46,7 +46,7 @@ public class RecordCommonStatsJobTests {
         JobContext ctx = new JobContext(null, jobStarted);
       
         when(commonsRepository.findAll()).thenReturn(Arrays.asList(commons));      
-        when(commonStatsService.createCommonStats(17L)).thenReturn(commonStats);
+        when(commonStatsService.createAndSaveCommonStats(17L)).thenReturn(commonStats);
 
         // Act
         RecordCommonStatsJob recordCommonStatsJob = 
@@ -56,7 +56,7 @@ public class RecordCommonStatsJobTests {
         // Assert
 
         verify(commonsRepository).findAll();
-        verify(commonStatsService).createCommonStats(17L);
+        verify(commonStatsService).createAndSaveCommonStats(17L);
         
         String expected = """
             Starting record common stats job...
