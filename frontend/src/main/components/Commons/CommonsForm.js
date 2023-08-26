@@ -30,7 +30,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
     const curr = new Date();
     // eslint-disable-next-line no-unused-vars
-    const today = curr.toISOString().substr(0, 10);
+    const today = curr.toISOString().split('T')[0];
     const DefaultVals = {
         name: "", startingBalance: "10000", cowPrice: "100",
         milkPrice: "1", degradationRate: null, carryingCapacity: null, startingDate: today
