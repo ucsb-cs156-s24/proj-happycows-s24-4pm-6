@@ -5,6 +5,9 @@ import {useBackend} from "main/utils/useBackend";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
+    if (initialCommons && initialCommons.startingDate && initialCommons.startingDate.includes("T")) {
+        initialCommons.startingDate = initialCommons.startingDate.split("T")[0];
+    }
 
     // Stryker disable all
     const {
