@@ -43,9 +43,9 @@ public class CommonStatsService {
     public CommonStats createAndSaveCommonStats(Long commonsId) {
         
         CommonStats stats = createCommonStats(commonsId);
-        CommonStats savedStats = commonStatsRepository.save(stats);
+        commonStatsRepository.save(stats);
 
-        return savedStats;
+        return stats;
     }
 
 }
