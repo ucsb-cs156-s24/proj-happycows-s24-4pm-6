@@ -5,7 +5,7 @@ import {useBackend} from "main/utils/useBackend";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
-    if (initialCommons && initialCommons.startingDate && initialCommons.startingDate.includes("T")) {
+    if (initialCommons && initialCommons.startingDate) {
         initialCommons.startingDate = initialCommons.startingDate.split("T")[0];
     }
 
@@ -29,7 +29,6 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     const testid = "CommonsForm";
 
     const curr = new Date();
-    // eslint-disable-next-line no-unused-vars
     const today = curr.toISOString().split('T')[0];
     const DefaultVals = {
         name: "", startingBalance: "10000", cowPrice: "100",
