@@ -274,7 +274,7 @@ describe("CommonsForm tests", () => {
     );
 
     expect(await screen.findByText(/Id/)).toBeInTheDocument();
-    expect(screen.getByTestId("CommonsForm-startingDate")).toHaveValue(commonsFixtures.threeCommons[0].startingDate);
+    expect(screen.getByTestId("CommonsForm-startingDate")).toHaveValue(commonsFixtures.threeCommons[0].startingDate.split("T")[0]);
   });
 
   it("renders correctly when an initialCommons is not passed in", async () => {
