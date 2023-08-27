@@ -5,9 +5,9 @@ import {useBackend} from "main/utils/useBackend";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
-    let modifiedCommons = { ...initialCommons };  // make a shallow copy of initialCommons
+    let modifiedCommons = initialCommons ? { ...initialCommons } : {};  // make a shallow copy of initialCommons
 
-    if (modifiedCommons && modifiedCommons.startingDate) {
+    if (modifiedCommons.startingDate) {
         modifiedCommons.startingDate = modifiedCommons.startingDate.split("T")[0];
     }
 
@@ -17,7 +17,8 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         formState: {errors},
         handleSubmit,
     } = useForm(
-        {defaultValues: modifiedCommons || {}}
+        // modifiedCommons is guaranteed to be defined (initialCommons or {})
+        {defaultValues: modifiedCommons}
     );
     // Stryker restore all
 
