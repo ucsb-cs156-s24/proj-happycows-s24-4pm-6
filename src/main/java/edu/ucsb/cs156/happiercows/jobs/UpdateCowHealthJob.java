@@ -36,6 +36,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
         for (CommonsPlus commonsPlus : allCommonsPlus) {
 
+
             Commons commons = commonsPlus.getCommons();
             
             runUpdateJobInCommons(commons, commonsPlus, commonsPlusBuilderService, commonsRepository, userCommonsRepository, ctx);
@@ -68,6 +69,7 @@ public class UpdateCowHealthJob implements JobContextConsumer {
 
     public static void runUpdateJobInCommons(Commons commons, CommonsPlus commonsPlus, CommonsPlusBuilderService commonsPlusBuilderService, CommonsRepository commonsRepository, UserCommonsRepository userCommonsRepository, JobContext ctx){
         ctx.log("Commons " + commons.getName() + ", degradationRate: " + commons.getDegradationRate() + ", effectiveCapacity: " + commonsPlus.getEffectiveCapacity());
+
             int numUsers = commonsRepository.getNumUsers(commons.getId()).orElseThrow(() -> new RuntimeException("Error calling getNumUsers(" + commons.getId() + ")"));
 
             if (numUsers==0) {
@@ -96,5 +98,6 @@ public class UpdateCowHealthJob implements JobContextConsumer {
                 ctx.log(" old cow health: " + oldHealth + ", new cow health: " + userCommons.getCowHealth());
                 userCommonsRepository.save(userCommons);
             }
+
     }
 }
