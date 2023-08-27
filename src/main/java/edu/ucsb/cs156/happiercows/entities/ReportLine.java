@@ -1,6 +1,5 @@
 package edu.ucsb.cs156.happiercows.entities;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.*;

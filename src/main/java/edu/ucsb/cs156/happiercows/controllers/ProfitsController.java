@@ -9,7 +9,6 @@ import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,8 +26,6 @@ import java.util.List;
 @Tag(name = "Profits")
 @RequestMapping("/api/profits")
 @RestController
-@Slf4j
-
 public class ProfitsController extends ApiController {
 
     @Autowired

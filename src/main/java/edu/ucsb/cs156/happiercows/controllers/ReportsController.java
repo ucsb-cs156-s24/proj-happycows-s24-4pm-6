@@ -1,20 +1,15 @@
 package edu.ucsb.cs156.happiercows.controllers;
 
-import edu.ucsb.cs156.happiercows.entities.Profit;
 import edu.ucsb.cs156.happiercows.entities.Report;
 import edu.ucsb.cs156.happiercows.entities.ReportLine;
-import edu.ucsb.cs156.happiercows.entities.UserCommons;
-import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import edu.ucsb.cs156.happiercows.helpers.ReportCSVHelper;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
-import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.repositories.ReportLineRepository;
 import edu.ucsb.cs156.happiercows.repositories.ReportRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.catalina.session.FileStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
