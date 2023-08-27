@@ -35,6 +35,7 @@ function MilkTheCowsForm( { submitAction, testid = "MilkTheCowsForm" } ) {
     submitAction(params);
   };
 
+  // TODO: calculate the selected commons with regular variable instead of setting state in render
   if (selectedCommons === null) {
     setSelectedCommons(commons[0].id);
     setSelectedCommonsName(commons[0].name);
