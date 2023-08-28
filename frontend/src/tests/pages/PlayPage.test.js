@@ -122,4 +122,88 @@ describe("PlayPage tests", () => {
         var div = screen.getByTestId("playpage-div");
         expect(div).toHaveAttribute("style", expect.stringContaining("background-size: cover; background-image: url(PlayPageBackground.png);"));
     });
+
+    test("Chat toggle button opens and closes the ChatPanel", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
+        });
+    
+        // Make sure the chat toggle button is visible
+        const chatToggleButton = screen.getByTestId("playpage-chat-toggle");
+        expect(chatToggleButton).toBeInTheDocument();
+        
+        // Make sure the ChatPanel is not visible initially
+        expect(screen.queryByTestId("ChatPanel")).not.toBeInTheDocument();
+    
+        // Click the chat toggle button to open the ChatPanel
+        fireEvent.click(chatToggleButton);
+    
+        // Wait for the ChatPanel to become visible
+        await waitFor(() => {
+            expect(screen.getByTestId("ChatPanel")).toBeInTheDocument();
+        });
+    
+        // Click the chat toggle button again to close the ChatPanel
+        fireEvent.click(chatToggleButton);
+    
+        // Wait for the ChatPanel to become hidden
+        await waitFor(() => {
+            expect(screen.queryByTestId("ChatPanel")).not.toBeInTheDocument();
+        });
+    });
+
+    test("Chat button and container have correct styles", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
+        });
+
+        const chatButton = screen.getByTestId("playpage-chat-toggle");
+        const chatContainer = screen.getByTestId("playpage-chat-div");
+
+        expect(chatButton).toHaveTextContent('▲');
+
+        // Click the chat toggle button to open the ChatPanel
+        fireEvent.click(chatButton);
+
+        await waitFor(() => {
+            expect(chatButton).toHaveTextContent('▼');
+        });
+
+        // Check styles for the chat button
+        expect(chatButton).toHaveStyle(`
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: lightblue;
+            color: black;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        `);
+
+        // Check styles for the chat container
+        expect(chatContainer).toHaveStyle(`
+            width: 550px;
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+        `);
+    });
+    
 });
