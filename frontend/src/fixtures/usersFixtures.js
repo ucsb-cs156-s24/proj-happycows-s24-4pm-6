@@ -11,7 +11,8 @@ const usersFixtures = {
             "emailVerified": true,
             "locale": "en",
             "hostedDomain": "ucsb.edu",
-            "admin": true
+            "admin": true,
+            "lastOnline": "2023-06-04T18:45:16.014490Z",
         },
         {
             "id": 2,
@@ -24,7 +25,8 @@ const usersFixtures = {
             "emailVerified": true,
             "locale": "en",
             "hostedDomain": null,
-            "admin": false
+            "admin": false,
+            "lastOnline": "2023-06-04T18:45:16.014490Z",
         },
         {
             "id": 3,
@@ -37,7 +39,8 @@ const usersFixtures = {
             "emailVerified": true,
             "locale": "en",
             "hostedDomain": null,
-            "admin": false
+            "admin": false,
+            "lastOnline": "2023-06-04T18:45:16.014490Z",
         }
     ]
 }

@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import UsersTable from "main/components/Users/UsersTable";
+import { formatTime } from "main/utils/dateUtils";
 import usersFixtures from "fixtures/usersFixtures";
 
 describe("UserTable tests", () => {
@@ -20,8 +21,8 @@ describe("UserTable tests", () => {
           <UsersTable users={usersFixtures.threeUsers}/>
         );
     
-        const expectedHeaders = ["id", "First Name", "Last Name", "Email", "Admin"];
-        const expectedFields = ["id", "givenName", "familyName", "email", "admin"];
+        const expectedHeaders = ["id", "First Name", "Last Name", "Email", "Last Online", "Admin"];
+        const expectedFields = ["id", "givenName", "familyName", "email", "lastOnline", "admin"];
         const testId = "UsersTable";
 
         expectedHeaders.forEach( (headerText)=> {
@@ -36,6 +37,7 @@ describe("UserTable tests", () => {
 
         expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
         expect(screen.getByTestId(`${testId}-cell-row-0-col-admin`)).toHaveTextContent("true");
+        expect(screen.getByTestId(`${testId}-cell-row-0-col-lastOnline`)).toHaveTextContent(formatTime(usersFixtures.threeUsers[0].lastOnline));
         expect(screen.getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("2");
         expect(screen.getByTestId(`${testId}-cell-row-1-col-admin`)).toHaveTextContent("false");
       });

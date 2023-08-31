@@ -50,6 +50,7 @@ describe("HomePage tests", () => {
         await waitFor(() => {
             expect(title.textContent).toEqual('Howdy Farmer Phillip');
         });
+        expect(() => screen.getAllByTestId(/commonsCard-button/)).toThrow('Unable to find an element');
     });
 
     test("renders with default for commons when api times out", () => {
