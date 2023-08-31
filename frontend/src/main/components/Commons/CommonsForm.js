@@ -35,7 +35,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     const today = curr.toISOString().split('T')[0];
     const DefaultVals = {
         name: "", startingBalance: "10000", cowPrice: "100",
-        milkPrice: "1", degradationRate: null, carryingCapacity: null, startingDate: today
+        milkPrice: "1", degradationRate: 0.001, carryingCapacity: 100, startingDate: today
     };
 
     const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
