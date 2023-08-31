@@ -41,7 +41,6 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
     const aboveStrategy = initialCommons?.aboveCapacityStrategy || healthUpdateStrategies?.defaultAboveCapacity;
 
-
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
             {initialCommons && (
