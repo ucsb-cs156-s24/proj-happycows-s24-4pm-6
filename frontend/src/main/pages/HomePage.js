@@ -10,7 +10,7 @@ import { commonsNotJoined } from "main/utils/commonsUtils";
 import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
 export default function HomePage({hour=null}) {
-  // Stryker next-line ignore : it is acceptable to exclude useState calls from mutation testing
+  // Stryker disable next-line all: it is acceptable to exclude useState calls from mutation testing
   const [commonsJoined, setCommonsJoined] = useState([]);
   const { data: currentUser } = useCurrentUser();
 
