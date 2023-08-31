@@ -85,6 +85,9 @@ describe("CommonsForm tests", () => {
     expect(submitButton).toBeInTheDocument();
     expect(screen.getByTestId("CommonsForm-Submit-Button")).toHaveTextContent("Create New Commons");
 
+    fireEvent.change(screen.getByTestId("CommonsForm-degradationRate"), { target: { value: "" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-carryingCapacity"), { target: { value: "" } });
+
     //Check default empty field
     fireEvent.click(submitButton);
     expect(await screen.findByText('Commons name is required')).toBeInTheDocument();
@@ -150,14 +153,12 @@ describe("CommonsForm tests", () => {
     const today = curr.toISOString().substr(0, 10);
     const DefaultVals = {
       name: "", startingBalance: 10000, cowPrice: 100,
-      milkPrice: 1, degradationRate: null, carryingCapacity: null, startingDate: today
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today
     };
-
 
     axiosMock
         .onGet("/api/commons/all-health-update-strategies")
         .reply(200, healthUpdateStrategyListFixtures.real);
-
 
     render(
         <QueryClientProvider client={new QueryClient()}>
@@ -223,7 +224,7 @@ describe("CommonsForm tests", () => {
 
     fireEvent.change(screen.getByTestId("CommonsForm-degradationRate"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
-    await screen.findByText(/Degradation rate must be ≥ 0.00/i);
+    await screen.findByText(/Degradation rate must be ≥ 0/i);
 
     fireEvent.change(screen.getByTestId("CommonsForm-carryingCapacity"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
