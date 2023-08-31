@@ -5,7 +5,7 @@
 | Type | Link       | 
 |------|------------|
 | prod | <https://happycows.dokku-00.cs.ucsb.edu/>     | 
-| qa   | <https://happycows-qa.dokku-07.cs.ucsb.edu/>  | 
+| qa   | <https://happycows-qa.dokku-00.cs.ucsb.edu/>  | 
 
 # Description
 
