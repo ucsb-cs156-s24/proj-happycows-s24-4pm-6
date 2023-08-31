@@ -1,5 +1,6 @@
 import React from "react";
 import OurTable from "main/components/OurTable"
+import { formatTime } from "main/utils/dateUtils";
 
 const columns = [
     {
@@ -17,6 +18,11 @@ const columns = [
     {
         Header: 'Email',
         accessor: 'email',
+    },
+    {
+        Header: 'Last Online',
+        id: 'lastOnline',
+        accessor: (row) => formatTime(row.lastOnline),
     },
     {
         Header: 'Admin',

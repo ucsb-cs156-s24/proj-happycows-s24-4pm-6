@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useRef } from "react"
+import { useBackendMutation } from "main/utils/useBackend";
 import HomePage from "main/pages/HomePage";
 import LoginPage from "main/pages/LoginPage";
 import ProfilePage from "main/pages/ProfilePage";
@@ -19,6 +21,30 @@ import NotFoundPage from "main/pages/NotFoundPage";
 function App() {
 
   const { data: currentUser } = useCurrentUser();
+
+  const updateLastOnlineMutation = useBackendMutation(
+    () => ({ method: 'POST', url: '/api/currentUser/last-online' }),
+    {}
+  );
+
+  const updatedOnlineOnMount = useRef(false);
+
+  useEffect(() => {
+    if (currentUser && currentUser.loggedIn) {
+      if (!updatedOnlineOnMount.current) {
+        updatedOnlineOnMount.current = true;
+        updateLastOnlineMutation.mutate();
+      }
+      
+      const interval = setInterval(() => {
+        updateLastOnlineMutation.mutate();
+      }, 60000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [currentUser, updateLastOnlineMutation]);
 
   return (
     <BrowserRouter>
