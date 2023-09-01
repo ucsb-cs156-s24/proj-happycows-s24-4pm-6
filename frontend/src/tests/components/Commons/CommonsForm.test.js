@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { MemoryRouter as Router } from "react-router-dom";
 import CommonsForm from "main/components/Commons/CommonsForm";
 import { QueryClient, QueryClientProvider } from "react-query";
 import commonsFixtures from "fixtures/commonsFixtures"
@@ -47,6 +47,7 @@ describe("CommonsForm tests", () => {
       /Milk Price/,
       /Starting Date/,
       /Degradation Rate/,
+      /Capacity Per User/,
       /Carrying Capacity/,
       /Show Leaderboard\?/,
       /When below capacity/,
@@ -84,32 +85,47 @@ describe("CommonsForm tests", () => {
     expect(submitButton).toBeInTheDocument();
     expect(screen.getByTestId("CommonsForm-Submit-Button")).toHaveTextContent("Create New Commons");
 
+    fireEvent.change(screen.getByTestId("CommonsForm-degradationRate"), { target: { value: "" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-carryingCapacity"), { target: { value: "" } });
 
+    //Check default empty field
     fireEvent.click(submitButton);
-    expect(await screen.findByText(/commons name is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/starting balance is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/cow price is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/milk price is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/starting date is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/degradation rate is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/Carrying capacity is required/i)).toBeInTheDocument();
+    expect(await screen.findByText('Commons name is required')).toBeInTheDocument();
+    expect(screen.getByText('Degradation rate is required')).toBeInTheDocument();
+    expect(screen.getByText('Carrying capacity is required')).toBeInTheDocument();
+    expect(screen.getByText('Capacity Per User is required')).toBeInTheDocument();
 
-    // check that each of the fields that has 
-    // a validation error is marked as invalid
-    // This helps with mutation coverage of code such as:
-    //    isInvalid={!!errors.carryingCapacity}
+    //Clear Default Values
+    fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-cowPrice"), { target: { value: "" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-startingBalance"), { target: { value: "" } });
+    expect(await screen.findByText('Cow price is required')).toBeInTheDocument();
+    expect(screen.getByText('Milk price is required')).toBeInTheDocument();
+    expect(screen.getByText('Starting Balance is required')).toBeInTheDocument();
+
+    //Reset to Invalid Values
+    fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "-1" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-cowPrice"), { target: { value: "-1" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-startingBalance"), { target: { value: "-1" } });
+    fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: NaN } });
+    fireEvent.click(submitButton);
+
+    //Await
+    await screen.findByTestId('CommonsForm-milkPrice');
 
     [
       "CommonsForm-name",
-      "CommonsForm-startingBalance",
-      "CommonsForm-cowPrice",
-      "CommonsForm-milkPrice",
-      "CommonsForm-startingDate",
       "CommonsForm-degradationRate",
+      "CommonsForm-capacityPerUser",
       "CommonsForm-carryingCapacity",
+      "CommonsForm-milkPrice",
+      "CommonsForm-cowPrice",
+      "CommonsForm-startingBalance",
+      "CommonsForm-startingDate",
+
     ].forEach(
-      (testid) => {
-        const element = screen.getByTestId(testid);
+      (item) => {
+        const element = screen.getByTestId(item);
         expect(element).toBeInTheDocument();
         expect(element).toHaveClass("is-invalid");
       }
@@ -127,6 +143,49 @@ describe("CommonsForm tests", () => {
     );
 
     expect(submitAction).not.toBeCalled();
+  });
+
+
+
+  it("Check Default Values and correct styles", async () => {
+
+    const curr = new Date();
+    const today = curr.toISOString().substr(0, 10);
+    const DefaultVals = {
+      name: "", startingBalance: 10000, cowPrice: 100,
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today
+    };
+
+    axiosMock
+        .onGet("/api/commons/all-health-update-strategies")
+        .reply(200, healthUpdateStrategyListFixtures.real);
+
+    render(
+        <QueryClientProvider client={new QueryClient()}>
+          <Router>
+            <CommonsForm  />
+          </Router>
+        </QueryClientProvider>
+    );
+
+    expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();
+    [
+      "name", "degradationRate", "carryingCapacity",
+      "milkPrice","cowPrice","startingBalance","startingDate",
+    ].forEach(
+        (item) => {
+          const element = screen.getByTestId(`CommonsForm-${item}`);
+          expect(element).toHaveValue(DefaultVals[item]);
+        }
+    );
+
+    // Check Style
+    expect(screen.getByTestId("CommonsForm-r0")).toHaveStyle('width: 80%');
+    expect(screen.getByTestId("CommonsForm-r1")).toHaveStyle('width: 80%');
+    expect(screen.getByTestId("CommonsForm-r2")).toHaveStyle('width: 80%');
+    expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('width: 300px');
+    expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('height: 50px');
+    expect(screen.getByTestId("CommonsForm-Submit-Button")).toHaveStyle('width: 30%');
   });
 
 
@@ -165,7 +224,7 @@ describe("CommonsForm tests", () => {
 
     fireEvent.change(screen.getByTestId("CommonsForm-degradationRate"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
-    await screen.findByText(/Degradation rate must be ≥ 0.00/i);
+    await screen.findByText(/Degradation rate must be ≥ 0/i);
 
     fireEvent.change(screen.getByTestId("CommonsForm-carryingCapacity"), { target: { value: "-1" } });
     fireEvent.click(submitButton);
@@ -200,6 +259,23 @@ describe("CommonsForm tests", () => {
 
     expect(screen.getByTestId("aboveCapacityHealthUpdateStrategy-Noop")).toBeInTheDocument();
     expect(screen.getByTestId("belowCapacityHealthUpdateStrategy-Noop")).toBeInTheDocument();
+  });
+
+  it("renders correctly with date cut off", async () => {
+    axiosMock
+      .onGet("/api/commons/all-health-update-strategies")
+      .reply(200, healthUpdateStrategyListFixtures.real);
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <CommonsForm initialCommons={commonsFixtures.threeCommons[0]} />
+        </Router>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByText(/Id/)).toBeInTheDocument();
+    expect(screen.getByTestId("CommonsForm-startingDate")).toHaveValue(commonsFixtures.threeCommons[0].startingDate.split("T")[0]);
   });
 
   it("renders correctly when an initialCommons is not passed in", async () => {
@@ -250,6 +326,4 @@ describe("CommonsForm tests", () => {
       );
     });
   });
-
-
 });

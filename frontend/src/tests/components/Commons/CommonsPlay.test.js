@@ -22,7 +22,7 @@ describe("CommonsPlay tests", () => {
         );
 
         await waitFor(()=>{
-            expect(screen.getByText("Welcome Farmer")).toBeInTheDocument();
+            expect(screen.getByTestId("CommonsPlay")).toBeInTheDocument();
         });
 
     });

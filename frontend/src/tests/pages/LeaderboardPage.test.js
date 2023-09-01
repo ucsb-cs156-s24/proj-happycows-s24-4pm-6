@@ -1,4 +1,4 @@
-import { screen, waitFor, render } from "@testing-library/react";
+import { render, waitFor, fireEvent, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
@@ -78,7 +78,26 @@ describe("LeaderboardPage tests", () => {
 
         });
         const leaderboard_main_div = screen.getByTestId("LeaderboardPage-main-div");
+        const leaderboard_back_button = screen.getByTestId("LeaderboardPage-back-button");
         expect(leaderboard_main_div).toHaveAttribute("style","background-size: cover; background-image: url(PlayPageBackground.png);");
+        expect(leaderboard_back_button).toBeInTheDocument();
+    });
+
+    test("that navigate(-1) is called when Back is clicked", async () => {
+        const queryClient = new QueryClient();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <LeaderboardPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        await screen.findByTestId("LeaderboardPage-back-button");
+        const cancelButton = screen.getByTestId("LeaderboardPage-back-button");
+
+        fireEvent.click(cancelButton);
+
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(-1));
 
     });
 

@@ -203,9 +203,11 @@ public class UserCommonsControllerTests extends ControllerTestCase {
 
         UserCommons origUserCommons = getTestUserCommons();
         origUserCommons.setCowsSold(1);
+        origUserCommons.setCowHealth(50);
 
         UserCommons updatedUserCommons = getTestUserCommons();
-        updatedUserCommons.setTotalWealth(300 + testCommons.getCowPrice());
+        updatedUserCommons.setCowHealth(50);
+        updatedUserCommons.setTotalWealth(300 + testCommons.getCowPrice() * 0.5);
         updatedUserCommons.setNumOfCows(0);
         updatedUserCommons.setCowsSold(2);
 
@@ -373,7 +375,7 @@ public class UserCommonsControllerTests extends ControllerTestCase {
         expectedUserCommons.add(testexpectedUserCommons);
         when(userCommonsRepository.findByCommonsId(eq(1L))).thenReturn(expectedUserCommons);
 
-        MvcResult response = mockMvc.perform(get("/api/usercommons/commons/all?commonsId=1"))
+        MvcResult response = mockMvc.perform(get("/api/usercommons/commons/all?commonsId=1").with(csrf()))
                 .andExpect(status().isOk()).andReturn();
 
         verify(userCommonsRepository, times(1)).findByCommonsId(eq(1L));

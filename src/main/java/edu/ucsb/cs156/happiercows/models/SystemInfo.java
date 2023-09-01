@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 import lombok.AccessLevel;
-import org.springframework.beans.factory.annotation.Value;
-
-
 
 @Data
 @AllArgsConstructor

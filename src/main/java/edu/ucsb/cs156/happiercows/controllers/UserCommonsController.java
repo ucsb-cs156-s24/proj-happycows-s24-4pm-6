@@ -25,11 +25,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
 import org.springframework.http.ResponseEntity;
-import javax.validation.Valid;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "User Commons")
 @RequestMapping("/api/usercommons")
@@ -117,7 +113,8 @@ public class UserCommonsController extends ApiController {
 
 
         if(userCommons.getNumOfCows() >= 1 ){
-          userCommons.setTotalWealth(userCommons.getTotalWealth() + commons.getCowPrice());
+          double cowValue = commons.getCowPrice() * userCommons.getCowHealth() / 100;
+          userCommons.setTotalWealth(userCommons.getTotalWealth() + cowValue);
           userCommons.setNumOfCows(userCommons.getNumOfCows() - 1);
           userCommons.setCowsSold(userCommons.getCowsSold() + 1);
         }
@@ -133,6 +130,7 @@ public class UserCommonsController extends ApiController {
     
 
     @Operation(summary = "Get all user commons for a specific commons")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/commons/all")
     public  ResponseEntity<String> getUsersCommonsByCommonsId(
         @Parameter(name="commonsId") @RequestParam Long commonsId) throws JsonProcessingException {

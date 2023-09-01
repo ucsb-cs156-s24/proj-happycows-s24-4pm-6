@@ -60,23 +60,45 @@ const AdminJobsPage = () => {
     method: "POST",
   });
 
+  const objectToAxiosParamsUpdateCowHealthJobSingle = (data) => ({
+    url: `/api/jobs/launch/updatecowhealthsinglecommons?commonsId=${data.selectedCommons}`,
+    method: "POST",
+  });
+
   // Stryker disable all
   const UpdateCowHealthMutation = useBackendMutation(
     objectToAxiosParamsUpdateCowHealthJob,
     {},
     ["/api/jobs/all"]
   );
+
+  const UpdateCowHealthSingleMutation = useBackendMutation(
+    objectToAxiosParamsUpdateCowHealthJobSingle,
+    {},
+    ["/api/jobs/all"]
+  );
   // Stryker restore all
 
-  const submitUpdateCowHealthJob = async () => {
-    toast("Submitted Job: Update Cow Health");
+  const submitUpdateCowHealthJob = async (data) => {
+    if (data.selectedCommonsName === "All Commons") {
+      toast("Submitted Job: Update Cow Health");
     UpdateCowHealthMutation.mutate();
+    } else {
+    toast(`Submitted Job: Update Cow Health (Commons: ${data.selectedCommonsName})`);
+    UpdateCowHealthSingleMutation.mutate(data);
+    }
   };
+
 
   // *** MilkTheCows job ***
 
   const objectToAxiosParamsMilkTheCowsJob = () => ({
     url: `/api/jobs/launch/milkthecowjob`,
+    method: "POST",
+  });
+
+  const objectToAxiosParamsMilkTheCowsJobSingle = (data) => ({
+    url: `/api/jobs/launch/milkthecowjobsinglecommons?commonsId=${data.selectedCommons}`,
     method: "POST",
   });
 
@@ -87,13 +109,23 @@ const AdminJobsPage = () => {
     {},
     ["/api/jobs/all"]
   );
+
+  const MilkTheCowsSingleMutation = useBackendMutation(
+    objectToAxiosParamsMilkTheCowsJobSingle,
+    {},
+    ["/api/jobs/all"]
+  );
   // Stryker restore all
 
-  const submitMilkTheCowsJob = async () => {
-    toast("Submitted Job: Milk The Cows");
-    MilkTheCowsMutation.mutate();
+  const submitMilkTheCowsJob = async (data) => {
+    if (data.selectedCommonsName === "All Commons") {
+      toast("Submitted Job: Milk The Cows!");
+      MilkTheCowsMutation.mutate();
+    } else {
+    toast(`Submitted Job: Milk The Cows! (Commons: ${data.selectedCommonsName})`);
+    MilkTheCowsSingleMutation.mutate(data);
+    }
   };
-
   // *** Instructor Report job ***
 
   const objectToAxiosParamsInstructorReportJob = () => ({

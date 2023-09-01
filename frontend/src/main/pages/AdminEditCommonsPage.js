@@ -35,6 +35,7 @@ export default function CommonsEditPage() {
         "milkPrice": commons.milkPrice,
         "startingDate": commons.startingDate,
         "degradationRate": commons.degradationRate,
+        "capacityPerUser": commons.capacityPerUser,
         "carryingCapacity": commons.carryingCapacity,
         "aboveCapacityHealthUpdateStrategy": commons.aboveCapacityHealthUpdateStrategy,
         "belowCapacityHealthUpdateStrategy": commons.belowCapacityHealthUpdateStrategy,
