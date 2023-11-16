@@ -270,6 +270,12 @@ public class CommonsController extends ApiController {
     @DeleteMapping("")
     public Object deleteCommons(
             @Parameter(name="id") @RequestParam Long id) {
+        
+        Iterable<UserCommons> userCommons = userCommonsRepository.findByCommonsId(id);
+
+        for (UserCommons userCommon : userCommons) {
+            userCommonsRepository.delete(userCommon);
+        }
 
         commonsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Commons.class, id));
