@@ -273,8 +273,8 @@ public class CommonsController extends ApiController {
         
         Iterable<UserCommons> userCommons = userCommonsRepository.findByCommonsId(id);
 
-        for (UserCommons userCommon : userCommons) {
-            userCommonsRepository.delete(userCommon);
+        for (UserCommons commons : userCommons) {
+            userCommonsRepository.delete(commons);
         }
 
         commonsRepository.findById(id)

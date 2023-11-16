@@ -751,7 +751,28 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .carryingCapacity(100)
                 .build();
 
+        UserCommons uc1 = UserCommons.builder()
+                .user(currentUserService.getUser())
+                .commons(c)
+                .username("1L")
+                .totalWealth(0)
+                .numOfCows(1)
+                .build();
+
+        UserCommons uc2 = UserCommons.builder()
+                .user(currentUserService.getUser())
+                .commons(c)
+                .username("3L")
+                .totalWealth(0)
+                .numOfCows(1)
+                .build();
+
+        List<UserCommons> userCommons = new ArrayList<>();
+        userCommons.add(uc1);
+        userCommons.add(uc2);
+
         when(commonsRepository.findById(eq(2L))).thenReturn(Optional.of(c));
+        when(userCommonsRepository.findByCommonsId(2L)).thenReturn(userCommons);
         doNothing().when(commonsRepository).deleteById(2L);
 
         MvcResult response = mockMvc.perform(
@@ -761,6 +782,10 @@ public class CommonsControllerTests extends ControllerTestCase {
 
         verify(commonsRepository, times(1)).findById(2L);
         verify(commonsRepository, times(1)).deleteById(2L);
+
+        verify(userCommonsRepository, times(1)).findByCommonsId(2L);
+        verify(userCommonsRepository, times(1)).delete(uc1);
+        verify(userCommonsRepository, times(1)).delete(uc2);
 
         String responseString = response.getResponse().getContentAsString();
 
