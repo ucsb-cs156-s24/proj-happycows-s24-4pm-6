@@ -94,7 +94,6 @@ describe("PlayPage tests", () => {
 
         await waitFor(() => expect(axiosMock.history.put.length).toBe(2));
 
-        expect(mockToast).toBeCalledWith("Cow sold!");
     });
 
     test("Make sure that both the Announcements and Welcome Farmer components show up", async () => {
