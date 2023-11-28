@@ -14,6 +14,7 @@ import { useCurrentUser } from "main/utils/currentUser";
 import Background from "../../assets/PlayPageBackground.png";
 import ChatPanel from "main/components/Chat/ChatPanel";
 
+
 export default function PlayPage() {
 
   const { commonsId } = useParams();
