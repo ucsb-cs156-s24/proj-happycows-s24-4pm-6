@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
+
+import { useNavigate, useParams } from "react-router-dom";
 import { Container, CardGroup, Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import CommonsOverview from "main/components/Commons/CommonsOverview";
 import CommonsPlay from "main/components/Commons/CommonsPlay";
 import FarmStats from "main/components/Commons/FarmStats";
@@ -11,22 +12,27 @@ import ManageCows from "main/components/Commons/ManageCows";
 import Profits from "main/components/Commons/Profits";
 import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
-import Background from "../../assets/PlayPageBackground.png";
+// import Background from "../../assets/PlayPageBackground.png";
 import ChatPanel from "main/components/Chat/ChatPanel";
 
-export default function PlayPage() {
-    const { commonsId } = useParams();
+// import { useUsers } from "main/utils/users";
+const AdminViewPlayPage = () => {
+    // this will get the usercommonsid, and we can use it for the playpage
+    const userCommonsId = useParams();
+    const navigate = useNavigate();
+    console.log(userCommonsId);
+
     const { data: currentUser } = useCurrentUser();
-    console.log(commonsId);
+    console.log(currentUser);
 
     // Stryker disable all
     const { data: userCommons } = useBackend(
-        [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`],
+        [`/api/usercommons/forcurrentuser?commonsId=${userCommonsId}`],
         {
             method: "GET",
             url: "/api/usercommons/forcurrentuser",
             params: {
-                commonsId: commonsId,
+                commonsId: userCommonsId,
             },
         }
     );
@@ -34,12 +40,12 @@ export default function PlayPage() {
 
     // Stryker disable all
     const { data: commonsPlus } = useBackend(
-        [`/api/commons/plus?id=${commonsId}`],
+        [`/api/commons/plus?id=${userCommonsId}`],
         {
             method: "GET",
             url: "/api/commons/plus",
             params: {
-                id: commonsId,
+                id: userCommonsId,
             },
         }
     );
@@ -47,12 +53,12 @@ export default function PlayPage() {
 
     // Stryker disable all
     const { data: userCommonsProfits } = useBackend(
-        [`/api/profits/all/commonsid?commonsId=${commonsId}`],
+        [`/api/profits/all/commonsid?commonsId=${userCommonsId}`],
         {
             method: "GET",
             url: "/api/profits/all/commonsid",
             params: {
-                commonsId: commonsId,
+                commonsId: userCommonsId,
             },
         }
     );
@@ -64,7 +70,7 @@ export default function PlayPage() {
         method: "PUT",
         data: newUserCommons,
         params: {
-            commonsId: commonsId,
+            commonsId: userCommonsId,
         },
     });
     // Stryker restore all
@@ -74,7 +80,7 @@ export default function PlayPage() {
         objectToAxiosParamsBuy,
         null,
         // Stryker disable next-line all : hard to set up test for caching
-        [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
+        [`/api/usercommons/forcurrentuser?commonsId=${userCommonsId}`]
     );
     // Stryker restore all
 
@@ -92,7 +98,7 @@ export default function PlayPage() {
         method: "PUT",
         data: newUserCommons,
         params: {
-            commonsId: commonsId,
+            commonsId: userCommonsId,
         },
     });
     // Stryker restore all
@@ -101,7 +107,7 @@ export default function PlayPage() {
     const mutationsell = useBackendMutation(
         objectToAxiosParamsSell,
         { onSuccess: onSuccessSell },
-        [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
+        [`/api/usercommons/forcurrentuser?commonsId=${userCommonsId}`]
     );
     // Stryker restore all
 
@@ -132,16 +138,17 @@ export default function PlayPage() {
         bottom: "100px",
         right: "20px",
     };
-
     return (
-        <div
-            style={{
-                backgroundSize: "cover",
-                backgroundImage: `url(${Background})`,
-            }}
-            data-testid="playpage-div"
-        >
+        <div>
             <BasicLayout>
+                {" "}
+                View play page
+                <Button
+                    onClick={() => navigate(-1)}
+                    data-testid="LeaderboardPage-back-button"
+                >
+                    Back
+                </Button>
                 <Container>
                     {!!currentUser && <CommonsPlay currentUser={currentUser} />}
                     {!!commonsPlus && (
@@ -169,7 +176,7 @@ export default function PlayPage() {
                 </Container>
             </BasicLayout>
             <div style={chatContainerStyle} data-testid="playpage-chat-div">
-                {!!isChatOpen && <ChatPanel commonsId={commonsId} />}
+                {!!isChatOpen && <ChatPanel commonsId={userCommonsId} />}
                 <Button
                     style={chatButtonStyle}
                     onClick={toggleChatWindow}
@@ -180,4 +187,6 @@ export default function PlayPage() {
             </div>
         </div>
     );
-}
+};
+
+export default AdminViewPlayPage;
