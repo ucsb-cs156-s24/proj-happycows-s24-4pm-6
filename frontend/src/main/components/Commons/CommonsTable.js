@@ -57,7 +57,7 @@ export default function CommonsTable({ commons, currentUser }) {
         {
             Header:<span> Milk <br /> Price </span>,
             accessor: row => row.commons.milkPrice,
-            id: 'commons.milkPrice'
+            id: 'commons.milkPrice' 
         },
         {
             Header:<span> Start <br /> Bal </span>,
