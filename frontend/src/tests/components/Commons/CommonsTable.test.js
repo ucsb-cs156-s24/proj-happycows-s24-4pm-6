@@ -68,8 +68,7 @@ describe("UserTable tests", () => {
       </QueryClientProvider>
 
     );
-
-    const expectedHeaders = ["id", "Name", "Cow Price", 'Milk Price', 'Starting Balance', 'Starting Date', 'Degradation Rate', 'Capacity Per User', 'Carrying Capacity', "Effective Capacity",'Cows', 'Show Leaderboard?'];
+    const expectedHeaders = ["id", "Name", /Cow\s+Price/, /Milk\s+Price/, /Start\s+Bal/, /Starting\s+Date/, /Degrad\s+Rate/, /Cap \/\s+User/, /Carry\s+Cap/, /Eff\s+Cap/, /Tot\s+Cows/, /Show\s+LrdrBrd\?/];
     const expectedFields = ["id", "name", "cowPrice", "milkPrice", "startingBalance", "startingDate", "degradationRate", "capacityPerUser", "carryingCapacity"];
     const testId = "CommonsTable";
 
