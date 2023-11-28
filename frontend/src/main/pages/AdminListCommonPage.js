@@ -25,7 +25,7 @@ export default function AdminListCommonsPage()
           <Col>
             <h2>Commons</h2>
           </Col>
-          <Col>
+          <Col style  = {{display: 'flex', justifyContent: 'flex-end'}}>
             <Button href='/api/commonstats/downloadAll'>
               Download All Stats
             </Button>
