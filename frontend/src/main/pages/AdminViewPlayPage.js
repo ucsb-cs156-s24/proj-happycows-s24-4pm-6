@@ -16,6 +16,13 @@ import { useCurrentUser } from "main/utils/currentUser";
 import ChatPanel from "main/components/Chat/ChatPanel";
 
 // import { useUsers } from "main/utils/users";
+
+// call differewnct API
+// common id and userid
+// use params to get them
+
+// dont show button for admin
+
 const AdminViewPlayPage = () => {
     // this will get the usercommonsid, and we can use it for the playpage
     const userCommonsId = useParams();
