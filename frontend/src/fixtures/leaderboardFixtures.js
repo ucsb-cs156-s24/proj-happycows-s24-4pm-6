@@ -58,10 +58,10 @@ const leaderboardFixtures = {
             "commonsId": 1,
             "totalWealth" : 1000,
             "cowHealth": 93.0,
-            "numOfCows": 8,
-            "cowsBought": 8,
-            "cowsSold": 8,
-            "cowDeaths": 8
+            "numOfCows": 12,
+            "cowsBought": 11,
+            "cowsSold": 10,
+            "cowDeaths": 9
         },
         {
             "id":2,
