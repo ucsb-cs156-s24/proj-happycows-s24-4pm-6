@@ -1,6 +1,6 @@
 import React, { useState} from "react";
 import greetingsList from "../../../assets/PlayGreetings.json"
-
+import "../../pages/HomePage.css"
 export default function CommonsPlay({ currentUser }) {
   // Stryker disable  all 
   const firstName = currentUser?.root ? currentUser?.root?.user?.givenName : "";
@@ -10,8 +10,7 @@ export default function CommonsPlay({ currentUser }) {
 
   return (
     <div data-testid="CommonsPlay">
-      <h1>
-      {welcomeText} {firstName}! 
+      <h1 className="animate-charcter"> {welcomeText} {firstName}! 
     </h1>
     </div>
   );
