@@ -238,26 +238,44 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
+            <Row>
+                <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
+                    <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
+                    <Form.Control
+                        data-testid={`${testid}-startingDate`}
+                        id="startingDate"
+                        type="date"
+                        defaultValue={DefaultVals.startingDate}
+                        isInvalid={!!errors.startingDate}
+                        {...register("startingDate", {
+                            valueAsDate: true,
+                            validate: {isPresent: (v) => !isNaN(v)},
+                        })}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        {errors.startingDate?.message}
+                    </Form.Control.Feedback>
+                </Form.Group>
 
-            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
-                <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
-                <Form.Control
-                    data-testid={`${testid}-startingDate`}
-                    id="startingDate"
-                    type="date"
-                    defaultValue={DefaultVals.startingDate}
-                    isInvalid={!!errors.startingDate}
-                    {...register("startingDate", {
-                        valueAsDate: true,
-                        validate: {isPresent: (v) => !isNaN(v)},
-                    })}
-                />
-                <Form.Control.Feedback type="invalid">
-                    {errors.startingDate?.message}
-                </Form.Control.Feedback>
-            </Form.Group>
-            
-
+                    
+                <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
+                    <Form.Label htmlFor="lastDate">Last Date</Form.Label>
+                    <Form.Control
+                        data-testid={`${testid}-lastDate`}
+                        id="lastDate"
+                        type="date"
+                        defaultValue={DefaultVals.lastDate}
+                        isInvalid={!!errors.lastDate}
+                        {...register("lastDate", {
+                            valueAsDate: true,
+                            validate: {isPresent: (v) => !isNaN(v)},
+                        })}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        {errors.lastDate?.message}
+                    </Form.Control.Feedback>
+                </Form.Group>
+            </Row>
 
 
             <h5>Health update formula</h5>
