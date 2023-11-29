@@ -89,4 +89,42 @@ describe("CommonsList tests", () => {
             i++;
         })
     });
+
+    test("renders default join UI when there are no commons", () => {
+        render(
+            <CommonsList commonList={[]} buttonText = {"Join"} title="Join A New Commons"/>
+        );
+
+        const title = screen.getByTestId("commonsList-title");
+        expect(title).toBeInTheDocument();
+        expect(typeof(title.textContent)).toBe('string');
+        expect(title.textContent).toEqual('Join A New Commons');
+
+        const subtitle_name = screen.getByTestId("commonsList-default-message");
+        expect(subtitle_name).toBeInTheDocument();
+        expect(typeof(subtitle_name.textContent)).toBe('string');
+        expect(subtitle_name.textContent).toEqual("There are currently no commons to join");
+        expect(subtitle_name).toHaveStyle("justify-content: center;");
+
+        expect(() => screen.getByTestId("commonsList-subtitle-name")).toThrow('Unable to find an element');
+    });
+
+    test("renders default visit UI when there are no commons", () => {
+        render(
+            <CommonsList commonList={[]} buttonText = {"Visit"} title="Visit A Commons"/>
+        );
+
+        const title = screen.getByTestId("commonsList-title");
+        expect(title).toBeInTheDocument();
+        expect(typeof(title.textContent)).toBe('string');
+        expect(title.textContent).toEqual('Visit A Commons');
+
+        const subtitle_name = screen.getByTestId("commonsList-default-message");
+        expect(subtitle_name).toBeInTheDocument();
+        expect(typeof(subtitle_name.textContent)).toBe('string');
+        expect(subtitle_name.textContent).toEqual("There are currently no commons to visit");
+        expect(subtitle_name).toHaveStyle("justify-content: center;")
+
+        expect(() => screen.getByTestId("commonsList-subtitle-name")).toThrow('Unable to find an element');
+    });
 });
