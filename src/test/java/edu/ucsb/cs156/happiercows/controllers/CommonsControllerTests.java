@@ -62,7 +62,6 @@ public class CommonsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"ADMIN"})
     @Test
     public void getDefaultCommonsValuesTest() throws Exception {
-        // Set up your expected default values
         Map<String, Object> expectedDefaults = Map.of(
                 "id", 0,
                 "name", "null",
@@ -74,23 +73,18 @@ public class CommonsControllerTests extends ControllerTestCase {
                 "capacityPerUser", 50,
                 "aboveCapacityHealthUpdateStrategy", "Linear",
                 "belowCapacityHealthUpdateStrategy", "Constant"
-                // "showLeaderboard", false
         );
 
         MvcResult response = mockMvc
                 .perform(get("/api/commons/defaults").with(csrf()))
                 .andExpect(status().isOk())
-                // .andExpect(jsonPath("$.name").value("Default Commons"))
-                // .andExpect(jsonPath("$.showLeaderboard").value(false))
                 .andReturn();
 
         Map<String, Object> actualDefaults = objectMapper.readValue(
                 response.getResponse().getContentAsString(),
                 new TypeReference<Map<String, Object>>() {});
 
-        // Compare the actual and expected default values
         assertEquals(expectedDefaults.get("id"), actualDefaults.get("id"));
-        // assertEquals(expectedDefaults.get("name"), actualDefaults.get("name")); // Adjusted assertion
         assertEquals(expectedDefaults.get("cowPrice"), actualDefaults.get("cowPrice"));
         assertEquals(expectedDefaults.get("milkPrice"), actualDefaults.get("milkPrice"));
         assertEquals(expectedDefaults.get("startingBalance"), actualDefaults.get("startingBalance"));
@@ -99,7 +93,6 @@ public class CommonsControllerTests extends ControllerTestCase {
         assertEquals(expectedDefaults.get("capacityPerUser"), actualDefaults.get("capacityPerUser"));
         assertEquals(expectedDefaults.get("aboveCapacityHealthUpdateStrategy"), actualDefaults.get("aboveCapacityHealthUpdateStrategy"));
         assertEquals(expectedDefaults.get("belowCapacityHealthUpdateStrategy"), actualDefaults.get("belowCapacityHealthUpdateStrategy"));
-
     }
 
 
