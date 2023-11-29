@@ -18,10 +18,14 @@ export default function AdminListCommonsPage()
     );
   // Stryker restore  all 
 
+
+  // Stryker disable all - styles that don't need to be mut tested
   const DownloadButtonStyle = {
     display: 'flex', 
     justifyContent: 'flex-end',
   };
+  // Stryker restore all
+
 
   return (
     <BasicLayout>
