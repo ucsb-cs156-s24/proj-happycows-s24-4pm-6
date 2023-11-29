@@ -45,7 +45,7 @@ function App() {
                 element={<AdminEditCommonsPage />}
             />
             <Route
-                path="/admin/play/:userCommonsId"
+                path="/admin/play/:commonsId/user/:userId"
                 element={<AdminViewPlayPage />}
             />
         </>

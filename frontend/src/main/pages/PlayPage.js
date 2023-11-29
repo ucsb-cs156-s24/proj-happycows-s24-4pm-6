@@ -17,7 +17,6 @@ import ChatPanel from "main/components/Chat/ChatPanel";
 export default function PlayPage() {
     const { commonsId } = useParams();
     const { data: currentUser } = useCurrentUser();
-    console.log(commonsId);
 
     // Stryker disable all
     const { data: userCommons } = useBackend(

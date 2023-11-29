@@ -86,7 +86,7 @@ export default function LeaderboardPage() {
                                     placeholder="Enter User ID to visit"
                                 />
                                 <Button
-                                    href={`/admin/play/${playPageId}`}
+                                    href={`/admin/play/${commonsId}/user/${playPageId}`}
                                     data-testid="LeaderboardPage-play-page-button"
                                 >
                                     Play Page
