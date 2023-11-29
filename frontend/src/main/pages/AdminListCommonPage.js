@@ -18,6 +18,11 @@ export default function AdminListCommonsPage()
     );
   // Stryker restore  all 
 
+  const DownloadButtonStyle = {
+    display: 'flex', 
+    justifyContent: 'flex-end',
+  };
+
   return (
     <BasicLayout>
       <div className="pt-2">
@@ -25,7 +30,7 @@ export default function AdminListCommonsPage()
           <Col>
             <h2>Commons</h2>
           </Col>
-          <Col style  = {{display: 'flex', justifyContent: 'flex-end'}}>
+          <Col style  = {DownloadButtonStyle}>
             <Button href='/api/commonstats/downloadAll'>
               Download All Stats
             </Button>
