@@ -175,13 +175,19 @@ describe("PlayPage tests", () => {
         const chatButton = screen.getByTestId("playpage-chat-toggle");
         const chatContainer = screen.getByTestId("playpage-chat-div");
 
+        
         expect(chatButton).toHaveTextContent('💬');
-
+        const messageIcon = screen.getByTestId("message-icon");
+        expect(messageIcon).toHaveStyle('font-family: Arial, sans-serif;');
+        expect(messageIcon).toHaveStyle('font-size: 30px;');
         // Click the chat toggle button to open the ChatPanel
         fireEvent.click(chatButton);
 
         await waitFor(() => {
             expect(chatButton).toHaveTextContent('❌');
+            const closeIcon = screen.getByTestId("close-icon");
+            expect(closeIcon).toHaveStyle('font-family: Arial, sans-serif;');
+            expect(closeIcon).toHaveStyle('font-size: 30px;');
         });
 
         // Check styles for the chat button
