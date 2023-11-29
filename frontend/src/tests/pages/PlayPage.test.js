@@ -185,10 +185,10 @@ describe("PlayPage tests", () => {
 
         await waitFor(() => {
             expect(chatButton).toHaveTextContent('❌');
-            const closeIcon = screen.getByTestId("close-icon");
-            expect(closeIcon).toHaveStyle('font-family: Arial, sans-serif;');
-            expect(closeIcon).toHaveStyle('font-size: 30px;');
         });
+        const closeIcon = screen.getByTestId("close-icon");
+        expect(closeIcon).toHaveStyle('font-family: Arial, sans-serif;');
+        expect(closeIcon).toHaveStyle('font-size: 30px;');
 
         // Check styles for the chat button
         expect(chatButton).toHaveStyle(`
