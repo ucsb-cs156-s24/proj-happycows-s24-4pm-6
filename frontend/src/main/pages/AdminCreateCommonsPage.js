@@ -29,7 +29,7 @@ const AdminCreateCommonsPage = () => {
     const mutation = useBackendMutation(
         objectToAxiosParams,
         { onSuccess },
-        // Stryker disable next-line all : hard to set up test for caching draft
+        // Stryker disable next-line all : hard to set up test for caching
         ["/api/commons/all"]
     );
     // Stryker restore all
