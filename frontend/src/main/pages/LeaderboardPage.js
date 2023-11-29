@@ -55,6 +55,9 @@ export default function LeaderboardPage() {
     <div data-testid={"LeaderboardPage-main-div"} style={{backgroundSize: 'cover', backgroundImage: `url(${Background})`}}>
         <BasicLayout>
             <div className="pt-2">
+                <Button onClick={() => navigate(-1)} data-testid="LeaderboardPage-back-button"  style={{ float: "right", marginRight: "442px"}}>
+                    Back
+                </Button>
                 <h1>Leaderboard</h1>
                 {
                   showLeaderboard?
@@ -62,9 +65,7 @@ export default function LeaderboardPage() {
                   (<p>You're not authorized to see the leaderboard.</p>)
                 }
                 </div>
-                <Button onClick={() => navigate(-1)} data-testid="LeaderboardPage-back-button" >
-                    Back
-                </Button>
+
         </BasicLayout>
     </div>
   )
