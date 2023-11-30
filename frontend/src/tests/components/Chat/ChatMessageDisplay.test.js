@@ -129,7 +129,7 @@ describe("ChatMessageDisplay tests", () => {
         expect(screen.getByTestId("ChatMessageDisplay-undefined-Date")).toHaveTextContent("");
     });
 
-    test("test current user message", async () => {
+    test("current user message", async () => {
 
         const message = chatMessageFixtures.oneChatMessage[0];
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
