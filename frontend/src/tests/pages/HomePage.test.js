@@ -9,6 +9,7 @@ import commonsFixtures from "fixtures/commonsFixtures";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import "main/pages/HomePage.css"
+import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -194,6 +195,15 @@ describe("HomePage tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
+
+        expect(await screen.findByTestId("HomePage-intro-card")).toBeInTheDocument();
+        
+        const HomePageDiv = screen.getByTestId("HomePage-main-div");
+        expect(HomePageDiv).toHaveStyle('backgroundSize: cover;');       
+        
+        const Background = getBackgroundImage(12);
+        expect(HomePageDiv).toHaveStyle(`backgroundImage: url(${Background});`);       
+
 
         expect(await screen.findByTestId("HomePage-intro-card")).toBeInTheDocument();
     
