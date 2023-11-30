@@ -1,13 +1,25 @@
 import ChatMessageDisplay from "main/components/Chat/ChatMessageDisplay";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {MemoryRouter} from "react-router-dom";
+import axios from "axios";
+import AxiosMockAdapter from "axios-mock-adapter";
 
 import { chatMessageFixtures } from "fixtures/chatMessageFixtures";
+import { apiCurrentUserFixtures }  from "fixtures/currentUserFixtures";
+import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 import { render, screen, waitFor } from "@testing-library/react";
 
 describe("ChatMessageDisplay tests", () => {
 
     const queryClient = new QueryClient();
+    const axiosMock = new AxiosMockAdapter(axios);
+
+    beforeEach(()=>{
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+    });
 
     test("renders correct content with username", async () => {
 
@@ -117,4 +129,36 @@ describe("ChatMessageDisplay tests", () => {
         expect(screen.getByTestId("ChatMessageDisplay-undefined-Date")).toHaveTextContent("");
     });
 
+    test("test current user message", async () => {
+
+        const message = chatMessageFixtures.oneChatMessage[0];
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
+
+
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <ChatMessageDisplay message={message}/>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(message.userId).toBe(1)
+
+        const cardBody = screen.getByTestId("ChatMessageDisplay-1");
+
+        const expectedBgColor = 'card bg-primary text-white';
+        expect(cardBody).toHaveClass(expectedBgColor)
+
+        expect(screen.getByTestId("ChatMessageDisplay-1-User")).toHaveStyle("margin: 0px");
+        expect(screen.getByTestId("ChatMessageDisplay-1-Date")).toHaveStyle("margin: 0px");
+
+        /* eslint-disable-next-line testing-library/no-node-access */
+        const styleDiv = screen.getByTestId("ChatMessageDisplay-1-User").parentElement;
+
+        expect(styleDiv).toHaveStyle("display: flex; justify-content: space-between; align-items: center");
+        expect(screen.getByTestId("ChatMessageDisplay-1-User")).toHaveStyle("margin: 0px");
+        expect(screen.getByTestId("ChatMessageDisplay-1-Date")).toHaveStyle("margin: 0px");
+    });
 });
