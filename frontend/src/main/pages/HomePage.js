@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Container, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
@@ -67,11 +67,13 @@ export default function HomePage({hour=null}) {
   return (
     <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
       <BasicLayout>
-        <Container>
-          <Row>
-            <div class= "text-center border-0 my-3">
+      <Card> 
+      <div class= "text-center border-0 my-3">
               <h1 data-testid="homePage-title" className="animate-charcter">Howdy Farmer {firstName}</h1>
               </div>
+      </Card>
+        <Container>
+          <Row>
             <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} /></Col>
             <Col sm><CommonsList commonList={commonsNotJoinedList} title="Join A New Commons" buttonText={"Join"} buttonLink={mutation.mutate} /></Col>
           </Row>
