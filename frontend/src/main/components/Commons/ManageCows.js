@@ -3,18 +3,14 @@ import { Card, Button, Row, Col } from "react-bootstrap";
 import { useCurrentUser, hasRole } from "main/utils/currentUser";
 import { useParams } from "react-router-dom";
 
-// add parameters 
-const ManageCows = ({userCommons, commons, setMessage, openModal}) =>  {
-
+// add parameters
+const ManageCows = ({ userCommons, commons, setMessage, openModal }) => {
     // update cowPrice from fixture
     const { data: currentUser } = useCurrentUser();
     let { userId } = useParams();
     userId = userId ? parseInt(userId, 10) : NaN;
     // Stryker disable all
-    const isViewOnly =
-        hasRole(currentUser, "ROLE_ADMIN") &&
-        userId !== currentUser.root.user.id;
-    !isNaN(userId);
+    const isViewOnly = hasRole(currentUser, "ROLE_ADMIN") && !isNaN(userId);
 
     // Stryker restore all
     return (
@@ -41,12 +37,30 @@ const ManageCows = ({userCommons, commons, setMessage, openModal}) =>  {
                     </>
                 ) : (
                     <>
-                       <Row>
+                        <Row>
                             <Col className="text-center">
-                                <Button variant="outline-success" onClick={()=>{setMessage('buy'); openModal();}} data-testid={"buy-cow-button"}>Buy cows</Button>
+                                <Button
+                                    variant="outline-success"
+                                    onClick={() => {
+                                        setMessage("buy");
+                                        openModal();
+                                    }}
+                                    data-testid={"buy-cow-button"}
+                                >
+                                    Buy cows
+                                </Button>
                             </Col>
                             <Col className="text-center">
-                                <Button variant="outline-danger" onClick={()=>{setMessage('sell'); openModal();}} data-testid={"sell-cow-button"}>Sell cows</Button>
+                                <Button
+                                    variant="outline-danger"
+                                    onClick={() => {
+                                        setMessage("sell");
+                                        openModal();
+                                    }}
+                                    data-testid={"sell-cow-button"}
+                                >
+                                    Sell cows
+                                </Button>
                             </Col>
                         </Row>
                         <p>

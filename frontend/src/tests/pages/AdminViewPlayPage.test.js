@@ -91,29 +91,6 @@ describe("AdminViewPlayPage tests", () => {
         );
     });
 
-    test("click buy and sell buttons", async () => {
-        render(
-            <QueryClientProvider client={queryClient}>
-                <MemoryRouter>
-                    <AdminViewPlayPage />
-                </MemoryRouter>
-            </QueryClientProvider>
-        );
-
-        expect(await screen.findByTestId("buy-cow-button")).toBeInTheDocument();
-        const buyCowButton = screen.getByTestId("buy-cow-button");
-        fireEvent.click(buyCowButton);
-
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
-
-        const sellCowButton = screen.getByTestId("sell-cow-button");
-        fireEvent.click(sellCowButton);
-
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(2));
-
-        expect(mockToast).toBeCalledWith("Cow sold!");
-    });
-
     test("Make sure that both the Announcements and Welcome Farmer components show up", async () => {
         render(
             <QueryClientProvider client={queryClient}>

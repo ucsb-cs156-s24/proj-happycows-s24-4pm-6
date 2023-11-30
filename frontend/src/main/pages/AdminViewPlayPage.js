@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
-
 import { useParams } from "react-router-dom";
 import { Card, Container, CardGroup, Button } from "react-bootstrap";
-import { toast } from "react-toastify";
-
 import CommonsOverview from "main/components/Commons/CommonsOverview";
 import CommonsPlay from "main/components/Commons/CommonsPlay";
 import FarmStats from "main/components/Commons/FarmStats";
 import ManageCows from "main/components/Commons/ManageCows";
 import Profits from "main/components/Commons/Profits";
-import { useBackend, useBackendMutation } from "main/utils/useBackend";
+import { useBackend } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
 import ChatPanel from "main/components/Chat/ChatPanel";
 
@@ -54,57 +51,6 @@ const AdminViewPlayPage = () => {
         },
     });
     // Stryker restore all
-
-    // Stryker disable all (can't check if commonsId is null because it is mocked)
-    const objectToAxiosParamsBuy = (newUserCommons) => ({
-        url: "/api/usercommons/buy",
-        method: "PUT",
-        data: newUserCommons,
-        params: {
-            commonsId: userId,
-        },
-    });
-    // Stryker restore all
-
-    // Stryker disable all
-    const mutationbuy = useBackendMutation(
-        objectToAxiosParamsBuy,
-        null,
-        // Stryker disable next-line all : hard to set up test for caching
-        [`/api/usercommons?commonsId=${userId}`]
-    );
-    // Stryker restore all
-
-    const onBuy = (userCommons) => {
-        mutationbuy.mutate(userCommons);
-    };
-
-    const onSuccessSell = () => {
-        toast(`Cow sold!`);
-    };
-
-    // Stryker disable all
-    const objectToAxiosParamsSell = (newUserCommons) => ({
-        url: "/api/usercommons/sell",
-        method: "PUT",
-        data: newUserCommons,
-        params: {
-            commonsId: userId,
-        },
-    });
-    // Stryker restore all
-
-    // Stryker disable all
-    const mutationsell = useBackendMutation(
-        objectToAxiosParamsSell,
-        { onSuccess: onSuccessSell },
-        [`/api/usercommons?commonsId=${userId}`]
-    );
-    // Stryker restore all
-
-    const onSell = (userCommons) => {
-        mutationsell.mutate(userCommons);
-    };
 
     const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -163,8 +109,6 @@ const AdminViewPlayPage = () => {
                             <ManageCows
                                 userCommons={userCommons}
                                 commons={commonsPlus.commons}
-                                onBuy={onBuy}
-                                onSell={onSell}
                             />
                             <FarmStats userCommons={userCommons} />
                             <Profits
