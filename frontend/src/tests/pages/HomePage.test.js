@@ -8,6 +8,7 @@ import HomePage from "main/pages/HomePage";
 import commonsFixtures from "fixtures/commonsFixtures";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import "main/pages/HomePage.css"
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -81,11 +82,10 @@ describe("HomePage tests", () => {
                     <HomePage />
                 </MemoryRouter>
             </QueryClientProvider>
-        );
-
+        );        
         const title = screen.getByTestId("homePage-title");
-        expect(title).toHaveAttribute("style", "font-size: 75px; border-radius: 7px; background-color: white; opacity: 0.9;");
-    });
+        expect(title).toHaveAttribute("class", "animate-charcter");
+        });
 
     test("renders without crashing when lists are full", () => {
         apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons;

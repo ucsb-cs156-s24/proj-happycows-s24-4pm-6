@@ -28,6 +28,7 @@ public class Commons {
     private double milkPrice;
     private double startingBalance;
     private LocalDateTime startingDate;
+    private LocalDateTime lastDate;
     private boolean showLeaderboard;
     
     private int capacityPerUser;
@@ -47,5 +48,11 @@ public class Commons {
     @JsonIgnore
     private List<UserCommons> joinedUsers;
 
-    
+    public boolean gameInProgress() {
+        LocalDateTime today = LocalDateTime.now();
+        if (startingDate.isBefore(today) && lastDate.isAfter(today)) {
+            return true;
+        }
+        return false;
+    }
 }
