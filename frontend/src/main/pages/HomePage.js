@@ -69,7 +69,7 @@ export default function HomePage({hour=null}) {
       <BasicLayout>
       <Card style={{opacity: ".9" }}>
       <div class= "text-center border-0 my-3">
-              <h1 data-testid="homePage-title" className="animate-charcter" > Howdy Farmer {firstName}</h1>
+              <h1 data-testid="homePage-title" className="animate-charcter" >Howdy Farmer {firstName}</h1>
               </div>
       </Card>
         <Container>
