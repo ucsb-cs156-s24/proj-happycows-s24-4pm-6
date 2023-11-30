@@ -110,6 +110,43 @@ public class ProfitsControllerTests extends ControllerTestCase {
 
         assertEquals(profits, actualProfits);
     }
+        @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void admin_get_profits_all_commons_nonexistent_using_commons_id() throws Exception {
+        MvcResult response = mockMvc.perform(get("/api/profits/all?userId=1&commonsId=2").contentType("application/json"))
+                .andExpect(status().isNotFound()).andReturn();
+
+        verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(2L, 1L);
+
+        Map<String, Object> json = responseToJson(response);
+        assertEquals("EntityNotFoundException", json.get("type"));
+        assertEquals("UserCommons with commonsId 2 and userId 1 not found",
+                json.get("message"));
+    }
+        @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void admin_get_profits_all_commons_using_commons_id() throws Exception {
+        UserCommons expectedUserCommons = p1.getUserCommons();
+        when(profitRepository.findAllByUserCommons(uc1)).thenReturn(profits);
+        when(userCommonsRepository.findByCommonsIdAndUserId(2L, 1L)).thenReturn(Optional.of(expectedUserCommons));
+
+        MvcResult response = mockMvc.perform(get("/api/profits/all?userId=1&commonsId=2")).andDo(print())
+                .andExpect(status().isOk()).andReturn();
+
+        verify(profitRepository, times(1)).findAllByUserCommons(uc1);
+
+        String responseString = response.getResponse().getContentAsString();
+        List<Profit> actualProfits = objectMapper.readValue(responseString, new TypeReference<List<Profit>>() {
+        });
+
+        // json serialized result doesn't include userCommons.user or userCommons.commons,
+        // so we exclude them from expected
+        System.out.println("Hello world");
+        p1.getUserCommons().setUser(null);
+        p1.getUserCommons().setCommons(null);
+
+        assertEquals(profits, actualProfits);
+    }
 
 
     @WithMockUser(roles = {"USER"})

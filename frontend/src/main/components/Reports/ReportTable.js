@@ -25,6 +25,10 @@ export default function ReportTable({ reports, storybook = false, buttons=true }
         {
             Header: 'commonsId',
             accessor: 'commonsId',
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{props.value}</div>)
+            },
         },
         {
             Header: 'Name',
@@ -37,10 +41,18 @@ export default function ReportTable({ reports, storybook = false, buttons=true }
         {
             Header: 'Num Users',
             accessor: 'numUsers',
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{props.value}</div>)
+            },
         },
         {
             Header: 'Num Cows',
             accessor: 'numCows',
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{props.value}</div>)
+            },
         },
     ];
 
