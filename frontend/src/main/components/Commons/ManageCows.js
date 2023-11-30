@@ -3,8 +3,9 @@ import { Card, Button, Row, Col } from "react-bootstrap";
 import { useCurrentUser, hasRole } from "main/utils/currentUser";
 import { useParams } from "react-router-dom";
 
-// add parameters
-const ManageCows = ({ userCommons, commons, onBuy, onSell }) => {
+// add parameters 
+const ManageCows = ({userCommons, commons, setMessage, openModal}) =>  {
+
     // update cowPrice from fixture
     const { data: currentUser } = useCurrentUser();
     let { userId } = useParams();
@@ -40,24 +41,12 @@ const ManageCows = ({ userCommons, commons, onBuy, onSell }) => {
                     </>
                 ) : (
                     <>
-                        <Row>
+                       <Row>
                             <Col className="text-center">
-                                <Button
-                                    variant="outline-success"
-                                    onClick={() => onBuy(userCommons)}
-                                    data-testid={"buy-cow-button"}
-                                >
-                                    Buy cow
-                                </Button>
+                                <Button variant="outline-success" onClick={()=>{setMessage('buy'); openModal();}} data-testid={"buy-cow-button"}>Buy cows</Button>
                             </Col>
                             <Col className="text-center">
-                                <Button
-                                    variant="outline-danger"
-                                    onClick={() => onSell(userCommons)}
-                                    data-testid={"sell-cow-button"}
-                                >
-                                    Sell cow
-                                </Button>
+                                <Button variant="outline-danger" onClick={()=>{setMessage('sell'); openModal();}} data-testid={"sell-cow-button"}>Sell cows</Button>
                             </Col>
                         </Row>
                         <p>
