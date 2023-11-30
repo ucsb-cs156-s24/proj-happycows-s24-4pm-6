@@ -30,6 +30,10 @@ If these repos are not yet setup, see the setup steps in [`docs/storybook.md`](d
 
 A description of how the game is played and what scheduled actions are run are given under [`docs/gamePlay.md`](docs/gamePlay.md)
 
+# Environment Variables
+
+For information on environment variables used in the app, refer to [docs/environment.md](docs/environment.md).
+
 # Setup before running application
 
 Before running the application for the first time,
