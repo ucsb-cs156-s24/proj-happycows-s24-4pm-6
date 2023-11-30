@@ -11,8 +11,10 @@ export default function CommonsPlay({ currentUser }) {
 
   return (
     <div data-testid="CommonsPlay">
+      <Card>
       <h1 className="animate-charcter"> {welcomeText} {firstName}! 
     </h1>
+    </Card>
     </div>
   );
 };
