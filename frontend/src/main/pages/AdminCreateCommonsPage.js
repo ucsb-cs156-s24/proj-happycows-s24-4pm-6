@@ -19,6 +19,7 @@ const AdminCreateCommonsPage = () => {
             <br />{`id: ${commons.id}`}
             <br />{`name: ${commons.name}`}
             <br />{`startDate: ${commons.startingDate}`}
+            <br />{`lastDate: ${commons.lastDate}`}
             <br />{`cowPrice: ${commons.cowPrice}`}
             <br />{`capacityPerUser: ${commons.capacityPerUser}`}
             <br />{`carryingCapacity: ${commons.carryingCapacity}`}
