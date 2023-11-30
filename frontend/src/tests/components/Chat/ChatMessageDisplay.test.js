@@ -134,7 +134,7 @@ describe("ChatMessageDisplay tests", () => {
         const message = chatMessageFixtures.oneChatMessage[0];
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
 
-
+        message.userId = 2
 
         render(
             <QueryClientProvider client={queryClient}>
@@ -144,7 +144,7 @@ describe("ChatMessageDisplay tests", () => {
             </QueryClientProvider>
         );
 
-        expect(message.userId).toBe(1)
+        expect(message.userId).toBe(2)
 
         const cardBody = screen.getByTestId("ChatMessageDisplay-1");
 
