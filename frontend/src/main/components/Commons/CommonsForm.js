@@ -33,9 +33,11 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
     const curr = new Date();
     const today = curr.toISOString().split('T')[0];
+    const currMonth = curr.getMonth() % 12;
+    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
     const DefaultVals = {
         name: "", startingBalance: "10000", cowPrice: "100",
-        milkPrice: "1", degradationRate: 0.001, carryingCapacity: 100, startingDate: today
+        milkPrice: "1", degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth
     };
 
     const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
@@ -258,32 +260,43 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
-
-            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
-                <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
-                <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>This is the starting date of the game; before this date, the jobs to calculate statistics, milk the cows, and report profits, etc. will not be run on this commons.</Tooltip>}
-                            delay = '100'
-                >
-                <Form.Control
-                    data-testid={`${testid}-startingDate`}
-                    id="startingDate"
-                    type="date"
-                    defaultValue={DefaultVals.startingDate}
-                    isInvalid={!!errors.startingDate}
-                    {...register("startingDate", {
-                        valueAsDate: true,
-                        validate: {isPresent: (v) => !isNaN(v)},
-                    })}
-                />
-                </OverlayTrigger>
-                <Form.Control.Feedback type="invalid">
-                    {errors.startingDate?.message}
-                </Form.Control.Feedback>
-            </Form.Group>
-            
-
+            <Row>
+                <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
+                    <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
+                    <Form.Control
+                        data-testid={`${testid}-startingDate`}
+                        id="startingDate"
+                        type="date"
+                        defaultValue={DefaultVals.startingDate}
+                        isInvalid={!!errors.startingDate}
+                        {...register("startingDate", {
+                            valueAsDate: true,
+                            validate: {isPresent: (v) => !isNaN(v)},
+                        })}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        {errors.startingDate?.message}
+                    </Form.Control.Feedback>
+                </Form.Group>
+                    
+                <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r4`}>
+                    <Form.Label htmlFor="lastDate">Last Date</Form.Label>
+                    <Form.Control
+                        data-testid={`${testid}-lastDate`}
+                        id="lastDate"
+                        type="date"
+                        defaultValue={DefaultVals.lastDate}
+                        isInvalid={!!errors.lastDate}
+                        {...register("lastDate", {
+                            valueAsDate: true,
+                            validate: {isPresent: (v) => !isNaN(v)},
+                        })}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        {errors.lastDate?.message}
+                    </Form.Control.Feedback>
+                </Form.Group>
+            </Row>
 
 
             <h5>Health update formula</h5>
