@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
 
 // add parameters 
-const ManageCows = ({userCommons, commons, onBuy, onSell}) =>  {
+const ManageCows = ({userCommons, commons, setMessage, openModal}) =>  {
     // update cowPrice from fixture
     return (
         <Card>
@@ -14,15 +14,16 @@ const ManageCows = ({userCommons, commons, onBuy, onSell}) =>  {
             <Card.Title className="text-center">🥛 Current Milk Price: ${commons?.milkPrice}</Card.Title>
             <Row>
                 <Col className="text-center">
-                    <Button variant="outline-success" onClick={()=>{onBuy(userCommons)}} data-testid={"buy-cow-button"}>Buy cow</Button>
+                    <Button variant="outline-success" onClick={()=>{setMessage('buy'); openModal();}} data-testid={"buy-cow-button"}>Buy cows</Button>
                 </Col>
                 <Col className="text-center">
-                    <Button variant="outline-danger" onClick={()=>{onSell(userCommons)}} data-testid={"sell-cow-button"}>Sell cow</Button>
+                    <Button variant="outline-danger" onClick={()=>{setMessage('sell'); openModal();}} data-testid={"sell-cow-button"}>Sell cows</Button>
                 </Col>
             </Row>
                 
                     Note: Buying cows buys at current cow price, but selling cows sells at current cow price
                     times the average health of cows as a percentage! 
+
         </Card.Body>
         </Card>
     ); 

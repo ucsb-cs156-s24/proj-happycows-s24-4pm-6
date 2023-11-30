@@ -12,11 +12,23 @@ import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
 import Background from "../../assets/PlayPageBackground.png";
 import ChatPanel from "main/components/Chat/ChatPanel";
+import ManageCowsModal from "main/components/Commons/ManageCowsModal";
 
 export default function PlayPage() {
 
   const { commonsId } = useParams();
   const { data: currentUser } = useCurrentUser();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState();
+  const [numCows, setNumCows] = useState(1)
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
   // Stryker disable all 
   const { data: userCommons } =
@@ -67,7 +79,8 @@ export default function PlayPage() {
     method: "PUT",
     data: newUserCommons,
     params: {
-      commonsId: commonsId
+      commonsId: commonsId,
+      numCows: numCows
     }
   });
   // Stryker restore all
@@ -83,8 +96,8 @@ export default function PlayPage() {
   // Stryker restore all 
 
 
-  const onBuy = (userCommons) => {
-    mutationbuy.mutate(userCommons)
+  const onBuy = (userCommons, numCows) => {
+    mutationbuy.mutate(userCommons, numCows)
   };
 
 
@@ -98,7 +111,8 @@ export default function PlayPage() {
     method: "PUT",
     data: newUserCommons,
     params: {
-      commonsId: commonsId
+      commonsId: commonsId,
+      numCows: numCows
     }
   });
   // Stryker restore all 
@@ -113,8 +127,8 @@ export default function PlayPage() {
   // Stryker restore all 
 
 
-  const onSell = (userCommons) => {
-    mutationsell.mutate(userCommons)
+  const onSell = (userCommons, numCows) => {
+    mutationsell.mutate(userCommons, numCows)
   };
 
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -156,9 +170,10 @@ export default function PlayPage() {
           <br />
           {!!userCommons && !!commonsPlus &&
             <CardGroup >
-              <ManageCows userCommons={userCommons} commons={commonsPlus.commons} onBuy={onBuy} onSell={onSell} />
+              <ManageCows userCommons={userCommons} commons={commonsPlus.commons} setMessage={setMessage} openModal={openModal} />
               <FarmStats userCommons={userCommons} />
               <Profits userCommons={userCommons} profits={userCommonsProfits} />
+              <ManageCowsModal number={numCows} setNumber={setNumCows} userCommons={userCommons} isOpen={isModalOpen} message={message} onClose={closeModal} onBuy={onBuy} onSell={onSell}/>
             </CardGroup>
           }
         </Container>
