@@ -41,6 +41,7 @@ describe("ChatMessageDisplay tests", () => {
             expect(screen.getByText("Hello World")).toBeInTheDocument();
         });
 
+        expect(message.userId).toBe(1)
         expect(screen.getByText("John Doe")).toBeInTheDocument();
         expect(screen.getByText("2023-08-17 23:57:46")).toBeInTheDocument();
 
@@ -81,6 +82,7 @@ describe("ChatMessageDisplay tests", () => {
         await waitFor(() => {
             expect(screen.getByText("Hello World")).toBeInTheDocument();
         });
+        expect(message.userId).toBe(1)
 
         const cardBody = screen.getByTestId("ChatMessageDisplay-1");
 
@@ -110,6 +112,8 @@ describe("ChatMessageDisplay tests", () => {
             expect(screen.getByTestId("ChatMessageDisplay-1-Message")).toHaveTextContent("Hello World");
         });
 
+        
+
         const cardBody = screen.getByTestId("ChatMessageDisplay-1");
 
         const expectedBgColor = 'card bg-secondary text-white';
@@ -122,6 +126,7 @@ describe("ChatMessageDisplay tests", () => {
     test("renders correct content with no message", async () => {
 
         // act
+    
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
@@ -134,6 +139,8 @@ describe("ChatMessageDisplay tests", () => {
         await waitFor(() => {
             expect(screen.getByTestId("ChatMessageDisplay-undefined-Message")).toHaveTextContent("");
         });
+
+
 
         const cardBody = screen.getByTestId("ChatMessageDisplay-undefined");
 

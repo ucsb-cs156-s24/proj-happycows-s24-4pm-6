@@ -8,7 +8,7 @@ const ChatMessageDisplay = ({ message }) => {
   const formattedTimestamp = message?.timestamp ? message.timestamp.replace('T', ' ').split('.')[0] : '';
 
   const { data: currentUser } = useCurrentUser();
-  const currentUserId = currentUser?.root ? currentUser?.root?.user?.id : "";
+  const currentUserId = currentUser.root?.user?.id;
 
   const testId = `ChatMessageDisplay-${message?.id}`;
   
