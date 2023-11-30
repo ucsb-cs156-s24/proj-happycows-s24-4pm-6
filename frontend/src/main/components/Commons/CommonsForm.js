@@ -77,7 +77,6 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         milkPrice: defaultValuesData?.milkPrice || "1",
         degradationRate: defaultValuesData?.degradationRate || 0.001,
         carryingCapacity: defaultValuesData?.carryingCapacity || 100,
-        capacityPerUser: defaultValuesData?.capacityPerUser || null,
         startingDate: today,
         lastDate: nextMonth,
       };
@@ -287,7 +286,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                             id="capacityPerUser"
                             type="number"
                             step="1"
-                            defaultValue={DefaultVals.capacityPerUser}
+                            defaultValue={defaultValuesData?.capacityPerUser}
                             isInvalid={!!errors.capacityPerUser}
                             {...register("capacityPerUser", {
                                 valueAsNumber: true,
