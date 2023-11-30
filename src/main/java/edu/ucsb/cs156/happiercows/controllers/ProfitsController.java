@@ -37,6 +37,22 @@ public class ProfitsController extends ApiController {
     @Autowired
     ProfitRepository profitRepository;
 
+    @Operation(summary = "Get all profits belonging to a user commons as a admin via CommonsID and UserId")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/all")
+    public Iterable<Profit> allProfitsByCommonsId(
+            @Parameter(name="userId") @RequestParam Long userId,
+            @Parameter(name="commonsId") @RequestParam Long commonsId
+
+    ) {
+
+        UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)
+            .orElseThrow(() -> new EntityNotFoundException(UserCommons.class, "commonsId", commonsId, "userId", userId));
+
+        Iterable<Profit> profits = profitRepository.findAllByUserCommons(userCommons);
+
+        return profits;
+    }
     @Operation(summary = "Get all profits belonging to a user commons as a user via CommonsID")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all/commonsid")
