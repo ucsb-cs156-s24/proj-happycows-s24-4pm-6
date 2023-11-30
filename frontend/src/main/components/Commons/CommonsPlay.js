@@ -11,7 +11,7 @@ export default function CommonsPlay({ currentUser }) {
 
   return (
     <div data-testid="CommonsPlay">
-      <Card>
+      <Card style={{opacity: ".9" }}>
       <h1 className="animate-charcter"> {welcomeText} {firstName}! 
     </h1>
     </Card>
