@@ -56,7 +56,6 @@ export default function LeaderboardPage() {
 
     const navigate = useNavigate();
 
-
     const showLeaderboard =
         hasRole(currentUser, "ROLE_ADMIN") || commons.showLeaderboard;
     return (
@@ -106,5 +105,5 @@ export default function LeaderboardPage() {
                 </Button>
             </BasicLayout>
         </div>
-
+    );
 }
