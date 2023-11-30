@@ -14,16 +14,7 @@ import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
 import ChatPanel from "main/components/Chat/ChatPanel";
 
-// call differewnct API
-// common id and userid
-// use params to get them
-
-// dont show button for admin
-
-//  path="/admin/play/:commonsId/user/:userId"
-
 const AdminViewPlayPage = () => {
-    // this will get the usercommonsid, and we can use it for the playpage
     const { userId, commonsId } = useParams();
 
     const { data: currentUser } = useCurrentUser();

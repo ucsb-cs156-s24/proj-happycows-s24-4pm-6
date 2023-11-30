@@ -16,9 +16,7 @@ jest.mock("main/utils/currentUser", () => ({
 describe("ManageCows tests", () => {
     test("renders without crashing", () => {
         currentUserModule.useCurrentUser.mockReturnValue({
-            data: {
-                // Your mock data here
-            },
+            data: {},
         });
 
         render(
@@ -78,7 +76,7 @@ describe("ManageCows tests", () => {
             data: {
                 root: {
                     user: {
-                        id: 123, // Replace with the desired id value for testing
+                        id: 123,
                     },
                 },
             },

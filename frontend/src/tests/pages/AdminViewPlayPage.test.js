@@ -127,24 +127,6 @@ describe("AdminViewPlayPage tests", () => {
         expect(await screen.findByTestId("CommonsPlay")).toBeInTheDocument();
     });
 
-    // test("Make sure div has correct attributes", async () => {
-    //     render(
-    //         <QueryClientProvider client={queryClient}>
-    //             <MemoryRouter>
-    //                 <AdminViewPlayPage />
-    //             </MemoryRouter>
-    //         </QueryClientProvider>
-    //     );
-
-    //     var div = screen.getByTestId("adminviewplaypage-div");
-    //     expect(div).toHaveAttribute(
-    //         "style",
-    //         expect.stringContaining(
-    //             "background-size: cover; background-image: url(PlayPageBackground.png);"
-    //         )
-    //     );
-    // });
-
     test("Chat toggle button opens and closes the ChatPanel", async () => {
         render(
             <QueryClientProvider client={queryClient}>
