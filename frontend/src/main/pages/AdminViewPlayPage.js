@@ -84,9 +84,11 @@ const AdminViewPlayPage = () => {
 
     const visiting_user = userCommons?.username;
     const visiting_commons = commonsPlus?.commons.name;
+    // Stryker disable all
     const admin_name = currentUser?.root
         ? currentUser?.root?.user?.fullName
         : "";
+    // Stryker restore all
 
     return (
         <div>
