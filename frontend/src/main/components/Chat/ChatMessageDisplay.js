@@ -13,7 +13,7 @@ const ChatMessageDisplay = ({ message }) => {
   const testId = `ChatMessageDisplay-${message?.id}`;
   
   return (
-    <Card data-testid={testId} bg={currentUserId == message?.userId ? 'primary' : 'secondary'} text={'white'}>
+    <Card data-testid={testId} bg={currentUserId === message?.userId ? 'primary' : 'secondary'} text={'white'}>
       <Card.Body>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Card.Title data-testid={`${testId}-User`} style={{ margin: 0 }}>
