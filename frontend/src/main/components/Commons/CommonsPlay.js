@@ -1,6 +1,7 @@
 import React, { useState} from "react";
 import greetingsList from "../../../assets/PlayGreetings.json"
-
+import "../../pages/HomePage.css"
+import { Card } from "react-bootstrap";
 export default function CommonsPlay({ currentUser }) {
   // Stryker disable  all 
   const firstName = currentUser?.root ? currentUser?.root?.user?.givenName : "";
@@ -10,9 +11,10 @@ export default function CommonsPlay({ currentUser }) {
 
   return (
     <div data-testid="CommonsPlay">
-      <h1>
-      {welcomeText} {firstName}! 
+      <Card data-testid = "commons-card" style={{opacity: ".9" }}>
+      <h1 className="animate-charcter"> {welcomeText} {firstName}! 
     </h1>
+    </Card>
     </div>
   );
 };
