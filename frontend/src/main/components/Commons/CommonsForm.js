@@ -1,7 +1,7 @@
 import {Button, Form, Row, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
-
+import { useEffect } from "react";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
@@ -16,32 +16,74 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         register,
         formState: {errors},
         handleSubmit,
+        reset,
     } = useForm(
         // modifiedCommons is guaranteed to be defined (initialCommons or {})
         {defaultValues: modifiedCommons}
     );
     // Stryker restore all
-
+    
+    // Stryker disable all
     const {data: healthUpdateStrategies} = useBackend(
         "/api/commons/all-health-update-strategies", {
             method: "GET",
             url: "/api/commons/all-health-update-strategies",
         },
     );
+    // Stryker restore all
 
+    // Stryker disable all
+    const { data: defaultValuesData } = useBackend("/api/commons/defaults", {
+        method: "GET",
+        url: "/api/commons/defaults",
+      });
+    // Stryker restore all
+    
+    useEffect(() => {
+        if(defaultValuesData && !initialCommons)
+        {
+            const{
+                startingBalance,
+                cowPrice,
+                milkPrice,
+                degradationRate,
+                carryingCapacity,
+                capacityPerUser,
+                aboveCapacityStrategy,
+                belowCapacityStrategy,
+            } = defaultValuesData;
+
+            reset({
+                startingBalance,
+                cowPrice,
+                milkPrice,
+                degradationRate,
+                carryingCapacity,
+                capacityPerUser,
+                aboveCapacityStrategy,
+                belowCapacityStrategy,
+            });
+        }
+    }, [defaultValuesData, initialCommons, reset]);
     const testid = "CommonsForm";
-
     const curr = new Date();
     const today = curr.toISOString().split('T')[0];
     const currMonth = curr.getMonth() % 12;
     const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
     const DefaultVals = {
-        name: "", startingBalance: "10000", cowPrice: "100",
-        milkPrice: "1", degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth
-    };
+        name: "",
+        startingBalance: defaultValuesData?.startingBalance || "10000",
+        cowPrice: defaultValuesData?.cowPrice || "100",
+        milkPrice: defaultValuesData?.milkPrice || "1",
+        degradationRate: defaultValuesData?.degradationRate || 0.001,
+        carryingCapacity: defaultValuesData?.carryingCapacity || 100,
+        capacityPerUser: defaultValuesData?.capacityPerUser || null,
+        startingDate: today,
+        lastDate: nextMonth,
+      };
 
-    const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
-    const aboveStrategy = initialCommons?.aboveCapacityStrategy || healthUpdateStrategies?.defaultAboveCapacity;
+    const belowStrategy = defaultValuesData?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
+    const aboveStrategy = defaultValuesData?.aboveCapacityStrategy || healthUpdateStrategies?.defaultAboveCapacity;
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -245,6 +287,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                             id="capacityPerUser"
                             type="number"
                             step="1"
+                            defaultValue={DefaultVals.capacityPerUser}
                             isInvalid={!!errors.capacityPerUser}
                             {...register("capacityPerUser", {
                                 valueAsNumber: true,
