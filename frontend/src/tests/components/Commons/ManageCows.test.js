@@ -1,31 +1,34 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import ManageCows from "main/components/Commons/ManageCows"; 
 import userCommonsFixtures from "fixtures/userCommonsFixtures";
 
 describe("ManageCows tests", () => {
+    const mockSetMessage = jest.fn();
+    const mockOpenModal = jest.fn()
+
     test("renders without crashing", () => {
         render(
-            <ManageCows userCommons = {userCommonsFixtures.oneUserCommons[0]} onBuy={(userCommons) => { console.log("onBuy called:",userCommons); }} onSell={ (userCommons) => { console.log("onSell called:",userCommons); }} />
+            <ManageCows userCommons = {userCommonsFixtures.oneUserCommons[0]}/>
         );
     });
 
-    test("buying and selling a cow", async () => {
-        const mockBuy = jest.fn();
-        const mockSell = jest.fn();
-
+    test('calls setMessage with "buy" when the buy button is clicked', () => {
         render(
-            <ManageCows userCommons = {userCommonsFixtures.oneUserCommons[0]} onBuy={mockBuy} onSell={mockSell} />
+            <ManageCows userCommons = {userCommonsFixtures.oneUserCommons[0]} setMessage={mockSetMessage} openModal={mockOpenModal} />
         );
 
-        const buyButton = screen.getByTestId("buy-cow-button");
-        const sellButton = screen.getByTestId("sell-cow-button");
-        
-        fireEvent.click(buyButton);
-        await waitFor( ()=>expect(mockBuy).toHaveBeenCalledWith(userCommonsFixtures.oneUserCommons[0]) );
+        fireEvent.click(screen.getByTestId('buy-cow-button'));
+        expect(mockSetMessage).toHaveBeenCalledWith('buy');
+        expect(mockOpenModal).toHaveBeenCalled();
+      });
+    
+      test('calls setMessage with "sell" when the sell button is clicked', () => {
+        render(
+            <ManageCows userCommons = {userCommonsFixtures.oneUserCommons[0]} setMessage={mockSetMessage} openModal={mockOpenModal}/>
+        );
 
-        fireEvent.click(sellButton);
-        await waitFor( ()=>expect(mockSell).toHaveBeenCalledWith(userCommonsFixtures.oneUserCommons[0]) );
-        
-    });
-
+        fireEvent.click(screen.getByTestId('sell-cow-button'));
+        expect(mockSetMessage).toHaveBeenCalledWith('sell');
+        expect(mockOpenModal).toHaveBeenCalled();
+      });
 });

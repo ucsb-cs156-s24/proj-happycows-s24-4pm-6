@@ -59,14 +59,14 @@ describe("LeaderboardTable tests", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <LeaderboardTable leaderboardUsers={leaderboardFixtures.threeUserCommonsLB} currentUser={currentUser} />
+          <LeaderboardTable leaderboardUsers={leaderboardFixtures.fiveUserCommonsLB} currentUser={currentUser} />
         </MemoryRouter>
       </QueryClientProvider>
 
     );
 
-    const expectedHeaders = ['(Admin) userCommons Id', 'Username', 'User Id', 'Total Wealth', 'Cows Owned', 'Cow Health', 'Cows Bought', 'Cows Sold', 'Cow Deaths'];
-    const expectedFields = ['id', 'userId', 'username', 'totalWealth','numOfCows', 'cowHealth', 'cowsBought', 'cowsSold', 'cowDeaths'];
+    const expectedHeaders = ['Farmer', 'Total Wealth', 'Cows Owned', 'Cow Health', 'Cows Bought', 'Cows Sold', 'Cow Deaths'];
+    const expectedFields = ['username', 'totalWealth','numOfCows', 'cowHealth', 'cowsBought', 'cowsSold', 'cowDeaths'];
     const testId = "LeaderboardTable";
 
     expectedHeaders.forEach((headerText) => {
@@ -79,21 +79,13 @@ describe("LeaderboardTable tests", () => {
       expect(header).toBeInTheDocument();
     });
 
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-userId`)).toHaveTextContent("1");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-username`)).toHaveTextContent("one");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-totalWealth`)).toHaveTextContent("$1,000.00");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-cowsBought`)).toHaveTextContent("8");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-cowsSold`)).toHaveTextContent("8");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-cowDeaths`)).toHaveTextContent("8");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("2");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-userId`)).toHaveTextContent("2");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-username`)).toHaveTextContent("two");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-totalWealth`)).toHaveTextContent("$1,000.00");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-cowsBought`)).toHaveTextContent("5");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-cowsSold`)).toHaveTextContent("5");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-cowDeaths`)).toHaveTextContent("5");
-
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-numOfCows`)).toHaveTextContent("12");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-cowHealth`)).toHaveTextContent("93");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-cowsBought`)).toHaveTextContent("11");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-cowsSold`)).toHaveTextContent("10");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-cowDeaths`)).toHaveTextContent("9");
   });
 
   test("Total wealth is formatted correctly", () => {
@@ -102,13 +94,21 @@ describe("LeaderboardTable tests", () => {
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
-          <LeaderboardTable leaderboardUsers={leaderboardFixtures.threeUserCommonsLB} currentUser={currentUser} />
+          <LeaderboardTable leaderboardUsers={leaderboardFixtures.fiveUserCommonsLB} currentUser={currentUser} />
         </MemoryRouter>
       </QueryClientProvider>
 
     );
 
     expect(screen.getAllByText("$1,000.00")[0]).toHaveStyle("text-align: right;");
+    expect(screen.getAllByText("12")[0]).toHaveStyle("text-align: right;");
+
+    expect(screen.getAllByText("93")[0]).toHaveStyle("text-align: right;");
+
+    expect(screen.getAllByText("11")[0]).toHaveStyle("text-align: right;");
+    expect(screen.getAllByText("10")[0]).toHaveStyle("text-align: right;");
+    expect(screen.getAllByText("9")[0]).toHaveStyle("text-align: right;");
+
 
   });
     

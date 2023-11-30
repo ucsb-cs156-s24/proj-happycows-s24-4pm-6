@@ -15,6 +15,7 @@ import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,48 @@ public class CommonsController extends ApiController {
     @Autowired
     CommonsPlusBuilderService commonsPlusBuilderService;
 
+    @Value("${app.commons.default.startingBalance}")
+    private double defaultStartingBalance;
 
+    @Value("${app.commons.default.cowPrice}")
+    private double defaultCowPrice;
+
+    @Value("${app.commons.default.milkPrice}")
+    private double defaultMilkPrice;
+
+    @Value("${app.commons.default.degradationRate}")
+    private double defaultDegradationRate;
+
+    @Value("${app.commons.default.carryingCapacity}")
+    private int defaultCarryingCapacity;
+
+    @Value("${app.commons.default.capacityPerUser}")
+    private int defaultCapacityPerUser;
+
+    @Value("${app.commons.default.aboveCapacityHealthUpdateStrategy}")
+    private String defaultAboveCapacityHealthUpdateStrategy;
+
+    @Value("${app.commons.default.belowCapacityHealthUpdateStrategy}")
+    private String defaultBelowCapacityHealthUpdateStrategy;
+
+    @Operation(summary = "Get default common values")
+    @GetMapping("/defaults")
+    public ResponseEntity<Commons> getDefaultCommons() throws JsonProcessingException {
+        log.info("getDefaultCommons()...");
+
+        Commons defaultCommons = Commons.builder()
+                .startingBalance(defaultStartingBalance)
+                .cowPrice(defaultCowPrice)
+                .milkPrice(defaultMilkPrice)
+                .degradationRate(defaultDegradationRate)
+                .carryingCapacity(defaultCarryingCapacity)
+                .capacityPerUser(defaultCapacityPerUser)
+                .aboveCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(defaultAboveCapacityHealthUpdateStrategy))
+                .belowCapacityHealthUpdateStrategy(CowHealthUpdateStrategies.valueOf(defaultBelowCapacityHealthUpdateStrategy))
+                .build();
+
+        return ResponseEntity.ok().body(defaultCommons);
+    }
 
     @Operation(summary = "Get a list of all commons")
     @GetMapping("/all")
@@ -105,6 +147,7 @@ public class CommonsController extends ApiController {
         updated.setMilkPrice(params.getMilkPrice());
         updated.setStartingBalance(params.getStartingBalance());
         updated.setStartingDate(params.getStartingDate());
+        updated.setLastDate(params.getLastDate());
         updated.setShowLeaderboard(params.getShowLeaderboard());
         updated.setDegradationRate(params.getDegradationRate());
         updated.setCapacityPerUser(params.getCapacityPerUser());
@@ -170,6 +213,7 @@ public class CommonsController extends ApiController {
                 .milkPrice(params.getMilkPrice())
                 .startingBalance(params.getStartingBalance())
                 .startingDate(params.getStartingDate())
+                .lastDate(params.getLastDate())
                 .degradationRate(params.getDegradationRate())
                 .showLeaderboard(params.getShowLeaderboard())
                 .capacityPerUser(params.getCapacityPerUser())
