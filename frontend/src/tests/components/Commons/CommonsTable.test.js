@@ -68,8 +68,9 @@ describe("UserTable tests", () => {
       </QueryClientProvider>
 
     );
-    const expectedHeaders = ["id", "Name", /Cow\s+Price/, /Milk\s+Price/, /Start\s+Bal/, /Starting\s+Date/, /Degrad\s+Rate/, /Cap \/\s+User/, /Carry\s+Cap/, /Eff\s+Cap/, /Tot\s+Cows/, /Show\s+LrdrBrd\?/];
-    const expectedFields = ["id", "name", "cowPrice", "milkPrice", "startingBalance", "startingDate", "degradationRate", "capacityPerUser", "carryingCapacity"];
+    const expectedHeaders = ["id", "Name", /Cow\s+Price/, /Milk\s+Price/, /Start\s+Bal/, /Starting\s+Date/, /Last\s+Date/, /Degrad\s+Rate/, /Show\s+LrdrBrd\?/, /Tot\s+Cows/, /Cap \/\s+User/, /Carry\s+Cap/, /Eff\s+Cap/];
+    const expectedFields = ["id", "name", "cowPrice", "milkPrice", "startingBalance", "startingDate", "lastDate", "degradationRate", "capacityPerUser", "carryingCapacity"];
+    
     const testId = "CommonsTable";
 
     expectedHeaders.forEach((headerText) => {
@@ -94,6 +95,7 @@ describe("UserTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.carryingCapacity`)).toHaveTextContent("42");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.startingBalance`)).toHaveTextContent("10");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.startingDate`)).toHaveTextContent(/^2022-11-22$/); // regex so that we have an exact match https://stackoverflow.com/a/73298371
+    expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.lastDate`)).toHaveTextContent("undefined"); // regex so that we have an exact match https://stackoverflow.com/a/73298371
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.showLeaderboard`)).toHaveTextContent("true");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-totalCows`)).toHaveTextContent("0");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-effectiveCapacity`)).toHaveTextContent("42");
