@@ -95,7 +95,7 @@ describe("UserTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.carryingCapacity`)).toHaveTextContent("42");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.startingBalance`)).toHaveTextContent("10");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.startingDate`)).toHaveTextContent(/^2022-11-22$/); // regex so that we have an exact match https://stackoverflow.com/a/73298371
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.lastDate`)).toHaveTextContent("undefined"); // regex so that we have an exact match https://stackoverflow.com/a/73298371
+    expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.lastDate`)).toHaveTextContent(/^2022-11-22$/); // regex so that we have an exact match https://stackoverflow.com/a/73298371
     expect(screen.getByTestId(`${testId}-cell-row-1-col-commons.showLeaderboard`)).toHaveTextContent("true");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-totalCows`)).toHaveTextContent("0");
     expect(screen.getByTestId(`${testId}-cell-row-1-col-effectiveCapacity`)).toHaveTextContent("42");
