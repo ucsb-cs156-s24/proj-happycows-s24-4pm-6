@@ -32,6 +32,16 @@ describe("ChatMessageDisplay tests", () => {
         expect(screen.getByText("John Doe")).toBeInTheDocument();
         expect(screen.getByText("2023-08-17 23:57:46")).toBeInTheDocument();
 
+
+        // Assert for lines 11-16
+        const cardBody = screen.getByTestId("ChatMessageDisplay-1");
+
+        const expectedBgColor = 'card bg-secondary text-white';
+        expect(cardBody).toHaveClass(expectedBgColor)
+
+        expect(screen.getByTestId("ChatMessageDisplay-1-User")).toHaveStyle("margin: 0px");
+        expect(screen.getByTestId("ChatMessageDisplay-1-Date")).toHaveStyle("margin: 0px");
+
         /* eslint-disable-next-line testing-library/no-node-access */
         const styleDiv = screen.getByTestId("ChatMessageDisplay-1-User").parentElement;
 
