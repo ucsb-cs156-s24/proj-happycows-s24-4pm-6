@@ -3,7 +3,6 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ManageCowsModal from 'main/components/Commons/ManageCowsModal';
 import userCommonsFixtures from "fixtures/userCommonsFixtures";
-import PlayPage from 'main/pages/PlayPage';
 
 describe('ManageCowsModal', () => {
   const mockOnClose = jest.fn();

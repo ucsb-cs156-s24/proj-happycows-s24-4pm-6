@@ -7,7 +7,6 @@ import AxiosMockAdapter from "axios-mock-adapter";
 import PlayPage from "main/pages/PlayPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
-import ManageCowsModal from "main/components/Commons/ManageCowsModal";
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
