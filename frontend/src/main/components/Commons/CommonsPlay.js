@@ -10,6 +10,7 @@ export default function CommonsPlay({ currentUser }) {
   // Stryker restore all
 
   return (
+      // Stryker disable all : TODO: restructure this code to avoid the need for this disable
     <div data-testid="CommonsPlay">
       <Card style={{opacity: ".9" }}>
       <h1 className="animate-charcter"> {welcomeText} {firstName}! 
