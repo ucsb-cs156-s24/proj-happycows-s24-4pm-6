@@ -48,5 +48,11 @@ public class Commons {
     @JsonIgnore
     private List<UserCommons> joinedUsers;
 
-    
+    public boolean gameInProgress() {
+        LocalDateTime today = LocalDateTime.now();
+        if (startingDate.isBefore(today) && lastDate.isAfter(today)) {
+            return true;
+        }
+        return false;
+    }
 }

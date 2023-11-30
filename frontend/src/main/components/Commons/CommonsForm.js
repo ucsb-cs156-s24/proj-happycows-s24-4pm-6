@@ -33,9 +33,11 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
     const curr = new Date();
     const today = curr.toISOString().split('T')[0];
+    const currMonth = curr.getMonth() % 12;
+    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
     const DefaultVals = {
         name: "", startingBalance: "10000", cowPrice: "100",
-        milkPrice: "1", degradationRate: 0.001, carryingCapacity: 100, startingDate: today
+        milkPrice: "1", degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth
     };
 
     const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
@@ -258,7 +260,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Form.Group>
 
                     
-                <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
+                <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r4`}>
                     <Form.Label htmlFor="lastDate">Last Date</Form.Label>
                     <Form.Control
                         data-testid={`${testid}-lastDate`}
