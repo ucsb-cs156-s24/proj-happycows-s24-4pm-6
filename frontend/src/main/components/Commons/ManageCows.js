@@ -7,11 +7,14 @@ import { useParams } from "react-router-dom";
 const ManageCows = ({ userCommons, commons, onBuy, onSell }) => {
     // update cowPrice from fixture
     const { data: currentUser } = useCurrentUser();
-    const { userId } = useParams();
+    let { userId } = useParams();
+    userId = userId ? parseInt(userId, 10) : NaN;
     // Stryker disable all
-    const canView =
+    const isViewOnly =
         hasRole(currentUser, "ROLE_ADMIN") &&
         userId !== currentUser.root.user.id;
+    !isNaN(userId);
+
     // Stryker restore all
     return (
         <Card>
@@ -28,9 +31,9 @@ const ManageCows = ({ userCommons, commons, onBuy, onSell }) => {
                     🥛 Current Milk Price: ${commons?.milkPrice}
                 </Card.Title>
                 {/* when the ID doesnt match, dont show the buy/sell button */}
-                {canView ? (
+                {isViewOnly ? (
                     <>
-                        <p>
+                        <p data-testid="ManageCows-ViewOnly">
                             This page is for viewing only, cannot buy and sell
                             cows.
                         </p>

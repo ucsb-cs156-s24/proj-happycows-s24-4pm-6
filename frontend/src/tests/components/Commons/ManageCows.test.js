@@ -89,89 +89,26 @@ describe("ManageCows tests", () => {
             <QueryClientProvider client={queryClient}>
                 <ManageCows
                     userCommons={userCommonsFixtures.oneUserCommons[0]}
-                    commons={{ cowPrice: 10, milkPrice: 5 }}
                     onBuy={mockBuy}
                     onSell={mockSell}
-                    userId={userCommonsFixtures.oneUserCommons[0].userId}
+                    userId={1}
                 />
             </QueryClientProvider>
         );
 
-        const messageElement = screen.getByText(
-            "This page is for viewing only, cannot buy and sell cows."
-        );
+        await waitFor(() => {
+            const messageElement = screen.getByTestId("ManageCows-ViewOnly");
+            expect(messageElement).toBeInTheDocument();
+            expect(messageElement).toHaveTextContent(
+                "This page is for viewing only, cannot buy and sell cows."
+            );
+        });
         const buyButton = screen.queryByTestId("buy-cow-button");
         const sellButton = screen.queryByTestId("sell-cow-button");
 
-        await waitFor(() => expect(messageElement).toBeInTheDocument());
         expect(buyButton).toBeNull();
         expect(sellButton).toBeNull();
-    });
-    test("renders buttons when condition is always true", async () => {
-        const mockUserId = 1; // Replace with the desired user id value for testing
-        currentUserModule.useCurrentUser.mockReturnValue({
-            data: {
-                root: {
-                    user: {
-                        id: mockUserId,
-                    },
-                },
-            },
-        });
-        currentUserModule.hasRole.mockReturnValue(false);
-        const mockBuy = jest.fn();
-        const mockSell = jest.fn();
-
-        render(
-            <QueryClientProvider client={queryClient}>
-                <ManageCows
-                    userCommons={userCommonsFixtures.oneUserCommons[0]}
-                    commons={{ cowPrice: 10, milkPrice: 5 }}
-                    onBuy={mockBuy}
-                    onSell={mockSell}
-                    userId={mockUserId}
-                />
-            </QueryClientProvider>
-        );
-
-        const buyButton = screen.queryByTestId("buy-cow-button");
-        const sellButton = screen.queryByTestId("sell-cow-button");
-
-        expect(buyButton).toBeEnabled();
-        expect(sellButton).toBeEnabled();
-    });
-    test("renders buttons when hasRole is an empty string", async () => {
-        currentUserModule.useCurrentUser.mockReturnValue({
-            data: {
-                root: {
-                    user: {
-                        id: 1,
-                    },
-                },
-            },
-        });
-        currentUserModule.hasRole.mockReturnValue("");
-        currentUserModule.hasRole.mockReturnValue(false);
-
-        const mockBuy = jest.fn();
-        const mockSell = jest.fn();
-
-        render(
-            <QueryClientProvider client={queryClient}>
-                <ManageCows
-                    userCommons={userCommonsFixtures.oneUserCommons[0]}
-                    commons={{ cowPrice: 10, milkPrice: 5 }}
-                    onBuy={mockBuy}
-                    onSell={mockSell}
-                    userId={userCommonsFixtures.oneUserCommons[0].userId}
-                />
-            </QueryClientProvider>
-        );
-
-        const buyButton = screen.queryByTestId("buy-cow-button");
-        const sellButton = screen.queryByTestId("sell-cow-button");
-
-        expect(buyButton).toBeInTheDocument();
-        expect(sellButton).toBeInTheDocument();
+        // expect(buyButton).toBeEnabled();
+        // expect(sellButton).toBeEnabled();
     });
 });

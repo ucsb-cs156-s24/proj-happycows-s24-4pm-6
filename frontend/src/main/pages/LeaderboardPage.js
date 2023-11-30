@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import React from "react";
 
 import { useParams } from "react-router-dom";
 import { hasRole } from "main/utils/currentUser";
@@ -16,7 +16,6 @@ import { Button } from "react-bootstrap";
 export default function LeaderboardPage() {
     const { commonsId } = useParams();
     const { data: currentUser } = useCurrentUser();
-    const [playPageId, setPlayPageId] = useState(1);
 
     // Stryker disable all
     const {
@@ -75,23 +74,6 @@ export default function LeaderboardPage() {
                                 leaderboardUsers={userCommons}
                                 currentUser={currentUser}
                             />
-                            <div className="d-flex">
-                                <input
-                                    type="number"
-                                    value={playPageId}
-                                    onChange={(e) =>
-                                        setPlayPageId(e.target.value)
-                                    }
-                                    className="form-control mr-2"
-                                    placeholder="Enter User ID to visit"
-                                />
-                                <Button
-                                    href={`/admin/play/${commonsId}/user/${playPageId}`}
-                                    data-testid="LeaderboardPage-play-page-button"
-                                >
-                                    Play Page
-                                </Button>
-                            </div>
                         </>
                     ) : (
                         <p>You're not authorized to see the leaderboard.</p>

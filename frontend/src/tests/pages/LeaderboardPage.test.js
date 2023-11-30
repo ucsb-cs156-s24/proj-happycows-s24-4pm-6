@@ -89,10 +89,6 @@ describe("LeaderboardPage tests", () => {
         const leaderboard_main_div = screen.getByTestId(
             "LeaderboardPage-main-div"
         );
-        const navigationLink = screen.getByTestId(
-            "LeaderboardPage-play-page-button"
-        );
-        expect(navigationLink).toHaveAttribute("href", `/admin/play/1/user/1`);
         const leaderboard_back_button = screen.getByTestId(
             "LeaderboardPage-back-button"
         );
@@ -204,55 +200,5 @@ describe("LeaderboardPage tests", () => {
             expect(axiosMock.history.get.length).toEqual(4);
         });
         expect(await screen.findByText("Total Wealth")).toBeInTheDocument();
-    });
-
-    test("should update playPageId when input value changes", async () => {
-        setupUser();
-        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            id: 1,
-            name: "Anika's Commons",
-            day: 5,
-            startingDate: "2026-03-05T15:50:10",
-            startingBalance: 200.5,
-            totalPlayers: 50,
-            cowPrice: 15,
-            milkPrice: 10,
-            degradationRate: 0.5,
-            showLeaderboard: true,
-        });
-        axiosMock
-            .onGet("/api/usercommons/commons/all", { params: { commonsId: 1 } })
-            .reply(200, []);
-
-        const queryClient = new QueryClient();
-        render(
-            <QueryClientProvider client={queryClient}>
-                <MemoryRouter>
-                    <LeaderboardPage />
-                </MemoryRouter>
-            </QueryClientProvider>
-        );
-
-        // Use waitFor to wait for the asynchronous operations to complete
-        await waitFor(() => {
-            const inputElement = screen.getByPlaceholderText(
-                "Enter User ID to visit"
-            );
-            expect(inputElement).toBeInTheDocument();
-        });
-
-        const inputElement = screen.getByPlaceholderText(
-            "Enter User ID to visit"
-        );
-        // Simulate a change event on the input element
-        fireEvent.change(inputElement, { target: { value: "2" } });
-
-        // Check if the state has been updated
-        await waitFor(() => {
-            const inputElement = screen.getByPlaceholderText(
-                "Enter User ID to visit"
-            );
-            expect(inputElement.value).toBe("2");
-        });
     });
 });
