@@ -59,17 +59,16 @@ describe("LeaderboardPage tests", () => {
 
     test("renders without crashing for users", async () => {
         setupUser();
-        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            id: 1,
-            name: "Anika's Commons",
-            day: 5,
-            startingDate: "2026-03-05T15:50:10",
-            startingBalance: 200.5,
-            totalPlayers: 50,
-            cowPrice: 15,
-            milkPrice: 10,
-            degradationRate: 0.5,
-            showLeaderboard: true,
+
+            "username": "Anika",
+            "totalWealth": 100.0,
+            "numOfCows": 5,
+            "cowHealth": 100,
+            "cowsBought": 10,
+            "cowsSold": 3,
+            "cowDeaths": 0,
+            "showLeaderboard": true,
+
         });
         axiosMock
             .onGet("/api/usercommons/commons/all", { params: { commonsId: 1 } })
@@ -87,6 +86,7 @@ describe("LeaderboardPage tests", () => {
                 screen.getByTestId("LeaderboardPage-main-div")
             ).toBeInTheDocument();
         });
+
         const leaderboard_main_div = screen.getByTestId(
             "LeaderboardPage-main-div"
         );
@@ -101,6 +101,7 @@ describe("LeaderboardPage tests", () => {
             "style",
             "background-size: cover; background-image: url(PlayPageBackground.png);"
         );
+
         expect(leaderboard_back_button).toBeInTheDocument();
     });
 
@@ -123,17 +124,16 @@ describe("LeaderboardPage tests", () => {
 
     test("renders leaderboard for users when showLeaderboard = true", async () => {
         setupUser();
-        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            id: 1,
-            name: "Anika's Commons",
-            day: 5,
-            startingDate: "2026-03-05T15:50:10",
-            startingBalance: 200.5,
-            totalPlayers: 50,
-            cowPrice: 15,
-            milkPrice: 10,
-            degradationRate: 0.5,
-            showLeaderboard: true,
+
+            "username": "Anika",
+            "totalWealth": 100.0,
+            "numOfCows": 5,
+            "cowHealth": 100,
+            "cowsBought": 10,
+            "cowsSold": 3,
+            "cowDeaths": 0,
+            "showLeaderboard": true,
+
         });
         axiosMock
             .onGet("/api/usercommons/commons/all", { params: { commonsId: 1 } })
@@ -155,16 +155,15 @@ describe("LeaderboardPage tests", () => {
     test("renders leaderboard error message for users when showLeaderboard = false", async () => {
         setupUser();
         axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            id: 1,
-            name: "Anika's Commons",
-            day: 5,
-            startingDate: "2026-03-05T15:50:10",
-            startingBalance: 200.5,
-            totalPlayers: 50,
-            cowPrice: 15,
-            milkPrice: 10,
-            degradationRate: 0.5,
-            showLeaderboard: false,
+            "username": "Anika",
+            "totalWealth": 100.0,
+            "numOfCows": 5,
+            "cowHealth": 100,
+            "cowsBought": 10,
+            "cowsSold": 3,
+            "cowDeaths": 0,
+            "showLeaderboard": false,
+
         });
         const queryClient = new QueryClient();
         render(
@@ -184,16 +183,15 @@ describe("LeaderboardPage tests", () => {
     test("renders leaderboard for Admin users when showLeaderboard = false", async () => {
         setupAdmin();
         axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            id: 1,
-            name: "Anika's Commons",
-            day: 5,
-            startingDate: "2026-03-05T15:50:10",
-            startingBalance: 200.5,
-            totalPlayers: 50,
-            cowPrice: 15,
-            milkPrice: 10,
-            degradationRate: 0.5,
-            showLeaderboard: false,
+            "username": "Anika",
+            "totalWealth": 100.0,
+            "numOfCows": 5,
+            "cowHealth": 100,
+            "cowsBought": 10,
+            "cowsSold": 3,
+            "cowDeaths": 0,
+            "showLeaderboard": false,
+
         });
         axiosMock
             .onGet("/api/usercommons/commons/all", { params: { commonsId: 1 } })
