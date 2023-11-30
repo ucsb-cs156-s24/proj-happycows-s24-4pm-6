@@ -60,6 +60,7 @@ describe("AdminViewPlayPage tests", () => {
                 name: "Sample Commons",
             },
         ]);
+
         axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
             commons: {
                 id: 1,
@@ -241,6 +242,40 @@ describe("AdminViewPlayPage tests", () => {
             </QueryClientProvider>
         );
 
+        expect(
+            await screen.findByText(/Visiting user1 from common1/)
+        ).toBeInTheDocument();
+        expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
+
+        const bannerElement = screen.getByTestId(
+            "adminviewplaypage-read-only-banner"
+        );
+
+        expect(bannerElement).toHaveStyle(
+            `
+            background: rgb(240, 240, 240);
+            padding: 10px;
+            `
+        );
+    });
+
+    test("renders when userCommons is falsy but commonsPlus is truthy", async () => {
+        // Mock the response so that userCommons is falsy but commonsPlus is truthy
+        axiosMock
+            .onGet("/api/usercommons", {
+                params: { userId: 1, commonsId: 1 },
+            })
+            .reply(200, null);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminViewPlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Ensure that the component renders without crashing
         expect(
             await screen.findByText(/Visiting user1 from common1/)
         ).toBeInTheDocument();

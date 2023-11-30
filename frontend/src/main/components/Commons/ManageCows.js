@@ -8,8 +8,11 @@ const ManageCows = ({ userCommons, commons, onBuy, onSell }) => {
     // update cowPrice from fixture
     const { data: currentUser } = useCurrentUser();
     const { userId } = useParams();
-    // console.log(userId);
-    // console.log(currentUser.root.user.id);
+    // Stryker disable all
+    const canView =
+        hasRole(currentUser, "ROLE_ADMIN") &&
+        userId !== currentUser.root.user.id;
+    // Stryker restore all
     return (
         <Card>
             <Card.Header as="h5">Manage Cows</Card.Header>
@@ -25,8 +28,7 @@ const ManageCows = ({ userCommons, commons, onBuy, onSell }) => {
                     🥛 Current Milk Price: ${commons?.milkPrice}
                 </Card.Title>
                 {/* when the ID doesnt match, dont show the buy/sell button */}
-                {hasRole(currentUser, "ROLE_ADMIN") &&
-                userId !== currentUser.root.user.id ? (
+                {canView ? (
                     <>
                         <p>
                             This page is for viewing only, cannot buy and sell

@@ -109,4 +109,71 @@ describe("ManageCows tests", () => {
         expect(buyButton).toBeNull();
         expect(sellButton).toBeNull();
     });
+    test("renders buttons when condition is always true", async () => {
+        const mockUserId = 1; // Replace with the desired user id value for testing
+        currentUserModule.useCurrentUser.mockReturnValue({
+            data: {
+                root: {
+                    user: {
+                        id: mockUserId,
+                    },
+                },
+            },
+        });
+        currentUserModule.hasRole.mockReturnValue(false);
+        const mockBuy = jest.fn();
+        const mockSell = jest.fn();
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <ManageCows
+                    userCommons={userCommonsFixtures.oneUserCommons[0]}
+                    commons={{ cowPrice: 10, milkPrice: 5 }}
+                    onBuy={mockBuy}
+                    onSell={mockSell}
+                    userId={mockUserId}
+                />
+            </QueryClientProvider>
+        );
+
+        const buyButton = screen.queryByTestId("buy-cow-button");
+        const sellButton = screen.queryByTestId("sell-cow-button");
+
+        expect(buyButton).toBeEnabled();
+        expect(sellButton).toBeEnabled();
+    });
+    test("renders buttons when hasRole is an empty string", async () => {
+        currentUserModule.useCurrentUser.mockReturnValue({
+            data: {
+                root: {
+                    user: {
+                        id: 1,
+                    },
+                },
+            },
+        });
+        currentUserModule.hasRole.mockReturnValue("");
+        currentUserModule.hasRole.mockReturnValue(false);
+
+        const mockBuy = jest.fn();
+        const mockSell = jest.fn();
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <ManageCows
+                    userCommons={userCommonsFixtures.oneUserCommons[0]}
+                    commons={{ cowPrice: 10, milkPrice: 5 }}
+                    onBuy={mockBuy}
+                    onSell={mockSell}
+                    userId={userCommonsFixtures.oneUserCommons[0].userId}
+                />
+            </QueryClientProvider>
+        );
+
+        const buyButton = screen.queryByTestId("buy-cow-button");
+        const sellButton = screen.queryByTestId("sell-cow-button");
+
+        expect(buyButton).toBeInTheDocument();
+        expect(sellButton).toBeInTheDocument();
+    });
 });

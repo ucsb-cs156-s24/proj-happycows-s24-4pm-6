@@ -90,6 +90,10 @@ describe("LeaderboardPage tests", () => {
         const leaderboard_main_div = screen.getByTestId(
             "LeaderboardPage-main-div"
         );
+        const navigationLink = screen.getByTestId(
+            "LeaderboardPage-play-page-button"
+        );
+        expect(navigationLink).toHaveAttribute("href", `/admin/play/1/user/1`);
         const leaderboard_back_button = screen.getByTestId(
             "LeaderboardPage-back-button"
         );

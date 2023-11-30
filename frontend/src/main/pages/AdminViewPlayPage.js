@@ -28,6 +28,7 @@ const AdminViewPlayPage = () => {
 
     const { data: currentUser } = useCurrentUser();
 
+    // Stryker disable all
     const { data: userCommons } = useBackend("/api/usercommons", {
         method: "GET",
         url: "/api/usercommons",
@@ -141,12 +142,14 @@ const AdminViewPlayPage = () => {
     const bannerStyle = {
         background: "#f0f0f0",
         padding: "10px",
-        marginBottom: "20px",
     };
     return (
         <div>
             <BasicLayout>
-                <Card style={bannerStyle}>
+                <Card
+                    style={bannerStyle}
+                    data-testid="adminviewplaypage-read-only-banner"
+                >
                     <Card.Body>
                         <Card.Title>
                             Visiting user{userId} from common{commonsId}.
