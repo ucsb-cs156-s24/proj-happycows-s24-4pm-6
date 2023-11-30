@@ -180,7 +180,7 @@ describe("HomePage tests", () => {
 
     });
 
-    test("Commons Play has the correct styles applied", async () => {
+    test("Home page intro card has the correct styles applied", async () => {
         apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons;
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
         axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
