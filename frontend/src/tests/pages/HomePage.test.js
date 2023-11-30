@@ -180,6 +180,26 @@ describe("HomePage tests", () => {
 
     });
 
+    test("Commons Play has the correct styles applied", async () => {
+        apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons;
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+        axiosMock.onPost("/api/commons/join").reply(200, commonsFixtures.threeCommons[0]);
 
+        
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <HomePage hour={12}/>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByTestId("HomePage-intro-card")).toBeInTheDocument();
+    
+        const HomePageCard = screen.getByTestId("HomePage-intro-card");
+        expect(HomePageCard).toHaveStyle('opacity: .9;');       
+
+    });
 
 });
