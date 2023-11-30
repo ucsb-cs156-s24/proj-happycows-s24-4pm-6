@@ -73,7 +73,7 @@ describe("ChatMessageDisplay tests", () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
-                    <ChatMessageDisplay message={message} />
+                    <ChatMessageDisplay message={message_no_name} />
                 </MemoryRouter>
             </QueryClientProvider>
         );
