@@ -105,7 +105,7 @@ const AdminViewPlayPage = () => {
                     )}
                     <br />
                     {!!userCommons && !!commonsPlus && (
-                        <CardGroup>
+                        <CardGroup data-testid="adminviewplaypage-card-group">
                             <ManageCows
                                 userCommons={userCommons}
                                 commons={commonsPlus.commons}

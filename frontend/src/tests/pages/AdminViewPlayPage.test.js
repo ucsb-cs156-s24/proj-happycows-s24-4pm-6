@@ -240,4 +240,37 @@ describe("AdminViewPlayPage tests", () => {
         ).toBeInTheDocument();
         expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
     });
+    test("renders when userCommons is truthy and commonsPlus is falsy", async () => {
+        axiosMock
+            .onGet("/api/commons/plus", { params: { id: 1 } })
+            .reply(200, null);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminViewPlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Ensure that the component renders without crashing
+        expect(
+            await screen.findByText(/Visiting user1 from common1/)
+        ).toBeInTheDocument();
+        expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
+    });
+    test("renders CardGroup when userCommons and commonsPlus are truthy", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminViewPlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Ensure that the component renders the CardGroup when conditions are met
+        expect(
+            await screen.findByTestId("adminviewplaypage-card-group")
+        ).toBeInTheDocument();
+    });
 });
