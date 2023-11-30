@@ -7,6 +7,7 @@ import AxiosMockAdapter from "axios-mock-adapter";
 import PlayPage from "main/pages/PlayPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import ManageCowsModal from "main/components/Commons/ManageCowsModal";
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
@@ -74,7 +75,7 @@ describe("PlayPage tests", () => {
         );
     });
 
-    test("click buy and sell buttons", async () => {
+    test("click buy button", async () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
@@ -87,13 +88,35 @@ describe("PlayPage tests", () => {
         const buyCowButton = screen.getByTestId("buy-cow-button");
         fireEvent.click(buyCowButton);
 
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
+        const modal_buy = screen.findByTestId("buy-sell-cow-modal")
+        expect(await modal_buy).toBeInTheDocument();
+        const submitModalButton = screen.getByTestId("buy-sell-cow-modal-submit")
+        fireEvent.click(submitModalButton)
 
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
+    });
+
+    test("click sell button", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByTestId("sell-cow-button")).toBeInTheDocument();
         const sellCowButton = screen.getByTestId("sell-cow-button");
         fireEvent.click(sellCowButton);
 
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(2));
+        const modal_sell = screen.findByTestId("buy-sell-cow-modal");
+        expect(await modal_sell).toBeInTheDocument();
+        const submitModalButton = screen.getByTestId("buy-sell-cow-modal-submit");
+        fireEvent.click(submitModalButton);
 
+        expect(await modal_sell).not.toBeInTheDocument();
+
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
     });
 
     test("Make sure that both the Announcements and Welcome Farmer components show up", async () => {
@@ -204,5 +227,17 @@ describe("PlayPage tests", () => {
             right: 20px;
         `);
     });
-    
+
+    test("Buy and Sell Cows Modal is Closed by Default", () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+
+        expect(() => screen.getByTestId("buy-sell-cow-modal")).toThrow();
+    });
 });
