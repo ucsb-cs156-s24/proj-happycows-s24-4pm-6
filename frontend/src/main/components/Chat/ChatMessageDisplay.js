@@ -1,5 +1,5 @@
 import { Card } from 'react-bootstrap';
-//import { useCurrentUser } from "main/utils/currentUser";
+import { useCurrentUser } from "main/utils/currentUser";
 
 const ChatMessageDisplay = ({ message }) => {
 
@@ -7,13 +7,13 @@ const ChatMessageDisplay = ({ message }) => {
 
   const formattedTimestamp = message?.timestamp ? message.timestamp.replace('T', ' ').split('.')[0] : '';
 
-  //const { data: currentUser } = useCurrentUser();
-  //const currentUserId = currentUser?.root ? currentUser?.root?.user?.id : "";
+  const { data: currentUser } = useCurrentUser();
+  const currentUserId = currentUser?.root ? currentUser?.root?.user?.id : "";
 
   const testId = `ChatMessageDisplay-${message?.id}`;
   
   return (
-    <Card data-testid={testId} /*bg={currentUserId == message.userId ? 'primary' : 'secondary'} text={'white'}*/>
+    <Card data-testid={testId} bg={currentUserId == message.userId ? 'primary' : 'secondary'} text={'white'}>
       <Card.Body>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Card.Title data-testid={`${testId}-User`} style={{ margin: 0 }}>
