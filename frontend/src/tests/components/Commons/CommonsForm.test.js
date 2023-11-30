@@ -329,51 +329,32 @@ describe("CommonsForm tests", () => {
 
   });
 
-  // it("use default values when initial commons is null", async () => {
-  //   const submitAction = jest.fn();
-  //   // const curr = new Date();
-  //   // const today = curr.toISOString().substr(0, 10);
-  //   // const currMonth = curr.getMonth() % 12;
-  //   // const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
-  //   // const DefaultVals = {
-  //   //   name: "", startingBalance: 10000, cowPrice: 100,
-  //   //   milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth, aboveCapacityStrategy: "Linear", belowCapacityStrategy: "Constant"
-  //   // };
-  //   axiosMock
-  //     .onGet("/api/commons/all-health-update-strategies")
-  //     .reply(200, healthUpdateStrategyListFixtures.real);
-  //   axiosMock
-  //     .onGet("/api/commons/defaults")
-  //     .reply(200, {
-  //       startingBalance: 100, cowPrice: 10, milkPrice: 1, degradationRate: 0.01, carryingCapacity: 10,
-  //     });
+  test("the correct parameters are passed to useBackend", async () => {
 
-  //   render(
-  //     <QueryClientProvider client={new QueryClient()}>
-  //       <Router>
-  //         <CommonsForm submitAction={submitAction} />
-  //       </Router>
-  //     </QueryClientProvider>
-  //   );
+    axiosMock
+      .onGet("/api/commons/all-health-update-strategies")
+      .reply(200, healthUpdateStrategyListFixtures.real);
 
+    // https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
+    const useBackendSpy = jest.spyOn(useBackendModule, 'useBackend');
 
-  //   fireEvent.change(screen.getByTestId("CommonsForm-startingBalance"), { target: { value: "0" } });
-  //   fireEvent.change(screen.getByTestId("CommonsForm-cowPrice"), { target: { value: "0" } });
-  //   fireEvent.change(screen.getByTestId("CommonsForm-milkPrice"), { target: { value: "0" } });
-  //   fireEvent.change(screen.getByTestId("CommonsForm-degradationRate"), { target: { value: "0" } });
-  //   fireEvent.change(screen.getByTestId("CommonsForm-carryingCapacity"), { target: { value: "0" } });
-  //   // fireEvent.change(screen.getByTestId("CommonsForm-capacityPerUser"), { target: { value: "0" } });
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <CommonsForm />
+        </Router>
+      </QueryClientProvider>
+    );
 
-  //   await act(async() => {
-  //     await new Promise((resolve) => setTimeout(resolve, 0));
-  //   });
-  //   expect(screen.findByTestId("CommonsForm-startingBalance")).toHaveValue(100);
-  //   expect(screen.findByTestId("CommonsForm-cowPrice")).toHaveValue(10);
-  //   expect(screen.findByTestId("CommonsForm-milkPrice")).toHaveValue(1);
-  //   expect(screen.findByTestId("CommonsForm-degradationRate")).toHaveValue(0.01);
-  //   expect(screen.findByTestId("CommonsForm-carryingCapacity")).toHaveValue(10);
-  //   // expect(screen.findByTestId("CommonsForm-capacityPerUser")).toHaveValue(8);
-  // });
+    await waitFor(() => {
+      expect(useBackendSpy).toHaveBeenCalledWith(
+        "/api/commons/all-health-update-strategies", {
+        method: "GET",
+        url: "/api/commons/all-health-update-strategies",
+      },
+      );
+    });
+  });
 
   test("the correct parameters are passed to useBackend", async () => {
 
