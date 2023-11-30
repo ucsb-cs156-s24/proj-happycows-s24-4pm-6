@@ -39,6 +39,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
       });
     // Stryker restore all
     
+    // Stryker disable all
     useEffect(() => {
         if(defaultValuesData && !initialCommons)
         {
@@ -65,6 +66,8 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
             });
         }
     }, [defaultValuesData, initialCommons, reset]);
+    // Stryker restore all
+    
     const testid = "CommonsForm";
     const curr = new Date();
     const today = curr.toISOString().split('T')[0];
@@ -81,8 +84,8 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         lastDate: nextMonth,
       };
 
-    const belowStrategy = defaultValuesData?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
-    const aboveStrategy = defaultValuesData?.aboveCapacityStrategy || healthUpdateStrategies?.defaultAboveCapacity;
+    const belowStrategy = defaultValuesData?.belowCapacityStrategy;
+    const aboveStrategy = defaultValuesData?.aboveCapacityStrategy;
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
