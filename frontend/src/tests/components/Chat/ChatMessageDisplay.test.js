@@ -82,6 +82,11 @@ describe("ChatMessageDisplay tests", () => {
             expect(screen.getByText("Hello World")).toBeInTheDocument();
         });
 
+        const cardBody = screen.getByTestId("ChatMessageDisplay-1");
+
+        const expectedBgColor = 'card bg-secondary text-white';
+        expect(cardBody).toHaveClass(expectedBgColor)
+
         expect(screen.getByText("Anonymous")).toBeInTheDocument();
         expect(screen.getByText("2023-08-17 23:57:46")).toBeInTheDocument();
     });
@@ -105,6 +110,11 @@ describe("ChatMessageDisplay tests", () => {
             expect(screen.getByTestId("ChatMessageDisplay-1-Message")).toHaveTextContent("Hello World");
         });
 
+        const cardBody = screen.getByTestId("ChatMessageDisplay-1");
+
+        const expectedBgColor = 'card bg-secondary text-white';
+        expect(cardBody).toHaveClass(expectedBgColor)
+
         expect(screen.getByTestId("ChatMessageDisplay-1-User")).toHaveTextContent("Anonymous");
         expect(screen.getByTestId("ChatMessageDisplay-1-Date")).toHaveTextContent("");
     });
@@ -124,6 +134,11 @@ describe("ChatMessageDisplay tests", () => {
         await waitFor(() => {
             expect(screen.getByTestId("ChatMessageDisplay-undefined-Message")).toHaveTextContent("");
         });
+
+        const cardBody = screen.getByTestId("ChatMessageDisplay-undefined");
+
+        const expectedBgColor = 'card bg-secondary text-white';
+        expect(cardBody).toHaveClass(expectedBgColor)
 
         expect(screen.getByTestId("ChatMessageDisplay-undefined-User")).toHaveTextContent("Anonymous");
         expect(screen.getByTestId("ChatMessageDisplay-undefined-Date")).toHaveTextContent("");
