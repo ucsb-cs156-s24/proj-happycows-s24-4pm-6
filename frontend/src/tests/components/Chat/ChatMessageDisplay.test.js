@@ -91,7 +91,11 @@ describe("ChatMessageDisplay tests", () => {
 
         // act
         render(
-            <ChatMessageDisplay />
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <ChatMessageDisplay />
+                </MemoryRouter>
+            </QueryClientProvider>
         );
 
         // assert
