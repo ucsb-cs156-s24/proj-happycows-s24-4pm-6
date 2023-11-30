@@ -82,9 +82,7 @@ describe("HomePage tests", () => {
                     <HomePage />
                 </MemoryRouter>
             </QueryClientProvider>
-        );
-       // "style", "font-size: 75px; border-radius: 7px; background-color: white; opacity: 0.9;"
-        
+        );        
         const title = screen.getByTestId("homePage-title");
         expect(title).toHaveAttribute("class", "animate-charcter");
         });
