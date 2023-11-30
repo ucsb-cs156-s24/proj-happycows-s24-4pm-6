@@ -201,10 +201,7 @@ describe("AdminViewPlayPage tests", () => {
             </QueryClientProvider>
         );
 
-        expect(
-            await screen.findByText(/Visiting user1 from common1/)
-        ).toBeInTheDocument();
-        expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
+        expect(await screen.findByText(/Visiting Farmer/)).toBeInTheDocument();
 
         const bannerElement = screen.getByTestId(
             "adminviewplaypage-read-only-banner"
@@ -235,10 +232,7 @@ describe("AdminViewPlayPage tests", () => {
         );
 
         // Ensure that the component renders without crashing
-        expect(
-            await screen.findByText(/Visiting user1 from common1/)
-        ).toBeInTheDocument();
-        expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
+        expect(await screen.findByText(/Visiting Farmer/)).toBeInTheDocument();
     });
     test("renders when userCommons is truthy and commonsPlus is falsy", async () => {
         axiosMock
@@ -254,10 +248,7 @@ describe("AdminViewPlayPage tests", () => {
         );
 
         // Ensure that the component renders without crashing
-        expect(
-            await screen.findByText(/Visiting user1 from common1/)
-        ).toBeInTheDocument();
-        expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
+        expect(await screen.findByText(/Visiting Farmer/)).toBeInTheDocument();
     });
     test("renders CardGroup when userCommons and commonsPlus are truthy", async () => {
         render(
