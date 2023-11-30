@@ -124,14 +124,14 @@ export default function PlayPage() {
   };
 
   const chatButtonStyle = {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
+    width: '60px',
+    height: '60px',
+    borderRadius: '25%',
     backgroundColor: 'lightblue',
     color: 'black',
     position: 'fixed',
-    bottom: '20px',
-    right: '20px',
+    bottom: '30px',
+    right: '30px',
   };
 
   const chatContainerStyle = {
@@ -139,6 +139,12 @@ export default function PlayPage() {
     position: 'fixed',
     bottom: '100px',
     right: '20px',
+  };
+
+  const emojiStyle = {
+    fontFamily: 'Arial, sans-serif', 
+    fontSize: '30px', 
+
   };
 
   return (
@@ -160,7 +166,7 @@ export default function PlayPage() {
       <div style={chatContainerStyle} data-testid="playpage-chat-div">
         {!!isChatOpen && <ChatPanel commonsId={commonsId}/>}
         <Button style={chatButtonStyle} onClick={toggleChatWindow} data-testid="playpage-chat-toggle">
-          {!!isChatOpen ? '▼' : '▲'}
+          {!!isChatOpen ? <span style={emojiStyle} data-testid="close-icon">❌</span> : <span style={emojiStyle} data-testid="message-icon">💬</span>}
         </Button>
       </div>
     </div>
