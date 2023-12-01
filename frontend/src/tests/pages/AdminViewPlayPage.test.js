@@ -202,9 +202,12 @@ describe("AdminViewPlayPage tests", () => {
         );
 
         expect(
-            await screen.findByText(/Visiting user1 from common1/)
+            await screen.findByText(/This is a Admin Feature for/)
         ).toBeInTheDocument();
-        expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
+        expect(await screen.findByText(/Visiting Farmer/)).toBeInTheDocument();
+        expect(
+            await screen.findByText(/Play Page for common/)
+        ).toBeInTheDocument();
 
         const bannerElement = screen.getByTestId(
             "adminviewplaypage-read-only-banner"
@@ -214,7 +217,11 @@ describe("AdminViewPlayPage tests", () => {
             `
             background: rgb(240, 240, 240);
             padding: 10px;
+            textAlign: center
             `
+        );
+        expect(bannerElement).toHaveTextContent(
+            "This is a Admin Feature for Phillip ConradVisiting Farmer 's Play Page for common Sample Commons in Read Only Mode."
         );
     });
 
@@ -236,9 +243,12 @@ describe("AdminViewPlayPage tests", () => {
 
         // Ensure that the component renders without crashing
         expect(
-            await screen.findByText(/Visiting user1 from common1/)
+            await screen.findByText(/This is a Admin Feature for/)
         ).toBeInTheDocument();
-        expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
+        expect(await screen.findByText(/Visiting Farmer/)).toBeInTheDocument();
+        expect(
+            await screen.findByText(/Play Page for common/)
+        ).toBeInTheDocument();
     });
     test("renders when userCommons is truthy and commonsPlus is falsy", async () => {
         axiosMock
@@ -255,9 +265,12 @@ describe("AdminViewPlayPage tests", () => {
 
         // Ensure that the component renders without crashing
         expect(
-            await screen.findByText(/Visiting user1 from common1/)
+            await screen.findByText(/This is a Admin Feature for/)
         ).toBeInTheDocument();
-        expect(await screen.findByText(/READ ONLY/)).toBeInTheDocument();
+        expect(await screen.findByText(/Visiting Farmer/)).toBeInTheDocument();
+        expect(
+            await screen.findByText(/Play Page for common/)
+        ).toBeInTheDocument();
     });
     test("renders CardGroup when userCommons and commonsPlus are truthy", async () => {
         render(
