@@ -79,7 +79,17 @@ const AdminViewPlayPage = () => {
     const bannerStyle = {
         background: "#f0f0f0",
         padding: "10px",
+        textAlign: "center",
     };
+
+    const visiting_user = userCommons?.username;
+    const visiting_commons = commonsPlus?.commons.name;
+    // Stryker disable all
+    const admin_name = currentUser?.root
+        ? currentUser?.root?.user?.fullName
+        : "";
+    // Stryker restore all
+
     return (
         <div>
             <BasicLayout>
@@ -89,14 +99,18 @@ const AdminViewPlayPage = () => {
                 >
                     <Card.Body>
                         <Card.Title>
-                            Visiting user{userId} from common{commonsId}.
+                            This is a Admin Feature for{" "}
+                            <strong>{admin_name}</strong>
                             <br />
-                            READ ONLY
+                            Visiting Farmer <strong>{visiting_user}</strong>'s
+                            Play Page for common{" "}
+                            <strong>{visiting_commons}</strong> in Read Only
+                            Mode.
                         </Card.Title>
                     </Card.Body>
                 </Card>
                 <Container>
-                    {!!currentUser && <CommonsPlay currentUser={currentUser} />}
+                    {!!currentUser && <CommonsPlay currentUser={userCommons} />}
                     {!!commonsPlus && (
                         <CommonsOverview
                             commonsPlus={commonsPlus}
