@@ -86,7 +86,7 @@ describe("ChatDisplay tests", () => {
     
     //assert
     await waitFor(() => {
-        expect(axiosMock.history.get.length).toBe(2);
+        expect(axiosMock.history.get.length).toBe(3);
     });
     expect(axiosMock.history.get[0].url).toBe("/api/chat/get");
     expect(axiosMock.history.get[0].params).toEqual({ commonsId: 1, page: 0, size: 10 });
@@ -105,15 +105,15 @@ describe("ChatDisplay tests", () => {
 
     /* eslint-enable testing-library/no-node-access */
 
-    expect(screen.getByTestId("ChatMessageDisplay-1-User")).toHaveTextContent("George Washington (1)");
+    expect(screen.getByTestId("ChatMessageDisplay-1-User")).toHaveTextContent("George Washington");
     expect(screen.getByTestId("ChatMessageDisplay-1-Message")).toHaveTextContent("Hello World");
     expect(screen.getByTestId("ChatMessageDisplay-1-Date")).toHaveTextContent("2023-08-17 23:57:46");
 
-    expect(screen.getByTestId("ChatMessageDisplay-2-User")).toHaveTextContent("Thomas Jefferson (3)");
+    expect(screen.getByTestId("ChatMessageDisplay-2-User")).toHaveTextContent("Thomas Jefferson");
     expect(screen.getByTestId("ChatMessageDisplay-2-Message")).toHaveTextContent("Hello World How are you doing???");
     expect(screen.getByTestId("ChatMessageDisplay-2-Date")).toHaveTextContent("2023-08-18 02:59:11");
 
-    expect(screen.getByTestId("ChatMessageDisplay-3-User")).toHaveTextContent("John Adams (2)");
+    expect(screen.getByTestId("ChatMessageDisplay-3-User")).toHaveTextContent("John Adams");
     expect(screen.getByTestId("ChatMessageDisplay-3-Message")).toHaveTextContent("This is another test for chat messaging");
     expect(screen.getByTestId("ChatMessageDisplay-3-Date")).toHaveTextContent("2023-08-18 02:59:28");
 
@@ -137,18 +137,19 @@ describe("ChatDisplay tests", () => {
     
     //assert
     await waitFor(() => {
-        expect(axiosMock.history.get.length).toBe(2);
+        expect(axiosMock.history.get.length).toBe(3);
     });
-    expect(axiosMock.history.get[0].url).toBe("/api/chat/get");
-    expect(axiosMock.history.get[0].params).toEqual({ commonsId: 1, page: 0, size: 10 });
-    expect(axiosMock.history.get[1].url).toBe("/api/usercommons/commons/all");
-    expect(axiosMock.history.get[1].params).toEqual({ commonsId: 1 });
+    expect(axiosMock.history.get[0].url).toBe("/api/currentUser");
+    expect(axiosMock.history.get[1].url).toBe("/api/chat/get");
+    expect(axiosMock.history.get[1].params).toEqual({ commonsId: 1, page: 0, size: 10 });
+    expect(axiosMock.history.get[2].url).toBe("/api/usercommons/commons/all");
+    expect(axiosMock.history.get[2].params).toEqual({ commonsId: 1 });
 
     await waitFor(() => {
         expect(screen.getByTestId("ChatMessageDisplay-1")).toBeInTheDocument();
 
     });
-    expect(screen.getByTestId("ChatMessageDisplay-1-User")).toHaveTextContent("Anonymous (1)");
+    expect(screen.getByTestId("ChatMessageDisplay-1-User")).toHaveTextContent("Anonymous");
     expect(screen.getByTestId("ChatMessageDisplay-1-Message")).toHaveTextContent("Hello World");
     expect(screen.getByTestId("ChatMessageDisplay-1-Date")).toHaveTextContent("2023-08-17 23:57:46");
 
@@ -172,12 +173,13 @@ describe("ChatDisplay tests", () => {
     
     //assert
     await waitFor(() => {
-        expect(axiosMock.history.get.length).toBe(2);
+        expect(axiosMock.history.get.length).toBe(3);
     });
-    expect(axiosMock.history.get[0].url).toBe("/api/chat/get");
-    expect(axiosMock.history.get[0].params).toEqual({ commonsId: 1, page: 0, size: 10 });
-    expect(axiosMock.history.get[1].url).toBe("/api/usercommons/commons/all");
-    expect(axiosMock.history.get[1].params).toEqual({ commonsId: 1 });
+    expect(axiosMock.history.get[0].url).toBe("/api/currentUser");
+    expect(axiosMock.history.get[1].url).toBe("/api/chat/get");
+    expect(axiosMock.history.get[1].params).toEqual({ commonsId: 1, page: 0, size: 10 });
+    expect(axiosMock.history.get[2].url).toBe("/api/usercommons/commons/all");
+    expect(axiosMock.history.get[2].params).toEqual({ commonsId: 1 });
 
     await waitFor(() => {
         expect(screen.getByTestId("ChatMessageDisplay-11")).toBeInTheDocument();
