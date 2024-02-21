@@ -108,5 +108,20 @@ describe("ReportTable tests", () => {
 
   });
 
+  test("Has all numeric values right-justified", () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <ReportTable reports={reportFixtures.threeReports} />
+        </MemoryRouter>
+      </QueryClientProvider>
+
+    );
+
+    expect(screen.getAllByText("1")[2]).toHaveStyle("text-align: right;")
+    expect(screen.getAllByText("1")[3]).toHaveStyle("text-align: right;");
+    expect(screen.getAllByText("3")[0]).toHaveStyle("text-align: right;");  
+  });
+
 });
 

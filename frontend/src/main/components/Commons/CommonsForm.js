@@ -1,7 +1,7 @@
 import {Button, Form, Row, Col, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
-
+import { useEffect } from "react";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
@@ -16,30 +16,76 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
         register,
         formState: {errors},
         handleSubmit,
+        reset,
     } = useForm(
         // modifiedCommons is guaranteed to be defined (initialCommons or {})
         {defaultValues: modifiedCommons}
     );
     // Stryker restore all
-
+    
+    // Stryker disable all
     const {data: healthUpdateStrategies} = useBackend(
         "/api/commons/all-health-update-strategies", {
             method: "GET",
             url: "/api/commons/all-health-update-strategies",
         },
     );
+    // Stryker restore all
 
+    // Stryker disable all
+    const { data: defaultValuesData } = useBackend("/api/commons/defaults", {
+        method: "GET",
+        url: "/api/commons/defaults",
+      });
+    // Stryker restore all
+    
+    // Stryker disable all
+    useEffect(() => {
+        if(defaultValuesData && !initialCommons)
+        {
+            const{
+                startingBalance,
+                cowPrice,
+                milkPrice,
+                degradationRate,
+                carryingCapacity,
+                capacityPerUser,
+                aboveCapacityStrategy,
+                belowCapacityStrategy,
+            } = defaultValuesData;
+
+            reset({
+                startingBalance,
+                cowPrice,
+                milkPrice,
+                degradationRate,
+                carryingCapacity,
+                capacityPerUser,
+                aboveCapacityStrategy,
+                belowCapacityStrategy,
+            });
+        }
+    }, [defaultValuesData, initialCommons, reset]);
+    // Stryker restore all
+    
     const testid = "CommonsForm";
-
     const curr = new Date();
     const today = curr.toISOString().split('T')[0];
+    const currMonth = curr.getMonth() % 12;
+    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
     const DefaultVals = {
-        name: "", startingBalance: "10000", cowPrice: "100",
-        milkPrice: "1", degradationRate: 0.001, carryingCapacity: 100, startingDate: today
-    };
+        name: "",
+        startingBalance: defaultValuesData?.startingBalance || "10000",
+        cowPrice: defaultValuesData?.cowPrice || "100",
+        milkPrice: defaultValuesData?.milkPrice || "1",
+        degradationRate: defaultValuesData?.degradationRate || 0.001,
+        carryingCapacity: defaultValuesData?.carryingCapacity || 100,
+        startingDate: today,
+        lastDate: nextMonth,
+      };
 
-    const belowStrategy = initialCommons?.belowCapacityStrategy || healthUpdateStrategies?.defaultBelowCapacity;
-    const aboveStrategy = initialCommons?.aboveCapacityStrategy || healthUpdateStrategies?.defaultAboveCapacity;
+    const belowStrategy = defaultValuesData?.belowCapacityStrategy;
+    const aboveStrategy = defaultValuesData?.aboveCapacityStrategy;
 
     return (
         <Form onSubmit={handleSubmit(submitAction)}>
@@ -65,7 +111,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         <Form.Label htmlFor="name">Commons Name</Form.Label>
                         <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip>Enter Name for a new common</Tooltip>}
+                            overlay={<Tooltip>This is the name farmers will see when joining the game.</Tooltip>}
                             delay='5'
                         >
                             <Form.Control
@@ -87,7 +133,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         <Form.Label htmlFor="startingBalance">Starting Balance</Form.Label>
                         <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip>Unit: $</Tooltip>}
+                            overlay={<Tooltip>Each farmer starts with this amount of money in dollars.</Tooltip>}
                             delay='100'
                         >
                             <Form.Control
@@ -117,7 +163,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         <Form.Label htmlFor="cowPrice">Cow Price</Form.Label>
                         <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip>Unit: $</Tooltip>}
+                            overlay={<Tooltip>This is the price to purchase cows. The selling price is this amount times the health of the cows on that farm.</Tooltip>}
                             delay='100'
                         >
                             <Form.Control
@@ -147,7 +193,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                         <Form.Label htmlFor="milkPrice">Milk Price</Form.Label>
                         <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip>Unit: $</Tooltip>}
+                            overlay={<Tooltip>This is the amount of money the farmer earns in profits for each cow every time it is milked if it is at 100% health. When a cow is at health less than 100%, the amount earned is multiplied by that percentage (e.g. 75% of the milk price if the health is at 75%).</Tooltip>}
                             delay='100'
                         >
                             <Form.Control
@@ -177,6 +223,11 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="degradationRate">Degradation Rate</Form.Label>
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>This number controls the rate at which cow health decreases when the number of cows in the commons is greater than the effective carrying capacity. The way in which the number is used depends on the selected Health Update Formulas below.</Tooltip>}
+                            delay = '100'
+                        >
                         <Form.Control
                             data-testid={`${testid}-degradationRate`}
                             id="degradationRate"
@@ -191,6 +242,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 min: {value: 0, message: "Degradation rate must be ≥ 0"},
                             })}
                         />
+                        </OverlayTrigger>
                         <Form.Control.Feedback type="invalid">
                             {errors.degradationRate?.message}
                         </Form.Control.Feedback>
@@ -199,6 +251,11 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="carryingCapacity">Carrying Capacity</Form.Label>
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>This is the minimum carrying capacity for the commons; at least this many cows may graze in the commons regardless of the number of players. If this number is zero, then only the Capacity Per User is used to determine the actual carrying capacity.</Tooltip>}
+                            delay = '100'
+                        >
                         <Form.Control
                             data-testid={`${testid}-carryingCapacity`}
                             id="carryingCapacity"
@@ -212,6 +269,8 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                                 min: {value: 1, message: "Carrying Capacity must be ≥ 1"},
                             })}
                         />
+                        </OverlayTrigger>
+
                         <Form.Control.Feedback type="invalid">
                             {errors.carryingCapacity?.message}
                         </Form.Control.Feedback>
@@ -220,17 +279,25 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 <Col md={4}>
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="capacityPerUser">Capacity Per User</Form.Label>
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>When this number is greater than zero, the commons will be able to support at least this many cows per farmer; that is, the effective carrying capacity of the commons is the value of Carrying Capacity, or Capacity Per User times the number of Farmers, whichever is greater. If this number is zero, then the Carrying Capacity is fixed regardless of the number of users.</Tooltip>}
+                            delay = '100'
+                            >
                         <Form.Control
                             data-testid={`${testid}-capacityPerUser`}
                             id="capacityPerUser"
                             type="number"
                             step="1"
+                            defaultValue={defaultValuesData?.capacityPerUser}
                             isInvalid={!!errors.capacityPerUser}
                             {...register("capacityPerUser", {
                                 valueAsNumber: true,
                                 required: "Capacity Per User is required",
                             })}
                         />
+                        </OverlayTrigger>
+
                         <Form.Control.Feedback type="invalid">
                             {errors.capacityPerUser?.message}
                         </Form.Control.Feedback>
@@ -238,26 +305,43 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
-
-            <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
-                <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
-                <Form.Control
-                    data-testid={`${testid}-startingDate`}
-                    id="startingDate"
-                    type="date"
-                    defaultValue={DefaultVals.startingDate}
-                    isInvalid={!!errors.startingDate}
-                    {...register("startingDate", {
-                        valueAsDate: true,
-                        validate: {isPresent: (v) => !isNaN(v)},
-                    })}
-                />
-                <Form.Control.Feedback type="invalid">
-                    {errors.startingDate?.message}
-                </Form.Control.Feedback>
-            </Form.Group>
-            
-
+            <Row>
+                <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r3`}>
+                    <Form.Label htmlFor="startingDate">Starting Date</Form.Label>
+                    <Form.Control
+                        data-testid={`${testid}-startingDate`}
+                        id="startingDate"
+                        type="date"
+                        defaultValue={DefaultVals.startingDate}
+                        isInvalid={!!errors.startingDate}
+                        {...register("startingDate", {
+                            valueAsDate: true,
+                            validate: {isPresent: (v) => !isNaN(v)},
+                        })}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        {errors.startingDate?.message}
+                    </Form.Control.Feedback>
+                </Form.Group>
+                    
+                <Form.Group className="mb-5" style={{width: '300px', height: '50px'}} data-testid={`${testid}-r4`}>
+                    <Form.Label htmlFor="lastDate">Last Date</Form.Label>
+                    <Form.Control
+                        data-testid={`${testid}-lastDate`}
+                        id="lastDate"
+                        type="date"
+                        defaultValue={DefaultVals.lastDate}
+                        isInvalid={!!errors.lastDate}
+                        {...register("lastDate", {
+                            valueAsDate: true,
+                            validate: {isPresent: (v) => !isNaN(v)},
+                        })}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        {errors.lastDate?.message}
+                    </Form.Control.Feedback>
+                </Form.Group>
+            </Row>
 
 
             <h5>Health update formula</h5>
@@ -286,12 +370,18 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
 
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="showLeaderboard">Show Leaderboard?</Form.Label>
+                <OverlayTrigger
+                            placement="bottom"
+                            overlay={<Tooltip>When checked, regular users will have access to the leaderboard for this commons. When unchecked, only admins can see the leaderboard for this commons.</Tooltip>}
+                            delay = '100'
+                        >
                 <Form.Check
                     data-testid={`${testid}-showLeaderboard`}
                     type="checkbox"
                     id="showLeaderboard"
                     {...register("showLeaderboard")}
                 />
+                </OverlayTrigger>
             </Form.Group>
             <Row className="mb-5">
                 <Button type="submit"
