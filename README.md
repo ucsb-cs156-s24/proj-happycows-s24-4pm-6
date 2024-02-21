@@ -7,6 +7,26 @@
 | prod | <https://happycows.dokku-00.cs.ucsb.edu/>     | 
 | qa   | <https://happycows-qa.dokku-00.cs.ucsb.edu/>  | 
 
+# W24 Production Deployments
+
+
+| Team | Link       | 
+|------|------------|
+| w24-4pm-1 | <https://happycows.dokku-01.cs.ucsb.edu/> | 
+| w24-4pm-2 | <https://happycows.dokku-02.cs.ucsb.edu/>  | 
+| w24-4pm-3 | <https://happycows.dokku-03.cs.ucsb.edu/>  | 
+| w24-4pm-4 | <https://happycows.dokku-04.cs.ucsb.edu/>  | 
+
+# W24 QA Deployments
+
+
+| Team | Link       | 
+|------|------------|
+| w24-4pm-1 | <https://happycows-qa.dokku-01.cs.ucsb.edu/> | 
+| w24-4pm-2 | <https://happycows-qa.dokku-02.cs.ucsb.edu/>  | 
+| w24-4pm-3 | <https://happycows-qa.dokku-03.cs.ucsb.edu/>  | 
+| w24-4pm-4 | <https://happycows-qa.dokku-04.cs.ucsb.edu/>  | 
+
 # Description
 
 This is a full rewrite of the application HappyCows, a project sponsored by [Mattanjah de Vries, Distingished Professor of Chemistry at UC Santa Barbara](https://www.chem.ucsb.edu/people/mattanjah-s-de-vries).
