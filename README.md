@@ -85,7 +85,7 @@ If it doesn't work at first, e.g. you have a blank page on  <http://localhost:80
 If you see the following on localhost, make sure that you also have the frontend code running in a separate window.
 
 ```
-Failed to connect to the frontend server... On Dokku, be sure that PRODUCTION is defined.  On localhost, open a second terminal window, cd into frontend and type: npm install; npm start";
+Failed to connect to the frontend server... On Dokku, be sure that PRODUCTION is defined.  On localhost, open a second terminal window, cd into frontend and type: npm install; npm start;
 ```
 
 # Accessing swagger
