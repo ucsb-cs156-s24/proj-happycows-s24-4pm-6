@@ -8,6 +8,8 @@ import HomePage from "main/pages/HomePage";
 import commonsFixtures from "fixtures/commonsFixtures";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import "main/pages/HomePage.css"
+import getBackgroundImage from "main/components/Utils/HomePageBackground";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -81,11 +83,10 @@ describe("HomePage tests", () => {
                     <HomePage />
                 </MemoryRouter>
             </QueryClientProvider>
-        );
-
+        );        
         const title = screen.getByTestId("homePage-title");
-        expect(title).toHaveAttribute("style", "font-size: 75px; border-radius: 7px; background-color: white; opacity: 0.9;");
-    });
+        expect(title).toHaveAttribute("class", "animate-charcter");
+        });
 
     test("renders without crashing when lists are full", () => {
         apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons;
@@ -180,6 +181,35 @@ describe("HomePage tests", () => {
 
     });
 
+    test("Home page intro card has the correct styles applied", async () => {
+        apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons;
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+        axiosMock.onPost("/api/commons/join").reply(200, commonsFixtures.threeCommons[0]);
 
+        
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <HomePage hour={12}/>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByTestId("HomePage-intro-card")).toBeInTheDocument();
+        
+        const HomePageDiv = screen.getByTestId("HomePage-main-div");
+        expect(HomePageDiv).toHaveStyle('backgroundSize: cover;');       
+        
+        const Background = getBackgroundImage(12);
+        expect(HomePageDiv).toHaveStyle(`backgroundImage: url(${Background});`);       
+
+
+        expect(await screen.findByTestId("HomePage-intro-card")).toBeInTheDocument();
+    
+        const HomePageCard = screen.getByTestId("HomePage-intro-card");
+        expect(HomePageCard).toHaveStyle('opacity: .9;');       
+
+    });
 
 });

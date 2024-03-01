@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Container, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
@@ -8,6 +8,8 @@ import { useBackend, useBackendMutation } from "main/utils/useBackend";
 import { useCurrentUser } from "main/utils/currentUser";
 import { commonsNotJoined } from "main/utils/commonsUtils";
 import getBackgroundImage from "main/components/Utils/HomePageBackground";
+
+import "./HomePage.css"
 
 export default function HomePage({hour=null}) {
   // Stryker disable next-line all: it is acceptable to exclude useState calls from mutation testing
@@ -61,11 +63,14 @@ export default function HomePage({hour=null}) {
   //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
   
-  // Stryker disable all : TODO: restructure this code to avoid the need for this disable
   return (
     <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
       <BasicLayout>
-        <h1 data-testid="homePage-title" style={{ fontSize: "75px", borderRadius: "7px", backgroundColor: "white", opacity: ".9" }} className="text-center border-0 my-3">Howdy Farmer {firstName}</h1>
+      <Card data-testid= {"HomePage-intro-card"} style={{opacity: ".9" }}>
+      <div class= "text-center border-0 my-3">
+              <h1 data-testid="homePage-title" className="animate-charcter" >Howdy Farmer {firstName}</h1>
+              </div>
+      </Card>
         <Container>
           <Row>
             <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} /></Col>
@@ -75,5 +80,4 @@ export default function HomePage({hour=null}) {
       </BasicLayout>
     </div>
   )
-  // Stryker restore all
 }
