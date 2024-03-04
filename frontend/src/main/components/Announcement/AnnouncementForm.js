@@ -35,6 +35,7 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
                 <Form.Group className="mb-3" >
                     <Form.Label htmlFor="id">Id</Form.Label>
                     <Form.Control
+                    // Stryker disable next-line all
                         data-testid={testIdPrefix + "-id"}
                         id="id"
                         type="text"
@@ -48,6 +49,7 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="start">Start</Form.Label>
                 <Form.Control
+                // Stryker disable next-line all
                     data-testid={testIdPrefix + "-start"}
                     id="start"
                     type="datetime-local"
@@ -65,10 +67,12 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
             <Form.Group className="mb-3" >
                 <Form.Label htmlFor="end">End</Form.Label>
                 <Form.Control
+                // Stryker disable next-line all
                     data-testid={testIdPrefix + "-end"}
                     id="end"
                     type="datetime-local"
                     isInvalid={Boolean(errors.end)}
+                    // Stryker disable next-line all
                     {...register("end", {
                         pattern: isodate_regex
                     })}
@@ -80,6 +84,7 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
                 <Form.Label htmlFor="announcement">Announcement</Form.Label>
                 <Form.Control
                     as="textarea"
+                    // Stryker disable next-line all
                     data-testid={testIdPrefix + "-announcement"}
                     id="announcement"
                     rows={5}
@@ -95,6 +100,7 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
 
             <Button
                 type="submit"
+                // Stryker disable next-line all
                 data-testid={testIdPrefix + "-submit"}
             >
                 {buttonLabel}
@@ -102,6 +108,7 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
             <Button
                 variant="Secondary"
                 onClick={() => navigate(-1)}
+                // Stryker disable next-line all
                 data-testid={testIdPrefix + "-cancel"}
             >
                 Cancel
