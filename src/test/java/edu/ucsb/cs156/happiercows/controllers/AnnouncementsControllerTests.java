@@ -446,29 +446,47 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"ADMIN"})
     @Test
     public void adminCanEditAnnouncement() throws Exception {
-        
-        // arrange
+
+
         Long id = 0L;
         Long commonsId = 1L;
         String announcement = "Hello world!";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT-8:00"));
         Date start = sdf.parse("2024-03-03T17:39:43.000-08:00");
-        Date end = sdf.parse("2025-03-03T17:39:43.000-08:00");
 
-        Announcement announcementObj = Announcement.builder().id(id).commonsId(commonsId).start(start).end(end).announcement(announcement).build();
+        Announcement announcementObj = Announcement.builder().id(id).commonsId(commonsId).start(start).announcement(announcement).build();
         when(announcementRepository.findByAnnouncementId(id)).thenReturn(Optional.of(announcementObj));
 
         //act 
-        MvcResult response = mockMvc.perform(put("/api/announcements/put?id={id}&commonsId={commonsId}&start={start}&end={end}&announcement={announcement}", id, commonsId, start, end, announcement).with(csrf()))
+        MvcResult response = mockMvc.perform(get("/api/announcements/getbyid?id={id}", id))
+            .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(announcementRepository, atLeastOnce()).findByAnnouncementId(id);
+        String responseString = response.getResponse().getContentAsString();
+        String expectedResponseString = mapper.writeValueAsString(announcementObj);
+        assertEquals(expectedResponseString, responseString);
+
+
+        // arrange
+        String editedAnnouncement = "Hello world edited!";
+        Date editedStart = sdf.parse("2023-03-03T17:39:43.000-08:00");
+        Date editedEnd = sdf.parse("2025-03-03T17:39:43.000-08:00");
+
+        Announcement editedAnnouncementObj = Announcement.builder().id(id).commonsId(commonsId).start(editedStart).end(editedEnd).announcement(editedAnnouncement).build();
+        when(announcementRepository.findByAnnouncementId(id)).thenReturn(Optional.of(announcementObj));
+
+        //act 
+        MvcResult editedResponse = mockMvc.perform(put("/api/announcements/put?id={id}&commonsId={commonsId}&start={start}&end={end}&announcement={announcement}", id, commonsId, editedStart, editedEnd, editedAnnouncement).with(csrf()))
             .andExpect(status().isOk()).andReturn();
 
         // assert
         verify(announcementRepository, atLeastOnce()).findByAnnouncementId(id);
         verify(announcementRepository, atLeastOnce()).save(any(Announcement.class));
-        String responseString = response.getResponse().getContentAsString();
-        String expectedResponseString = mapper.writeValueAsString(announcementObj);
-        assertEquals(expectedResponseString, responseString);
+        String editedResponseString = editedResponse.getResponse().getContentAsString();
+        String editedExpectedResponseString = mapper.writeValueAsString(editedAnnouncementObj);
+        assertEquals(editedExpectedResponseString, editedResponseString);
     }
 
     @WithMockUser(roles = {"USER"})

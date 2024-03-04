@@ -174,7 +174,6 @@ public class AnnouncementsController extends ApiController{
 
         // Create the announcement
         Announcement announcementObj = announcementLookup.get();
-        announcementObj.setCommonsId(commonsId);
         announcementObj.setStart(start);
         announcementObj.setEnd(end);
         announcementObj.setAnnouncement(announcement);
