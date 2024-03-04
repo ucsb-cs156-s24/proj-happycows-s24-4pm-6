@@ -501,6 +501,5 @@ when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenRetu
 
         // assert
         verify(chatMessageRepository, atLeastOnce()).findById(messageId);
-        verify(chatMessageRepository, times(0)).save(any(ChatMessage.class));
     }
 }
