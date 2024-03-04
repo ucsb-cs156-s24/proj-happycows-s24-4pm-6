@@ -417,7 +417,7 @@ when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenRetu
         assertEquals(expectedResponseString, responseString);
     }
 
-    // Users cannot hide messages hat aren't their own
+    // Users cannot hide messages that aren't their own
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCannotDeleteOtherUsersChatMessages() throws Exception {
@@ -435,6 +435,38 @@ when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenRetu
         // assert
         verify(chatMessageRepository, atLeastOnce()).findById(messageId);
         verify(chatMessageRepository, times(0)).save(any(ChatMessage.class));
+    }
+
+    // Users cannot hide messages that aren't their own
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
+    public void adminCanDeleteOtherUsersChatMessages() throws Exception {
+        
+        // arrange
+        Long messageId = 0L;
+        Long commonsId = 1L;
+        Long userId = 1L;
+
+        ChatMessage chatMessage = ChatMessage.builder().id(messageId).userId(2L).commonsId(1L).build();
+        when(chatMessageRepository.findById(messageId)).thenReturn(Optional.of(chatMessage));
+
+        UserCommons userCommons = UserCommons.builder()
+                .commons(Commons.builder().build())
+                .build();
+        when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.of(userCommons));
+
+        //act 
+        MvcResult response = mockMvc.perform(put("/api/chat/hide?chatMessageId={messageId}", messageId).with(csrf()))
+            .andExpect(status().isOk()).andReturn();
+
+        // assert
+        verify(chatMessageRepository, atLeastOnce()).findById(messageId);
+        verify(chatMessageRepository, atLeastOnce()).save(any(ChatMessage.class));
+        String responseString = response.getResponse().getContentAsString();
+        chatMessage.setHidden(true);
+        String expectedResponseString = mapper.writeValueAsString(chatMessage);
+        log.info("Got back from API: {}",responseString);
+        assertEquals(expectedResponseString, responseString);
     }
 
     
