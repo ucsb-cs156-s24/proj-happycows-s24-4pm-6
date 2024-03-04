@@ -73,9 +73,6 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
                         pattern: isodate_regex
                     })}
                 />
-                <Form.Control.Feedback type="invalid">
-                    {errors.end && 'End must be provided in ISO format.'}
-                </Form.Control.Feedback>
             </Form.Group>
 
 
