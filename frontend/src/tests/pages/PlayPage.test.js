@@ -340,7 +340,7 @@ describe("PlayPage tests", () => {
         );
 
         await waitFor(() => {
-            expect(screen.queryByTestId("playpage-chat-toggle")).toBeInTheDocument();
+            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
         });
     })
 });
