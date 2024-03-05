@@ -7,7 +7,7 @@ const ManageCowsModal = ({number, setNumber, isOpen, onClose, message, userCommo
     const handleInputChange = (e) => {
         if(e.target.value < 0){
           if(message.includes('buy')){
-            toast("Warning: You cannot buy a negative number of cows!");
+            toast.warn("Warning: You cannot buy a negative number of cows!");
           }
           setNumber(e.target.value);
         } else {

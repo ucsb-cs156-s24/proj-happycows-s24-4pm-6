@@ -8,9 +8,12 @@ const mockToast = jest.fn();
 jest.mock('react-toastify', () => {
   const originalModule = jest.requireActual('react-toastify');
   return {
-      __esModule: true,
-      ...originalModule,
-      toast: (x) => mockToast(x),
+    __esModule: true,
+    ...originalModule,
+    toast: {
+      ...originalModule.toast,
+      warn: (message) => mockToast(message),
+    },
   };
 });
 
@@ -20,22 +23,6 @@ describe('ManageCowsModal', () => {
   const mockOnBuy = jest.fn();
   const mockOnSell = jest.fn();
   window.alert = jest.fn();
-
-
-  // jest.mock('react-toastify', () => ({
-  //   __esModule: true,
-  //   ...jest.requireActual('react-toastify'),
-  //   toast: {
-  //     warn: jest.fn(),
-  //   },
-  // }));
-
-  // jest.mock('react-toastify', () => ({
-  //   toast: {
-  //     warn: mockToast
-  //   },
-  // }));
-
 
   test('renders the modal when isOpen is true', () => {
     render(
@@ -68,7 +55,6 @@ describe('ManageCowsModal', () => {
     render(
         <ManageCowsModal isOpen={true} onClose={mockOnClose} message="buy" setNumber={mockSetNumber} />
     );
-
 
     fireEvent.click(screen.getByTestId('buy-sell-cow-modal-cancel'));
     expect(mockOnClose).toHaveBeenCalled();
@@ -146,7 +132,6 @@ describe('ManageCowsModal', () => {
     fireEvent.change(input, { target: { value: '0' } });
     expect(mockSetNumber).toHaveBeenCalledWith('0');
     expect(mockToast).not.toHaveBeenCalledWith("Warning: You cannot buy a negative number of cows!");
-    // expect(mockToast).not
   });
 
   // WILL TAKE OUT WHEN DISABLING THE ABILITY TO SELL NEGATIVE COWS, JUST NEED THIS TO PASS 100 MUTATION COVERAGE FOR BUY 
@@ -162,7 +147,6 @@ describe('ManageCowsModal', () => {
     fireEvent.change(input, { target: { value: '-1' } });
     expect(mockSetNumber).toHaveBeenCalledWith('-1');
     expect(mockToast).not.toHaveBeenCalledWith("Warning: You cannot buy a negative number of cows!");
-    // expect(mockToast).not
   });
 
   test('updates the number state on input change', () => {
