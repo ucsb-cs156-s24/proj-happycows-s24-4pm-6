@@ -103,7 +103,7 @@ describe('ManageCowsModal', () => {
 
     fireEvent.click(screen.getByTestId('buy-sell-cow-modal-submit'));
 
-    expect(window.alert).toHaveBeenCalledWith('Warning: Negative number entered!');
+    expect(window.alert).toHaveBeenCalledWith('You cannot buy a negative number of cows! Please enter a non-negative number.');
   });
 
   test('toast warning for inputing negative number when buying cows', async () => {

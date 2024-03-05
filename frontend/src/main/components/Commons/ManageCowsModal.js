@@ -18,7 +18,7 @@ const ManageCowsModal = ({number, setNumber, isOpen, onClose, message, userCommo
     const handleSubmit = (e) => {
       e.preventDefault();
       if(number < 0){
-        window.alert("Warning: Negative number entered!");
+        window.alert("You cannot buy a negative number of cows! Please enter a non-negative number.");
 
       } else {
       if (message.includes('buy')) {
