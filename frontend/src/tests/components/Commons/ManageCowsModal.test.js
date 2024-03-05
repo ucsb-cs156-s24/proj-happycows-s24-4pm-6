@@ -107,7 +107,6 @@ describe('ManageCowsModal', () => {
   });
 
   test('toast warning for inputing negative number when buying cows', async () => {
-    const number2 = -3;
     
     render(
       <ManageCowsModal isOpen={true} onClose={mockOnClose} message="buy" setNumber={mockSetNumber} />
@@ -121,7 +120,6 @@ describe('ManageCowsModal', () => {
   });
 
   test('toast warning not present when buying 0 cows', async () => {
-    const number2 = 0;
     
     render(
       <ManageCowsModal isOpen={true} onClose={mockOnClose} message="buy" setNumber={mockSetNumber} />
@@ -135,8 +133,7 @@ describe('ManageCowsModal', () => {
   });
 
   // WILL TAKE OUT WHEN DISABLING THE ABILITY TO SELL NEGATIVE COWS, JUST NEED THIS TO PASS 100 MUTATION COVERAGE FOR BUY 
-  test('toast warning not present when selling negative cows', async () => { 
-    const number2 = -1;
+  test('toast warning not present when inputing selling negative cows', async () => { 
     
     render(
       <ManageCowsModal isOpen={true} onClose={mockOnClose} message="sell" setNumber={mockSetNumber} />
