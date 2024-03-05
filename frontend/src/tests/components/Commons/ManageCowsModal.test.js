@@ -4,11 +4,38 @@ import '@testing-library/jest-dom';
 import ManageCowsModal from 'main/components/Commons/ManageCowsModal';
 import userCommonsFixtures from "fixtures/userCommonsFixtures";
 
+const mockToast = jest.fn();
+jest.mock('react-toastify', () => {
+  const originalModule = jest.requireActual('react-toastify');
+  return {
+      __esModule: true,
+      ...originalModule,
+      toast: (x) => mockToast(x),
+  };
+});
+
 describe('ManageCowsModal', () => {
   const mockOnClose = jest.fn();
   const mockSetNumber = jest.fn();
   const mockOnBuy = jest.fn();
   const mockOnSell = jest.fn();
+  window.alert = jest.fn();
+
+
+  // jest.mock('react-toastify', () => ({
+  //   __esModule: true,
+  //   ...jest.requireActual('react-toastify'),
+  //   toast: {
+  //     warn: jest.fn(),
+  //   },
+  // }));
+
+  // jest.mock('react-toastify', () => ({
+  //   toast: {
+  //     warn: mockToast
+  //   },
+  // }));
+
 
   test('renders the modal when isOpen is true', () => {
     render(
@@ -68,6 +95,74 @@ describe('ManageCowsModal', () => {
     fireEvent.click(screen.getByTestId('buy-sell-cow-modal-submit'));
 
     await waitFor(()=>expect(mockOnSell).toHaveBeenCalledWith(userCommonsFixtures.oneUserCommons[0], number2));
+  });
+
+  test('calls onSell with correct arguments when sell button is clicked (0 argument)', async () => {
+    const number2 = 0;
+    render(
+        <ManageCowsModal isOpen={true} onClose={mockOnClose} message="sell" userCommons={userCommonsFixtures.oneUserCommons[0]} number={number2} onSell={mockOnSell} setNumber={mockSetNumber} />
+    );
+
+    fireEvent.click(screen.getByTestId('buy-sell-cow-modal-submit'));
+
+    await waitFor(()=>expect(mockOnSell).toHaveBeenCalledWith(userCommonsFixtures.oneUserCommons[0], number2));
+  });
+
+  test('windows toolkit warning for buying negative cows', async () => {
+    const number2 = -3;
+    
+    render(
+      <ManageCowsModal isOpen={true} onClose={mockOnClose} message="buy" userCommons={userCommonsFixtures.oneUserCommons[0]} number={number2} onBuy={mockOnBuy} setNumber={mockSetNumber} />
+    );
+
+    fireEvent.click(screen.getByTestId('buy-sell-cow-modal-submit'));
+
+    expect(window.alert).toHaveBeenCalledWith('Warning: Negative number entered!');
+  });
+
+  test('toast warning for inputing negative number when buying cows', async () => {
+    const number2 = -3;
+    
+    render(
+      <ManageCowsModal isOpen={true} onClose={mockOnClose} message="buy" setNumber={mockSetNumber} />
+    );
+
+    const input = screen.getByTestId('buy-sell-cow-modal-input');
+
+    fireEvent.change(input, { target: { value: '-3' } });
+    expect(mockSetNumber).toHaveBeenCalledWith('-3');
+    expect(mockToast).toHaveBeenCalledWith("Warning: You cannot buy a negative number of cows!");
+  });
+
+  test('toast warning not present when buying 0 cows', async () => {
+    const number2 = 0;
+    
+    render(
+      <ManageCowsModal isOpen={true} onClose={mockOnClose} message="buy" setNumber={mockSetNumber} />
+    );
+
+    const input = screen.getByTestId('buy-sell-cow-modal-input');
+
+    fireEvent.change(input, { target: { value: '0' } });
+    expect(mockSetNumber).toHaveBeenCalledWith('0');
+    expect(mockToast).not.toHaveBeenCalledWith("Warning: You cannot buy a negative number of cows!");
+    // expect(mockToast).not
+  });
+
+  // WILL TAKE OUT WHEN DISABLING THE ABILITY TO SELL NEGATIVE COWS, JUST NEED THIS TO PASS 100 MUTATION COVERAGE FOR BUY 
+  test('toast warning not present when selling negative cows', async () => { 
+    const number2 = -1;
+    
+    render(
+      <ManageCowsModal isOpen={true} onClose={mockOnClose} message="sell" setNumber={mockSetNumber} />
+    );
+
+    const input = screen.getByTestId('buy-sell-cow-modal-input');
+
+    fireEvent.change(input, { target: { value: '-1' } });
+    expect(mockSetNumber).toHaveBeenCalledWith('-1');
+    expect(mockToast).not.toHaveBeenCalledWith("Warning: You cannot buy a negative number of cows!");
+    // expect(mockToast).not
   });
 
   test('updates the number state on input change', () => {
