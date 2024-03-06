@@ -106,6 +106,18 @@ describe('ManageCowsModal', () => {
     expect(window.alert).toHaveBeenCalledWith('You cannot buy a negative number of cows! Please enter a non-negative number.');
   });
 
+  test('windows toolkit warning for selling negative cows', async () => {
+    const number2 = -3;
+    
+    render(
+      <ManageCowsModal isOpen={true} onClose={mockOnClose} message="sell" userCommons={userCommonsFixtures.oneUserCommons[0]} number={number2} onSell={mockOnSell} setNumber={mockSetNumber} />
+    );
+
+    fireEvent.click(screen.getByTestId('buy-sell-cow-modal-submit'));
+
+    expect(window.alert).toHaveBeenCalledWith('You cannot sell a negative number of cows! Please enter a non-negative number.');
+  });
+
   test('toast warning for inputing negative number when buying cows', async () => {
     
     render(
@@ -117,6 +129,19 @@ describe('ManageCowsModal', () => {
     fireEvent.change(input, { target: { value: '-3' } });
     expect(mockSetNumber).toHaveBeenCalledWith('-3');
     expect(mockToast).toHaveBeenCalledWith("Warning: You cannot buy a negative number of cows!");
+  });
+
+  test('toast warning for inputing negative number when selling cows', async () => {
+    
+    render(
+      <ManageCowsModal isOpen={true} onClose={mockOnClose} message="sell" setNumber={mockSetNumber} />
+    );
+
+    const input = screen.getByTestId('buy-sell-cow-modal-input');
+
+    fireEvent.change(input, { target: { value: '-3' } });
+    expect(mockSetNumber).toHaveBeenCalledWith('-3');
+    expect(mockToast).toHaveBeenCalledWith("Warning: You cannot sell a negative number of cows!");
   });
 
   test('toast warning not present when buying 0 cows', async () => {
@@ -132,8 +157,7 @@ describe('ManageCowsModal', () => {
     expect(mockToast).not.toHaveBeenCalledWith("Warning: You cannot buy a negative number of cows!");
   });
 
-  // WILL TAKE OUT WHEN DISABLING THE ABILITY TO SELL NEGATIVE COWS, JUST NEED THIS TO PASS 100 MUTATION COVERAGE FOR BUY 
-  test('toast warning not present when inputing selling negative cows', async () => { 
+  test('toast warning not present when selling 0 cows', async () => {
     
     render(
       <ManageCowsModal isOpen={true} onClose={mockOnClose} message="sell" setNumber={mockSetNumber} />
@@ -141,9 +165,9 @@ describe('ManageCowsModal', () => {
 
     const input = screen.getByTestId('buy-sell-cow-modal-input');
 
-    fireEvent.change(input, { target: { value: '-1' } });
-    expect(mockSetNumber).toHaveBeenCalledWith('-1');
-    expect(mockToast).not.toHaveBeenCalledWith("Warning: You cannot buy a negative number of cows!");
+    fireEvent.change(input, { target: { value: '0' } });
+    expect(mockSetNumber).toHaveBeenCalledWith('0');
+    expect(mockToast).not.toHaveBeenCalledWith("Warning: You cannot sell a negative number of cows!");
   });
 
   test('updates the number state on input change', () => {
