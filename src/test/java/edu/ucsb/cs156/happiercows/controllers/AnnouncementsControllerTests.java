@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @Import(AnnouncementsController.class)
 @AutoConfigureDataJpa
 public class AnnouncementsControllerTests extends ControllerTestCase {
-    
+
     @MockBean
     AnnouncementRepository announcementRepository;
 
@@ -67,7 +67,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"ADMIN"})
     @Test
     public void adminCanPostAnnouncements() throws Exception {
-        
+
         // arrange
         Long commonsId = 1L;
         Long id = 0L;
@@ -82,7 +82,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         Announcement announcementObj = Announcement.builder().id(id).commonsId(commonsId).start(start).end(end).announcement(announcement).build();
 
         when(announcementRepository.save(any(Announcement.class))).thenReturn(announcementObj);
-        
+
         UserCommons userCommons = UserCommons.builder().build();
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.empty());
 
@@ -101,7 +101,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userInCommonsCanPostAnnouncements() throws Exception {
-        
+
         // arrange
         Long commonsId = 1L;
         Long id = 0L;
@@ -115,7 +115,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         Announcement announcementObj = Announcement.builder().id(id).commonsId(commonsId).start(start).announcement(announcement).build();
 
         when(announcementRepository.save(any(Announcement.class))).thenReturn(announcementObj);
-        
+
         UserCommons userCommons = UserCommons.builder().build();
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.of(userCommons));
 
@@ -134,7 +134,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCanPostAnnouncementWithoutStartAndEndTime() throws Exception {
-        
+
         // arrange
         Long commonsId = 1L;
         Long id = 0L;
@@ -144,7 +144,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         Announcement announcementObj = Announcement.builder().id(id).commonsId(commonsId).announcement(announcement).build();
 
         when(announcementRepository.save(any(Announcement.class))).thenReturn(announcementObj);
-        
+
         UserCommons userCommons = UserCommons.builder().build();
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.of(userCommons));
 
@@ -159,7 +159,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCannotPostAnnouncementWithEmptyString() throws Exception {
-        
+
         // arrange
         Long commonsId = 1L;
         Long id = 0L;
@@ -172,7 +172,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         Announcement announcementObj = Announcement.builder().id(id).commonsId(commonsId).start(start).announcement(announcement).build();
 
         when(announcementRepository.save(any(Announcement.class))).thenReturn(announcementObj);
-        
+
         UserCommons userCommons = UserCommons.builder().build();
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.of(userCommons));
 
@@ -187,7 +187,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCannotPostAnnouncementWithEndBeforeStart() throws Exception {
-        
+
         // arrange
         Long commonsId = 1L;
         Long id = 0L;
@@ -201,7 +201,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         Announcement announcementObj = Announcement.builder().id(id).commonsId(commonsId).start(start).end(end).announcement(announcement).build();
 
         when(announcementRepository.save(any(Announcement.class))).thenReturn(announcementObj);
-        
+
         UserCommons userCommons = UserCommons.builder().build();
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.of(userCommons));
 
@@ -216,7 +216,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userNotInCommonsCannotPostAnnouncements() throws Exception {
-        
+
         // arrange
         Long commonsId = 1L;
         Long id = 0L;
@@ -229,7 +229,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         Announcement announcementObj = Announcement.builder().id(id).commonsId(commonsId).start(start).announcement(announcement).build();
 
         when(announcementRepository.save(any(Announcement.class))).thenReturn(announcementObj);
-        
+
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.empty());
 
         //act 
@@ -244,7 +244,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"ADMIN"})
     @Test
     public void adminCannotDeleteAnnouncementsThatDontExist() throws Exception {
-        
+
         // arrange
         Long id = 0L;
 
@@ -262,7 +262,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"ADMIN"})
     @Test
     public void adminCanDeleteAnnouncements() throws Exception {
-        
+
         // arrange
         Long commonsId = 1L;
         Long id = 0L;
@@ -292,7 +292,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCanGetAllAnnouncements() throws Exception {
-        
+
         // arrange
         Long id1 = 0L;
         Long id2 = 1L;
@@ -332,7 +332,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCannotGetAllAnnouncementsIfNotInCommons() throws Exception {
-        
+
         // arrange
         Long id1 = 0L;
         Long id2 = 1L;
@@ -364,11 +364,11 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         // assert
         verify(announcementRepository, times(0)).findByCommonsId(commonsId, pageable);
     }
-    
+
     @WithMockUser(roles = {"ADMIN"})
     @Test
     public void adminCanGetAllAnnouncements() throws Exception {
-        
+
         // arrange
         Long id1 = 0L;
         Long id2 = 1L;
@@ -404,7 +404,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCanGetAnnouncementById() throws Exception {
-        
+
         // arrange
         Long id = 0L;
         Long commonsId = 1L;
@@ -492,7 +492,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCanEditAnnouncementWithoutStart() throws Exception {
-        
+
         // arrange
         Long id = 0L;
         Long commonsId = 1L;
@@ -520,7 +520,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCannotEditAnnouncementIfNotInCommons() throws Exception {
-        
+
         // arrange
         Long id = 0L;
         Long commonsId = 1L;
@@ -547,7 +547,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCannotEditAnnouncementThatDoesNotExist() throws Exception {
-        
+
         // arrange
         Long id = 0L;
         Long commonsId = 1L;
@@ -574,7 +574,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCannotEditAnnouncementToHaveEmptyStringAsAnnouncement() throws Exception {
-        
+
         // arrange
         Long id = 0L;
         Long commonsId = 1L;
@@ -602,7 +602,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
     @WithMockUser(roles = {"USER"})
     @Test
     public void userCannotEditAnnouncementToHaveEndBeforeStart() throws Exception {
-        
+
         // arrange
         Long id = 0L;
         Long commonsId = 1L;

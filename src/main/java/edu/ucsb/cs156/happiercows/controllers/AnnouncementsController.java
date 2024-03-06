@@ -52,7 +52,7 @@ public class AnnouncementsController extends ApiController{
         @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) Date start,
         @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date end,
         @Parameter(description = "The announcement to be sent out") @RequestParam String announcement) {
-        
+
         User user = getCurrentUser().getUser();
         Long userId = user.getId();
 
@@ -97,7 +97,7 @@ public class AnnouncementsController extends ApiController{
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/getbycommonsid")
     public ResponseEntity<Object> getAnnouncements(@Parameter(description = "The id of the common") @RequestParam Long commonsId) {
-        
+
         // Make sure the user is part of the commons or is an admin
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
@@ -138,7 +138,7 @@ public class AnnouncementsController extends ApiController{
         @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) Date start,
         @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date end,
         @Parameter(description = "The announcement to be sent out") @RequestParam String announcement) {
-        
+
         User user = getCurrentUser().getUser();
         Long userId = user.getId();
 
@@ -165,9 +165,9 @@ public class AnnouncementsController extends ApiController{
         if (end != null && start.after(end)) {
             return ResponseEntity.badRequest().body("Start date must be before end date.");
         }
-        
+
         Optional<Announcement> announcementLookup = announcementRepository.findByAnnouncementId(id);
-        
+
         if (!announcementLookup.isPresent()) {
             return ResponseEntity.badRequest().body("Announcement could not be found. Invalid id.");
         }
