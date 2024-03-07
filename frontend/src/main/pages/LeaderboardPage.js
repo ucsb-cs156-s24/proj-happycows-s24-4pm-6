@@ -69,6 +69,13 @@ export default function LeaderboardPage() {
         >
             <BasicLayout>
                 <div className="pt-2 board">
+                <Button
+                    onClick={() => navigate(-1)}
+                    data-testid="LeaderboardPage-back-button"
+                    style={{ float: 'right' }}
+                >
+                    Back
+                </Button>
                     <h1 className="name">Leaderboard</h1>
                     {showLeaderboard ? (
                         <>
@@ -81,12 +88,6 @@ export default function LeaderboardPage() {
                         <p>You're not authorized to see the leaderboard.</p>
                     )}
                 </div>
-                <Button
-                    onClick={() => navigate(-1)}
-                    data-testid="LeaderboardPage-back-button"
-                >
-                    Back
-                </Button>
             </BasicLayout>
         </div>
     );
