@@ -143,7 +143,7 @@ describe("PlayPage tests", () => {
         );
 
         var div = screen.getByTestId("playpage-div");
-        expect(div).toHaveAttribute("style", expect.stringContaining("background-size: cover; background-image: url(PlayPageBackground.png);"));
+        expect(div).toHaveAttribute("style", expect.stringContaining("background-size: cover; background-image: url(PlayPageBackground.jpg);"));
     });
 
     test("Chat toggle button opens and closes the ChatPanel", async () => {
