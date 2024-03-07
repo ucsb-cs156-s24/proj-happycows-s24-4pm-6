@@ -6,19 +6,15 @@ import 'react-toastify/dist/ReactToastify.css';
 const ManageCowsModal = ({number, setNumber, isOpen, onClose, message, userCommons, onBuy, onSell }) => {
     const handleInputChange = (e) => {
         if(e.target.value < 0){
-          if(message.includes('buy')){
-            toast.warn("Warning: You cannot buy a negative number of cows!");
-          }
-          setNumber(e.target.value);
-        } else {
-          setNumber(e.target.value);
+          toast.warn(`Warning: You cannot ${message} a negative number of cows!`);
         }
+        setNumber(e.target.value);
     };
 
     const handleSubmit = (e) => {
       e.preventDefault();
       if(number < 0){
-        window.alert("You cannot buy a negative number of cows! Please enter a non-negative number.");
+        window.alert(`You cannot ${message} a negative number of cows! Please enter a non-negative number.`);
 
       } else {
       if (message.includes('buy')) {
