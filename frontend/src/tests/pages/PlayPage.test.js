@@ -34,7 +34,8 @@ describe("PlayPage tests", () => {
             commonsId: 1,
             id: 1,
             totalWealth: 0,
-            userId: 1
+            userId: 1,
+            showChat: true
         };
         axiosMock.reset();
         axiosMock.resetHistory();
@@ -54,7 +55,8 @@ describe("PlayPage tests", () => {
         axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
             commons: {
                 id: 1,
-                name: "Sample Commons"
+                name: "Sample Commons",
+                showChat: true
             },
             totalPlayers: 5,
             totalCows: 5 
@@ -245,4 +247,100 @@ describe("PlayPage tests", () => {
 
         expect(() => screen.getByTestId("buy-sell-cow-modal")).toThrow();
     });
+
+    test("Doesn't show chat button for non-admins if showChat is false", async () => {
+        const userCommons = {
+            commonsId: 1,
+            id: 1,
+            totalWealth: 0,
+            userId: 1,
+        };
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/usercommons/forcurrentuser", { params: { commonsId: 1 } }).reply(200, userCommons);
+        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
+            id: 1,
+            name: "Sample Commons"
+        });
+        axiosMock.onGet("/api/commons/all").reply(200, [
+            {
+                id: 1,
+                name: "Sample Commons"
+            }
+        ]);
+        axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
+            commons: {
+                id: 1,
+                name: "Sample Commons",
+                showChat: false,
+            },
+            totalPlayers: 5,
+            totalCows: 5 
+        });
+        axiosMock.onGet("/api/profits/all/commonsid").reply(200, []);
+        axiosMock.onPut("/api/usercommons/sell").reply(200, userCommons);
+        axiosMock.onPut("/api/usercommons/buy").reply(200, userCommons);
+        
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId("playpage-chat-toggle")).not.toBeInTheDocument();
+        });
+    })
+
+    test("Shows chat button for admins if showChat is false", async () => {
+        const userCommons = {
+            commonsId: 1,
+            id: 1,
+            totalWealth: 0,
+            userId: 1,
+        };
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/usercommons/forcurrentuser", { params: { commonsId: 1 } }).reply(200, userCommons);
+        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
+            id: 1,
+            name: "Sample Commons"
+        });
+        axiosMock.onGet("/api/commons/all").reply(200, [
+            {
+                id: 1,
+                name: "Sample Commons"
+            }
+        ]);
+        axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
+            commons: {
+                id: 1,
+                name: "Sample Commons",
+                showChat: false,
+            },
+            totalPlayers: 5,
+            totalCows: 5 
+        });
+        axiosMock.onGet("/api/profits/all/commonsid").reply(200, []);
+        axiosMock.onPut("/api/usercommons/sell").reply(200, userCommons);
+        axiosMock.onPut("/api/usercommons/buy").reply(200, userCommons);
+        
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
+        });
+    })
 });
