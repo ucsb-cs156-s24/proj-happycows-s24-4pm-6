@@ -41,7 +41,9 @@ const CommonsCard = ({ buttonText, buttonLink, commons }) => {
                                 className="mx-4"
                                 onClick={() => {
                                     if (buttonText === "Join" && isFutureDate(commons.startingDate)) {
-                                        alert("This commons has not started yet and cannot be joined");
+                                        alert("This commons has not started yet and cannot be joined.\n The starting date is "
+                                         + parseInt(commons.startingDate.substring(5,7)) + "/" + commons.startingDate.substring(8,9) 
+                                         + "/" + commons.startingDate.substring(0,4));
                                     } else {
                                         buttonLink(commons.id);
                                     }
