@@ -10,18 +10,15 @@ function isFutureDate(startingDate) {
     const currYear = curr.getFullYear();
     const currMonth = curr.getMonth();
     const currDate = curr.getDate();
-    if (startYear > currYear) {
-        return true;
-    } else if (startYear === currYear) {
-        if (startMonth > currMonth) {
-            return true;
-        } else if (startMonth === currMonth) {
+
+    if (startYear === currYear) {
+        if (startMonth === currMonth) {
             return startDate > currDate;
         } else {
-            return false;
+            return startMonth > currMonth;
         }
     } else {
-        return false;
+        return startYear > currYear;
     }
 }
 
@@ -43,12 +40,8 @@ const CommonsCard = ({ buttonText, buttonLink, commons }) => {
                                 size="sm"
                                 className="mx-4"
                                 onClick={() => {
-                                    if (buttonText === "Join") {
-                                        if (isFutureDate(commons.startingDate)) {
-                                            alert("This commons has not started yet and cannot be joined");
-                                        } else {
-                                            buttonLink(commons.id);
-                                        }
+                                    if (buttonText === "Join" && isFutureDate(commons.startingDate)) {
+                                        alert("This commons has not started yet and cannot be joined");
                                     } else {
                                         buttonLink(commons.id);
                                     }
