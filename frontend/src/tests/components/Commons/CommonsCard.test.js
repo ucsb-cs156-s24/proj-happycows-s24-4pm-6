@@ -44,4 +44,28 @@ describe("CommonsCard tests", () => {
         expect(typeof (id.textContent)).toBe('string');
         expect(id.textContent).toEqual('5');
     });
+
+    test("cannot join commons with future start date", async () => {
+        const click = jest.fn();
+        render(
+            <CommonsCard commons={commonsFixtures.threeCommons[2]} buttonText={"Join"} buttonLink={click} />
+        );
+
+        const button = screen.getByTestId("commonsCard-button-Join-1");
+        expect(button).toBeInTheDocument();
+        expect(typeof (button.textContent)).toBe('string');
+        expect(button.textContent).toEqual('Join');
+        fireEvent.click(button);
+        expect(click).toBeCalledTimes(0);
+
+        //const button = screen.getByTestId("commonsCard-button-Join-1");
+        expect(button).toBeInTheDocument();
+        expect(typeof (button.textContent)).toBe('string');
+        expect(button.textContent).toEqual('Join');
+
+        // const id = screen.getByTestId("commonsCard-id-1");
+        // expect(id).toBeInTheDocument();
+        // expect(typeof (id.textContent)).toBe('string');
+        // expect(id.textContent).toEqual('1');
+    });
 });

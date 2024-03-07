@@ -1,6 +1,30 @@
 import React from "react";
 import { Card, Button, Container, Row, Col } from "react-bootstrap";
 
+const curr = new Date();
+
+function isFutureDate(startingDate) {
+    const startYear = parseInt(startingDate.substring(0,4));
+    const startMonth = parseInt(startingDate.substring(5,7));
+    const startDate = parseInt(startingDate.substring(8,9));
+    const currYear = curr.getFullYear();
+    const currMonth = curr.getMonth();
+    const currDate = curr.getDate();
+    if (startYear > currYear) {
+        return true;
+    } else if (startYear === currYear) {
+        if (startMonth > currMonth) {
+            return true;
+        } else if (startMonth === currMonth) {
+            return startDate > currDate;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
 const CommonsCard = ({ buttonText, buttonLink, commons }) => {
     const testIdPrefix = "commonsCard";
     return (
@@ -18,7 +42,17 @@ const CommonsCard = ({ buttonText, buttonLink, commons }) => {
                                 data-testid={`${testIdPrefix}-button-${buttonText}-${commons.id}`}
                                 size="sm"
                                 className="mx-4"
-                                onClick={() => buttonLink(commons.id)} >{buttonText}
+                                onClick={() => {
+                                    if (buttonText === "Join") {
+                                        if (isFutureDate(commons.startingDate)) {
+                                            alert("This commons has not started yet and cannot be joined");
+                                        } else {
+                                            buttonLink(commons.id);
+                                        }
+                                    } else {
+                                        buttonLink(commons.id);
+                                    }
+                                    }} >{buttonText}
                             </Button>
                         </Col>
                     }
@@ -27,6 +61,7 @@ const CommonsCard = ({ buttonText, buttonLink, commons }) => {
         </Card.Body>
     );
 };
+
 
 
 
