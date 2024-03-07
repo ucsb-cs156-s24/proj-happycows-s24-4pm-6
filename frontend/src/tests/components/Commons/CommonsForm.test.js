@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor} from "@testing-library/react";
 import { MemoryRouter as Router } from "react-router-dom";
 import CommonsForm from "main/components/Commons/CommonsForm";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -46,6 +46,7 @@ describe("CommonsForm tests", () => {
       /Cow Price/,
       /Milk Price/,
       /Starting Date/,
+      /Last Date/,
       /Degradation Rate/,
       /Capacity Per User/,
       /Carrying Capacity/,
@@ -108,6 +109,7 @@ describe("CommonsForm tests", () => {
     fireEvent.change(screen.getByTestId("CommonsForm-cowPrice"), { target: { value: "-1" } });
     fireEvent.change(screen.getByTestId("CommonsForm-startingBalance"), { target: { value: "-1" } });
     fireEvent.change(screen.getByTestId("CommonsForm-startingDate"), { target: { value: NaN } });
+    fireEvent.change(screen.getByTestId("CommonsForm-lastDate"), { target: { value: NaN } });
     fireEvent.click(submitButton);
 
     //Await
@@ -122,6 +124,7 @@ describe("CommonsForm tests", () => {
       "CommonsForm-cowPrice",
       "CommonsForm-startingBalance",
       "CommonsForm-startingDate",
+      "CommonsForm-lastDate",
 
     ].forEach(
       (item) => {
@@ -151,9 +154,11 @@ describe("CommonsForm tests", () => {
 
     const curr = new Date();
     const today = curr.toISOString().substr(0, 10);
+    const currMonth = curr.getMonth() % 12;
+    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
     const DefaultVals = {
       name: "", startingBalance: 10000, cowPrice: 100,
-      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth
     };
 
     axiosMock
@@ -171,7 +176,7 @@ describe("CommonsForm tests", () => {
     expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();
     [
       "name", "degradationRate", "carryingCapacity",
-      "milkPrice","cowPrice","startingBalance","startingDate",
+      "milkPrice","cowPrice","startingBalance","startingDate", "lastDate",
     ].forEach(
         (item) => {
           const element = screen.getByTestId(`CommonsForm-${item}`);
@@ -185,6 +190,8 @@ describe("CommonsForm tests", () => {
     expect(screen.getByTestId("CommonsForm-r2")).toHaveStyle('width: 80%');
     expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('width: 300px');
     expect(screen.getByTestId("CommonsForm-r3")).toHaveStyle('height: 50px');
+    expect(screen.getByTestId("CommonsForm-r4")).toHaveStyle('width: 300px');
+    expect(screen.getByTestId("CommonsForm-r4")).toHaveStyle('height: 50px');
     expect(screen.getByTestId("CommonsForm-Submit-Button")).toHaveStyle('width: 30%');
   });
 
@@ -279,10 +286,20 @@ describe("CommonsForm tests", () => {
   });
 
   it("renders correctly when an initialCommons is not passed in", async () => {
-
+    const curr = new Date();
+    const today = curr.toISOString().substr(0, 10);
+    const currMonth = curr.getMonth() % 12;
+    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
+    const DefaultVals = {
+      name: "", startingBalance: 10000, cowPrice: 100,
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth, aboveCapacityStrategy: "Linear", belowCapacityStrategy: "Constant"
+    };
     axiosMock
       .onGet("/api/commons/all-health-update-strategies")
       .reply(200, healthUpdateStrategyListFixtures.real);
+    axiosMock
+      .onGet("/api/commons/defaults")
+      .reply(200, DefaultVals);
 
     render(
       <QueryClientProvider client={new QueryClient()}>
@@ -292,15 +309,27 @@ describe("CommonsForm tests", () => {
       </QueryClientProvider>
     );
 
+    expect(await screen.findByTestId("CommonsForm-name")).toBeInTheDocument();
+    [
+      "name", "degradationRate", "carryingCapacity",
+      "milkPrice","cowPrice","startingBalance","startingDate", "lastDate",
+    ].forEach(
+        (item) => {
+          const element = screen.getByTestId(`CommonsForm-${item}`);
+          expect(element).toHaveValue(DefaultVals[item]);
+        }
+    );
     expect(await screen.findByText(/When below capacity/)).toBeInTheDocument();
 
     expect(screen.getByTestId("aboveCapacityHealthUpdateStrategy-Linear")).toBeInTheDocument();
     expect(screen.getByTestId("aboveCapacityHealthUpdateStrategy-Linear")).toHaveAttribute("selected");
     expect(screen.getByTestId("belowCapacityHealthUpdateStrategy-Constant")).toBeInTheDocument();
     expect(screen.getByTestId("belowCapacityHealthUpdateStrategy-Constant")).toHaveAttribute("selected");
+
+
   });
 
-  test("the correct parameters are passed to useBackend", async () => {
+test("the correct parameters are passed to useBackend", async () => {
 
     axiosMock
       .onGet("/api/commons/all-health-update-strategies")
@@ -326,4 +355,38 @@ describe("CommonsForm tests", () => {
       );
     });
   });
+
+  test("populates form fields with default values when initialCommons is not provided", async () => {
+
+    const curr = new Date();
+    const today = curr.toISOString().substr(0, 10);
+    const currMonth = curr.getMonth() % 12;
+    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
+    const defaultValuesData = {
+      name: "", startingBalance: 10000, cowPrice: 100,
+      milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth
+    };
+
+    jest.spyOn(useBackendModule, 'useBackend').mockReturnValue({ data: defaultValuesData });
+
+    jest.spyOn(useBackendModule, 'useBackend').mockReturnValue({ data: healthUpdateStrategyListFixtures.real });
+
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <Router>
+          <CommonsForm />
+        </Router>
+      </QueryClientProvider>
+    );
+  
+    expect(await screen.findByTestId("CommonsForm-startingBalance")).toHaveValue(defaultValuesData.startingBalance);
+    expect(screen.getByTestId("CommonsForm-name")).toHaveValue(defaultValuesData.name);
+    expect(screen.getByTestId("CommonsForm-cowPrice")).toHaveValue(defaultValuesData.cowPrice);
+    expect(screen.getByTestId("CommonsForm-milkPrice")).toHaveValue(defaultValuesData.milkPrice);
+    expect(screen.getByTestId("CommonsForm-degradationRate")).toHaveValue(defaultValuesData.degradationRate);
+    expect(screen.getByTestId("CommonsForm-carryingCapacity")).toHaveValue(defaultValuesData.carryingCapacity);
+    expect(screen.getByTestId("CommonsForm-startingDate")).toHaveValue(defaultValuesData.startingDate);
+    expect(screen.getByTestId("CommonsForm-lastDate")).toHaveValue(defaultValuesData.lastDate);
+  });
+
 });

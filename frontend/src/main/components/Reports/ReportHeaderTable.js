@@ -1,4 +1,5 @@
 import OurTable from "main/components/OurTable";
+import { formatter } from "./ReportLineTable";
 
 // should take in a players list from a commons
 export default function ReportHeaderTable({ report  }) {
@@ -6,14 +7,26 @@ export default function ReportHeaderTable({ report  }) {
         {
             Header: 'Cow Price',
             accessor: 'cowPrice', 
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{props.value}</div>)
+            },
         },
         {
             Header: 'Milk Price',
             accessor: 'milkPrice',
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{props.value}</div>)
+            },
         },
         {
             Header: 'Start Bal',
             accessor: 'startingBalance',
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{formatter.format(props.value)}</div>)
+            },
         },
         {
             Header: 'Start Date',
@@ -29,10 +42,18 @@ export default function ReportHeaderTable({ report  }) {
         {
             Header: 'Capacity',
             accessor: 'carryingCapacity',
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{props.value}</div>)
+                  },
         },
         {
             Header: 'Degrad Rate',
             accessor: 'degradationRate',
+            Cell: (props) => {
+                return (
+                  <div style={{textAlign: "right"}}>{props.value}</div>)
+                  },
         },
         {
             Header: 'BelowCap',

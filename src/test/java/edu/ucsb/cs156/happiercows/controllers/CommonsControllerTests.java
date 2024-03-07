@@ -61,6 +61,43 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     @WithMockUser(roles = {"ADMIN"})
     @Test
+    public void getDefaultCommonsValuesTest() throws Exception {
+        Map<String, Object> expectedDefaults = Map.of(
+                "id", 0,
+                "name", "null",
+                "cowPrice", 100.0,
+                "milkPrice", 1.0,
+                "startingBalance", 10000.0,
+                "degradationRate", 0.001,
+                "carryingCapacity", 100,
+                "capacityPerUser", 50,
+                "aboveCapacityHealthUpdateStrategy", "Linear",
+                "belowCapacityHealthUpdateStrategy", "Constant"
+        );
+
+        MvcResult response = mockMvc
+                .perform(get("/api/commons/defaults").with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Map<String, Object> actualDefaults = objectMapper.readValue(
+                response.getResponse().getContentAsString(),
+                new TypeReference<Map<String, Object>>() {});
+
+        assertEquals(expectedDefaults.get("id"), actualDefaults.get("id"));
+        assertEquals(expectedDefaults.get("cowPrice"), actualDefaults.get("cowPrice"));
+        assertEquals(expectedDefaults.get("milkPrice"), actualDefaults.get("milkPrice"));
+        assertEquals(expectedDefaults.get("startingBalance"), actualDefaults.get("startingBalance"));
+        assertEquals(expectedDefaults.get("degradationRate"), actualDefaults.get("degradationRate"));
+        assertEquals(expectedDefaults.get("carryingCapacity"), actualDefaults.get("carryingCapacity"));
+        assertEquals(expectedDefaults.get("capacityPerUser"), actualDefaults.get("capacityPerUser"));
+        assertEquals(expectedDefaults.get("aboveCapacityHealthUpdateStrategy"), actualDefaults.get("aboveCapacityHealthUpdateStrategy"));
+        assertEquals(expectedDefaults.get("belowCapacityHealthUpdateStrategy"), actualDefaults.get("belowCapacityHealthUpdateStrategy"));
+    }
+
+
+    @WithMockUser(roles = {"ADMIN"})
+    @Test
     public void createCommonsTest() throws Exception {
         LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
 
@@ -285,6 +322,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .milkPrice(8.99)
                 .startingBalance(1020.10)
                 .startingDate(someTime)
+                .lastDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(true)
                 .capacityPerUser(10)
@@ -299,6 +337,7 @@ public class CommonsControllerTests extends ControllerTestCase {
                 .milkPrice(8.99)
                 .startingBalance(1020.10)
                 .startingDate(someTime)
+                .lastDate(someTime)
                 .degradationRate(50.0)
                 .showLeaderboard(true)
                 .capacityPerUser(10)

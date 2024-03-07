@@ -34,7 +34,8 @@ describe("PlayPage tests", () => {
             commonsId: 1,
             id: 1,
             totalWealth: 0,
-            userId: 1
+            userId: 1,
+            showChat: true
         };
         axiosMock.reset();
         axiosMock.resetHistory();
@@ -54,7 +55,8 @@ describe("PlayPage tests", () => {
         axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
             commons: {
                 id: 1,
-                name: "Sample Commons"
+                name: "Sample Commons",
+                showChat: true
             },
             totalPlayers: 5,
             totalCows: 5 
@@ -74,7 +76,7 @@ describe("PlayPage tests", () => {
         );
     });
 
-    test("click buy and sell buttons", async () => {
+    test("click buy button", async () => {
         render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
@@ -87,14 +89,35 @@ describe("PlayPage tests", () => {
         const buyCowButton = screen.getByTestId("buy-cow-button");
         fireEvent.click(buyCowButton);
 
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
+        const modal_buy = screen.findByTestId("buy-sell-cow-modal")
+        expect(await modal_buy).toBeInTheDocument();
+        const submitModalButton = screen.getByTestId("buy-sell-cow-modal-submit")
+        fireEvent.click(submitModalButton)
 
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
+    });
+
+    test("click sell button", async () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByTestId("sell-cow-button")).toBeInTheDocument();
         const sellCowButton = screen.getByTestId("sell-cow-button");
         fireEvent.click(sellCowButton);
 
-        await waitFor(() => expect(axiosMock.history.put.length).toBe(2));
+        const modal_sell = screen.findByTestId("buy-sell-cow-modal");
+        expect(await modal_sell).toBeInTheDocument();
+        const submitModalButton = screen.getByTestId("buy-sell-cow-modal-submit");
+        fireEvent.click(submitModalButton);
 
-        expect(mockToast).toBeCalledWith("Cow sold!");
+        expect(await modal_sell).not.toBeInTheDocument();
+
+        await waitFor(() => expect(axiosMock.history.put.length).toBe(1));
     });
 
     test("Make sure that both the Announcements and Welcome Farmer components show up", async () => {
@@ -176,25 +199,31 @@ describe("PlayPage tests", () => {
         const chatButton = screen.getByTestId("playpage-chat-toggle");
         const chatContainer = screen.getByTestId("playpage-chat-div");
 
-        expect(chatButton).toHaveTextContent('▲');
-
+        
+        expect(chatButton).toHaveTextContent('💬');
+        const messageIcon = screen.getByTestId("message-icon");
+        expect(messageIcon).toHaveStyle('font-family: Arial, sans-serif;');
+        expect(messageIcon).toHaveStyle('font-size: 30px;');
         // Click the chat toggle button to open the ChatPanel
         fireEvent.click(chatButton);
 
         await waitFor(() => {
-            expect(chatButton).toHaveTextContent('▼');
+            expect(chatButton).toHaveTextContent('❌');
         });
+        const closeIcon = screen.getByTestId("close-icon");
+        expect(closeIcon).toHaveStyle('font-family: Arial, sans-serif;');
+        expect(closeIcon).toHaveStyle('font-size: 30px;');
 
         // Check styles for the chat button
         expect(chatButton).toHaveStyle(`
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            border-radius: 25%;
             background-color: lightblue;
             color: black;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
         `);
 
         // Check styles for the chat container
@@ -205,5 +234,113 @@ describe("PlayPage tests", () => {
             right: 20px;
         `);
     });
-    
+
+    test("Buy and Sell Cows Modal is Closed by Default", () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+
+        expect(() => screen.getByTestId("buy-sell-cow-modal")).toThrow();
+    });
+
+    test("Doesn't show chat button for non-admins if showChat is false", async () => {
+        const userCommons = {
+            commonsId: 1,
+            id: 1,
+            totalWealth: 0,
+            userId: 1,
+        };
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/usercommons/forcurrentuser", { params: { commonsId: 1 } }).reply(200, userCommons);
+        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
+            id: 1,
+            name: "Sample Commons"
+        });
+        axiosMock.onGet("/api/commons/all").reply(200, [
+            {
+                id: 1,
+                name: "Sample Commons"
+            }
+        ]);
+        axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
+            commons: {
+                id: 1,
+                name: "Sample Commons",
+                showChat: false,
+            },
+            totalPlayers: 5,
+            totalCows: 5 
+        });
+        axiosMock.onGet("/api/profits/all/commonsid").reply(200, []);
+        axiosMock.onPut("/api/usercommons/sell").reply(200, userCommons);
+        axiosMock.onPut("/api/usercommons/buy").reply(200, userCommons);
+        
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByTestId("playpage-chat-toggle")).not.toBeInTheDocument();
+        });
+    })
+
+    test("Shows chat button for admins if showChat is false", async () => {
+        const userCommons = {
+            commonsId: 1,
+            id: 1,
+            totalWealth: 0,
+            userId: 1,
+        };
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/usercommons/forcurrentuser", { params: { commonsId: 1 } }).reply(200, userCommons);
+        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
+            id: 1,
+            name: "Sample Commons"
+        });
+        axiosMock.onGet("/api/commons/all").reply(200, [
+            {
+                id: 1,
+                name: "Sample Commons"
+            }
+        ]);
+        axiosMock.onGet("/api/commons/plus", { params: { id: 1 } }).reply(200, {
+            commons: {
+                id: 1,
+                name: "Sample Commons",
+                showChat: false,
+            },
+            totalPlayers: 5,
+            totalCows: 5 
+        });
+        axiosMock.onGet("/api/profits/all/commonsid").reply(200, []);
+        axiosMock.onPut("/api/usercommons/sell").reply(200, userCommons);
+        axiosMock.onPut("/api/usercommons/buy").reply(200, userCommons);
+        
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
+        });
+    })
 });

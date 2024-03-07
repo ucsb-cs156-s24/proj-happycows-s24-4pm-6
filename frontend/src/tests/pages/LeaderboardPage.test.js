@@ -10,61 +10,68 @@ import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
 const mockToast = jest.fn();
-jest.mock('react-toastify', () => {
-    const originalModule = jest.requireActual('react-toastify');
+jest.mock("react-toastify", () => {
+    const originalModule = jest.requireActual("react-toastify");
     return {
         __esModule: true,
         ...originalModule,
-        toast: (x) => mockToast(x)
+        toast: (x) => mockToast(x),
     };
 });
 
 const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => {
-    const originalModule = jest.requireActual('react-router-dom');
+jest.mock("react-router-dom", () => {
+    const originalModule = jest.requireActual("react-router-dom");
     return {
         __esModule: true,
         ...originalModule,
         useParams: () => ({
-            commonsId: 1
+            commonsId: 1,
         }),
-        useNavigate: () => mockNavigate
+        useNavigate: () => mockNavigate,
     };
 });
 
 describe("LeaderboardPage tests", () => {
-    
     const axiosMock = new AxiosMockAdapter(axios);
 
     const setupUser = () => {
         axiosMock.reset();
         axiosMock.resetHistory();
-        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
-        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock
+            .onGet("/api/currentUser")
+            .reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock
+            .onGet("/api/systemInfo")
+            .reply(200, systemInfoFixtures.showingNeither);
     };
 
     const setupAdmin = () => {
         axiosMock.reset();
         axiosMock.resetHistory();
-        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
-        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock
+            .onGet("/api/currentUser")
+            .reply(200, apiCurrentUserFixtures.adminUser);
+        axiosMock
+            .onGet("/api/systemInfo")
+            .reply(200, systemInfoFixtures.showingNeither);
     };
 
     test("renders without crashing for users", async () => {
         setupUser();
         axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            "id": 1,
-            "name": "Anika's Commons",
-            "day": 5,
-            "startingDate": "2026-03-05T15:50:10",
-            "startingBalance": 200.50,
-            "totalPlayers": 50,
-            "cowPrice": 15,
-            "milkPrice": 10,
-            "degradationRate": .5,
-            "showLeaderboard": true,
+            username: "Anika",
+            totalWealth: 100.0,
+            numOfCows: 5,
+            cowHealth: 100,
+            cowsBought: 10,
+            cowsSold: 3,
+            cowDeaths: 0,
+            showLeaderboard: true,
         });
-        axiosMock.onGet("/api/usercommons/commons/all", { params: { commonsId: 1} }).reply(200,[]);
+        axiosMock
+            .onGet("/api/usercommons/commons/all", { params: { commonsId: 1 } })
+            .reply(200, []);
         const queryClient = new QueryClient();
         render(
             <QueryClientProvider client={queryClient}>
@@ -73,13 +80,23 @@ describe("LeaderboardPage tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
-        await waitFor(()=>{
-            expect(screen.getByTestId("LeaderboardPage-main-div")).toBeInTheDocument();
-
+        await waitFor(() => {
+            expect(
+                screen.getByTestId("LeaderboardPage-main-div")
+            ).toBeInTheDocument();
         });
-        const leaderboard_main_div = screen.getByTestId("LeaderboardPage-main-div");
-        const leaderboard_back_button = screen.getByTestId("LeaderboardPage-back-button");
-        expect(leaderboard_main_div).toHaveAttribute("style","background-size: cover; background-image: url(PlayPageBackground.png);");
+
+        const leaderboard_main_div = screen.getByTestId(
+            "LeaderboardPage-main-div"
+        );
+        const leaderboard_back_button = screen.getByTestId(
+            "LeaderboardPage-back-button"
+        );
+        expect(leaderboard_main_div).toHaveAttribute(
+            "style",
+            "background-size: cover; background-image: url(PlayPageBackground.png);"
+        );
+
         expect(leaderboard_back_button).toBeInTheDocument();
     });
 
@@ -98,24 +115,23 @@ describe("LeaderboardPage tests", () => {
         fireEvent.click(cancelButton);
 
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(-1));
-
     });
 
     test("renders leaderboard for users when showLeaderboard = true", async () => {
         setupUser();
         axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            "id": 1,
-            "name": "Anika's Commons",
-            "day": 5,
-            "startingDate": "2026-03-05T15:50:10",
-            "startingBalance": 200.50,
-            "totalPlayers": 50,
-            "cowPrice": 15,
-            "milkPrice": 10,
-            "degradationRate": .5,
-            "showLeaderboard": true,
+            username: "Anika",
+            totalWealth: 100.0,
+            numOfCows: 5,
+            cowHealth: 100,
+            cowsBought: 10,
+            cowsSold: 3,
+            cowDeaths: 0,
+            showLeaderboard: true,
         });
-        axiosMock.onGet("/api/usercommons/commons/all", { params: { commonsId: 1} }).reply(200,[]);
+        axiosMock
+            .onGet("/api/usercommons/commons/all", { params: { commonsId: 1 } })
+            .reply(200, []);
         const queryClient = new QueryClient();
         render(
             <QueryClientProvider client={queryClient}>
@@ -133,16 +149,14 @@ describe("LeaderboardPage tests", () => {
     test("renders leaderboard error message for users when showLeaderboard = false", async () => {
         setupUser();
         axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            "id": 1,
-            "name": "Anika's Commons",
-            "day": 5,
-            "startingDate": "2026-03-05T15:50:10",
-            "startingBalance": 200.50,
-            "totalPlayers": 50,
-            "cowPrice": 15,
-            "milkPrice": 10,
-            "degradationRate": .5,
-            "showLeaderboard": false,
+            username: "Anika",
+            totalWealth: 100.0,
+            numOfCows: 5,
+            cowHealth: 100,
+            cowsBought: 10,
+            cowsSold: 3,
+            cowDeaths: 0,
+            showLeaderboard: false,
         });
         const queryClient = new QueryClient();
         render(
@@ -152,24 +166,28 @@ describe("LeaderboardPage tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
-        expect(await screen.findByText("You're not authorized to see the leaderboard.")).toBeInTheDocument();
+        expect(
+            await screen.findByText(
+                "You're not authorized to see the leaderboard."
+            )
+        ).toBeInTheDocument();
     });
 
     test("renders leaderboard for Admin users when showLeaderboard = false", async () => {
         setupAdmin();
         axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, {
-            "id": 1,
-            "name": "Anika's Commons",
-            "day": 5,
-            "startingDate": "2026-03-05T15:50:10",
-            "startingBalance": 200.50,
-            "totalPlayers": 50,
-            "cowPrice": 15,
-            "milkPrice": 10,
-            "degradationRate": .5,
-            "showLeaderboard": false,
+            username: "Anika",
+            totalWealth: 100.0,
+            numOfCows: 5,
+            cowHealth: 100,
+            cowsBought: 10,
+            cowsSold: 3,
+            cowDeaths: 0,
+            showLeaderboard: false,
         });
-        axiosMock.onGet("/api/usercommons/commons/all", { params: { commonsId: 1} }).reply(200,[]);
+        axiosMock
+            .onGet("/api/usercommons/commons/all", { params: { commonsId: 1 } })
+            .reply(200, []);
         const queryClient = new QueryClient();
         render(
             <QueryClientProvider client={queryClient}>
@@ -183,5 +201,4 @@ describe("LeaderboardPage tests", () => {
         });
         expect(await screen.findByText("Total Wealth")).toBeInTheDocument();
     });
-
 });

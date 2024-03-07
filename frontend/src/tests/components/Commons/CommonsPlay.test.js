@@ -26,4 +26,17 @@ describe("CommonsPlay tests", () => {
         });
 
     });
+    test("Commons Play has the correct styles applied", async () => {
+        render(
+            <CommonsPlay currentUser={currentUserFixtures.noRoot } commons={commonsFixtures.oneCommons[0]} />
+        );
+
+        await waitFor(()=>{
+            expect(screen.getByTestId("commons-card")).toBeInTheDocument();
+        });
+    
+        const CommonsCard = screen.getByTestId("commons-card");
+        expect(CommonsCard).toHaveStyle('opacity: .9;');       
+
+    });
 });
