@@ -47,33 +47,33 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
             )}
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="start">Start</Form.Label>
+                <Form.Label htmlFor="startDate">Start Date</Form.Label>
                 <Form.Control
                 // Stryker disable next-line all
-                    data-testid={testIdPrefix + "-start"}
-                    id="start"
+                    data-testid={testIdPrefix + "-startDate"}
+                    id="startDate"
                     type="datetime-local"
-                    isInvalid={Boolean(errors.start)}
-                    {...register("start", {
-                        required: "Start is required.",
+                    isInvalid={Boolean(errors.startDate)}
+                    {...register("startDate", {
+                        required: "StartDate is required.",
                         pattern: isodate_regex
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
-                    {errors.start && 'Start is required and must be provided in ISO format.'}
+                    {errors.startDate && 'Start Date is required and must be provided in ISO format.'}
                 </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group className="mb-3" >
-                <Form.Label htmlFor="end">End</Form.Label>
+                <Form.Label htmlFor="endDate">End Date</Form.Label>
                 <Form.Control
                 // Stryker disable next-line all
-                    data-testid={testIdPrefix + "-end"}
-                    id="end"
+                    data-testid={testIdPrefix + "-endDate"}
+                    id="endDate"
                     type="datetime-local"
-                    isInvalid={Boolean(errors.end)}
+                    isInvalid={Boolean(errors.endDate)}
                     // Stryker disable next-line all
-                    {...register("end", {
+                    {...register("endDate", {
                         pattern: isodate_regex
                     })}
                 />
@@ -81,20 +81,20 @@ function AnnouncementForm({ initialContents, submitAction, buttonLabel = "Create
 
 
             <Form.Group className="mb-3">
-                <Form.Label htmlFor="announcement">Announcement</Form.Label>
+                <Form.Label htmlFor="announcementText">Announcement</Form.Label>
                 <Form.Control
                     as="textarea"
                     // Stryker disable next-line all
-                    data-testid={testIdPrefix + "-announcement"}
-                    id="announcement"
+                    data-testid={testIdPrefix + "-announcementText"}
+                    id="announcementText"
                     rows={5}
-                    isInvalid={Boolean(errors.announcement)}
-                    {...register("announcement", {
+                    isInvalid={Boolean(errors.announcementText)}
+                    {...register("announcementText", {
                         required: "Announcement is required."
                     })}
                 />
                 <Form.Control.Feedback type="invalid">
-                    {errors.announcement?.message}
+                    {errors.announcementText?.message}
                 </Form.Control.Feedback>
             </Form.Group>
 

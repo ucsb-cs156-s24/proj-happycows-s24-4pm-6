@@ -49,9 +49,9 @@ public class AnnouncementsController extends ApiController{
     @PostMapping("/post")
     public ResponseEntity<Object> createAnnouncement(
         @Parameter(description = "The id of the common") @RequestParam Long commonsId,
-        @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) Date start,
-        @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date end,
-        @Parameter(description = "The announcement to be sent out") @RequestParam String announcement) {
+        @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) Date startDate,
+        @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date endDate,
+        @Parameter(description = "The announcement to be sent out") @RequestParam String announcementText) {
 
         User user = getCurrentUser().getUser();
         Long userId = user.getId();
@@ -67,24 +67,24 @@ public class AnnouncementsController extends ApiController{
             }
         }
 
-        if (start == null) { 
+        if (startDate == null) { 
             log.info("Start date not specified. Defaulting to current date.");
-            start = new Date(); 
+            startDate = new Date(); 
         }
 
-        if (announcement == "") {
+        if (announcementText == "") {
             return ResponseEntity.badRequest().body("Announcement cannot be empty.");
         }
-        if (end != null && start.after(end)) {
+        if (endDate != null && startDate.after(endDate)) {
             return ResponseEntity.badRequest().body("Start date must be before end date.");
         }
 
         // Create the announcement
         Announcement announcementObj = Announcement.builder()
         .commonsId(commonsId)
-        .start(start)
-        .end(end)
-        .announcement(announcement)
+        .startDate(startDate)
+        .endDate(endDate)
+        .announcementText(announcementText)
         .build();
 
         // Save the announcement
@@ -112,7 +112,7 @@ public class AnnouncementsController extends ApiController{
         }
 
         int MAX_ANNOUNCEMENTS = 1000;
-        Page<Announcement> announcements = announcementRepository.findByCommonsId(commonsId, PageRequest.of(0, MAX_ANNOUNCEMENTS, Sort.by("start").descending()));
+        Page<Announcement> announcements = announcementRepository.findByCommonsId(commonsId, PageRequest.of(0, MAX_ANNOUNCEMENTS, Sort.by("startDate").descending()));
         return ResponseEntity.ok(announcements);
     }
 
@@ -135,9 +135,9 @@ public class AnnouncementsController extends ApiController{
     public ResponseEntity<Object> editAnnouncement(
         @Parameter(description = "The id of the announcement") @RequestParam Long id,
         @Parameter(description = "The id of the common") @RequestParam Long commonsId,
-        @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) Date start,
-        @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date end,
-        @Parameter(description = "The announcement to be sent out") @RequestParam String announcement) {
+        @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) Date startDate,
+        @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date endDate,
+        @Parameter(description = "The announcement to be sent out") @RequestParam String announcementText) {
 
         User user = getCurrentUser().getUser();
         Long userId = user.getId();
@@ -153,16 +153,16 @@ public class AnnouncementsController extends ApiController{
             }
         }
 
-        if (announcement == "") {
+        if (announcementText == "") {
             return ResponseEntity.badRequest().body("Announcement cannot be empty.");
         }
 
-        if (start == null) {
+        if (startDate == null) {
             log.info("Start date not specified. Defaulting to current date.");
-            start = new Date();
+            startDate = new Date();
         }
 
-        if (end != null && start.after(end)) {
+        if (endDate != null && startDate.after(endDate)) {
             return ResponseEntity.badRequest().body("Start date must be before end date.");
         }
 
@@ -174,9 +174,9 @@ public class AnnouncementsController extends ApiController{
 
         // Create the announcement
         Announcement announcementObj = announcementLookup.get();
-        announcementObj.setStart(start);
-        announcementObj.setEnd(end);
-        announcementObj.setAnnouncement(announcement);
+        announcementObj.setStartDate(startDate);
+        announcementObj.setEndDate(endDate);
+        announcementObj.setAnnouncementText(announcementText);
 
         // Save the announcement
         announcementRepository.save(announcementObj);

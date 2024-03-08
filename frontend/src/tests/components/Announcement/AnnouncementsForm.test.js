@@ -16,7 +16,7 @@ jest.mock('react-router-dom', () => ({
 describe("AnnouncementForm tests", () => {
     const queryClient = new QueryClient();
 
-    const expectedHeaders = ["Start", "End", "Announcement"];
+    const expectedHeaders = ["Start Date", "End Date", "Announcement"];
     const testId = "AnnouncementForm";
 
     test("renders correctly with no initialContents", async () => {
@@ -87,7 +87,7 @@ describe("AnnouncementForm tests", () => {
         const submitButton = screen.getByText(/Create/);
         fireEvent.click(submitButton);
 
-        await screen.findByText(/Start is required and must be provided in ISO format./);
+        await screen.findByText(/Start Date is required and must be provided in ISO format./);
         expect(screen.getByText(/Announcement is required./)).toBeInTheDocument();
 
         // const endInput = screen.getByTestId(`${testId}-end`);

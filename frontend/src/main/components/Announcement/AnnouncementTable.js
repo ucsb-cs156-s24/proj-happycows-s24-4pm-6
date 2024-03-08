@@ -34,15 +34,15 @@ export default function AnnouncementTable({ announcements, currentUser }) {
         },
         {
             Header: 'Start Date ISO Format',
-            accessor: 'start',
+            accessor: 'startDate',
         },
         {
             Header: 'End Date ISO Format',
-            accessor: 'end',
+            accessor: 'endDate',
         },
         {
             Header: 'Announcement',
-            accessor: 'announcement',
+            accessor: 'announcementText',
         }
     ];
 

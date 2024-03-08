@@ -17,7 +17,7 @@ describe("AnnouncementTable tests", () => {
   const queryClient = new QueryClient();
 
   const expectedHeaders = ["id", "Start Date ISO Format", "End Date ISO Format", "Announcement"];
-  const expectedFields = ["id", "start", "end", "announcement"];
+  const expectedFields = ["id", "startDate", "endDate", "announcementText"];
   const testId = "AnnouncementTable";
 
   test("renders empty table correctly", () => {
@@ -71,10 +71,10 @@ describe("AnnouncementTable tests", () => {
     });
 
     expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-start`)).toHaveTextContent("2024-12-12T00:00:00");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-startDate`)).toHaveTextContent("2024-12-12T00:00:00");
 
     expect(screen.getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("2");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-start`)).toHaveTextContent("2022-12-12T00:00:00");
+    expect(screen.getByTestId(`${testId}-cell-row-1-col-startDate`)).toHaveTextContent("2022-12-12T00:00:00");
 
     const editButton = screen.getByTestId(`${testId}-cell-row-0-col-Edit-button`);
     expect(editButton).toBeInTheDocument();
@@ -111,10 +111,10 @@ describe("AnnouncementTable tests", () => {
     });
 
     expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-start`)).toHaveTextContent("2024-12-12T00:00:00");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-startDate`)).toHaveTextContent("2024-12-12T00:00:00");
 
     expect(screen.getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("2");
-    expect(screen.getByTestId(`${testId}-cell-row-1-col-start`)).toHaveTextContent("2022-12-12T00:00:00");
+    expect(screen.getByTestId(`${testId}-cell-row-1-col-startDate`)).toHaveTextContent("2022-12-12T00:00:00");
 
     expect(screen.queryByText("Delete")).not.toBeInTheDocument();
     expect(screen.queryByText("Edit")).not.toBeInTheDocument();
@@ -136,7 +136,7 @@ describe("AnnouncementTable tests", () => {
 
     // assert - check that the expected content is rendered
     expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-start`)).toHaveTextContent("2024-12-12T00:00:00");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-startDate`)).toHaveTextContent("2024-12-12T00:00:00");
 
     const editButton = screen.getByTestId(`${testId}-cell-row-0-col-Edit-button`);
     expect(editButton).toBeInTheDocument();
@@ -164,7 +164,7 @@ describe("AnnouncementTable tests", () => {
 
     // assert - check that the expected content is rendered
     expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
-    expect(screen.getByTestId(`${testId}-cell-row-0-col-start`)).toHaveTextContent("2024-12-12T00:00:00");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-startDate`)).toHaveTextContent("2024-12-12T00:00:00");
 
     const deleteButton = screen.getByTestId(`${testId}-cell-row-0-col-Delete-button`);
     expect(deleteButton).toBeInTheDocument();

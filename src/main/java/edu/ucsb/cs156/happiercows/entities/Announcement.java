@@ -23,10 +23,12 @@ public class Announcement {
     private long id;
     private long commonsId;
 
-    @Column(name="startDate", nullable = false)
-    private Date start;
+    @Column(name="start_date", nullable = false)
+    private Date startDate;
 
-    @Column(name="endDate", nullable = true)
-    private Date end;
-    private String announcement;
-}g
+    @Column(name="end_date", nullable = true)
+    private Date endDate;
+
+    @Column(name="announcement_text", nullable = false)
+    private String announcementText;
+}
