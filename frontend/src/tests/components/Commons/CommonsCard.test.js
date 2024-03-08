@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, findByRole } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import CommonsCard from "main/components/Commons/CommonsCard";
 import commonsFixtures from "fixtures/commonsFixtures";
