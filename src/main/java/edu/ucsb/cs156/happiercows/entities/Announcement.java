@@ -25,14 +25,14 @@ public class Announcement {
     @Column(name="commons_id", nullable = false)
     private long commonsId;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="start", nullable = false)
-    private Date start;
+    // @CreationTimestamp
+    // @Temporal(TemporalType.TIMESTAMP)
+    // @Column(name="start", nullable = false)
+    // private Date start;
 
-    @Column(name="end", nullable = true)
-    private Date end;
+    // @Column(name="end", nullable = true)
+    // private Date end;
 
-    @Column(name="announcement", nullable = false)
-    private String announcement;
+    // @Column(name="announcement", nullable = false)
+    // private String announcement;
 }
