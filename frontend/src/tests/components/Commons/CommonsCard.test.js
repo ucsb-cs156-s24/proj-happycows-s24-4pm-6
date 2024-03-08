@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import '@testing-library/jest-dom'
 import CommonsCard from "main/components/Commons/CommonsCard";
 import commonsFixtures from "fixtures/commonsFixtures";
 
@@ -51,6 +52,7 @@ describe("CommonsCard tests", () => {
         const futureYearCommon = commonsFixtures.threeCommons[2];
         futureYearCommon.startingDate = new Date(curr.getFullYear() + 1, curr.getMonth(), curr.getDate()).toISOString().substring(0, 10);
         const click = jest.fn();
+        window.alert = jest.fn();
         render(
             <CommonsCard commons={futureYearCommon} buttonText={"Join"} buttonLink={click} />
         );
@@ -61,6 +63,12 @@ describe("CommonsCard tests", () => {
         expect(button.textContent).toEqual('Join');
         fireEvent.click(button);
         expect(click).toBeCalledTimes(0);
+        // const alertElement = getByRole('alert');
+        expect(window.alert).toHaveBeenCalledTimes(1);
+        // expect(alertElement).toHaveTextContent("This commons has not started yet and cannot be joined.\n The starting date is "
+        // + parseInt(futureYearCommon.startingDate.substring(5,7)) + "/" 
+        // + parseInt(futureYearCommon.startingDate.substring(8,10)) + "/" 
+        // + parseInt(futureYearCommon.startingDate));
 
         expect(button).toBeInTheDocument();
         expect(typeof (button.textContent)).toBe('string');
@@ -85,6 +93,22 @@ describe("CommonsCard tests", () => {
         expect(button).toBeInTheDocument();
         expect(typeof (button.textContent)).toBe('string');
         expect(button.textContent).toEqual('Join');
+    });
+
+    test("can join commons with past date - past month", async () => {
+        const futureCommon = commonsFixtures.threeCommons[2];
+        futureCommon.startingDate = new Date(curr.getFullYear(), curr.getMonth() - 1, curr.getDate()).toISOString().substring(0, 10);
+        const click = jest.fn();
+        render(
+            <CommonsCard commons={futureCommon} buttonText={"Join"} buttonLink={click} />
+        );
+
+        const button = screen.getByTestId("commonsCard-button-Join-1");
+        expect(button).toBeInTheDocument();
+        expect(typeof (button.textContent)).toBe('string');
+        expect(button.textContent).toEqual('Join');
+        fireEvent.click(button);
+        expect(click).toBeCalledTimes(1);
     });
 
     test("cannot join commons with future start date - future day", async () => {
