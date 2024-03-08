@@ -14,20 +14,16 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "announcements")
+@Entity(name = "announcement")
 public class Announcement {
     
     // Unique Announcement Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private long commonsId;
-
-    @CreationTimestamp
-    @Column(name="start", nullable = false)
     private Date start;
-
+    @Column(name="end", nullable = true)
     private Date end;
     private String announcement;
 }
