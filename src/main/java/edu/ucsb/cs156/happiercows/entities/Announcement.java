@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "announcement")
+@Entity(name = "announcements")
 public class Announcement {
     
     // Unique Announcement Id
@@ -24,9 +24,10 @@ public class Announcement {
 
     private long commonsId;
 
+    @CreationTimestamp
+    @Column(name="start", nullable = false)
     private Date start;
 
     private Date end;
-
     private String announcement;
 }
