@@ -22,8 +22,11 @@ public class Announcement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long commonsId;
+
+    @Column(name="startDate", nullable = false)
     private Date start;
-    @Column(name="end", nullable = true)
+
+    @Column(name="endDate", nullable = true)
     private Date end;
     private String announcement;
-}
+}g

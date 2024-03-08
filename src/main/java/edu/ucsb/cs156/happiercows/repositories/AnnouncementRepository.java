@@ -14,7 +14,7 @@ import java.util.Date;
 
 @Repository
 public interface AnnouncementRepository extends CrudRepository<Announcement, Long> {
-    @Query(value = "SELECT ann FROM announcement ann WHERE ann.commonsId = :commonsId AND (ann.end IS NULL OR ann.end > CURRENT_TIMESTAMP)")
+    @Query(value = "SELECT ann FROM announcement ann WHERE ann.commonsId = :commonsId AND (ann.endDate IS NULL OR ann.endDate > CURRENT_DATE)")
     Page<Announcement> findByCommonsId(Long commonsId, Pageable pageable);
 
     @Query(value = "SELECT ann FROM announcement ann WHERE ann.id = :id")
