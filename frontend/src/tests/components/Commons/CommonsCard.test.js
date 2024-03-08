@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, findByRole } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import CommonsCard from "main/components/Commons/CommonsCard";
 import commonsFixtures from "fixtures/commonsFixtures";
@@ -63,12 +63,7 @@ describe("CommonsCard tests", () => {
         expect(button.textContent).toEqual('Join');
         fireEvent.click(button);
         expect(click).toBeCalledTimes(0);
-        // const alertElement = getByRole('alert');
-        expect(window.alert).toHaveBeenCalledTimes(1);
-        // expect(alertElement).toHaveTextContent("This commons has not started yet and cannot be joined.\n The starting date is "
-        // + parseInt(futureYearCommon.startingDate.substring(5,7)) + "/" 
-        // + parseInt(futureYearCommon.startingDate.substring(8,10)) + "/" 
-        // + parseInt(futureYearCommon.startingDate));
+        expect(window.alert).toBeCalledTimes(1);
 
         expect(button).toBeInTheDocument();
         expect(typeof (button.textContent)).toBe('string');

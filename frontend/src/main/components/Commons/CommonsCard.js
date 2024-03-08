@@ -43,7 +43,7 @@ const CommonsCard = ({ buttonText, buttonLink, commons }) => {
                                 className="mx-4"
                                 onClick={() => {
                                     if (buttonText === "Join" && isFutureDate(commons.startingDate)) {
-                                        // Stryker disable next-line all: unable to read alert in mutation test
+                                        // Stryker disable next-line all: unable to read alert text in tests
                                         alert("This commons has not started yet and cannot be joined.\n The starting date is " + parseInt(commons.startingDate.substring(5,7)) + "/" + parseInt(commons.startingDate.substring(8,10)) + "/" + parseInt(commons.startingDate));
                                     } else {
                                         buttonLink(commons.id);
