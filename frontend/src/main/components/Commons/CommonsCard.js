@@ -6,9 +6,9 @@ const curr = new Date();
 function isFutureDate(startingDate) {
     const startYear = parseInt(startingDate.substring(0,4));
     const startMonth = parseInt(startingDate.substring(5,7));
-    const startDate = parseInt(startingDate.substring(8,9));
+    const startDate = parseInt(startingDate.substring(8,10));
     const currYear = curr.getFullYear();
-    const currMonth = curr.getMonth();
+    const currMonth = curr.getMonth() + 1;
     const currDate = curr.getDate();
 
     if (startYear === currYear) {
@@ -42,8 +42,9 @@ const CommonsCard = ({ buttonText, buttonLink, commons }) => {
                                 onClick={() => {
                                     if (buttonText === "Join" && isFutureDate(commons.startingDate)) {
                                         alert("This commons has not started yet and cannot be joined.\n The starting date is "
-                                         + parseInt(commons.startingDate.substring(5,7)) + "/" + commons.startingDate.substring(8,9) 
-                                         + "/" + commons.startingDate.substring(0,4));
+                                         + parseInt(commons.startingDate.substring(5,7)) + "/" 
+                                         + parseInt(commons.startingDate.substring(8,10)) + "/" 
+                                         + commons.startingDate.substring(0,4));
                                     } else {
                                         buttonLink(commons.id);
                                     }
