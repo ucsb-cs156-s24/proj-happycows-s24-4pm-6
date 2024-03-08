@@ -48,7 +48,6 @@ describe("CommonsCard tests", () => {
     });
 
     test("cannot join commons with future start date - future year", async () => {
-        const curr = new Date();
         const futureYearCommon = commonsFixtures.threeCommons[2];
         futureYearCommon.startingDate = new Date(curr.getFullYear() + 1, curr.getMonth(), curr.getDate()).toISOString().substring(0, 10);
         const click = jest.fn();
@@ -69,7 +68,6 @@ describe("CommonsCard tests", () => {
     });
 
     test("cannot join commons with future start date - future month", async () => {
-        const curr = new Date();
         const futureCommon = commonsFixtures.threeCommons[2];
         futureCommon.startingDate = new Date(curr.getFullYear(), curr.getMonth() + 2, curr.getDate()).toISOString().substring(0, 10);
         const click = jest.fn();
@@ -90,7 +88,6 @@ describe("CommonsCard tests", () => {
     });
 
     test("cannot join commons with future start date - future day", async () => {
-        const curr = new Date();
         const futureCommon = commonsFixtures.threeCommons[2];
         futureCommon.startingDate = new Date(curr.getFullYear(), curr.getMonth(), curr.getDate() + 1).toISOString().substring(0, 10);
         const click = jest.fn();
@@ -111,7 +108,6 @@ describe("CommonsCard tests", () => {
     });
 
     test("can join commons with current date", async () => {
-        const curr = new Date();
         const futureCommon = commonsFixtures.threeCommons[2];
         futureCommon.startingDate = new Date(curr.getFullYear(), curr.getMonth(), curr.getDate()).toISOString().substring(0, 10);
         const click = jest.fn();
