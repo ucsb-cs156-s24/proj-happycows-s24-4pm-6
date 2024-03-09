@@ -1,13 +1,22 @@
 import React from 'react';
 import {Modal, Button, Form} from 'react-bootstrap'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ManageCowsModal = ({number, setNumber, isOpen, onClose, message, userCommons, onBuy, onSell }) => {
     const handleInputChange = (e) => {
+        if(e.target.value < 0){
+          toast.warn(`Warning: You cannot ${message} a negative number of cows!`);
+        }
         setNumber(e.target.value);
     };
 
     const handleSubmit = (e) => {
       e.preventDefault();
+      if(number < 0){
+        window.alert(`You cannot ${message} a negative number of cows! Please enter a non-negative number.`);
+
+      } else {
       if (message.includes('buy')) {
           onBuy(userCommons, number)
       }
@@ -16,6 +25,7 @@ const ManageCowsModal = ({number, setNumber, isOpen, onClose, message, userCommo
       }
       setNumber(1);
       onClose(); // Close the modal
+    }
     };
 
     const handleClose = () => {
