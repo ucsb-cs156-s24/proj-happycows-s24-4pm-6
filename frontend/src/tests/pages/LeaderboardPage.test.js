@@ -111,6 +111,7 @@ describe("LeaderboardPage tests", () => {
         );
         await screen.findByTestId("LeaderboardPage-back-button");
         const cancelButton = screen.getByTestId("LeaderboardPage-back-button");
+        expect(cancelButton).toHaveAttribute("style", "float: right;");
 
         fireEvent.click(cancelButton);
 
