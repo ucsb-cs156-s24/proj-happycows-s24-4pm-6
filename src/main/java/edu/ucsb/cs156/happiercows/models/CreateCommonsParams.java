@@ -24,6 +24,8 @@ public class CreateCommonsParams {
     private LocalDateTime lastDate;
     @Builder.Default
     private Boolean showLeaderboard = false;
+    @Builder.Default
+    private Boolean showChat = true;
     @NumberFormat
     private int capacityPerUser;
     @NumberFormat
