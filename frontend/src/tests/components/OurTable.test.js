@@ -491,7 +491,7 @@ describe("OurTable tests", () => {
         expect(await screen.findByTestId("testid-right-ellipsis")).toBeInTheDocument();
     });
 
-    test("renders a table with 100 rows and tests the first page button", async () => {
+    test("renders a table with 100 rows and tests the first page button visibility", async () => {
         render(
             <OurTable columns={columns} data={hundredRows} />
         );
@@ -542,7 +542,7 @@ describe("OurTable tests", () => {
         expect(await screen.findByTestId("testid-back-two-page-button")).toBeInTheDocument();
     });
 
-    test("renders a table with 100 rows and tests the last page button", async () => {
+    test("renders a table with 100 rows and tests the last page button visibiliy", async () => {
         render(
             <OurTable columns={columns} data={hundredRows} />
         );
