@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import OurTable, { ButtonColumn, DateColumn, PlaintextColumn} from "main/components/OurTable";
+import OurTable, { ButtonColumn, DateColumn, PlaintextColumn } from "main/components/OurTable";
 
 describe("OurTable tests", () => {
     const threeRows = [
@@ -23,6 +23,26 @@ describe("OurTable tests", () => {
             log: "bar\n  baz",
         }
     ];
+
+    const thirtyRows = [];
+    for(let i = 0; i < 30; i++) {
+        thirtyRows.push({
+            col1: `Hello ${i}`,
+            col2: `World ${i}`,
+            createdAt: `2021-04-01T04:00:00.000`,
+            log: `foo\nbar\n  baz ${i}`,
+        });
+    }
+
+    const hundredRows = [];
+    for(let i = 0; i < 100; i++) {
+        hundredRows.push({
+            col1: `Hello ${i}`,
+            col2: `World ${i}`,
+            createdAt: `2021-04-01T04:00:00.000`,
+            log: `foo\nbar\n  baz ${i}`,
+        });
+    }
     const clickMeCallback = jest.fn();
 
     const columns = [
@@ -89,4 +109,366 @@ describe("OurTable tests", () => {
         fireEvent.click(col1Header);
         expect(await screen.findByText("🔽")).toBeInTheDocument();
     });
+
+    test("previous and next page buttons are disabled when there is no data", async () => {
+        render(
+            <OurTable columns={columns} data={[]} />
+        );
+
+        expect((await screen.findByTestId("testid-prev-page-button")).hasAttribute("disabled")).toBe(true);
+        expect((await screen.findByTestId("testid-next-page-button")).hasAttribute("disabled")).toBe(true);
+    });
+
+    test("current page button is active when there is no data", async () => {
+        render(
+            <OurTable columns={columns} data={[]} />
+        );
+
+        expect(await screen.findByTestId("testid-current-page-button")).active;
+    });
+
+    test("renders a table with three rows without crashing", () => {
+        render(
+            <OurTable columns={columns} data={threeRows} />
+        );
+    });
+
+    test("renders a table with 30 rows without crashing", () => {
+        render(
+            <OurTable columns={columns} data={thirtyRows} />
+        );
+    });
+
+    test("renders a table with 30 rows and clicks on the next page button", async () => {
+        render(
+            <OurTable columns={columns} data={thirtyRows} />
+        );
+
+        expect(await screen.findByTestId("testid-next-page-button")).toBeInTheDocument();
+        expect((await screen.findByTestId("testid-prev-page-button")).hasAttribute("disabled")).toBe(true);
+        expect((await screen.findByTestId("testid-next-page-button")).hasAttribute("disabled")).toBe(false);
+        const nextButton = screen.getByTestId("testid-next-page-button");
+        for(let i = 0; i < 10; i++) {
+            expect(await screen.findByText(`Hello ${i}`)).toBeInTheDocument();
+        }
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("1");
+        fireEvent.click(nextButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("2");
+        expect((await screen.findByTestId("testid-prev-page-button")).hasAttribute("disabled")).toBe(false);
+        expect((await screen.findByTestId("testid-next-page-button")).hasAttribute("disabled")).toBe(false);
+        for(let i = 10; i < 20; i++) {
+            expect(await screen.findByText(`Hello ${i}`)).toBeInTheDocument();
+        }
+        fireEvent.click(nextButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("3");
+        expect((await screen.findByTestId("testid-prev-page-button")).hasAttribute("disabled")).toBe(false);
+        expect((await screen.findByTestId("testid-next-page-button")).hasAttribute("disabled")).toBe(true);
+        for(let i = 20; i < 30; i++) {
+            expect(await screen.findByText(`Hello ${i}`)).toBeInTheDocument();
+        }
+    });
+
+    test("renders a table with 100 rows and tests the first page", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+        const nextButton = screen.getByTestId("testid-next-page-button");
+        fireEvent.click(nextButton);
+        const prevButton = screen.getByTestId("testid-prev-page-button");
+        fireEvent.click(prevButton);
+
+        expect(await screen.findByTestId("testid-next-page-button")).toBeInTheDocument();
+        try {
+            await screen.findByTestId("testid-left-ellipses");
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-left-ellipses\"]");
+        }
+        try {
+            await screen.findByTestId("testid-back-three-page-button");
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-back-three-page-button\"]");
+        }
+        try {
+            await screen.findByTestId("testid-back-two-page-button");
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-back-two-page-button\"]");
+        }
+        try {
+            await screen.findByTestId("testid-back-one-page-button");
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-back-one-page-button\"]");
+        }
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("1");
+        expect(await screen.findByTestId("testid-forward-one-page-button")).toContainHTML("2");
+        expect(await screen.findByTestId("testid-forward-two-page-button")).toContainHTML("3");
+        try {
+            expect(await screen.findByTestId("testid-forward-three-page-button"));
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-forward-three-page-button\"]");
+        }
+        expect(await screen.findByTestId("testid-right-ellipsis")).toBeInTheDocument();
+        expect(await screen.findByTestId("testid-last-page-button")).toContainHTML("10");
+        for(let i = 0; i < 10; i++) {
+            expect(await screen.findByText(`Hello ${i}`)).toBeInTheDocument();
+        }
+    }, 10000);
+
+    test("renders a table with 100 rows and tests the moving back one page", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-next-page-button")).toBeInTheDocument();
+        try {
+            await screen.findByTestId("testid-left-ellipses");
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-left-ellipses\"]");
+        }
+        try {
+            await screen.findByTestId("testid-back-three-page-button");
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-back-three-page-button\"]");
+        }
+        try {
+            await screen.findByTestId("testid-back-two-page-button");
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-back-two-page-button\"]");
+        }
+        try {
+            await screen.findByTestId("testid-back-one-page-button");
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-back-one-page-button\"]");
+        }
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("1");
+        expect(await screen.findByTestId("testid-forward-one-page-button")).toContainHTML("2");
+        expect(await screen.findByTestId("testid-forward-two-page-button")).toContainHTML("3");
+        try {
+            expect(await screen.findByTestId("testid-forward-three-page-button"));
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-forward-three-page-button\"]");
+        }
+        expect(await screen.findByTestId("testid-right-ellipsis")).toBeInTheDocument();
+        expect(await screen.findByTestId("testid-last-page-button")).toContainHTML("10");
+        for(let i = 0; i < 10; i++) {
+            expect(await screen.findByText(`Hello ${i}`)).toBeInTheDocument();
+        }
+    }, 10000);
+
+    test("renders a table with 100 rows and tests the last page button", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-next-page-button")).toBeInTheDocument();
+        expect((await screen.findByTestId("testid-prev-page-button")).hasAttribute("disabled")).toBe(true);
+        expect((await screen.findByTestId("testid-next-page-button")).hasAttribute("disabled")).toBe(false);
+        const forwardOneButton = screen.getByTestId("testid-forward-one-page-button");
+        const forwardTwoButton = screen.getByTestId("testid-forward-two-page-button");
+        const lastButton = screen.getByTestId("testid-last-page-button");
+        const rightEllipsis = screen.getByTestId("testid-right-ellipsis");
+        fireEvent.click(lastButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("10");
+        for(let i = 90; i < 100; i++) {
+            expect(await screen.findByText(`Hello ${i}`)).toBeInTheDocument();
+        }
+        expect(forwardOneButton).not.toBeInTheDocument();
+        expect(forwardTwoButton).not.toBeInTheDocument();
+        try {
+            expect(await screen.findByTestId("testid-forward-three-page-button"));
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-forward-three-page-button\"]");
+        }
+        expect(rightEllipsis).not.toBeInTheDocument();
+        expect(lastButton).not.toBeInTheDocument();
+        expect(await screen.findByTestId("testid-left-ellipsis")).toBeInTheDocument();
+        expect(await screen.findByTestId("testid-back-two-page-button")).toContainHTML("8");
+        expect(await screen.findByTestId("testid-back-one-page-button")).toContainHTML("9");
+    });
+
+    test("renders a table with 100 rows and tests the first page button", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-next-page-button")).toBeInTheDocument();
+        expect((await screen.findByTestId("testid-prev-page-button")).hasAttribute("disabled")).toBe(true);
+        expect((await screen.findByTestId("testid-next-page-button")).hasAttribute("disabled")).toBe(false);
+        const lastButton = screen.getByTestId("testid-last-page-button");
+        fireEvent.click(lastButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("10");
+        expect(await screen.findByTestId("testid-first-page-button")).toContainHTML("1");
+        const firstButton = screen.getByTestId("testid-first-page-button");
+        fireEvent.click(firstButton);
+    });
+
+    test("renders a table with 100 rows and tests moving forward one page", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-forward-one-page-button")).toBeInTheDocument();
+        const forwardOneButton = screen.getByTestId("testid-forward-one-page-button");
+        fireEvent.click(forwardOneButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("2");
+    });
+
+    test("renders a table with 100 rows and moving forward two pages", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-forward-two-page-button")).toBeInTheDocument();
+        const forwardTwoButton = screen.getByTestId("testid-forward-two-page-button");
+        fireEvent.click(forwardTwoButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("3");
+    });
+
+    test("renders a table with 100 rows and moving back three pages", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-forward-two-page-button")).toBeInTheDocument();
+        const forwardThreeButton = screen.getByTestId("testid-forward-two-page-button");
+        fireEvent.click(forwardThreeButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("3");
+        expect(await screen.findByTestId("testid-forward-one-page-button")).toContainHTML("4");
+        const forwardOneButton = screen.getByTestId("testid-forward-one-page-button");
+        fireEvent.click(forwardOneButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("4");
+        fireEvent.click(forwardOneButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("5");
+        expect(await screen.findByTestId("testid-back-three-page-button")).toContainHTML("2");
+        const backThreeButton = screen.getByTestId("testid-back-three-page-button");
+        fireEvent.click(backThreeButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("2");
+    });
+
+    test("renders a table with 100 rows and tests moving back one page", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-last-page-button")).toBeInTheDocument();
+        const lastButton = screen.getByTestId("testid-last-page-button");
+        fireEvent.click(lastButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("10");
+        expect(await screen.findByTestId("testid-back-one-page-button")).toContainHTML("9");
+        const backOneButton = screen.getByTestId("testid-back-one-page-button");
+        fireEvent.click(backOneButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("9");
+    });
+
+    test("renders a table with 100 rows and tests moving back two pages", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-last-page-button")).toBeInTheDocument();
+        const lastButton = screen.getByTestId("testid-last-page-button");
+        fireEvent.click(lastButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("10");
+        expect(await screen.findByTestId("testid-back-two-page-button")).toContainHTML("8");
+        const backTwoButton = screen.getByTestId("testid-back-two-page-button");
+        fireEvent.click(backTwoButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("8");
+    });
+
+    test("renders a table with 100 rows and tests moving forward three pages", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-last-page-button")).toBeInTheDocument();
+        const lastButton = screen.getByTestId("testid-last-page-button");
+        fireEvent.click(lastButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("10");
+        expect(await screen.findByTestId("testid-back-two-page-button")).toContainHTML("8");
+        const backTwoButton = screen.getByTestId("testid-back-two-page-button");
+        fireEvent.click(backTwoButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("8");
+        expect(await screen.findByTestId("testid-back-one-page-button")).toContainHTML("7");
+        fireEvent.click(backTwoButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("6");
+        expect(await screen.findByTestId("testid-forward-three-page-button")).toContainHTML("9");
+        try {
+            expect(await screen.findByTestId("testid-right-ellipsis"));
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-right-ellipsis\"]");
+        }
+        const forwardThreeButton = screen.getByTestId("testid-forward-three-page-button");
+        fireEvent.click(forwardThreeButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("9");
+    });
+
+    test("renders a table with 100 rows and tests left-ellipsis", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-last-page-button")).toBeInTheDocument();
+        const lastButton = screen.getByTestId("testid-last-page-button");
+        fireEvent.click(lastButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("10");
+        expect(await screen.findByTestId("testid-back-two-page-button")).toContainHTML("8");
+        const backTwoButton = screen.getByTestId("testid-back-two-page-button");
+        fireEvent.click(backTwoButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("8");
+        expect(await screen.findByTestId("testid-back-two-page-button")).toContainHTML("6");
+        fireEvent.click(backTwoButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("6");
+        expect(await screen.findByTestId("testid-left-ellipsis")).toBeInTheDocument();
+        expect(await screen.findByTestId("testid-back-one-page-button")).toContainHTML("5");
+        const backOneButton = screen.getByTestId("testid-back-one-page-button");
+        fireEvent.click(backOneButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("5");
+        try {
+            expect(await screen.findByTestId("testid-left-ellipsis"));
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-left-ellipsis\"]");
+        }
+    });
+
+    test("renders a table with 100 rows and tests right-ellipsis", async () => {
+        render(
+            <OurTable columns={columns} data={hundredRows} />
+        );
+
+        expect(await screen.findByTestId("testid-last-page-button")).toBeInTheDocument();
+        const lastButton = screen.getByTestId("testid-last-page-button");
+        fireEvent.click(lastButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("10");
+        expect(await screen.findByTestId("testid-back-two-page-button")).toContainHTML("8");
+        const backTwoButton = screen.getByTestId("testid-back-two-page-button");
+        fireEvent.click(backTwoButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("8");
+        expect(await screen.findByTestId("testid-back-two-page-button")).toContainHTML("6");
+        fireEvent.click(backTwoButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("6");
+        try {
+            expect(await screen.findByTestId("testid-right-ellipsis"));
+            expect(false).toBe(true);
+        } catch(e) {
+            expect(e.message).toMatch("Unable to find an element by: [data-testid=\"testid-right-ellipsis\"]");
+        }
+        expect(await screen.findByTestId("testid-back-one-page-button")).toContainHTML("5");
+        const backOneButton = screen.getByTestId("testid-back-one-page-button");
+        fireEvent.click(backOneButton);
+        expect(await screen.findByTestId("testid-current-page-button")).toContainHTML("5");
+        expect(await screen.findByTestId("testid-right-ellipsis")).toBeInTheDocument();
+    });
+
 });

@@ -78,7 +78,7 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
             <Pagination {...getTableProps()}>
                 <Pagination.Prev
                     onClick={() => setPageIndex(Math.max(pageIndex - 1, 0))}
-                    data-testid={`${testid}-prev-button`}
+                    data-testid={`${testid}-prev-page-button`}
                     disabled={pageIndex === 0}
                 />
                 {pageIndex > 3 && (<Pagination.Item
@@ -87,8 +87,8 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                 >
                     {1}
                 </Pagination.Item>)}
-                {pageIndex > 3 && (<Pagination.Ellipsis data-testid={`${testid}-left-ellipsis`} />)}
-                {pageIndex === 3 && (<Pagination.Item
+                {pageIndex > 4 && (<Pagination.Ellipsis data-testid={`${testid}-left-ellipsis`} />)}
+                {pageIndex === 4 && (<Pagination.Item
                     onClick={() => setPageIndex(pageIndex - 3)}
                     data-testid={`${testid}-back-three-page-button`}
                 >
@@ -107,7 +107,6 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                     {pageIndex}
                 </Pagination.Item>)}
                 <Pagination.Item
-                    onClick={() => setPageIndex(pageIndex)}
                     data-testid={`${testid}-current-page-button`}
                     active={true}
                 >
@@ -125,14 +124,14 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                 >
                     {pageIndex + 3}
                 </Pagination.Item>)}
-                {pageIndex + 3 < Math.ceil(rows.length / pageSize - 1) && (<Pagination.Item
+                {pageIndex + 4 === Math.ceil(rows.length / pageSize - 1) && (<Pagination.Item
                     onClick={() => setPageIndex(pageIndex + 3)}
                     data-testid={`${testid}-forward-three-page-button`}
                 >
                     {pageIndex + 4}
                 </Pagination.Item>)}
-                {pageIndex + 3 < Math.ceil(rows.length / pageSize - 1) && (<Pagination.Ellipsis data-testid={`${testid}-right-ellipsis`} />)}
-                {pageIndex + 3 <= Math.ceil(rows.length / pageSize - 1) && (<Pagination.Item
+                {pageIndex + 4 < Math.ceil(rows.length / pageSize - 1) && (<Pagination.Ellipsis data-testid={`${testid}-right-ellipsis`} />)}
+                {pageIndex + 4 <= Math.ceil(rows.length / pageSize - 1) && (<Pagination.Item
                     onClick={() => setPageIndex(Math.ceil(rows.length / pageSize - 1))}
                     data-testid={`${testid}-last-page-button`}
                 >
@@ -140,8 +139,8 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                 </Pagination.Item>)}
                 <Pagination.Next {...getTableBodyProps()}
                     onClick={() => setPageIndex(Math.min(pageIndex + 1, Math.ceil(rows.length / pageSize - 1)))}
-                    data-testid={`${testid}-next-button`}
-                    disabled={pageIndex === Math.ceil(rows.length / pageSize - 1)}
+                    data-testid={`${testid}-next-page-button`}
+                    disabled={pageIndex === Math.ceil(rows.length / pageSize - 1) || rows.length === 0}
                 />
             </Pagination>
         </div>
