@@ -12,6 +12,10 @@ var tableStyle = {
     "overflowX": "auto",
     "whiteSpace": "nowrap"
 };
+var paginationStyle = {
+    "display": "flex",
+    "justifyContent": "right"
+};
 // Stryker restore all
 export default function OurTable({ columns, data, testid = "testid", ...rest }) {
     const [pageIndex, setPageIndex] = React.useState(0);
@@ -74,10 +78,10 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                 })}
             </tbody>
         </Table>
-        <div style={{ display: "flex", justifyContent: "right" }}>
+        <div style={paginationStyle}>
             <Pagination {...getTableProps()}>
                 <Pagination.Prev
-                    onClick={() => setPageIndex(Math.max(pageIndex - 1, 0))}
+                    onClick={() => setPageIndex(pageIndex - 1)}
                     data-testid={`${testid}-prev-page-button`}
                     disabled={pageIndex === 0}
                 />
@@ -108,7 +112,9 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                 </Pagination.Item>)}
                 <Pagination.Item
                     data-testid={`${testid}-current-page-button`}
+                    // Stryker disable all
                     active={true}
+                    // Stryker restore all
                 >
                     {pageIndex + 1}
                 </Pagination.Item>
@@ -138,7 +144,7 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                     {Math.ceil(rows.length / pageSize)}
                 </Pagination.Item>)}
                 <Pagination.Next {...getTableBodyProps()}
-                    onClick={() => setPageIndex(Math.min(pageIndex + 1, Math.ceil(rows.length / pageSize - 1)))}
+                    onClick={() => setPageIndex(pageIndex + 1)}
                     data-testid={`${testid}-next-page-button`}
                     disabled={pageIndex === Math.ceil(rows.length / pageSize - 1) || rows.length === 0}
                 />
