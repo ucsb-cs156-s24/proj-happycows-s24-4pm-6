@@ -24,6 +24,26 @@ describe("OurTable tests", () => {
         }
     ];
 
+    const tenRows = [];
+    for(let i = 0; i < 10; i++) {
+        tenRows.push({
+            col1: `Hello ${i}`,
+            col2: `World ${i}`,
+            createdAt: `2021-04-01T04:00:00.000`,
+            log: `foo\nbar\n  baz ${i}`,
+        });
+    }
+
+    const elevenRows = [];
+    for(let i = 0; i < 11; i++) {
+        elevenRows.push({
+            col1: `Hello ${i}`,
+            col2: `World ${i}`,
+            createdAt: `2021-04-01T04:00:00.000`,
+            log: `foo\nbar\n  baz ${i}`,
+        });
+    }
+
     const thirtyRows = [];
     for(let i = 0; i < 30; i++) {
         thirtyRows.push({
@@ -138,7 +158,7 @@ describe("OurTable tests", () => {
         );
     });
 
-    test("tests that pagination isn't visible when there are less rows than rows per page", async () => {
+    test("renders a table with 3 rows and tests that pagination isn't visible when there are less rows than rows per page", async () => {
         render(
             <OurTable columns={columns} data={threeRows} />
         );
@@ -159,6 +179,39 @@ describe("OurTable tests", () => {
             tester = false;
         } catch(e) { }
         expect(tester).toBe(true);
+    });
+
+    test("renders a table with 10 rows and tests that pagination isn't visible when there are less rows than rows per page", async () => {
+        render(
+            <OurTable columns={columns} data={tenRows} />
+        );
+
+        var tester = true;
+        try {
+            await screen.findByTestId("testid-prev-page-button");
+            tester = false;
+        } catch(e) { }
+        expect(tester).toBe(true);
+        try {
+            await screen.findByTestId("testid-next-page-button");
+            tester = false;
+        } catch(e) { }
+        expect(tester).toBe(true);
+        try {
+            await screen.findByTestId("testid-current-page-button");
+            tester = false;
+        } catch(e) { }
+        expect(tester).toBe(true);
+    });
+
+    test("renders a table with 10 rows and tests that pagination is visible when there are more rows than rows per page", async () => {
+        render(
+            <OurTable columns={columns} data={elevenRows} />
+        );
+
+        expect(await screen.findByTestId("testid-prev-page-button")).toBeInTheDocument();
+        expect(await screen.findByTestId("testid-next-page-button")).toBeInTheDocument();
+        expect(await screen.findByTestId("testid-current-page-button")).toBeInTheDocument();
     });
 
     test("renders a table with 30 rows without crashing", () => {
