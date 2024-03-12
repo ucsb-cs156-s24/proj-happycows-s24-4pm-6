@@ -35,7 +35,7 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
         })
     }, useSortBy)
 
-    return (<>
+    return (<div {...getTableProps()}>
         <Table style={tableStyle} {...getTableProps()} striped bordered hover >
             <thead>
                 {headerGroups.map(headerGroup => (
@@ -78,7 +78,7 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                 })}
             </tbody>
         </Table>
-        <div style={paginationStyle}>
+        {rows.length > pageSize && (<div style={paginationStyle}>
             <Pagination {...getTableProps()}>
                 <Pagination.Prev
                     onClick={() => setPageIndex(pageIndex - 1)}
@@ -149,8 +149,8 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
                     disabled={pageIndex === Math.ceil(rows.length / pageSize - 1) || rows.length === 0}
                 />
             </Pagination>
-        </div>
-    </>)
+        </div>)}
+    </div>)
 }
 
 // The callback function for ButtonColumn should have the form
