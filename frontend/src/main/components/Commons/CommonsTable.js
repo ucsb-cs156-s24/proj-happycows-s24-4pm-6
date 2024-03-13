@@ -85,6 +85,11 @@ export default function CommonsTable({ commons, currentUser }) {
             accessor: (row, _rowIndex) => String(row.commons.showLeaderboard) // hack needed for boolean values to show up
         },
         {
+            Header:<span> Show <br /> Chat? </span>,
+            id: 'commons.showChat',
+            accessor: (row, _rowIndex) => String(row.commons.showChat)
+        },
+        {
             Header: <span> Tot <br /> Cows </span>,
             accessor: 'totalCows'
         },
