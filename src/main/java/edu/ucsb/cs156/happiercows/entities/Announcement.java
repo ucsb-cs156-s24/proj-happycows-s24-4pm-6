@@ -21,18 +21,14 @@ public class Announcement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name="commons_id", nullable = false)
     private long commonsId;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="start", nullable = false)
-    private Date start;
+    @Column(name="start_date", nullable = false)
+    private Date startDate;
 
-    @Column(name="end", nullable = true)
-    private Date end;
+    @Column(name="end_date", nullable = true)
+    private Date endDate;
 
-    @Column(name="announcement", nullable = false)
-    private String announcement;
+    @Column(name="announcement_text", nullable = false)
+    private String announcementText;
 }
