@@ -138,6 +138,7 @@ describe("CommonsForm tests", () => {
 
     [
       "CommonsForm-showLeaderboard",
+      "CommonsForm-showChat"
     ].forEach(
       (testid) => {
         const element = screen.getByTestId(testid);

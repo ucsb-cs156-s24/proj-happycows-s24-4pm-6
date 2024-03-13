@@ -54,6 +54,7 @@ describe("AdminEditCommonsPage tests", () => {
                 "capacityPerUser": 10,
                 "carryingCapacity": 100,
                 "showLeaderboard": false,
+                "showChat": false,
                 "aboveCapacityHealthUpdateStrategy": "strat1",
                 "belowCapacityHealthUpdateStrategy": "strat2"
             });
@@ -69,6 +70,7 @@ describe("AdminEditCommonsPage tests", () => {
                 "capacityPerUser": 20,
                 "carryingCapacity": 200,
                 "showLeaderboard": false,
+                "showChat": false,
                 "aboveCapacityHealthUpdateStrategy": "strat2",
                 "belowCapacityHealthUpdateStrategy": "strat3"
             });
@@ -108,6 +110,7 @@ describe("AdminEditCommonsPage tests", () => {
             const aboveCapacityHealthUpdateStrategyField = screen.getByLabelText(/When above capacity/);
             const belowCapacityHealthUpdateStrategyField = screen.getByLabelText(/When below capacity/);
             const showLeaderboardField = screen.getByLabelText(/Show Leaderboard\?/);
+            const showChatField = screen.getByLabelText(/Show Chat?\?/);
 
             expect(nameField).toHaveValue("Seths Common");
             expect(startingDateField).toHaveValue("2022-03-05");
@@ -121,6 +124,7 @@ describe("AdminEditCommonsPage tests", () => {
             expect(aboveCapacityHealthUpdateStrategyField).toHaveValue("strat1");
             expect(belowCapacityHealthUpdateStrategyField).toHaveValue("strat2");
             expect(showLeaderboardField).not.toBeChecked();
+            expect(showChatField).not.toBeChecked();
         });
 
         test("Changes when you click Update", async () => {
@@ -146,6 +150,8 @@ describe("AdminEditCommonsPage tests", () => {
             const aboveCapacityHealthUpdateStrategyField = screen.getByLabelText(/When above capacity/);
             const belowCapacityHealthUpdateStrategyField = screen.getByLabelText(/When below capacity/);
             const showLeaderboardField = screen.getByLabelText(/Show Leaderboard\?/);
+            const showChatField = screen.getByLabelText(/Show Chat?\?/);
+
 
             expect(nameField).toHaveValue("Seths Common");
             expect(startingDateField).toHaveValue("2022-03-05");
@@ -159,6 +165,7 @@ describe("AdminEditCommonsPage tests", () => {
             expect(aboveCapacityHealthUpdateStrategyField).toHaveValue("strat1");
             expect(belowCapacityHealthUpdateStrategyField).toHaveValue("strat2");
             expect(showLeaderboardField).not.toBeChecked();
+            expect(showChatField).not.toBeChecked();
 
             const submitButton = screen.getByText("Update");
 
@@ -176,6 +183,7 @@ describe("AdminEditCommonsPage tests", () => {
             fireEvent.change(aboveCapacityHealthUpdateStrategyField, { target: { value: "strat2" } })
             fireEvent.change(belowCapacityHealthUpdateStrategyField, { target: { value: "strat3" } })
             fireEvent.click(showLeaderboardField)
+            fireEvent.click(showChatField)
 
             fireEvent.click(submitButton);
 
@@ -198,6 +206,7 @@ describe("AdminEditCommonsPage tests", () => {
                 "aboveCapacityHealthUpdateStrategy": "strat2",
                 "belowCapacityHealthUpdateStrategy": "strat3",
                 "showLeaderboard": true,
+                "showChat": true
             })); // posted object
         });
     });
