@@ -13,6 +13,7 @@ import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
+import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 @RestClientTest(UpdateCowHealthJobFactoryInd.class)
 @AutoConfigureDataJpa
@@ -32,6 +33,9 @@ public class UpdateCowHealthJobFactoryIndTests {
 
     @Autowired
     UpdateCowHealthJobFactoryInd updateCowHealthJobFactoryInd;
+
+    @MockBean
+    WiremockService mockWiremockService;
 
     @Test
     void test_create() throws Exception {

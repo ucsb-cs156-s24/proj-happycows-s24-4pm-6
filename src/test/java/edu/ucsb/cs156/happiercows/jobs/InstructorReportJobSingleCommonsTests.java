@@ -14,6 +14,7 @@ import edu.ucsb.cs156.happiercows.entities.Report;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.services.ReportService;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
+import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration

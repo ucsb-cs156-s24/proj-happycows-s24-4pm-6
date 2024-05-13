@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import edu.ucsb.cs156.happiercows.services.ReportService;
+import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 @RestClientTest(InstructorReportJobSingleCommonsFactory.class)
 @AutoConfigureDataJpa
@@ -20,6 +21,9 @@ public class InstructorReportJobSingleCommonsFactoryTests {
  
     @Autowired
     InstructorReportJobSingleCommonsFactory InstructorReportJobSingleCommonsFactory;
+
+    @MockBean
+    WiremockService mockWiremockService;
 
     @Test
     void test_create() throws Exception {

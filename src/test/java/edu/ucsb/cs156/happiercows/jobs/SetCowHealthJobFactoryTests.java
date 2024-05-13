@@ -12,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
+import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 @RestClientTest(SetCowHealthJobFactory.class)
 @AutoConfigureDataJpa
@@ -28,6 +29,9 @@ public class SetCowHealthJobFactoryTests {
 
     @Autowired
     SetCowHealthJobFactory setCowHealthJobFactory;
+
+    @MockBean
+    WiremockService mockWiremockService;
 
     @Test
     void test_create() throws Exception {

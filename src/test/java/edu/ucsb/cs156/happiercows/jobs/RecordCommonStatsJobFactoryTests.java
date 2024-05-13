@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.services.CommonStatsService;
+import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 @RestClientTest(RecordCommonStatsJobFactory.class)
 @AutoConfigureDataJpa
@@ -24,6 +25,9 @@ public class RecordCommonStatsJobFactoryTests {
 
     @Autowired
     RecordCommonStatsJobFactory RecordCommonStatsJobFactory;
+
+    @MockBean
+    WiremockService mockWiremockService;
 
     @Test
     void test_create() throws Exception {

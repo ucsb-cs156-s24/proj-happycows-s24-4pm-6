@@ -9,6 +9,7 @@ import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
 import edu.ucsb.cs156.happiercows.services.jobs.JobService;
+import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ScheduledJobsTests {
 
     @MockBean
     private JobService jobService;
+
+    @MockBean
+    WiremockService mockWiremockService;
 
     @Test
     void test_runUpdateCowHealthJobBasedOnCron() throws Exception {
