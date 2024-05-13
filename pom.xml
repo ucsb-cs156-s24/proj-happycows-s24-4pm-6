@@ -163,6 +163,7 @@
                         <exclude>**/edu/ucsb/cs156/happiercows/controllers/FrontendProxyController.*</exclude>
                         <exclude>**/edu/ucsb/cs156/happiercows/services/CurrentUserServiceImpl.*</exclude>
                         <exclude>**/edu/ucsb/cs156/happiercows/HappierCowsApplication.*</exclude>
+                        <exclude>**/edu/ucsb/cs156/happiercows/services/wiremock/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -250,6 +251,9 @@
                         <param>edu.ucsb.cs156.happiercows.config.SecurityConfig</param>
                         <param>edu.ucsb.cs156.happiercows.config.SecurityConfig.MyCsrfRequestMatcher</param>
                         <param>edu.ucsb.cs156.happiercows.config.SpringFoxConfig</param>
+                        <param>edu.ucsb.cs156.happiercows.services.wiremock.WiremockService</param>
+                        <param>edu.ucsb.cs156.happiercows.services.wiremock.WiremockServiceDummy</param>
+                        <param>edu.ucsb.cs156.happiercows.services.wiremock.WiremockServiceImpl</param>
                     </excludedClasses>
                     <excludedTestClasses></excludedTestClasses>
                     <excludedMethods>
