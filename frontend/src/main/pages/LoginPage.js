@@ -47,3 +47,5 @@ export default function LoginPage() {
     </div>
   )
 }
+
+export { LoginCard };

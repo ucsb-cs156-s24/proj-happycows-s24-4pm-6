@@ -117,4 +117,21 @@ describe("AppNavbar tests", () => {
         expect(await screen.findByTestId("AppNavbar")).toBeInTheDocument();
         expect(screen.queryByTestId(/AppNavbarLocalhost/i)).toBeNull();
     });
+
+    test("when oauthlogin undefined, default value is used", async () =>  {
+        const currentUser = currentUserFixtures.notLoggedIn;
+        const systemInfo = systemInfoFixtures.oauthLoginUndefined;
+        const doLogin = jest.fn();
+
+       render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AppNavbar currentUser={currentUser} systemInfo={systemInfo} doLogin={doLogin}/>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await screen.findByText("Log In");
+        expect(screen.getByText("Log In")).toHaveAttribute("href", "/oauth2/authorization/google");
+    });
 });

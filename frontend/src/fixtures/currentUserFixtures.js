@@ -193,6 +193,11 @@ const currentUserFixtures = {
     noRoot: {
         loggedIn: true,
     },
+    notLoggedIn: {
+        loggedIn: false,
+        root: {
+        },
+    }
 };
 
 export { currentUserFixtures, apiCurrentUserFixtures };
