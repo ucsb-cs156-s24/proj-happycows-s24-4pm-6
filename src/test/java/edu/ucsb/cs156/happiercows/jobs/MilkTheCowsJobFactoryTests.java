@@ -9,15 +9,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
-import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 @RestClientTest(MilkTheCowsJobFactory.class)
 @AutoConfigureDataJpa
-public class MilkTheCowsJobFactoryTests {
+public class MilkTheCowsJobFactoryTests extends JobTestCase {
 
     @MockBean
     CommonsRepository commonsRepository;
@@ -33,9 +33,6 @@ public class MilkTheCowsJobFactoryTests {
 
     @Autowired
     MilkTheCowsJobFactory MilkTheCowsJobFactory;
-
-    @MockBean
-    WiremockService mockWiremockService;
 
     @Test
     void test_create() throws Exception {

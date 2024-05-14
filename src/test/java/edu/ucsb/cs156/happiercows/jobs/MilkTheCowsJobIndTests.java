@@ -1,5 +1,6 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
@@ -21,12 +22,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class MilkTheCowsJobIndTests {
+public class MilkTheCowsJobIndTests extends JobTestCase {
     @Mock
     CommonsRepository commonsRepository;
 
