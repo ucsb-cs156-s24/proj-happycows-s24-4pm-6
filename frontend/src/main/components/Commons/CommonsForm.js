@@ -368,21 +368,45 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
                 </Col>
             </Row>
 
-            <Form.Group className="mb-3">
-                <Form.Label htmlFor="showLeaderboard">Show Leaderboard?</Form.Label>
-                <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip>When checked, regular users will have access to the leaderboard for this commons. When unchecked, only admins can see the leaderboard for this commons.</Tooltip>}
-                            delay = '100'
-                        >
-                <Form.Check
-                    data-testid={`${testid}-showLeaderboard`}
-                    type="checkbox"
-                    id="showLeaderboard"
-                    {...register("showLeaderboard")}
-                />
-                </OverlayTrigger>
-            </Form.Group>
+            <Row>
+                <Col>
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="showLeaderboard">Show Leaderboard?</Form.Label>
+                        <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={<Tooltip>When checked, regular users will have access to the leaderboard for this commons. When unchecked, only admins can see the leaderboard for this commons.</Tooltip>}
+                                    delay = '100'
+                                >
+                        <Form.Check
+                            data-testid={`${testid}-showLeaderboard`}
+                            type="checkbox"
+                            id="showLeaderboard"
+                            {...register("showLeaderboard")}
+                        />
+                        </OverlayTrigger>
+                    </Form.Group>
+                </Col>
+
+                <Col>
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="showChat">Show Chat?</Form.Label>
+                        <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={<Tooltip>When checked, regular users will have access to the chat for this commons. When unchecked, only admins can see the chat for this commons.</Tooltip>}
+                                    delay = '100'
+                                >
+                        <Form.Check
+                            data-testid={`${testid}-showChat`}
+                            type="checkbox"
+                            id="showChat"
+                            {...register("showChat")}
+                        />
+                        </OverlayTrigger>
+                    </Form.Group>
+                </Col>
+
+            </Row>
+
             <Row className="mb-5">
                 <Button type="submit"
                         data-testid="CommonsForm-Submit-Button"

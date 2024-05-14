@@ -8,6 +8,7 @@ const reportLineFixtures = {
       "startingBalance": 10000,
       "startingDate": "2023-08-06T00:00:00",
       "showLeaderboard": true,
+      "showChat": true,
       "carryingCapacity": 10,
       "degradationRate": 0.1,
       "belowCapacityHealthUpdateStrategy": "Constant",

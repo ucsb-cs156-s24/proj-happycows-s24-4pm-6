@@ -67,7 +67,7 @@ export default function HomePage({hour=null}) {
     <div data-testid={"HomePage-main-div"} style={{ backgroundSize: 'cover', backgroundImage: `url(${Background})` }}>
       <BasicLayout>
       <Card data-testid= {"HomePage-intro-card"} style={{opacity: ".9" }}>
-      <div class= "text-center border-0 my-3">
+      <div className= "text-center border-0 my-3">
               <h1 data-testid="homePage-title" className="animate-charcter" >Howdy Farmer {firstName}</h1>
               </div>
       </Card>

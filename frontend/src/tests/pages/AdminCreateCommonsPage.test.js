@@ -128,6 +128,7 @@ describe("AdminCreateCommonsPage tests", () => {
             startingDate: '2022-03-05T00:00:00.000Z',
             lastDate: '2023-03-05T00:00:00.000Z',
             showLeaderboard: false,
+            showChat: false,
             aboveCapacityHealthUpdateStrategy: "strat2",
             belowCapacityHealthUpdateStrategy: "strat3",
         };

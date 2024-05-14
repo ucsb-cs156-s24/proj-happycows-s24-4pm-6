@@ -1,77 +1,156 @@
 import React from "react";
 import { useTable, useSortBy } from 'react-table'
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Pagination } from "react-bootstrap";
 import Plaintext from "main/components/Utils/Plaintext";
+
 // Stryker disable all
 var tableStyle = {
-  "background": "white",
-  "display": "block" ,
-  "maxWidth": "-moz-fit-content" ,
-  "margin": "0 auto" ,
-  "overflowX": "auto" ,
-  "whiteSpace": "nowrap"
+    "background": "white",
+    "display": "block",
+    "maxWidth": "-moz-fit-content",
+    "margin": "0 auto",
+    "overflowX": "auto",
+    "whiteSpace": "nowrap"
+};
+var paginationStyle = {
+    "display": "flex",
+    "justifyContent": "right"
 };
 // Stryker restore all
 export default function OurTable({ columns, data, testid = "testid", ...rest }) {
+    const [pageIndex, setPageIndex] = React.useState(0);
+    const pageSize = 10;
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({
-    columns,
-    data,
-    ...(rest.initialState && {
-      initialState: rest.initialState
-    })
-  }, useSortBy)
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+    } = useTable({
+        columns,
+        data,
+        ...(rest.initialState && {
+            initialState: rest.initialState
+        })
+    }, useSortBy)
 
-  return (
-    <Table style={tableStyle} {...getTableProps()} striped bordered hover >
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                data-testid={`${testid}-header-${column.id}`}
-              >
-                {column.render('Header')}
-                <span data-testid={`${testid}-header-${column.id}-sort-carets`}>
-                  {column.isSorted
-                    ? column.isSortedDesc
-                      ? ' 🔽'
-                      : ' 🔼'
-                    : ''}
-                </span>
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row)
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell, _index) => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    data-testid={`${testid}-cell-row-${cell.row.index}-col-${cell.column.id}`}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                )
-              })}
-            </tr>
-          )
-        })}
-      </tbody>
-    </Table>
-  )
+    return (<div {...getTableProps()}>
+        <Table style={tableStyle} {...getTableProps()} striped bordered hover >
+            <thead>
+                {headerGroups.map(headerGroup => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => (
+                            <th
+                                {...column.getHeaderProps(column.getSortByToggleProps())}
+                                data-testid={`${testid}-header-${column.id}`}
+                            >
+                                {column.render('Header')}
+                                <span data-testid={`${testid}-header-${column.id}-sort-carets`}>
+                                    {column.isSorted
+                                        ? column.isSortedDesc
+                                            ? ' 🔽'
+                                            : ' 🔼'
+                                        : ''}
+                                </span>
+                            </th>
+                        ))}
+                    </tr>
+                ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+                {rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize).map(row => {
+                    prepareRow(row)
+                    return (
+                        <tr {...row.getRowProps()}>
+                            {row.cells.map((cell, _index) => {
+                                return (
+                                    <td
+                                        {...cell.getCellProps()}
+                                        data-testid={`${testid}-cell-row-${cell.row.index}-col-${cell.column.id}`}
+                                    >
+                                        {cell.render('Cell')}
+                                    </td>
+                                )
+                            })}
+                        </tr>
+                    )
+                })}
+            </tbody>
+        </Table>
+        {rows.length > pageSize && (<div style={paginationStyle}>
+            <Pagination {...getTableProps()}>
+                <Pagination.Prev
+                    onClick={() => setPageIndex(pageIndex - 1)}
+                    data-testid={`${testid}-prev-page-button`}
+                    disabled={pageIndex === 0}
+                />
+                {pageIndex > 3 && (<Pagination.Item
+                    onClick={() => setPageIndex(0)}
+                    data-testid={`${testid}-first-page-button`}
+                >
+                    {1}
+                </Pagination.Item>)}
+                {pageIndex > 4 && (<Pagination.Ellipsis data-testid={`${testid}-left-ellipsis`} />)}
+                {pageIndex === 4 && (<Pagination.Item
+                    onClick={() => setPageIndex(pageIndex - 3)}
+                    data-testid={`${testid}-back-three-page-button`}
+                >
+                    {pageIndex - 2}
+                </Pagination.Item>)}
+                {pageIndex > 1 && (<Pagination.Item
+                    onClick={() => setPageIndex(pageIndex - 2)}
+                    data-testid={`${testid}-back-two-page-button`}
+                >
+                    {pageIndex - 1}
+                </Pagination.Item>)}
+                {pageIndex > 0 && (<Pagination.Item
+                    onClick={() => setPageIndex(pageIndex - 1)}
+                    data-testid={`${testid}-back-one-page-button`}
+                >
+                    {pageIndex}
+                </Pagination.Item>)}
+                <Pagination.Item
+                    data-testid={`${testid}-current-page-button`}
+                    // Stryker disable all
+                    active={true}
+                    // Stryker restore all
+                >
+                    {pageIndex + 1}
+                </Pagination.Item>
+                {pageIndex + 1 <= Math.ceil(rows.length / pageSize - 1) && (<Pagination.Item
+                    onClick={() => setPageIndex(pageIndex + 1)}
+                    data-testid={`${testid}-forward-one-page-button`}
+                >
+                    {pageIndex + 2}
+                </Pagination.Item>)}
+                {pageIndex + 2 <= Math.ceil(rows.length / pageSize - 1) && (<Pagination.Item
+                    onClick={() => setPageIndex(pageIndex + 2)}
+                    data-testid={`${testid}-forward-two-page-button`}
+                >
+                    {pageIndex + 3}
+                </Pagination.Item>)}
+                {pageIndex + 4 === Math.ceil(rows.length / pageSize - 1) && (<Pagination.Item
+                    onClick={() => setPageIndex(pageIndex + 3)}
+                    data-testid={`${testid}-forward-three-page-button`}
+                >
+                    {pageIndex + 4}
+                </Pagination.Item>)}
+                {pageIndex + 4 < Math.ceil(rows.length / pageSize - 1) && (<Pagination.Ellipsis data-testid={`${testid}-right-ellipsis`} />)}
+                {pageIndex + 4 <= Math.ceil(rows.length / pageSize - 1) && (<Pagination.Item
+                    onClick={() => setPageIndex(Math.ceil(rows.length / pageSize - 1))}
+                    data-testid={`${testid}-last-page-button`}
+                >
+                    {Math.ceil(rows.length / pageSize)}
+                </Pagination.Item>)}
+                <Pagination.Next {...getTableBodyProps()}
+                    onClick={() => setPageIndex(pageIndex + 1)}
+                    data-testid={`${testid}-next-page-button`}
+                    disabled={pageIndex === Math.ceil(rows.length / pageSize - 1) || rows.length === 0}
+                />
+            </Pagination>
+        </div>)}
+    </div>)
 }
 
 // The callback function for ButtonColumn should have the form
@@ -100,65 +179,65 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
 // ];
 
 export function ButtonColumn(label, variant, callback, testid) {
-  const column = {
-    Header: label,
-    id: label,
-    Cell: ({ cell }) => (
-      <Button
-        variant={variant}
-        onClick={() => callback(cell)}
-        data-testid={`${testid}-cell-row-${cell.row.index}-col-${cell.column.id}-button`}
-      >
-        {label}
-      </Button>
-    )
-  }
-  return column;
+    const column = {
+        Header: label,
+        id: label,
+        Cell: ({ cell }) => (
+            <Button
+                variant={variant}
+                onClick={() => callback(cell)}
+                data-testid={`${testid}-cell-row-${cell.row.index}-col-${cell.column.id}-button`}
+            >
+                {label}
+            </Button>
+        )
+    }
+    return column;
 }
 
 export function HrefButtonColumn(label, variant, href, testid) {
-  const column = {
-    Header: label,
-    id: label,
-    Cell: ({ cell }) => (
-      <Button
-        variant={variant}
-        href={`${href}${cell.row.values["commons.id"]}`}
-        data-testid={`${testid}-cell-row-${cell.row.index}-col-${cell.column.id}-button`}
-      >
-        {label}
-      </Button>
-    )
-  }
-  return column;
+    const column = {
+        Header: label,
+        id: label,
+        Cell: ({ cell }) => (
+            <Button
+                variant={variant}
+                href={`${href}${cell.row.values["commons.id"]}`}
+                data-testid={`${testid}-cell-row-${cell.row.index}-col-${cell.column.id}-button`}
+            >
+                {label}
+            </Button>
+        )
+    }
+    return column;
 }
 
 export function PlaintextColumn(label, getText) {
-  const column = {
-    Header: label,
-    id: label,
-    Cell: ({ cell }) => (
-      <Plaintext text={getText(cell)} />
-    )
-  }
-  return column;
+    const column = {
+        Header: label,
+        id: label,
+        Cell: ({ cell }) => (
+            <Plaintext text={getText(cell)} />
+        )
+    }
+    return column;
 }
 
 export function DateColumn(label, getDate) {
-  const options = {
-    year: 'numeric', month: 'numeric', day: 'numeric',
-    hour: 'numeric', minute: 'numeric', second: 'numeric',
-    hour12: false,
-    timeZone: 'America/Los_Angeles'
-  };
-  const column = {
-    Header: label,
-    id: label,
-    Cell: ({ cell }) => {
-      const date = new Date(getDate(cell));
-      const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
-      return (<>{formattedDate}</>)
+    const options = {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: 'numeric', minute: 'numeric', second: 'numeric',
+        hour12: false,
+        timeZone: 'America/Los_Angeles'
+    };
+    const column = {
+        Header: label,
+        id: label,
+        Cell: ({ cell }) => {
+            const date = new Date(getDate(cell));
+            const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+            return (<>{formattedDate}</>)
+        }
     }
-  }
-  return column;
+    return column;
 }

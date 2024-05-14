@@ -13,6 +13,8 @@ import Background from "../../assets/PlayPageBackground.png";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
+import "./LeaderboardPage.css"
+
 export default function LeaderboardPage() {
     const { commonsId } = useParams();
     const { data: currentUser } = useCurrentUser();
@@ -66,8 +68,15 @@ export default function LeaderboardPage() {
             }}
         >
             <BasicLayout>
-                <div className="pt-2">
-                    <h1>Leaderboard</h1>
+                <div className="pt-2 board">
+                <Button
+                    onClick={() => navigate(-1)}
+                    data-testid="LeaderboardPage-back-button"
+                    style={{ float: 'right' }}
+                >
+                    Back
+                </Button>
+                    <h1 className="name">Leaderboard</h1>
                     {showLeaderboard ? (
                         <>
                             <LeaderboardTable
@@ -79,12 +88,6 @@ export default function LeaderboardPage() {
                         <p>You're not authorized to see the leaderboard.</p>
                     )}
                 </div>
-                <Button
-                    onClick={() => navigate(-1)}
-                    data-testid="LeaderboardPage-back-button"
-                >
-                    Back
-                </Button>
             </BasicLayout>
         </div>
     );

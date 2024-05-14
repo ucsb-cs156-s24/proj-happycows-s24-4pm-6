@@ -41,6 +41,7 @@ export default function CommonsEditPage() {
         "aboveCapacityHealthUpdateStrategy": commons.aboveCapacityHealthUpdateStrategy,
         "belowCapacityHealthUpdateStrategy": commons.belowCapacityHealthUpdateStrategy,
         "showLeaderboard": commons.showLeaderboard,
+        "showChat": commons.showChat,
     }
   });
 
