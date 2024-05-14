@@ -7,7 +7,7 @@ import { useSystemInfo} from "main/utils/systemInfo";
 
 const LoginCard = () => {
   const { data: systemInfo } = useSystemInfo();
-  var oauthLogin = systemInfo?.oauthLogin || "/oauth2/authorization/google";
+  var oauthLogin = systemInfo.oauthLogin || "/oauth2/authorization/google";
   return (
     <Card style={
       // Stryker disable next-line all : no need to unit test CSS

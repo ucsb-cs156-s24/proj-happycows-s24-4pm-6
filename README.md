@@ -107,3 +107,19 @@ To access the swagger API endpoints, use:
 # Accessing Database Console
 
 * On localhost only: <http://localhost:8080/h2-console>  See also: [docs/h2-console.md](docs/h2-console.md)
+
+# To Run Integration and End-to-end Tests
+
+In order to run the integration and end-to-end test suite, using the following series of commands
+
+```
+mvn clean
+INTEGRATION=true mvn test-compile
+INTEGRATION=true mvn failsafe:integration-test
+```
+
+In order to run the end-to-end tests 'not headless' use the following instead of the last command.
+
+```
+INTEGRATION=true HEADLESS=false mvn failsafe:integration-test
+```
