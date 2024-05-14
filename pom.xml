@@ -255,7 +255,9 @@
                         <param>edu.ucsb.cs156.happiercows.services.wiremock.WiremockServiceDummy</param>
                         <param>edu.ucsb.cs156.happiercows.services.wiremock.WiremockServiceImpl</param>
                     </excludedClasses>
-                    <excludedTestClasses></excludedTestClasses>
+                    <excludedTestClasses>
+                        <param>edu.ucsb.cs156.happiercows.web.*</param>
+                    </excludedTestClasses>
                     <excludedMethods>
                         <param>flush_and_close_noPitest</param>
                     </excludedMethods>
