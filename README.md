@@ -1,11 +1,11 @@
 # HappyCows/HappierCows
 
-# Deployments
+# Deployments (S24 teams: DO NOT EDIT)
 
 | Type | Link       | 
 |------|------------|
-| prod | <https://happy-cows.dokku-02.cs.ucsb.edu/>     | 
-| qa   | <https://happy-cows-qa.dokku-02.cs.ucsb.edu/>  | 
+| prod | <https://happy-cows.dokku-00.cs.ucsb.edu/>     | 
+| qa   | <https://happy-cows-qa.dokku-00.cs.ucsb.edu/>  | 
 
 # W24 Production Deployments
 
