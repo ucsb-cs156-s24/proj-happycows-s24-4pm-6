@@ -94,6 +94,19 @@
             <version>2.0.1.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>1.41.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8-standalone</artifactId>
+            <version>2.35.1</version>
+        </dependency>
+
         <!-- To help with testing async jobs; see http://www.awaitility.org/
         https://stackoverflow.com/a/46227996 -->
         <dependency>
@@ -120,6 +133,18 @@
 
     <build>
         <plugins>
+            <!-- This fixes a problem as explained in this SO article:
+            https://stackoverflow.com/a/61936537/13960329
+            -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <configuration>
+                <!-- Activate the use of TCP to transmit events to the plugin -->
+                <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+                </configuration>
+            </plugin>
+      
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -138,6 +163,7 @@
                         <exclude>**/edu/ucsb/cs156/happiercows/controllers/FrontendProxyController.*</exclude>
                         <exclude>**/edu/ucsb/cs156/happiercows/services/CurrentUserServiceImpl.*</exclude>
                         <exclude>**/edu/ucsb/cs156/happiercows/HappierCowsApplication.*</exclude>
+                        <exclude>**/edu/ucsb/cs156/happiercows/services/wiremock/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -225,8 +251,13 @@
                         <param>edu.ucsb.cs156.happiercows.config.SecurityConfig</param>
                         <param>edu.ucsb.cs156.happiercows.config.SecurityConfig.MyCsrfRequestMatcher</param>
                         <param>edu.ucsb.cs156.happiercows.config.SpringFoxConfig</param>
+                        <param>edu.ucsb.cs156.happiercows.services.wiremock.WiremockService</param>
+                        <param>edu.ucsb.cs156.happiercows.services.wiremock.WiremockServiceDummy</param>
+                        <param>edu.ucsb.cs156.happiercows.services.wiremock.WiremockServiceImpl</param>
                     </excludedClasses>
-                    <excludedTestClasses></excludedTestClasses>
+                    <excludedTestClasses>
+                        <param>edu.ucsb.cs156.happiercows.web.*</param>
+                    </excludedTestClasses>
                     <excludedMethods>
                         <param>flush_and_close_noPitest</param>
                     </excludedMethods>
@@ -269,6 +300,105 @@
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
+        </profile>
+        <!-- to run with this profile use "WIREMOCK=true mvn spring-boot:run" -->
+        <profile>
+        <id>wiremock</id>
+        <activation>
+            <property>
+            <name>env.WIREMOCK</name>
+            </property>
+        </activation>
+        <properties>
+            <springProfiles>wiremock,development</springProfiles>
+        </properties>
+        <dependencies>
+            <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+            </dependency>
+        </dependencies>
+        </profile>
+        <!-- to run with this profile use "INTEGRATION=true mvn spring-boot:run" -->
+        <profile>
+        <id>integration</id>
+        <activation>
+            <property>
+            <name>env.INTEGRATION</name>
+            </property>
+        </activation>
+        <properties>
+            <springProfiles>integration</springProfiles>
+        </properties>
+        <dependencies>
+            <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+            </dependency>
+        </dependencies>
+        <build>
+            <plugins>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.12.1</version>
+                <configuration>
+                    <workingDirectory>frontend</workingDirectory>
+                    <installDirectory>${project.build.directory}</installDirectory>
+                </configuration>
+                <executions>
+                <execution>
+                    <id>install node and npm</id>
+                    <goals>
+                    <goal>install-node-and-npm</goal>
+                    </goals>
+                    <configuration>
+                    <nodeVersion>v16.20.0</nodeVersion>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>npm install</id>
+                    <goals>
+                    <goal>npm</goal>
+                    </goals>
+                    <configuration>
+                    <arguments>ci</arguments>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>npm run build</id>
+                    <goals>
+                    <goal>npm</goal>
+                    </goals>
+                    <configuration>
+                    <arguments>run build</arguments>
+                    </configuration>
+                </execution>
+                </executions>
+                </plugin>
+                <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                    <phase>generate-resources</phase>
+                    <configuration>
+                        <target>
+                        <copy todir="${project.build.outputDirectory}/public">
+                            <fileset dir="${project.basedir}/frontend/build" />
+                        </copy>
+                        </target>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                    </execution>
+                </executions>
+                </plugin>
+            </plugins>
+        </build>
         </profile>
         <profile>
             <id>production</id>

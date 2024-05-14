@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.entities.Report;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.services.ReportService;
@@ -17,7 +18,7 @@ import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class InstructorReportJobSingleCommonsTests {
+public class InstructorReportJobSingleCommonsTests extends JobTestCase {
 
     @MockBean
     ReportService reportService;

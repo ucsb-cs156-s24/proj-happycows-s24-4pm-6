@@ -13,7 +13,7 @@ import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.services.CurrentUserServiceImpl;
 
 @Slf4j
-@Service("currentUser")
+@Service("testingUser")
 public class MockCurrentUserServiceImpl extends CurrentUserServiceImpl {
 
   public User getMockUser(SecurityContext securityContext, Authentication authentication) {

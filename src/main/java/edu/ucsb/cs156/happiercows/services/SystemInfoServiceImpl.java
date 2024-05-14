@@ -25,11 +25,15 @@ public class SystemInfoServiceImpl extends SystemInfoService {
   @Value("${app.sourceRepo}")
   private String sourceRepo = "https://github.com/ucsb-cs156/proj-happycows";
 
+  @Value("${app.oauth.login:/oauth2/authorization/google}")
+  private String oauthLogin;
+
   public SystemInfo getSystemInfo() {
     SystemInfo si = SystemInfo.builder()
     .springH2ConsoleEnabled(this.springH2ConsoleEnabled)
     .showSwaggerUILink(this.showSwaggerUILink)
     .sourceRepo(this.sourceRepo)
+    .oauthLogin(this.oauthLogin)
     .build();
   log.info("getSystemInfo returns {}",si);
   return si;

@@ -9,11 +9,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.services.ReportService;
+import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 @RestClientTest(InstructorReportJobSingleCommonsFactory.class)
 @AutoConfigureDataJpa
-public class InstructorReportJobSingleCommonsFactoryTests {
+public class InstructorReportJobSingleCommonsFactoryTests extends JobTestCase {
 
     @MockBean
     ReportService reportService;

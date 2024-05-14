@@ -4,6 +4,7 @@ import { hasRole } from "main/utils/currentUser";
 import AppNavbarLocalhost from "main/components/Nav/AppNavbarLocalhost"
 
 export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUrl = window.location.href }) {
+  var oauthLogin = systemInfo?.oauthLogin || "/oauth2/authorization/google";
   return (
     <>
       {
@@ -64,7 +65,7 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
                     <Button onClick={doLogout}>Log Out</Button>
                   </>
                 ) : (
-                  <Button href="/oauth2/authorization/google">Log In</Button>
+                  <Button href={oauthLogin}>Log In</Button>
                 )
               }
             </Nav>

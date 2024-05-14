@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
@@ -18,7 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @RestClientTest(ScheduledJobs.class)
 @AutoConfigureDataJpa
-public class ScheduledJobsTests {
+public class ScheduledJobsTests extends JobTestCase {
 
     private class MockJobContextConsumer implements JobContextConsumer {
         @Override

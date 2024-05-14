@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
@@ -16,7 +17,7 @@ import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
 @RestClientTest(UpdateCowHealthJobFactory.class)
 @AutoConfigureDataJpa
-public class UpdateCowHealthJobFactoryTests {
+public class UpdateCowHealthJobFactoryTests extends JobTestCase {
 
     @MockBean
     CommonsRepository commonsRepository;

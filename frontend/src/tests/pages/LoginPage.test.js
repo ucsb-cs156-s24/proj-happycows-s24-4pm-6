@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
-import LoginPage from "main/pages/LoginPage";
+import LoginPage, { LoginCard } from "main/pages/LoginPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
@@ -45,5 +45,22 @@ describe("LoginPage tests", () => {
             </QueryClientProvider>
         );
 
+    });
+
+    test("when oauthlogin undefined, login card default value is used", async () =>  {
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.oauthLoginUndefined);
+
+       render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <LoginCard />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await screen.findByText("Log In");
+        expect(screen.getByText("Log In")).toHaveAttribute("href", "/oauth2/authorization/google");
     });
 });
