@@ -9,13 +9,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.services.CommonStatsService;
-import edu.ucsb.cs156.happiercows.services.wiremock.WiremockService;
 
 @RestClientTest(RecordCommonStatsJobFactory.class)
 @AutoConfigureDataJpa
-public class RecordCommonStatsJobFactoryTests {
+public class RecordCommonStatsJobFactoryTests extends JobTestCase {
 
     @MockBean
     CommonStatsService commonStatsService;
@@ -25,9 +25,6 @@ public class RecordCommonStatsJobFactoryTests {
 
     @Autowired
     RecordCommonStatsJobFactory RecordCommonStatsJobFactory;
-
-    @MockBean
-    WiremockService mockWiremockService;
 
     @Test
     void test_create() throws Exception {

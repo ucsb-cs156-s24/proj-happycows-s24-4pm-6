@@ -1,5 +1,6 @@
 package edu.ucsb.cs156.happiercows.jobs;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.UserCommons;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class SetCowHealthJobTests {
+public class SetCowHealthJobTests extends JobTestCase {
     @Mock
     CommonsRepository commonsRepository;
 

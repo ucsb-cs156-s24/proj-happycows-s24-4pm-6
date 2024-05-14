@@ -2,6 +2,7 @@ package edu.ucsb.cs156.happiercows.jobs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.ucsb.cs156.happiercows.JobTestCase;
 import edu.ucsb.cs156.happiercows.entities.jobs.Job;
 import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
 
@@ -13,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration 
-public class TestJobTests {
+public class TestJobTests extends JobTestCase {
 
     @Test
     void test_log_output_with_no_user() throws Exception {
