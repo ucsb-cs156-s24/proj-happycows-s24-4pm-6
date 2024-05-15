@@ -3,7 +3,7 @@ name: 99 - Copy issues from starter repo
 env:
     GH_TOKEN: ${{ github.token }}
     STARTER: https://github.com/ucsb-cs156/proj-happycows
-    TAG: w24
+    TAG: ${{ variables.QXX }}
 on:
   workflow_dispatch:
      
