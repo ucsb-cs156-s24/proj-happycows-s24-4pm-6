@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfitsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">happycows</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.happiercows.controllers</a> &gt; <span class="el_source">ProfitsController.java</span></div><h1>ProfitsController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.happiercows.controllers;
+
+import edu.ucsb.cs156.happiercows.entities.Profit;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
+import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Tag(name = &quot;Profits&quot;)
+@RequestMapping(&quot;/api/profits&quot;)
+@RestController
+<span class="fc" id="L29">public class ProfitsController extends ApiController {</span>
+
+    @Autowired
+    CommonsRepository commonsRepository;
+
+    @Autowired
+    UserCommonsRepository userCommonsRepository;
+
+    @Autowired
+    ProfitRepository profitRepository;
+
+    @Operation(summary = &quot;Get all profits belonging to a user commons as a admin via CommonsID and UserId&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @GetMapping(&quot;/all&quot;)
+    public Iterable&lt;Profit&gt; allProfitsByCommonsId(
+            @Parameter(name=&quot;userId&quot;) @RequestParam Long userId,
+            @Parameter(name=&quot;commonsId&quot;) @RequestParam Long commonsId
+
+    ) {
+
+<span class="fc" id="L49">        UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)</span>
+<span class="fc" id="L50">            .orElseThrow(() -&gt; new EntityNotFoundException(UserCommons.class, &quot;commonsId&quot;, commonsId, &quot;userId&quot;, userId));</span>
+
+<span class="fc" id="L52">        Iterable&lt;Profit&gt; profits = profitRepository.findAllByUserCommons(userCommons);</span>
+
+<span class="fc" id="L54">        return profits;</span>
+    }
+    @Operation(summary = &quot;Get all profits belonging to a user commons as a user via CommonsID&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @GetMapping(&quot;/all/commonsid&quot;)
+    public Iterable&lt;Profit&gt; allProfitsByCommonsId(
+            @Parameter(name=&quot;commonsId&quot;) @RequestParam Long commonsId
+    ) {
+<span class="fc" id="L62">        Long userId = getCurrentUser().getUser().getId();</span>
+
+<span class="fc" id="L64">        UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)</span>
+<span class="fc" id="L65">            .orElseThrow(() -&gt; new EntityNotFoundException(UserCommons.class, &quot;commonsId&quot;, commonsId, &quot;userId&quot;, userId));</span>
+
+<span class="fc" id="L67">        Iterable&lt;Profit&gt; profits = profitRepository.findAllByUserCommons(userCommons);</span>
+
+<span class="fc" id="L69">        return profits;</span>
+    }
+
+    @Operation(summary = &quot;Get all profits belonging to a user commons as a user via CommonsID with pagination&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @GetMapping(&quot;/paged/commonsid&quot;)
+    public Page&lt;Profit&gt; allProfitsByCommonsIdWithPagination(
+            @Parameter(name = &quot;commonsId&quot;) @RequestParam Long commonsId,
+            @Parameter(name = &quot;pageNumber&quot;, description = &quot;Page number, 0 indexed&quot;) @RequestParam(defaultValue = &quot;0&quot;) int pageNumber,
+            @Parameter(name = &quot;pageSize&quot;, description = &quot;Number of records per page&quot;) @RequestParam(defaultValue = &quot;7&quot;) int pageSize
+
+    ) {
+<span class="fc" id="L81">        Long userId = getCurrentUser().getUser().getId();</span>
+
+<span class="fc" id="L83">        UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)</span>
+<span class="fc" id="L84">                .orElseThrow(() -&gt; new EntityNotFoundException(UserCommons.class, &quot;commonsId&quot;, commonsId, &quot;userId&quot;, userId));</span>
+
+<span class="fc" id="L86">        Iterable&lt;Profit&gt; iterableProfits = profitRepository.findAllByUserCommons(userCommons);</span>
+
+<span class="fc" id="L88">        List&lt;Profit&gt; allProfits = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L89">        iterableProfits.forEach(allProfits::add);</span>
+
+<span class="fc" id="L91">        int start = pageNumber * pageSize;</span>
+<span class="fc" id="L92">        int end = Math.min((start + pageSize), allProfits.size());</span>
+<span class="fc" id="L93">        List&lt;Profit&gt; paginatedProfits = allProfits.subList(start, end);</span>
+
+<span class="fc" id="L95">        Pageable pageable = PageRequest.of(pageNumber, pageSize);</span>
+<span class="fc" id="L96">        Page&lt;Profit&gt; profitsPage = new PageImpl&lt;&gt;(paginatedProfits, pageable, allProfits.size());</span>
+
+<span class="fc" id="L98">        return profitsPage;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
