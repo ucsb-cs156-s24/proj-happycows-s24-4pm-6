@@ -1,5 +1,4 @@
 import React from "react";
-//import Pagination from 'react-bootstrap/Pagination'
 import OurTable from "main/components/OurTable";
 import { Button } from "react-bootstrap";
 import { useBackend } from "main/utils/useBackend";
