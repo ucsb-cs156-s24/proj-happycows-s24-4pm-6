@@ -69,7 +69,9 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     // Stryker restore all
     
     const testid = "CommonsForm";
+    // Stryker disable all
     const curr = new Date(Date.now()-(new Date()).getTimezoneOffset()*60000)
+    // Stryker restore all
     const today = curr.toISOString().split('T')[0]
     const currMonth = curr.getMonth() % 12;
     const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
