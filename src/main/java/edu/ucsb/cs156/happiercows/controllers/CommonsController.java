@@ -11,6 +11,7 @@ import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
 import edu.ucsb.cs156.happiercows.models.HealthUpdateStrategyList;
 import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
 import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 import edu.ucsb.cs156.happiercows.services.CommonsPlusBuilderService;
 
 
@@ -38,6 +40,9 @@ public class CommonsController extends ApiController {
 
     @Autowired
     private UserCommonsRepository userCommonsRepository;
+
+    @Autowired
+    private ProfitRepository profitRepository;
 
     @Autowired
     ObjectMapper mapper;
@@ -336,6 +341,7 @@ public class CommonsController extends ApiController {
     @Operation(summary="Delete a user from a commons")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{commonsId}/users/{userId}")
+    @Transactional
     public Object deleteUserFromCommon(@PathVariable("commonsId") Long commonsId,
                                        @PathVariable("userId") Long userId) throws Exception {
 
@@ -344,6 +350,7 @@ public class CommonsController extends ApiController {
                         UserCommons.class, "commonsId", commonsId, "userId", userId)
                 );
 
+        profitRepository.deleteByUserCommons(userCommons);
         userCommonsRepository.delete(userCommons);
 
         String responseString = String.format("user with id %d deleted from commons with id %d, %d users remain", userId, commonsId, commonsRepository.getNumUsers(commonsId).orElse(0));
