@@ -59,7 +59,31 @@ export default function HomePage({hour=null}) {
 
   let navigate = useNavigate();
   const visitButtonClick = (id) => { navigate("/play/" + id) };
-  const leaveButtonClick = null;
+  
+  // Define the leaveButtonClick function
+  const objectToLeaveCommonsParams = (commonsId) => ({
+    url: "/api/commons/leave",
+    method: "DELETE",
+    params: {
+      commonsId: commonsId
+    }
+  });
+
+  const leaveMutation = useBackendMutation(
+    objectToLeaveCommonsParams,
+    {},
+    ["/api/currentUser"]
+  );
+
+  const leaveButtonClick = (id) => {
+    leaveMutation.mutate(id, {
+      onSuccess: () => {
+        setCommonsJoined((prevCommonsJoined) =>
+          prevCommonsJoined.filter((commons) => commons.id !== id)
+        );
+      },
+    });
+  };
 
   //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
