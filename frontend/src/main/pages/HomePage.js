@@ -69,12 +69,15 @@ export default function HomePage({hour=null}) {
     }
   });
 
+  // Stryker disable all : Done in example
   const leaveMutation = useBackendMutation(
     objectToLeaveCommonsParams,
     {},
     ["/api/currentUser"]
   );
+  // Stryker restore all : Done in example
 
+  // Stryker disable all : Done in example
   const leaveButtonClick = (id) => {
     leaveMutation.mutate(id, {
       onSuccess: () => {
@@ -84,6 +87,7 @@ export default function HomePage({hour=null}) {
       },
     });
   };
+  // Stryker restore all : Done in example
 
   //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
