@@ -155,4 +155,18 @@ describe("CommonsCard tests", () => {
         fireEvent.click(button);
         expect(click).toBeCalledTimes(1);
     });
+
+    test("leave button click calls leaveButtonLink with commons id", () => {
+        const click = jest.fn();    
+        render(
+            <CommonsCard commons={commonsFixtures.threeCommons[0]} buttonText={"Visit"} leaveButtonLink={click} />
+        );
+    
+        const leaveButton = screen.getByTestId("commonsCard-button-leave-5");
+        expect(leaveButton).toBeInTheDocument();
+        expect(typeof (leaveButton.textContent)).toBe('string');
+        expect(leaveButton.textContent).toEqual('Leave');
+        fireEvent.click(leaveButton);
+        expect(click).toBeCalledTimes(1);
+    });
 });
