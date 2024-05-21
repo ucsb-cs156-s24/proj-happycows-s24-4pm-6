@@ -14,13 +14,10 @@ import java.util.Optional;
 public interface UserCommonsRepository extends CrudRepository<UserCommons, UserCommonsKey> {
     @Query("SELECT uc FROM user_commons uc WHERE uc.commons.id = :commonsId AND uc.user.id = :userId")
     Optional<UserCommons> findByCommonsIdAndUserId(Long commonsId, Long userId);
-
     @Query("SELECT uc FROM user_commons uc WHERE uc.commons.id = :commonsId")
     Iterable<UserCommons> findByCommonsId(Long commonsId);
-
     @Query("SELECT uc.commons FROM user_commons uc WHERE uc.user.id = :userId")
     List<Commons> findAllCommonsByUserId(Long userId);
-
     @Query("SELECT uc FROM user_commons uc WHERE uc.commons.id = :commonsId AND uc.user.id = :userId")
     List<UserCommons> findAllByCommonsIdAndUserId(Long commonsId, Long userId);
 }
