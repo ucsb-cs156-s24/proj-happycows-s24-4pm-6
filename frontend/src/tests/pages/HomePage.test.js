@@ -212,4 +212,34 @@ describe("HomePage tests", () => {
 
     });
 
+    test("calls the callback when you click leave", async () => {
+        apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons;
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/commons/all").reply(200, commonsFixtures.threeCommons);
+        axiosMock.onDelete("/api/commons/leave").reply(200);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <HomePage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        expect(await screen.findByTestId("commonsCard-button-leave-1")).toBeInTheDocument();
+        const leaveButton = screen.getByTestId("commonsCard-button-leave-1");
+        fireEvent.click(leaveButton);
+
+        await waitFor(() => {
+            expect(axiosMock.history.delete.length).toBe(1);
+        });
+        expect(axiosMock.history.delete[0].url).toBe("/api/commons/leave");
+        expect(axiosMock.history.delete[0].params).toEqual({ "commonsId": 1 });
+
+        // Verify that the commonsJoined state is updated correctly
+        await waitFor(() => {
+            expect(screen.queryByTestId("commonsCard-button-leave-1")).not.toBeInTheDocument();
+        });
+    });
+
 });
