@@ -83,4 +83,6 @@ public class UsersController extends ApiController {
         userCommonsRepository.deleteAll(userCommonsList);
         return ResponseEntity.ok("User removed from commons");
     }
+
+
 }
