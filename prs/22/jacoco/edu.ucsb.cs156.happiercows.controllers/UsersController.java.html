@@ -3,32 +3,33 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.ucsb.cs156.happiercows.entities.Commons;
 import edu.ucsb.cs156.happiercows.entities.User;
-import edu.ucsb.cs156.happiercows.entities.UserCommons;
-import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
-import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 
+import java.util.List;
+import java.util.Optional;
+import org.springframework.http.HttpStatus;
+import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
+
 @Tag(name = &quot;User information (admin only)&quot;)
 @RequestMapping(&quot;/api/admin/users&quot;)
 @RestController
-<span class="fc" id="L31">public class UsersController extends ApiController {</span>
+<span class="fc" id="L32">public class UsersController extends ApiController {</span>
     @Autowired
     UserRepository userRepository;
 
@@ -46,42 +47,22 @@ import io.swagger.v3.oas.annotations.Operation;
     @GetMapping(&quot;&quot;)
     public ResponseEntity&lt;String&gt; users()
             throws JsonProcessingException {
-<span class="fc" id="L49">        Iterable&lt;User&gt; users = userRepository.findAll();</span>
-<span class="fc" id="L50">        String body = mapper.writeValueAsString(users);</span>
-<span class="fc" id="L51">        return ResponseEntity.ok().body(body);</span>
+<span class="fc" id="L50">        Iterable&lt;User&gt; users = userRepository.findAll();</span>
+<span class="fc" id="L51">        String body = mapper.writeValueAsString(users);</span>
+<span class="fc" id="L52">        return ResponseEntity.ok().body(body);</span>
     }
 
     @Operation(summary = &quot;Get a list of commons for a specific user&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @GetMapping(&quot;/{id}/commons&quot;)
     public ResponseEntity&lt;List&lt;Commons&gt;&gt; getUserCommons(@PathVariable long id) {
-<span class="fc" id="L58">        Optional&lt;User&gt; user = userRepository.findById(id);</span>
-<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (!user.isPresent()) {</span>
-<span class="fc" id="L60">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
+<span class="fc" id="L59">        Optional&lt;User&gt; user = userRepository.findById(id);</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (!user.isPresent()) {</span>
+<span class="fc" id="L61">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);</span>
         }
-<span class="fc" id="L62">        List&lt;Commons&gt; commonsList = userCommonsRepository.findAllCommonsByUserId(id);</span>
-<span class="fc" id="L63">        return ResponseEntity.ok(commonsList);</span>
+<span class="fc" id="L63">        List&lt;Commons&gt; commonsList = userCommonsRepository.findAllCommonsByUserId(id);</span>
+<span class="fc" id="L64">        return ResponseEntity.ok(commonsList);</span>
     }
-    
-    
 
-    @Operation(summary = &quot;Remove a user from a specific commons&quot;)
-    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
-    @DeleteMapping(&quot;/{userId}/commons/{commonsId}&quot;)
-    public ResponseEntity&lt;String&gt; removeUserFromCommons(@PathVariable long userId, @PathVariable long commonsId) {
-<span class="fc" id="L72">        Optional&lt;User&gt; user = userRepository.findById(userId);</span>
-<span class="fc" id="L73">        Optional&lt;Commons&gt; commons = commonsRepository.findById(commonsId);</span>
-<span class="fc bfc" id="L74" title="All 4 branches covered.">        if (!user.isPresent() || !commons.isPresent()) {</span>
-<span class="fc" id="L75">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;User or Commons not found&quot;);</span>
-        }
-
-<span class="fc" id="L78">        List&lt;UserCommons&gt; userCommonsList = userCommonsRepository.findAllByCommonsIdAndUserId(commonsId, userId);</span>
-<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (userCommonsList.isEmpty()) {</span>
-<span class="fc" id="L80">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;User is not part of the Commons&quot;);</span>
-        }
-
-<span class="fc" id="L83">        userCommonsRepository.deleteAll(userCommonsList);</span>
-<span class="fc" id="L84">        return ResponseEntity.ok(&quot;User removed from commons&quot;);</span>
-    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
