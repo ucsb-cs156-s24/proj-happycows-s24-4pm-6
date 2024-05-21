@@ -24,7 +24,7 @@ function isFutureDate(startingDate) {
     }
 }
 
-const CommonsCard = ({ buttonText, buttonLink, commons }) => {
+const CommonsCard = ({ buttonText, buttonLink, commons, leaveButtonLink}) => {
     const testIdPrefix = "commonsCard";
     return (
         <Card.Body style={
@@ -36,11 +36,11 @@ const CommonsCard = ({ buttonText, buttonLink, commons }) => {
                     <Col sx={4} data-testid={`${testIdPrefix}-id-${commons.id}`}>{commons.id}</Col>
                     <Col sx={4} data-testid={`${testIdPrefix}-name-${commons.id}`}>{commons.name}</Col>
                     {buttonText != null &&
-                        <Col sm={4}>
+                        <Col sm={4} className="d-flex justify-content-end">
                             <Button
                                 data-testid={`${testIdPrefix}-button-${buttonText}-${commons.id}`}
                                 size="sm"
-                                className="mx-4"
+                                className="mx-2"
                                 onClick={() => {
                                     if (buttonText === "Join" && isFutureDate(commons.startingDate)) {
                                         // Stryker disable next-line all: unable to read alert text in tests
@@ -50,6 +50,16 @@ const CommonsCard = ({ buttonText, buttonLink, commons }) => {
                                     }
                                     }} >{buttonText}
                             </Button>
+                            {buttonText === "Visit" && (
+                            <Button
+                                data-testid={`${testIdPrefix}-button-leave-${commons.id}`}
+                                size="sm"
+                                className="mx-2"
+                                onClick={() => leaveButtonLink(commons.id)}
+                            >
+                                Leave
+                            </Button>
+                        )}
                         </Col>
                     }
                 </Row>

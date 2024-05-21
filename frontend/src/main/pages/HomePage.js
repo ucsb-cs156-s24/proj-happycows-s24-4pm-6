@@ -59,6 +59,7 @@ export default function HomePage({hour=null}) {
 
   let navigate = useNavigate();
   const visitButtonClick = (id) => { navigate("/play/" + id) };
+  const leaveButtonClick = null;
 
   //create a list of commons that the user hasn't joined for use in the "Join a New Commons" list.
   const commonsNotJoinedList = commonsNotJoined(commons, commonsJoined);
@@ -73,7 +74,7 @@ export default function HomePage({hour=null}) {
       </Card>
         <Container>
           <Row>
-            <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} /></Col>
+            <Col sm><CommonsList commonList={commonsJoined} title="Visit A Commons" buttonText={"Visit"} buttonLink={visitButtonClick} leaveButtonLink={leaveButtonClick} /></Col>
             <Col sm><CommonsList commonList={commonsNotJoinedList} title="Join A New Commons" buttonText={"Join"} buttonLink={mutation.mutate} /></Col>
           </Row>
         </Container>

@@ -36,7 +36,7 @@ const CommonsList = (props) => {
                 </Card.Subtitle>
                 {
                     props.commonList.map(
-                        (c) => (<CommonsCard key={c.id} commons={c} buttonText={props.buttonText} buttonLink={props.buttonLink} />)
+                        (c) => (<CommonsCard key={c.id} commons={c} buttonText={props.buttonText} buttonLink={props.buttonLink} leaveButtonLink={props.leaveButtonLink} />)
                     )
                 }
             </React.Fragment> 
