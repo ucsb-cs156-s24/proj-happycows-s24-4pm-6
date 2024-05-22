@@ -30,17 +30,10 @@ body {
   text-fill-color: transparent;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  -webkit-animation: textclip 2s linear infinite;
-          animation: textclip 2s linear infinite;
+  animation: textclip 2s linear infinite;
   display: inline-block;
   font-size: 50px;
 }
-
-@-webkit-keyframes textclip {
-    to {
-      background-position: 200% center;
-    }
-  }
 
 @keyframes textclip {
     to {
@@ -56,4 +49,4 @@ body {
     text-align: center;
 }
 
-/*# sourceMappingURL=main.8f1202b7.css.map*/
+/*# sourceMappingURL=main.46e811dc.css.map*/
