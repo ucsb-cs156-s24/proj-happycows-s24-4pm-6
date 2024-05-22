@@ -440,8 +440,8 @@ describe("PlayPage tests", () => {
             expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
         });
         
-        expect(screen.queryByTestId("commons-card")).toBeInTheDocument();
-        expect(screen.queryByText("Announcements")).toBeInTheDocument();
+        expect(screen.getByTestId("commons-card")).toBeInTheDocument();
+        expect(screen.getByText("Announcements")).toBeInTheDocument();
         
     })
     
