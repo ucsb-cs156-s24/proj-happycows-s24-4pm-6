@@ -67,7 +67,7 @@ describe("UserTable tests", () => {
         const editButton = screen.getByTestId(`edit-commons-${user.id}`);
         fireEvent.click(editButton);
 
-        await waitFor(() => expect(screen.getByText("Remove User from Commons")).toBeInTheDocument());
+        expect(await screen.findByText("Remove User from Commons")).toBeInTheDocument();
         expect(screen.getByLabelText("Commons 1")).toBeInTheDocument();
         expect(screen.getByLabelText("Commons 2")).toBeInTheDocument();
     });
@@ -86,7 +86,7 @@ describe("UserTable tests", () => {
         const editButton = screen.getByTestId(`edit-commons-${user.id}`);
         fireEvent.click(editButton);
 
-        await waitFor(() => expect(screen.getByText("Remove User from Commons")).toBeInTheDocument());
+        expect(await screen.findByText("Remove User from Commons")).toBeInTheDocument();
 
         const checkbox1 = screen.getByLabelText("Commons 1");
         const checkbox2 = screen.getByLabelText("Commons 2");
@@ -128,7 +128,7 @@ describe("UserTable tests", () => {
         const editButton = screen.getByTestId(`edit-commons-${user.id}`);
         fireEvent.click(editButton);
 
-        await waitFor(() => expect(screen.getByText("Remove User from Commons")).toBeInTheDocument());
+        expect(await screen.findByText("Remove User from Commons")).toBeInTheDocument();
 
         const checkbox1 = screen.getByLabelText("Commons 1");
         const checkbox2 = screen.getByLabelText("Commons 2");
@@ -176,7 +176,7 @@ describe("UserTable tests", () => {
         const editButton = screen.getByTestId(`edit-commons-${user.id}`);
         fireEvent.click(editButton);
 
-        await waitFor(() => expect(screen.getByText("Remove User from Commons")).toBeInTheDocument());
+        expect(await screen.findByText("Remove User from Commons")).toBeInTheDocument();
 
         const checkbox1 = screen.getByLabelText("Commons 1");
         fireEvent.click(checkbox1);
@@ -200,7 +200,7 @@ describe("UserTable tests", () => {
         const editButton = screen.getByTestId(`edit-commons-${user.id}`);
         fireEvent.click(editButton);
 
-        await waitFor(() => expect(screen.getByText("Remove User from Commons")).toBeInTheDocument());
+        expect(await screen.findByText("Remove User from Commons")).toBeInTheDocument();
         expect(screen.getByLabelText("Commons 1")).toBeInTheDocument();
         expect(screen.getByLabelText("Commons 2")).toBeInTheDocument();
     });
@@ -215,7 +215,7 @@ describe("UserTable tests", () => {
         const editButton = screen.getByTestId(`edit-commons-${user.id}`);
         fireEvent.click(editButton);
 
-        await waitFor(() => expect(screen.getByText("Remove User from Commons")).toBeInTheDocument());
+        expect(await screen.findByText("Remove User from Commons")).toBeInTheDocument();
 
         const closeButton = screen.getByText("Close");
         fireEvent.click(closeButton);
@@ -235,7 +235,8 @@ describe("UserTable tests", () => {
         const editButton = screen.getByTestId(`edit-commons-${user.id}`);
         fireEvent.click(editButton);
 
-        await waitFor(() => expect(screen.getByText("Remove User from Commons")).toBeInTheDocument());
+        expect(await screen.findByText("Remove User from Commons")).toBeInTheDocument();
+
 
         const checkbox1 = screen.getByLabelText("Commons 1");
         const checkbox2 = screen.getByLabelText("Commons 2");
@@ -262,7 +263,7 @@ describe("UserTable tests", () => {
         const editButton = screen.getByTestId(`edit-commons-${user.id}`);
         fireEvent.click(editButton);
 
-        await waitFor(() => expect(screen.getByText("Remove User from Commons")).toBeInTheDocument());
+        expect(await screen.findByText("Remove User from Commons")).toBeInTheDocument();
 
         const checkbox1 = screen.getByLabelText("Commons 1");
         const checkbox2 = screen.getByLabelText("Commons 2");
@@ -325,6 +326,4 @@ describe("UserTable tests", () => {
             });
         });
     });
-    
-
 });
