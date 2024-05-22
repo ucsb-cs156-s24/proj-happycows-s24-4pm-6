@@ -83,7 +83,7 @@ const UsersTable = ({ users }) => {
                     onClick={() => handleShow(row.original)}
                     data-testid={`edit-commons-${row.original.id}`}
                 >
-                    Edit Commons
+                    Edit
                 </Button>
             )
         }

@@ -298,7 +298,33 @@ describe("UserTable tests", () => {
     });
 
     
+    test("all Edit Commons buttons and fields are non-empty", async () => {
+        render(
+            <UsersTable users={usersFixtures.threeUsers} />
+        );
 
+        const testId = "UsersTable";
+
+        // Check each row's "Edit Commons" button ID and other fields
+        usersFixtures.threeUsers.forEach((user, index) => {
+            const editButton = screen.getByTestId(`edit-commons-${user.id}`);
+            expect(editButton).toBeInTheDocument();
+            expect(editButton.getAttribute('data-testid')).not.toBe("");
+
+            const fields = ["id", "givenName", "familyName", "email", "lastOnline", "admin", "editCommons"];
+            fields.forEach((field) => {
+                const cell = screen.getByTestId(`${testId}-cell-row-${index}-col-${field}`);
+                expect(cell).toBeInTheDocument();
+                expect(cell.textContent).not.toBe("");
+            });
+
+            const headers = ["id", "First Name", "Last Name", "Email", "Last Online", "Admin", "Edit Commons"];
+            headers.forEach( (headerText)=> {
+                const header = screen.getByText(headerText);
+                expect(header).toBeInTheDocument();
+            });
+        });
+    });
     
 
 });
