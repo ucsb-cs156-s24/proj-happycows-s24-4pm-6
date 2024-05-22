@@ -2,19 +2,9 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import PagedProfitsTable from "main/components/Commons/PagedProfitsTable";
 
-//import { timestampToDate } from "main/utils/dateUtils";
 
-
-const Profits = (/* { profits } */) => {
-    /* const profitsForTable =
-        profits ?
-        profits.map(profit => ({
-            date: timestampToDate(profit.timestamp),
-            ...profit
-        })) : 
-        // Stryker disable next-line ArrayDeclaration : no need to test what happens if [] is replaced with ["Stryker was here"]
-        [];
-        profitsForTable.reverse(); */
+const Profits = () => {
+    
     return (
         <Card>
             <Card.Header as="h5">
@@ -25,7 +15,7 @@ const Profits = (/* { profits } */) => {
                 <Card.Title>
                     You will earn profits from milking your cows everyday at 4am.
                 </Card.Title>
-                <PagedProfitsTable /*profits={profitsForTable}*/ />
+                <PagedProfitsTable  />
             </Card.Body>
         </Card>
     );
