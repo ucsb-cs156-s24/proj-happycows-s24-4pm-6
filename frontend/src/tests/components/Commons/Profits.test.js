@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import Profits from "main/components/Commons/Profits"; 
 import userCommonsFixtures from "fixtures/userCommonsFixtures"; 
-import profitsFixtures from "fixtures/profitsFixtures";
+
 import { QueryClient, QueryClientProvider } from "react-query";
 
 describe("Profits tests", () => {
