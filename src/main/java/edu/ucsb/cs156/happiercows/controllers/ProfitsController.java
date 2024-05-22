@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import java.util.Collections;
-import java.util.Comparator;
 
 @Tag(name = "Profits")
 @RequestMapping("/api/profits")
@@ -94,12 +90,7 @@ public class ProfitsController extends ApiController {
 
         int start = pageNumber * pageSize;
         int end = Math.min((start + pageSize), allProfits.size());
-
-        allProfits.sort(Comparator.comparing(Profit::getTimestamp).reversed());
-
         List<Profit> paginatedProfits = allProfits.subList(start, end);
-
-        
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Profit> profitsPage = new PageImpl<>(paginatedProfits, pageable, allProfits.size());
