@@ -44,7 +44,6 @@ const UsersTable = ({ users }) => {
         } else {
             setSelectedCommons([...selectedCommons, commonsId]);
         }
-        //console.log('Selected Commons:', selectedCommons);
     };
 
     const columns = [
