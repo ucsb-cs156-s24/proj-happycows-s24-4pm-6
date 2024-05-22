@@ -10,7 +10,6 @@ import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
 import commonsFixtures from "fixtures/commonsFixtures"; 
 import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
-import NotJoinedPage from "main/pages/NotJoinedPage";
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
