@@ -162,8 +162,8 @@ export default function PlayPage() {
         >
             <BasicLayout>
                 <Container>
-                    {(!(typeof commonsPlus == 'undefined') && (currentUser.root.user.commons.some(com => com.id == commonsPlus.commons.id))) && !!currentUser && <CommonsPlay currentUser={currentUser} />}
-                    {(!(typeof commonsPlus == 'undefined') && !(currentUser.root.user.commons.some(com => com.id == commonsPlus.commons.id))) &&  <h1>Whoa there, parder! You ain't a part of this commons!</h1> }             
+                    {(!(typeof commonsPlus == 'undefined') && (currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id))) && !!currentUser && <CommonsPlay currentUser={currentUser} />}
+                    {(!(typeof commonsPlus == 'undefined') && !(currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id))) &&  <h1>Whoa there, parder! You ain't a part of this commons!</h1> }             
                     {!!commonsPlus && (
                         <CommonsOverview
                             commonsPlus={commonsPlus}
