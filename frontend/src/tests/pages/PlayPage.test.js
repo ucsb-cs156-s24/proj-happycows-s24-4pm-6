@@ -8,9 +8,6 @@ import PlayPage from "main/pages/PlayPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
-import commonsFixtures from "fixtures/commonsFixtures"; 
-import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
-
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
     useParams: () => ({
