@@ -95,7 +95,8 @@ public class AnnouncementsController extends ApiController{
 
     @Operation(summary = "Get all announcements", description = "Get all announcements associated with a specific commons.")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    @GetMapping("/getbycommonsid")
+    // @GetMapping("/getbycommonsid")
+    @GetMapping("/all")
     public ResponseEntity<Object> getAnnouncements(@Parameter(description = "The id of the common") @RequestParam Long commonsId) {
 
         // Make sure the user is part of the commons or is an admin

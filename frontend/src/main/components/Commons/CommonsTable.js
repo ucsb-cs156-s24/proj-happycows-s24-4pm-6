@@ -39,6 +39,11 @@ export default function CommonsTable({ commons, currentUser }) {
         navigate(route)
     }
 
+    const announcementsCallback = (cell) => {
+        const route = `/admin/announcements/${cell.row.values["commons.id"]}`
+        navigate(route)
+    }
+
     const columns = [
         {
             Header: 'id',
@@ -116,6 +121,7 @@ export default function CommonsTable({ commons, currentUser }) {
         ButtonColumn("Edit", "primary", editCallback, testid),
         ButtonColumn("Delete", "danger", deleteCallback, testid),
         ButtonColumn("Leaderboard", "secondary", leaderboardCallback, testid),
+        ButtonColumn("Announcements", "warning", announcementsCallback, testid),
         HrefButtonColumn("Stats CSV", "success", `/api/commonstats/download?commonsId=`, testid),
     ];
 
