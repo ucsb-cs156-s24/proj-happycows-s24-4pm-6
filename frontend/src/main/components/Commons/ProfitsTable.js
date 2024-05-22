@@ -1,54 +1,10 @@
 import React from "react";
 import OurTable from "main/components/OurTable";
-import { Button } from "react-bootstrap";
-import { useBackend } from "main/utils/useBackend";
-import { useParams } from "react-router-dom";
 
-
-const ProfitsTable = () => {
-
-    const testId = "ProfitsTable";
-    const refreshJobsIntervalMilliseconds = 2000;
-
-    const [selectedPage, setSelectedPage] = React.useState(0);
-
-    const PROFIT_PAGE_SIZE = 5;
-    const { commonsId } = useParams();
+export default function ProfitsTable({ profits }) {
     
-    // Stryker disable all
-    const {
-        data: page
-    } = useBackend(
-        ["/api/profits/paged"],
-        {
-            method: "GET",
-            url: "/api/profits/paged/commonsid", 
-            params: {
-                commonsId: commonsId,
-                pageNumber: selectedPage,
-                pageSize: PROFIT_PAGE_SIZE,
-            }
-        },
-        {content: [], totalPages: 0},
-        { refetchInterval: refreshJobsIntervalMilliseconds }
-    );
-    // Stryker restore  all
-
-    const testid = "ProfitsTable";
-
-    const previousPageCallback = () => {
-        return () => {
-            setSelectedPage(selectedPage - 1);
-        }
-    }
-
-    const nextPageCallback = () => {
-        return () => {
-            setSelectedPage(selectedPage + 1);
-        }
-    }
-
-    const columns = 
+    // Stryker disable ArrayDeclaration : [columns] and [students] are performance optimization; mutation preserves correctness
+    const memoizedColumns = React.useMemo(() => 
         [
             {
                 Header: "Profit",
@@ -56,46 +12,24 @@ const ProfitsTable = () => {
             },
             {
                 Header: "Date",
-                accessor: "timestamp",
-                Cell: ({ value }) => new Date(value).toLocaleDateString(),
+                accessor: "date",
             },
             {
                 Header: "Health",
-                accessor: (row) => `${row.avgCowHealth.toFixed(2) + '%'}`
+                accessor: (row) => `${row.avgCowHealth + '%'}`
             },
             {
                 Header: "Cows",
                 accessor: "numCows",
             },
-        ];
-    
+        ], 
+    []);
+    const memoizedDates = React.useMemo(() => profits, [profits]);
+    // Stryker restore ArrayDeclaration
 
-    const sortees = React.useMemo(
-        () => [
-            {
-                id: "timestamp",
-                desc: true
-            }
-        ],
-        // Stryker disable next-line all
-        []
-    );
-
-
-    return (
-        <>
-            <p>Page: {selectedPage + 1}</p>
-            <Button data-testid={`${testId}-previous-button`}onClick={previousPageCallback()} disabled={ selectedPage === 0}>Previous</Button>
-            <Button data-testid={`${testId}-next-button`} onClick={nextPageCallback()} disabled={page.totalPages===0 || selectedPage === page.totalPages-1}>Next</Button>
-            < OurTable
-                data={page.content}
-                columns={columns}
-                testid={testid}
-                initialState={{ sortBy: sortees }}
-                
-            />
-        </>
-    );
-}; 
-
-export default ProfitsTable;
+    return <OurTable
+        data={memoizedDates}
+        columns={memoizedColumns}
+        testid={"ProfitsTable"}
+    />;
+};

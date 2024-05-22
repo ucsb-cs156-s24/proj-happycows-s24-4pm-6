@@ -1,12 +1,12 @@
 import React from "react";
 import { Card } from "react-bootstrap";
-import ProfitsTable from "main/components/Commons/ProfitsTable";
+import PagedProfitsTable from "main/components/Commons/PagedProfitsTable";
 
-import { timestampToDate } from "main/utils/dateUtils";
+//import { timestampToDate } from "main/utils/dateUtils";
 
 
-const Profits = ({ profits }) => {
-    const profitsForTable =
+const Profits = (/* { profits } */) => {
+    /* const profitsForTable =
         profits ?
         profits.map(profit => ({
             date: timestampToDate(profit.timestamp),
@@ -14,7 +14,7 @@ const Profits = ({ profits }) => {
         })) : 
         // Stryker disable next-line ArrayDeclaration : no need to test what happens if [] is replaced with ["Stryker was here"]
         [];
-        profitsForTable.reverse();
+        profitsForTable.reverse(); */
     return (
         <Card>
             <Card.Header as="h5">
@@ -25,7 +25,7 @@ const Profits = ({ profits }) => {
                 <Card.Title>
                     You will earn profits from milking your cows everyday at 4am.
                 </Card.Title>
-                <ProfitsTable profits={profitsForTable} />
+                <PagedProfitsTable /*profits={profitsForTable}*/ />
             </Card.Body>
         </Card>
     );
