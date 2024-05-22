@@ -388,8 +388,10 @@ describe("PlayPage tests", () => {
 
         await waitFor(() => {
             expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();
-            expect(screen.queryByTestId("commons-card")).not.toBeInTheDocument();
+            
         });
+      
+        expect(screen.queryByTestId("commons-card")).not.toBeInTheDocument();
     })
     
        test("joined test", async () => {
@@ -436,9 +438,11 @@ describe("PlayPage tests", () => {
 
         await waitFor(() => {
             expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
-            expect(screen.getByTestId("commons-card")).toBeInTheDocument();
-            expect(screen.queryByText("Announcements")).toBeInTheDocument();
         });
+        
+        expect(screen.queryByTestId("commons-card")).toBeInTheDocument();
+        expect(screen.queryByText("Announcements")).toBeInTheDocument();
+        
     })
     
    
