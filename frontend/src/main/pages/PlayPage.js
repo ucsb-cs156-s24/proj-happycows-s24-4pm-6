@@ -15,6 +15,8 @@ import Background from "../../assets/PlayPageBackground.jpg";
 import ChatPanel from "main/components/Chat/ChatPanel";
 import ManageCowsModal from "main/components/Commons/ManageCowsModal";
 
+//import { useNavigate } from "react-router-dom";
+
 export default function PlayPage() {
     const { commonsId } = useParams();
     const { data: currentUser } = useCurrentUser();
@@ -149,6 +151,8 @@ export default function PlayPage() {
         fontFamily: "Arial, sans-serif",
         fontSize: "30px",
     };
+    
+    //let navigate = useNavigate();
 
     return (
         <div
@@ -160,13 +164,17 @@ export default function PlayPage() {
         >
             <BasicLayout>
                 <Container>
-                    {!!currentUser && <CommonsPlay currentUser={currentUser} />}
+
+                    {(!(typeof commonsPlus == 'undefined') && (currentUser.root.user.commons.some(com => com.id == commonsPlus.commons.id))) && !!currentUser && <CommonsPlay currentUser={currentUser} />}
+                    {(!(typeof commonsPlus == 'undefined') && !(currentUser.root.user.commons.some(com => com.id == commonsPlus.commons.id))) &&  <h1>Whoa there, parder! You ain't a part of this commons!</h1> }
+                    
                     {!!commonsPlus && (
                         <CommonsOverview
                             commonsPlus={commonsPlus}
                             currentUser={currentUser}
                         />
                     )}
+                    
                     <br />
                     {!!userCommons && !!commonsPlus && (
                         <CardGroup>

@@ -8,6 +8,10 @@ import PlayPage from "main/pages/PlayPage";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
+import commonsFixtures from "fixtures/commonsFixtures"; 
+import commonsPlusFixtures from "fixtures/commonsPlusFixtures";
+import NotJoinedPage from "main/pages/NotJoinedPage";
+
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
     useParams: () => ({
@@ -343,4 +347,103 @@ describe("PlayPage tests", () => {
             expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
         });
     })
+    
+    test("not joined test", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        
+        axiosMock.onGet("/api/currentUser").reply(200, {
+       
+        user: {
+            id : 1,
+            fullName : "Nom Guerre",
+            givenName : "Nom",
+            familyName : "Guerre",
+            emailVerified : true,
+            admin : false,
+            commons : [
+                {
+                    id : 2,
+                    name : "TestCommons",
+                },
+                {
+                    id : 3,
+                    name : "OtherTestCommons",
+                }
+            ]
+        
+        
+        }});
+
+        axiosMock.onGet("/api/commons", { params: { id: 5 } }).reply(200, {
+            id: 5,
+            name: "Sample Commons"
+        });
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();
+            expect(screen.queryByTestId("commons-card")).not.toBeInTheDocument();
+        });
+    })
+    
+       test("joined test", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        
+        axiosMock.onGet("/api/currentUser").reply(200, {
+       
+        user: {
+            id : 1,
+            fullName : "Nom Guerre",
+            givenName : "Nom",
+            familyName : "Guerre",
+            emailVerified : true,
+            admin : false,
+            commons : [
+                {
+                    id : 1,
+                    name : "TestCommons",
+                },
+                {
+                    id : 3,
+                    name : "OtherTestCommons",
+                }
+            ]
+        
+        
+        }});
+
+        axiosMock.onGet("/api/commons", { params: { id: 5 } }).reply(200, {
+            id: 5,
+            name: "Sample Commons"
+        });
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+            expect(screen.getByTestId("commons-card")).toBeInTheDocument();
+            expect(screen.queryByText("Announcements")).toBeInTheDocument();
+        });
+    })
+    
+   
 });
