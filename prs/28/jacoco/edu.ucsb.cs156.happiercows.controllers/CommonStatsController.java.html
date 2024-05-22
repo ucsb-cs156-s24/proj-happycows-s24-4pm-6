@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonStatsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">happycows</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.happiercows.controllers</a> &gt; <span class="el_source">CommonStatsController.java</span></div><h1>CommonStatsController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.happiercows.controllers;
+
+import edu.ucsb.cs156.happiercows.entities.CommonStats;
+import edu.ucsb.cs156.happiercows.helpers.CommonStatsCSVHelper;
+import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.CommonStatsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@Tag(name = &quot;CommonStats&quot;)
+@RequestMapping(&quot;/api/commonstats&quot;)
+@RestController
+<span class="fc" id="L31">public class CommonStatsController {</span>
+
+    @Autowired
+    CommonsRepository commonsRepository;
+
+    @Autowired
+    UserCommonsRepository userCommonsRepository;
+
+    @Autowired
+    CommonStatsRepository commonStatsRepository;
+
+    @Operation(summary = &quot;Get all common stats&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @GetMapping(&quot;&quot;)
+    public Iterable&lt;CommonStats&gt; allCommonStats() {
+<span class="fc" id="L46">        return commonStatsRepository.findAll();</span>
+    }
+
+    @Operation(summary = &quot;Get all stats for a commons&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @GetMapping(&quot;/commons&quot;)
+    public Iterable&lt;CommonStats&gt; allCommonStatsForCommons(
+            @Parameter(name = &quot;commonsId&quot;) @RequestParam Long commonsId) {
+<span class="fc" id="L54">        return commonStatsRepository.findAllByCommonsId(commonsId);</span>
+    }
+
+    @Operation(summary = &quot;Get all stats for a commons as csv&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @GetMapping(value = &quot;/download&quot;)
+    public ResponseEntity&lt;Resource&gt; getCSV(
+            @Parameter(name = &quot;commonsId&quot;) @RequestParam Long commonsId) throws IOException {
+
+<span class="fc" id="L63">        Iterable&lt;CommonStats&gt; commonStats = commonStatsRepository.findAllByCommonsId(commonsId);</span>
+                
+<span class="fc" id="L65">        String filename = String.format(&quot;stats%05d.csv&quot;,commonsId);</span>
+
+<span class="fc" id="L67">        ByteArrayInputStream bais = CommonStatsCSVHelper.toCSV(commonStats);</span>
+<span class="fc" id="L68">        InputStreamResource isr = new InputStreamResource(bais);</span>
+
+<span class="fc" id="L70">        return ResponseEntity.ok()</span>
+<span class="fc" id="L71">                .header(HttpHeaders.CONTENT_DISPOSITION, &quot;attachment; filename=&quot; + filename)</span>
+<span class="fc" id="L72">                .contentType(MediaType.parseMediaType(&quot;application/csv&quot;)).body(isr);</span>
+    }
+
+    @Operation(summary = &quot;Get all stats for all commons as csv&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @GetMapping(value = &quot;/downloadAll&quot;)
+    public ResponseEntity&lt;Resource&gt; getAllCSV() throws IOException {
+
+<span class="fc" id="L80">        Iterable&lt;CommonStats&gt; commonStats = commonStatsRepository.findAll();</span>
+                
+<span class="fc" id="L82">        String filename = String.format(&quot;CommonStats.csv&quot;);</span>
+
+<span class="fc" id="L84">        ByteArrayInputStream bais = CommonStatsCSVHelper.toCSV(commonStats);</span>
+<span class="fc" id="L85">        InputStreamResource isr = new InputStreamResource(bais);</span>
+
+<span class="fc" id="L87">        return ResponseEntity.ok()</span>
+<span class="fc" id="L88">                .header(HttpHeaders.CONTENT_DISPOSITION, &quot;attachment; filename=&quot; + filename)</span>
+<span class="fc" id="L89">                .contentType(MediaType.parseMediaType(&quot;application/csv&quot;)).body(isr);</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
