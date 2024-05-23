@@ -1,4 +1,4 @@
-import { padWithZero, timestampToDate, daysSinceTimestamp, formatTime } from "main/utils/dateUtils";
+import { padWithZero, timestampToDate, daysSinceTimestamp, formatTime, getTodayCurrMonthNextMonth } from "main/utils/dateUtils";
 
 
 describe("dateUtils tests", () => {
@@ -72,4 +72,13 @@ describe("dateUtils tests", () => {
       expect(formatTime(twoWeeksAgo.toISOString())).toEqual(twoWeeksAgo.toLocaleDateString());
     });
   })
+  
+  describe("getTodayCurrMonthNextMonth tests", () => {
+    it("calculates days properly", () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-06-01T18:00'));
+      const { today, currMonth, nextMonth } = getTodayCurrMonthNextMonth();
+      expect(today).toBe('2022-06-01');
+    });
+  });
+  
 });

@@ -6,6 +6,7 @@ import commonsFixtures from "fixtures/commonsFixtures"
 import AxiosMockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import healthUpdateStrategyListFixtures from "fixtures/healthUpdateStrategyListFixtures";
+import {getTodayCurrMonthNextMonth} from "main/utils/dateUtils";
 
 // Next line uses technique from https://www.chakshunyu.com/blog/how-to-spy-on-a-named-import-in-jest/
 import * as useBackendModule from "main/utils/useBackend";
@@ -153,10 +154,7 @@ describe("CommonsForm tests", () => {
 
   it("Check Default Values and correct styles", async () => {
 
-    const curr = new Date(Date.now()-(new Date()).getTimezoneOffset()*60000)
-    const today = curr.toISOString().split('T')[0]
-    const currMonth = curr.getMonth() % 12;
-    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
+    const {today, currMonth, nextMonth} = getTodayCurrMonthNextMonth();
     const DefaultVals = {
       name: "", startingBalance: 10000, cowPrice: 100,
       milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth
@@ -287,10 +285,7 @@ describe("CommonsForm tests", () => {
   });
 
   it("renders correctly when an initialCommons is not passed in", async () => {
-    const curr = new Date(Date.now()-(new Date()).getTimezoneOffset()*60000)
-    const today = curr.toISOString().split('T')[0]
-    const currMonth = curr.getMonth() % 12;
-    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
+    const {today, currMonth, nextMonth} = getTodayCurrMonthNextMonth();
     const DefaultVals = {
       name: "", startingBalance: 10000, cowPrice: 100,
       milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth, aboveCapacityStrategy: "Linear", belowCapacityStrategy: "Constant"
@@ -359,10 +354,7 @@ test("the correct parameters are passed to useBackend", async () => {
 
   test("populates form fields with default values when initialCommons is not provided", async () => {
 
-    const curr = new Date(Date.now()-(new Date()).getTimezoneOffset()*60000)
-    const today = curr.toISOString().split('T')[0]
-    const currMonth = curr.getMonth() % 12;
-    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
+    const {today, currMonth, nextMonth} = getTodayCurrMonthNextMonth();
     const defaultValuesData = {
       name: "", startingBalance: 10000, cowPrice: 100,
       milkPrice: 1, degradationRate: 0.001, carryingCapacity: 100, startingDate: today, lastDate: nextMonth

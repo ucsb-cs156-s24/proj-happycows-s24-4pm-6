@@ -18,6 +18,14 @@ const hourInSeconds = 60 * minutesInSeconds;
 const dayInSeconds = 24 * hourInSeconds;
 const weekInSeconds = 7 * dayInSeconds;
 
+const getTodayCurrMonthNextMonth = () => {
+    const curr = new Date(Date.now()-(new Date()).getTimezoneOffset()*60000);
+    const today = curr.toISOString().split('T')[0];
+    const currMonth = curr.getMonth() % 12;
+    const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
+    return { today, currMonth, nextMonth };
+}
+
 export function formatTime(timeString) {
     if (!timeString) {
         return "";
@@ -49,4 +57,4 @@ export function formatTime(timeString) {
     return dateFromEpoch.toLocaleDateString();
 }
 
-export {timestampToDate, padWithZero, daysSinceTimestamp};
+export {timestampToDate, padWithZero, daysSinceTimestamp, getTodayCurrMonthNextMonth};
