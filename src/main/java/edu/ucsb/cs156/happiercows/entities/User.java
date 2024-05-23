@@ -31,7 +31,7 @@ public class User {
   private Instant lastOnline = Instant.now();
 
   @Builder.Default
-  private boolean suspended = false;
+  private Boolean suspended = false;
 
   @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
   @JoinTable(name = "user_commons", 
