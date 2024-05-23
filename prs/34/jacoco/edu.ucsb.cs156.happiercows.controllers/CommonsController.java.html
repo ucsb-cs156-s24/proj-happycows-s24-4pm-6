@@ -359,6 +359,27 @@ import java.util.Optional;
 <span class="fc" id="L359">        return genericMessage(responseString);</span>
     }
 
+    @Operation(summary = &quot;Leave a commons&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+    @DeleteMapping(&quot;/leave&quot;)
+    @Transactional // Add this annotation to ensure the method runs within a transaction
+    public ResponseEntity&lt;String&gt; leaveCommon(@RequestParam Long commonsId) throws Exception {
+<span class="nc" id="L367">        User currentUser = getCurrentUser().getUser();</span>
+<span class="nc" id="L368">        Long userId = currentUser.getId();</span>
+
+<span class="nc" id="L370">        UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)</span>
+<span class="nc" id="L371">                .orElseThrow(() -&gt; new EntityNotFoundException(UserCommons.class, &quot;commonsId&quot;, commonsId, &quot;userId&quot;, userId));</span>
+
+<span class="nc" id="L373">        profitRepository.deleteByUserCommons(userCommons);</span>
+
+<span class="nc" id="L375">        userCommonsRepository.delete(userCommons);</span>
+
+<span class="nc" id="L377">        String responseString = String.format(&quot;User with id %d left commons with id %d&quot;, userId, commonsId);</span>
+<span class="nc" id="L378">        return ResponseEntity.ok().body(responseString);</span>
+    }
+
+
+
     
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
