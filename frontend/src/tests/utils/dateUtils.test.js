@@ -74,14 +74,10 @@ describe("dateUtils tests", () => {
   });
   
   describe("getTodayNextMonth tests", () => {
-    it("calculates date properly", () => {
+    it("calculates date and next month properly", () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-06-01T18:00'));
       const { today, nextMonth } = getTodayNextMonth();
       expect(today).toBe('2022-06-01');
-    });
-    it("calculates next month properly", () => {
-      jest.useFakeTimers().setSystemTime(new Date('2022-06-01T18:00'));
-      const { today, nextMonth } = getTodayNextMonth();
       expect(nextMonth).toBe('2022-07-01');
     });
   });
