@@ -71,13 +71,18 @@ describe("dateUtils tests", () => {
       const twoWeeksAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
       expect(formatTime(twoWeeksAgo.toISOString())).toEqual(twoWeeksAgo.toLocaleDateString());
     });
-  })
+  });
   
   describe("getTodayNextMonth tests", () => {
-    it("calculates days properly", () => {
+    it("calculates date properly", () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-06-01T18:00'));
       const { today, nextMonth } = getTodayNextMonth();
       expect(today).toBe('2022-06-01');
+    });
+    it("calculates next month properly", () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-06-01T18:00'));
+      const { today, nextMonth } = getTodayNextMonth();
+      expect(nextMonth).toBe('2022-07-01');
     });
   });
   
