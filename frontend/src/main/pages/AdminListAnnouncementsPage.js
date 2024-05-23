@@ -1,12 +1,10 @@
 import React from "react";
 import BasicLayout from "main/layouts/BasicLayout/BasicLayout";
 import AnnouncementTable from "main/components/Announcement/AnnouncementTable";
-// import { Navigate } from 'react-router-dom'
-// import { toast } from "react-toastify"
 import { useBackend } from "main/utils/useBackend";
 import { useParams } from "react-router-dom";
-import { useCurrentUser, /*hasRole*/ } from "main/utils/currentUser";
-// import { Button } from 'react-bootstrap';
+import { useCurrentUser, hasRole } from "main/utils/currentUser";
+import { Button } from 'react-bootstrap';
 
 export default function AnnouncementsPage() {
 
@@ -14,24 +12,24 @@ export default function AnnouncementsPage() {
 
     let { commonsId } = useParams();
 
-    // const createButton = () => {
-    //     if (hasRole(currentUser, "ROLE_ADMIN")) {
-    //         return (
-    //             <Button
-    //                 variant="primary"
-    //                 href="/announcements/create"
-    //                 style={{ float: "right" }}
-    //             >
-    //                 Create Announcement 
-    //             </Button>
-    //         )
-    //     } 
-    //   }
+    const createButton = () => {
+        if (hasRole(currentUser, "ROLE_ADMIN")) {
+            return (
+                <Button
+                    variant="primary"
+                    href="/announcements/create"
+                    style={{ float: "right" }}
+                >
+                    Create Announcement 
+                </Button>
+            )
+        } 
+      }
 
     const { data: announcements, error: _error, status: _status } =
      useBackend(
       // Stryker disable next-line all : don't test internal caching of React Query
-      [`/api/announcements/all?commonsId=1`],
+      [`/api/announcements/all?commonsId=${commonsId}`],
       {  // Stryker disable next-line all : GET is the default, so changing this to "" doesn't introduce a bug
         method: "GET",
         url: `/api/announcements/all`,
@@ -39,16 +37,16 @@ export default function AnnouncementsPage() {
             commonsId
         }
       },
+      // Stryker disable next-line all : don't test default value of empty list
       []
     );
 
     return (
         <BasicLayout>
             <div className="pt-2">
-                {/* {createButton()} */}
+                {createButton()}
                 <h2>Announcements for {commonsId}</h2>
-                {/* {console.log(announcements)} */}
-                    <AnnouncementTable announcements={announcements} currentUser={currentUser}/>
+                <AnnouncementTable announcements={announcements} currentUser={currentUser}/>
             </div>
         </BasicLayout>
     );
