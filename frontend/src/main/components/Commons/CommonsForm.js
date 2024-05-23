@@ -3,7 +3,7 @@ import {useForm} from "react-hook-form";
 import {useBackend} from "main/utils/useBackend";
 import { useEffect } from "react";
 import HealthUpdateStrategiesDropdown from "main/components/Commons/HealthStrategiesUpdateDropdown";
-import {getTodayCurrMonthNextMonth} from "main/utils/dateUtils";
+import {getTodayNextMonth} from "main/utils/dateUtils";
 
 function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     let modifiedCommons = initialCommons ? { ...initialCommons } : {};  // make a shallow copy of initialCommons
@@ -70,7 +70,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     // Stryker restore all
     
     const testid = "CommonsForm";
-    const {today, currMonth, nextMonth} = getTodayCurrMonthNextMonth();
+    const {today, nextMonth} = getTodayNextMonth();
     const DefaultVals = {
         name: "",
         startingBalance: defaultValuesData?.startingBalance || "10000",
