@@ -359,5 +359,26 @@ public class CommonsController extends ApiController {
         return genericMessage(responseString);
     }
 
+    @Operation(summary = "Leave a commons")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @DeleteMapping("/leave")
+    @Transactional // Add this annotation to ensure the method runs within a transaction
+    public ResponseEntity<String> leaveCommon(@RequestParam Long commonsId) throws Exception {
+        User currentUser = getCurrentUser().getUser();
+        Long userId = currentUser.getId();
+
+        UserCommons userCommons = userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)
+                .orElseThrow(() -> new EntityNotFoundException(UserCommons.class, "commonsId", commonsId, "userId", userId));
+
+        profitRepository.deleteByUserCommons(userCommons);
+
+        userCommonsRepository.delete(userCommons);
+
+        String responseString = String.format("User with id %d left commons with id %d", userId, commonsId);
+        return ResponseEntity.ok().body(responseString);
+    }
+
+
+
     
 }
