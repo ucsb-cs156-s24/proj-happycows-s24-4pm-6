@@ -6,19 +6,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,8 +72,14 @@ public class RoleInterceptorTests {
         User activeUser = User.builder().email("testuser@example.com").admin(true).suspended(false).build();
         when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(activeUser));
 
-        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), Collections.singletonMap("email", "testuser@example.com"), "email");
-        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), "client-id");
+        OAuth2User oAuth2User = new DefaultOAuth2User(Arrays.asList(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ADMIN")
+        ), Collections.singletonMap("email", "testuser@example.com"), "email");
+        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Arrays.asList(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ADMIN")
+        ), "client-id");
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
@@ -94,5 +103,47 @@ public class RoleInterceptorTests {
 
         assertTrue(result);
         assertFalse(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+    }
+
+    @Test
+    public void testPreHandle_userNotFound_doesNotUpdateAuthorities() throws Exception {
+        when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.empty());
+
+        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), Collections.singletonMap("email", "testuser@example.com"), "email");
+        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), "client-id");
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+        boolean result = roleInterceptor.preHandle(request, response, handler);
+
+        assertTrue(result);
+        assertFalse(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+        verify(userRepository, times(1)).findByEmail("testuser@example.com");
+        assertTrue(SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+    }
+
+    @Test
+    public void testPreHandle_withActiveUser_filterRoleAdmin() throws Exception {
+        User activeUser = User.builder().email("testuser@example.com").admin(false).suspended(false).build();
+        when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(activeUser));
+
+        OAuth2User oAuth2User = new DefaultOAuth2User(Arrays.asList(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ADMIN")
+        ), Collections.singletonMap("email", "testuser@example.com"), "email");
+        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Arrays.asList(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ADMIN")
+        ), "client-id");
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+        boolean result = roleInterceptor.preHandle(request, response, handler);
+
+        assertTrue(result);
+        Set<GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .filter(grantedAuth -> !grantedAuth.getAuthority().equals("ROLE_ADMIN"))
+                .collect(Collectors.toSet());
+        assertFalse(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
     }
 }
