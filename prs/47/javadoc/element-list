@@ -1,0 +1,17 @@
+edu.ucsb.cs156.happiercows
+edu.ucsb.cs156.happiercows.advice
+edu.ucsb.cs156.happiercows.config
+edu.ucsb.cs156.happiercows.controllers
+edu.ucsb.cs156.happiercows.entities
+edu.ucsb.cs156.happiercows.entities.jobs
+edu.ucsb.cs156.happiercows.errors
+edu.ucsb.cs156.happiercows.helpers
+edu.ucsb.cs156.happiercows.interceptors
+edu.ucsb.cs156.happiercows.jobs
+edu.ucsb.cs156.happiercows.models
+edu.ucsb.cs156.happiercows.repositories
+edu.ucsb.cs156.happiercows.repositories.jobs
+edu.ucsb.cs156.happiercows.services
+edu.ucsb.cs156.happiercows.services.jobs
+edu.ucsb.cs156.happiercows.services.wiremock
+edu.ucsb.cs156.happiercows.strategies
