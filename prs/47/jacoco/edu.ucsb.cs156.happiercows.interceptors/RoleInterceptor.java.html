@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 <span class="fc" id="L38">            String email = principal.getAttribute(&quot;email&quot;);</span>
 <span class="fc" id="L39">            Optional&lt;User&gt; optionalUser = userRepository.findByEmail(email);</span>
 
-<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            if (optionalUser.isPresent()) {</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (optionalUser.isPresent()) {</span>
 <span class="fc" id="L42">                User user = optionalUser.get();</span>
 <span class="fc bfc" id="L43" title="All 2 branches covered.">                if (Boolean.TRUE.equals(user.getSuspended())) {</span>
                     // Log out suspended user
@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 
 <span class="fc" id="L50">                Collection&lt;? extends GrantedAuthority&gt; authorities = authentication.getAuthorities();</span>
 <span class="fc" id="L51">                Set&lt;GrantedAuthority&gt; revisedAuthorities = authorities.stream()</span>
-<span class="pc bpc" id="L52" title="1 of 2 branches missed.">                    .filter(grantedAuth -&gt; !grantedAuth.getAuthority().equals(&quot;ROLE_ADMIN&quot;))</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">                    .filter(grantedAuth -&gt; !grantedAuth.getAuthority().equals(&quot;ROLE_ADMIN&quot;))</span>
 <span class="fc" id="L53">                    .collect(Collectors.toSet());</span>
 
 <span class="fc bfc" id="L55" title="All 2 branches covered.">                if (user.isAdmin()) {</span>
