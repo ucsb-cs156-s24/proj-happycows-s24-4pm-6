@@ -53,6 +53,11 @@ public class AnnouncementsController extends ApiController{
         @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date endDate,
         @Parameter(description = "The announcement to be sent out") @RequestParam String announcementText) {
 
+        log.info("Received commonsId: " + commonsId);
+        log.info("Received startDate: " + startDate);
+        log.info("Received endDate: " + endDate);
+        log.info("Received announcementText: " + announcementText);
+
         User user = getCurrentUser().getUser();
         Long userId = user.getId();
 
