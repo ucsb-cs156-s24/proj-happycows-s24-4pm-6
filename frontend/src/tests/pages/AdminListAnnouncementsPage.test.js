@@ -62,7 +62,7 @@ describe("AdminListAnnouncementsPage tests", () => {
             expect(screen.getByText(/Create Announcement/)).toBeInTheDocument();
         });
         const button = screen.getByText(/Create Announcement/);
-        expect(button).toHaveAttribute("href", "/announcements/create");
+        expect(button).toHaveAttribute("href", "/admin/announcements/1/create");
         expect(button).toHaveAttribute("style", "float: right;");
     });
 
