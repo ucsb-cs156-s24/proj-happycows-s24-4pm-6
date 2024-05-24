@@ -17,7 +17,7 @@ export default function AnnouncementsPage() {
             return (
                 <Button
                     variant="primary"
-                    href="/announcements/create"
+                    href={`/admin/announcements/${commonsId}/create`}
                     style={{ float: "right" }}
                 >
                     Create Announcement 
