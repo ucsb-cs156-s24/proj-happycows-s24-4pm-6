@@ -1,4 +1,4 @@
-import { padWithZero, timestampToDate, daysSinceTimestamp, formatTime } from "main/utils/dateUtils";
+import { padWithZero, timestampToDate, daysSinceTimestamp, formatTime, getTodayNextMonth } from "main/utils/dateUtils";
 
 
 describe("dateUtils tests", () => {
@@ -71,5 +71,15 @@ describe("dateUtils tests", () => {
       const twoWeeksAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
       expect(formatTime(twoWeeksAgo.toISOString())).toEqual(twoWeeksAgo.toLocaleDateString());
     });
-  })
+  });
+  
+  describe("getTodayNextMonth tests", () => {
+    it("calculates date and next month properly", () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-06-01T18:00'));
+      const { today, nextMonth } = getTodayNextMonth();
+      expect(today).toBe('2022-06-01');
+      expect(nextMonth).toBe('2022-07-01');
+    });
+  });
+  
 });
