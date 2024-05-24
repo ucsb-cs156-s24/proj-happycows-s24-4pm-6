@@ -24,15 +24,9 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import edu.ucsb.cs156.happiercows.entities.User;
+import edu.ucsb.cs156.happiercows.interceptors.RoleInterceptor;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-
-/**
- * This class is used to configure Spring Security. 
- * 
- * Among other things, this class is partially responsible for 
- * the implementation of the ADMIN_EMAILS feature.
- */
 
 @Configuration
 @EnableWebSecurity
@@ -41,10 +35,13 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Value("${app.admin.emails}")
-  private final List<String> adminEmails = new ArrayList<String>();
+  private final List<String> adminEmails = new ArrayList<>();
 
   @Autowired
   UserRepository userRepository;
+
+  @Autowired
+  RoleInterceptor roleInterceptor;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -88,7 +85,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
           }
         }
-
       });
       return mappedAuthorities;
     };
