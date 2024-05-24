@@ -150,7 +150,9 @@ export default function PlayPage() {
         fontSize: "30px",
     };
     
-
+    const commonsLoaded = !(typeof commonsPlus == 'undefined')
+    const userJoinedCommons = commonsLoaded && (currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id));
+    const userNotJoinedCommons = commonsLoaded && !(currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id));
 
     return (
         <div
@@ -162,8 +164,8 @@ export default function PlayPage() {
         >
             <BasicLayout>
                 <Container>
-                    {(!(typeof commonsPlus == 'undefined') && (currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id))) && !!currentUser && <CommonsPlay currentUser={currentUser} />}
-                    {(!(typeof commonsPlus == 'undefined') && !(currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id))) &&  <h1>Whoa there, parder! You ain't a part of this commons!</h1> }             
+                    {userJoinedCommons && !!currentUser && <CommonsPlay currentUser={currentUser} />}
+                    {userNotJoinedCommons &&  <h1>Whoa there, parder! You ain't a part of this commons!</h1> }             
                     {!!commonsPlus && (
                         <CommonsOverview
                             commonsPlus={commonsPlus}
