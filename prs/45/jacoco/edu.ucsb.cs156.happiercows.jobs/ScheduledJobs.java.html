@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ScheduledJobs.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">happycows</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.happiercows.jobs</a> &gt; <span class="el_source">ScheduledJobs.java</span></div><h1>ScheduledJobs.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.happiercows.jobs;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
+import edu.ucsb.cs156.happiercows.services.jobs.JobService;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * This class contains methods that are scheduled to run at certain times
+ * to launch particular jobs.
+ * 
+ * The value of the &lt;code&gt;cron&lt;/code&gt; parameter to the &lt;code&gt;&amp;#64;Scheduled&lt;/code&gt;
+ * annotation is a Spring Boot cron expression, which is similar to
+ * a Unix cron expression, but with an extra field at the beginning for
+ * the seconds.
+ * 
+ * @see &lt;a href=&quot;https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html&quot;&gt;Spring Cron Syntax&lt;/a&gt;
+ * 
+ */
+
+@Component(&quot;scheduledJobs&quot;)
+<span class="fc" id="L25">@Slf4j</span>
+<span class="fc" id="L26">public class ScheduledJobs {</span>
+
+   @Autowired
+   private JobService jobService;
+
+   @Autowired
+   UpdateCowHealthJobFactory updateCowHealthJobFactory;
+
+   @Autowired
+   MilkTheCowsJobFactory milkTheCowsJobFactory;
+
+   @Autowired
+   RecordCommonStatsJobFactory recordCommonStatsJobFactory;
+   
+   @Scheduled(cron = &quot;${app.updateCowHealth.cron}&quot;, zone = &quot;${spring.jackson.time-zone}&quot;)
+   public void runUpdateCowHealthJobBasedOnCron() {
+<span class="fc" id="L42">      log.info(&quot;runUpdateCowHealthJobBasedOnCron: running&quot;);</span>
+
+<span class="fc" id="L44">      JobContextConsumer updateCowHealthJob = updateCowHealthJobFactory.create();</span>
+<span class="fc" id="L45">      jobService.runAsJob(updateCowHealthJob);</span>
+   
+<span class="fc" id="L47">      log.info(&quot;runUpdateCowHealthJobBasedOnCron: launched job&quot;);</span>
+<span class="fc" id="L48">   }</span>
+
+   @Scheduled(cron = &quot;${app.milkTheCows.cron}&quot;, zone = &quot;${spring.jackson.time-zone}&quot;)
+   public void runMilkTheCowsJobBasedOnCron() {
+<span class="fc" id="L52">      log.info(&quot;runMilkTheCowsJobBasedOnCron: running&quot;);</span>
+
+<span class="fc" id="L54">      JobContextConsumer milkTheCowsJob = milkTheCowsJobFactory.create();</span>
+<span class="fc" id="L55">      jobService.runAsJob(milkTheCowsJob);</span>
+   
+<span class="fc" id="L57">      log.info(&quot;runMilkTheCowsJobBasedOnCron: launched job&quot;);</span>
+<span class="fc" id="L58">   }</span>
+
+   @Scheduled(cron = &quot;${app.recordCommonStats.cron}&quot;, zone = &quot;${spring.jackson.time-zone}&quot;)
+   public void runRecordCommonStatsJobBasedOnCron() {
+<span class="fc" id="L62">      log.info(&quot;runRecordCommonStatsJobBasedOnCron: running&quot;);</span>
+
+<span class="fc" id="L64">      JobContextConsumer recordCommonStatsJob = recordCommonStatsJobFactory.create();</span>
+<span class="fc" id="L65">      jobService.runAsJob(recordCommonStatsJob);</span>
+
+<span class="fc" id="L67">      log.info(&quot;runRecordCommonStatsJobBasedOnCron: launched job&quot;);</span>
+<span class="fc" id="L68">   }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
