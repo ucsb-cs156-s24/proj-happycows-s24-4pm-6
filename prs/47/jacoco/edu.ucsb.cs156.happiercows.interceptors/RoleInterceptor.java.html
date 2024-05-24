@@ -33,31 +33,31 @@ import lombok.extern.slf4j.Slf4j;
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 <span class="fc" id="L34">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
 
-<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if (authentication instanceof OAuth2AuthenticationToken) {</span>
-<span class="nc" id="L37">            OAuth2User principal = ((OAuth2AuthenticationToken) authentication).getPrincipal();</span>
-<span class="nc" id="L38">            String email = principal.getAttribute(&quot;email&quot;);</span>
-<span class="nc" id="L39">            Optional&lt;User&gt; optionalUser = userRepository.findByEmail(email);</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (authentication instanceof OAuth2AuthenticationToken) {</span>
+<span class="fc" id="L37">            OAuth2User principal = ((OAuth2AuthenticationToken) authentication).getPrincipal();</span>
+<span class="fc" id="L38">            String email = principal.getAttribute(&quot;email&quot;);</span>
+<span class="fc" id="L39">            Optional&lt;User&gt; optionalUser = userRepository.findByEmail(email);</span>
 
-<span class="nc bnc" id="L41" title="All 2 branches missed.">            if (optionalUser.isPresent()) {</span>
-<span class="nc" id="L42">                User user = optionalUser.get();</span>
-<span class="nc bnc" id="L43" title="All 2 branches missed.">                if (Boolean.TRUE.equals(user.getSuspended())) {</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            if (optionalUser.isPresent()) {</span>
+<span class="fc" id="L42">                User user = optionalUser.get();</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">                if (Boolean.TRUE.equals(user.getSuspended())) {</span>
                     // Log out suspended user
-<span class="nc" id="L45">                    SecurityContextHolder.clearContext();</span>
-<span class="nc" id="L46">                    response.sendError(HttpServletResponse.SC_FORBIDDEN, &quot;You have been suspended from using this site; please contact the site administrator for details.&quot;);</span>
-<span class="nc" id="L47">                    return false;</span>
+<span class="fc" id="L45">                    SecurityContextHolder.clearContext();</span>
+<span class="fc" id="L46">                    response.sendError(HttpServletResponse.SC_FORBIDDEN, &quot;You have been suspended from using this site; please contact the site administrator for details.&quot;);</span>
+<span class="fc" id="L47">                    return false;</span>
                 }
 
-<span class="nc" id="L50">                Collection&lt;? extends GrantedAuthority&gt; authorities = authentication.getAuthorities();</span>
-<span class="nc" id="L51">                Set&lt;GrantedAuthority&gt; revisedAuthorities = authorities.stream()</span>
-<span class="nc bnc" id="L52" title="All 2 branches missed.">                    .filter(grantedAuth -&gt; !grantedAuth.getAuthority().equals(&quot;ROLE_ADMIN&quot;))</span>
-<span class="nc" id="L53">                    .collect(Collectors.toSet());</span>
+<span class="fc" id="L50">                Collection&lt;? extends GrantedAuthority&gt; authorities = authentication.getAuthorities();</span>
+<span class="fc" id="L51">                Set&lt;GrantedAuthority&gt; revisedAuthorities = authorities.stream()</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">                    .filter(grantedAuth -&gt; !grantedAuth.getAuthority().equals(&quot;ROLE_ADMIN&quot;))</span>
+<span class="fc" id="L53">                    .collect(Collectors.toSet());</span>
 
-<span class="nc bnc" id="L55" title="All 2 branches missed.">                if (user.isAdmin()) {</span>
-<span class="nc" id="L56">                    revisedAuthorities.add(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;));</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">                if (user.isAdmin()) {</span>
+<span class="fc" id="L56">                    revisedAuthorities.add(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;));</span>
                 }
 
-<span class="nc" id="L59">                Authentication newAuth = new OAuth2AuthenticationToken(principal, revisedAuthorities, ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId());</span>
-<span class="nc" id="L60">                SecurityContextHolder.getContext().setAuthentication(newAuth);</span>
+<span class="fc" id="L59">                Authentication newAuth = new OAuth2AuthenticationToken(principal, revisedAuthorities, ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId());</span>
+<span class="fc" id="L60">                SecurityContextHolder.getContext().setAuthentication(newAuth);</span>
             }
         }
 <span class="fc" id="L63">        return true;</span>
