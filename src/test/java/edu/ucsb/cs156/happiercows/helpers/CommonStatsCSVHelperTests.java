@@ -7,7 +7,7 @@ public class CommonStatsCSVHelperTests {
     
     @Test
     void call_constructor_so_pitest_does_not_complain() throws Exception {
-        CommonStatsCSVHelperTests helper = new CommonStatsCSVHelperTests();
+        CommonStatsCSVHelper helper = new CommonStatsCSVHelper();
         assertTrue(true);
     }
 }
