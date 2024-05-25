@@ -123,3 +123,25 @@ In order to run the end-to-end tests 'not headless' use the following instead of
 ```
 INTEGRATION=true HEADLESS=false mvn failsafe:integration-test
 ```
+
+## Partial pitest runs
+
+This repo has support for partial pitest runs
+
+For example, to run pitest on just one class, use:
+
+```
+mvn pitest:mutationCoverage -DtargetClasses=edu.ucsb.cs156.happiercows.controllers.CommonsController
+```
+
+To run pitest on just one package, use:
+
+```
+mvn pitest:mutationCoverage -DtargetClasses=edu.ucsb.cs156.happiercows.controllers.\*
+```
+
+To run full mutation test coverage, as usual, use:
+
+```
+mvn pitest:mutationCoverage
+```
