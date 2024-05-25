@@ -1,149 +1,204 @@
 package edu.ucsb.cs156.happiercows.interceptors;
 
-import edu.ucsb.cs156.happiercows.entities.User;
-import edu.ucsb.cs156.happiercows.repositories.UserRepository;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import edu.ucsb.cs156.happiercows.entities.User;
+import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
-
+@SpringBootTest
+@AutoConfigureMockMvc
 public class RoleInterceptorTests {
 
-    private RoleInterceptor roleInterceptor;
+    @MockBean
+    UserRepository userRepository;
 
-    @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private HttpServletRequest request;
-
-    @Mock
-    private HttpServletResponse response;
-
-    @Mock
-    private Object handler;
+    @Autowired
+    private RequestMappingHandlerMapping mapping;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        roleInterceptor = new RoleInterceptor();
-        roleInterceptor.userRepository = userRepository;
+    public void mockLogin() {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("sub", "sub");
+        attributes.put("name", "name");
+        attributes.put("email", "testuser@example.com"); // this needs to match email below
+        attributes.put("picture", "picture");
+        attributes.put("given_name", "given_name");
+        attributes.put("family_name", "family_name");
+        attributes.put("email_verified", true);
+        attributes.put("locale", "locale");
+        attributes.put("hd", "hd");
+
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
+        OAuth2User user = new DefaultOAuth2User(authorities, attributes, "name");
+        Authentication authentication = new OAuth2AuthenticationToken(user, authorities, "client-id");
+
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Test
-    public void testPreHandle_withSuspendedUser_logsOutUser() throws Exception {
-        User suspendedUser = User.builder().email("testuser@example.com").suspended(true).build();
+    public void RoleInterceptorIsPresent() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/currentUser");
+        HandlerExecutionChain chain = mapping.getHandler(request);
+
+        assert chain != null;
+        Optional<HandlerInterceptor> RoleInterceptor = chain.getInterceptorList()
+            .stream()
+            .filter(RoleInterceptor.class::isInstance)
+            .findFirst();
+
+        assertTrue(RoleInterceptor.isPresent());
+    }
+
+    @Test
+    public void logsOutSuspendedUser() throws Exception {
+        User suspendedUser = User.builder()
+            .email("testuser@example.com")
+            .suspended(true)
+            .build();
         when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(suspendedUser));
 
-        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), Collections.singletonMap("email", "testuser@example.com"), "email");
-        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), "client-id");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/currentUser");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HandlerExecutionChain chain = mapping.getHandler(request);
 
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        assert chain != null;
+        Optional<HandlerInterceptor> RoleInterceptor = chain.getInterceptorList()
+            .stream()
+            .filter(RoleInterceptor.class::isInstance)
+            .findFirst();
 
-        boolean result = roleInterceptor.preHandle(request, response, handler);
+        assertTrue(RoleInterceptor.isPresent());
 
-        verify(response).sendError(HttpServletResponse.SC_FORBIDDEN, "You have been suspended from using this site; please contact the site administrator for details.");
+        boolean result = RoleInterceptor.get().preHandle(request, response, chain.getHandler());
+
+        verify(userRepository, times(1)).findByEmail("testuser@example.com");
         assertFalse(result);
-        assertTrue(SecurityContextHolder.getContext().getAuthentication() == null);
+        assertTrue(response.getStatus() == HttpServletResponse.SC_FORBIDDEN);
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
     }
 
     @Test
-    public void testPreHandle_withActiveUser_updatesAuthorities() throws Exception {
-        User activeUser = User.builder().email("testuser@example.com").admin(true).suspended(false).build();
+    public void updatesAdminRoleWhenUserIsAdmin() throws Exception {
+        User activeUser = User.builder()
+            .email("testuser@example.com")
+            .admin(true)
+            .suspended(false)
+            .build();
         when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(activeUser));
 
-        OAuth2User oAuth2User = new DefaultOAuth2User(Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"),
-                new SimpleGrantedAuthority("ROLE_ADMIN")
-        ), Collections.singletonMap("email", "testuser@example.com"), "email");
-        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"),
-                new SimpleGrantedAuthority("ROLE_ADMIN")
-        ), "client-id");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/currentUser");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HandlerExecutionChain chain = mapping.getHandler(request);
 
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        assert chain != null;
+        Optional<HandlerInterceptor> RoleInterceptor = chain.getInterceptorList()
+            .stream()
+            .filter(RoleInterceptor.class::isInstance)
+            .findFirst();
 
-        boolean result = roleInterceptor.preHandle(request, response, handler);
+        assertTrue(RoleInterceptor.isPresent());
 
+        boolean result = RoleInterceptor.get().preHandle(request, response, chain.getHandler());
+
+        verify(userRepository, times(1)).findByEmail("testuser@example.com");
         assertTrue(result);
-        assertTrue(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        assertTrue(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+        assertTrue(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
     }
 
     @Test
-    public void testPreHandle_withNonAdminUser_doesNotAddAdminRole() throws Exception {
-        User nonAdminUser = User.builder().email("testuser@example.com").admin(false).suspended(false).build();
-        when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(nonAdminUser));
+    public void removesAdminRoleWhenUserIsNotAdmin() throws Exception {
+        User activeUser = User.builder()
+            .email("testuser@example.com")
+            .admin(false)
+            .suspended(false)
+            .build();
+        when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(activeUser));
 
-        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), Collections.singletonMap("email", "testuser@example.com"), "email");
-        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), "client-id");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/currentUser");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HandlerExecutionChain chain = mapping.getHandler(request);
 
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        assert chain != null;
+        Optional<HandlerInterceptor> RoleInterceptor = chain.getInterceptorList()
+            .stream()
+            .filter(RoleInterceptor.class::isInstance)
+            .findFirst();
 
-        boolean result = roleInterceptor.preHandle(request, response, handler);
+        assertTrue(RoleInterceptor.isPresent());
 
+        boolean result = RoleInterceptor.get().preHandle(request, response, chain.getHandler());
+
+        verify(userRepository, times(1)).findByEmail("testuser@example.com");
         assertTrue(result);
-        assertFalse(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        assertFalse(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+        assertTrue(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
     }
 
     @Test
-    public void testPreHandle_userNotFound_doesNotUpdateAuthorities() throws Exception {
+    public void noChangeWhenUserNotPresent() throws Exception {
         when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.empty());
 
-        OAuth2User oAuth2User = new DefaultOAuth2User(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), Collections.singletonMap("email", "testuser@example.com"), "email");
-        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), "client-id");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/currentUser");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HandlerExecutionChain chain = mapping.getHandler(request);
 
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        assert chain != null;
+        Optional<HandlerInterceptor> RoleInterceptor = chain.getInterceptorList()
+            .stream()
+            .filter(RoleInterceptor.class::isInstance)
+            .findFirst();
 
-        boolean result = roleInterceptor.preHandle(request, response, handler);
+        assertTrue(RoleInterceptor.isPresent());
 
-        assertTrue(result);
-        assertFalse(SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+        boolean result = RoleInterceptor.get().preHandle(request, response, chain.getHandler());
+
         verify(userRepository, times(1)).findByEmail("testuser@example.com");
-        assertTrue(SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
-    }
-
-    @Test
-    public void testPreHandle_withActiveUser_filterRoleAdmin() throws Exception {
-        User activeUser = User.builder().email("testuser@example.com").admin(false).suspended(false).build();
-        when(userRepository.findByEmail("testuser@example.com")).thenReturn(Optional.of(activeUser));
-
-        OAuth2User oAuth2User = new DefaultOAuth2User(Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"),
-                new SimpleGrantedAuthority("ROLE_ADMIN")
-        ), Collections.singletonMap("email", "testuser@example.com"), "email");
-        OAuth2AuthenticationToken authenticationToken = new OAuth2AuthenticationToken(oAuth2User, Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"),
-                new SimpleGrantedAuthority("ROLE_ADMIN")
-        ), "client-id");
-
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-        boolean result = roleInterceptor.preHandle(request, response, handler);
-
         assertTrue(result);
-        Set<GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .filter(grantedAuth -> !grantedAuth.getAuthority().equals("ROLE_ADMIN"))
-                .collect(Collectors.toSet());
-        assertFalse(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        assertTrue(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN")));
+        assertTrue(authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
     }
 }
