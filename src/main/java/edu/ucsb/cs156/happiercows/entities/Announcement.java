@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import org.hibernate.annotations.CreationTimestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -24,10 +24,10 @@ public class Announcement {
     private long commonsId;
 
     @Column(name="start_date", nullable = false)
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @Column(name="end_date", nullable = true)
-    private Date endDate;
+    private LocalDateTime endDate;
 
     @Column(name="announcement_text", nullable = false)
     private String announcementText;
