@@ -19,7 +19,7 @@ import edu.ucsb.cs156.happiercows.entities.CommonStats;
 
 public class CommonStatsCSVHelper {
 
-  private CommonStatsCSVHelper() {}
+  public CommonStatsCSVHelper() {}
 
   /**
    * This method is a hack to avoid a pitest issue; it isn't possible to 
