@@ -1,6 +1,8 @@
 package edu.ucsb.cs156.happiercows.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.common.Json;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import edu.ucsb.cs156.happiercows.entities.Announcement;
 import edu.ucsb.cs156.happiercows.repositories.AnnouncementRepository;
@@ -24,9 +27,15 @@ import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 
 import org.springframework.security.core.Authentication;
 import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+import java.time.LocalDateTime;
+import java.text.ParseException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.Optional;
+import java.util.TimeZone;
 
 @Tag(name = "Announcements")
 @RequestMapping("/api/announcements")
@@ -49,8 +58,8 @@ public class AnnouncementsController extends ApiController{
     @PostMapping("/post")
     public ResponseEntity<Object> createAnnouncement(
         @Parameter(description = "The id of the common") @RequestParam Long commonsId,
-        @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) Date startDate,
-        @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date endDate,
+        @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+        @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
         @Parameter(description = "The announcement to be sent out") @RequestParam String announcementText) {
 
         User user = getCurrentUser().getUser();
@@ -69,13 +78,13 @@ public class AnnouncementsController extends ApiController{
 
         if (startDate == null) { 
             log.info("Start date not specified. Defaulting to current date.");
-            startDate = new Date(); 
+            startDate = LocalDateTime.now();
         }
 
         if (announcementText == "") {
             return ResponseEntity.badRequest().body("Announcement cannot be empty.");
         }
-        if (endDate != null && startDate.after(endDate)) {
+        if(endDate != null && startDate.isAfter(endDate)){
             return ResponseEntity.badRequest().body("Start date must be before end date.");
         }
 
@@ -135,8 +144,8 @@ public class AnnouncementsController extends ApiController{
     public ResponseEntity<Object> editAnnouncement(
         @Parameter(description = "The id of the announcement") @RequestParam Long id,
         @Parameter(description = "The id of the common") @RequestParam Long commonsId,
-        @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) Date startDate,
-        @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) Date endDate,
+        @Parameter(description = "The datetime at which the announcement will be shown (defaults to current time)") @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+        @Parameter(description = "The datetime at which the announcement will stop being shown (optional)") @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
         @Parameter(description = "The announcement to be sent out") @RequestParam String announcementText) {
 
         User user = getCurrentUser().getUser();
@@ -159,10 +168,10 @@ public class AnnouncementsController extends ApiController{
 
         if (startDate == null) {
             log.info("Start date not specified. Defaulting to current date.");
-            startDate = new Date();
+            startDate = LocalDateTime.now();
         }
 
-        if (endDate != null && startDate.after(endDate)) {
+        if(endDate != null && startDate.isAfter(endDate)){
             return ResponseEntity.badRequest().body("Start date must be before end date.");
         }
 
