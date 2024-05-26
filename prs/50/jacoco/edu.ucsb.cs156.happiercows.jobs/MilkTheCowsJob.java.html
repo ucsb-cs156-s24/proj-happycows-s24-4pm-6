@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MilkTheCowsJob.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">happycows</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.happiercows.jobs</a> &gt; <span class="el_source">MilkTheCowsJob.java</span></div><h1>MilkTheCowsJob.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.happiercows.jobs;
+
+import java.time.LocalDateTime;
+
+import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.Profit;
+import edu.ucsb.cs156.happiercows.entities.User;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.ProfitRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserRepository;
+import edu.ucsb.cs156.happiercows.services.jobs.JobContext;
+import edu.ucsb.cs156.happiercows.services.jobs.JobContextConsumer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+public class MilkTheCowsJob implements JobContextConsumer {
+
+    @Getter
+    private CommonsRepository commonsRepository;
+    @Getter
+    private UserCommonsRepository userCommonsRepository;
+    @Getter
+    private UserRepository userRepository;
+    @Getter
+    private ProfitRepository profitRepository;
+
+    public static String formatDollars(double amount) {
+<span class="fc" id="L31">        return  String.format(&quot;$%.2f&quot;, amount);</span>
+    }
+
+    @Override
+    public void accept(JobContext ctx) throws Exception {
+<span class="fc" id="L36">        ctx.log(&quot;Starting to milk the cows&quot;);</span>
+
+<span class="fc" id="L38">        Iterable&lt;Commons&gt; allCommons = commonsRepository.findAll();</span>
+
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        for (Commons commons : allCommons) {</span>
+<span class="fc" id="L41">            String name = commons.getName();</span>
+<span class="fc" id="L42">            double milkPrice = commons.getMilkPrice();</span>
+<span class="fc" id="L43">            ctx.log(&quot;Milking cows for Commons: &quot; + name + &quot;, Milk Price: &quot; + formatDollars(milkPrice));</span>
+
+<span class="fc" id="L45">            Iterable&lt;UserCommons&gt; allUserCommons = userCommonsRepository.findByCommonsId(commons.getId());</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">            for (UserCommons userCommons : allUserCommons) {</span>
+<span class="fc" id="L48">                milkCows(ctx, commons, userCommons, profitRepository, userCommonsRepository);</span>
+<span class="fc" id="L49">            }</span>
+<span class="fc" id="L50">        }</span>
+
+<span class="fc" id="L52">        ctx.log(&quot;Cows have been milked!&quot;);</span>
+<span class="fc" id="L53">    }</span>
+
+    /** This method performs the function of milking the cows for a single userCommons.
+     *  It is a public method only so it can be exposed to the unit tests
+     * @param ctx the JobContext
+     * @param commons the Commons
+     * @param userCommons the UserCommons
+     *
+     */
+
+    public static void milkCows(JobContext ctx, Commons commons, UserCommons userCommons, ProfitRepository profitRepository, UserCommonsRepository userCommonsRepository) {
+<span class="fc" id="L64">        User user = userCommons.getUser();</span>
+
+<span class="fc" id="L66">        ctx.log(&quot;User: &quot; + user.getFullName()</span>
+<span class="fc" id="L67">                + &quot;, numCows: &quot; + userCommons.getNumOfCows()</span>
+<span class="fc" id="L68">                + &quot;, cowHealth: &quot; + userCommons.getCowHealth()</span>
+<span class="fc" id="L69">                + &quot;, totalWealth: &quot; + formatDollars(userCommons.getTotalWealth()));</span>
+
+<span class="fc" id="L71">        double profitAmount = calculateMilkingProfit(commons, userCommons);</span>
+<span class="fc" id="L72">        Profit profit = Profit.builder()</span>
+<span class="fc" id="L73">                .userCommons(userCommons)</span>
+<span class="fc" id="L74">                .amount(profitAmount)</span>
+<span class="fc" id="L75">                .timestamp(LocalDateTime.now())</span>
+<span class="fc" id="L76">                .numCows(userCommons.getNumOfCows())</span>
+<span class="fc" id="L77">                .avgCowHealth(userCommons.getCowHealth())</span>
+<span class="fc" id="L78">                .build();</span>
+<span class="fc" id="L79">        double newWeath = userCommons.getTotalWealth() + profitAmount;</span>
+<span class="fc" id="L80">        userCommons.setTotalWealth(newWeath);</span>
+<span class="fc" id="L81">        userCommonsRepository.save(userCommons);</span>
+<span class="fc" id="L82">        profit = profitRepository.save(profit);</span>
+<span class="fc" id="L83">        ctx.log(&quot;Profit for user: &quot; + user.getFullName()</span>
+<span class="fc" id="L84">                + &quot; is: &quot; + formatDollars(profitAmount)</span>
+<span class="fc" id="L85">                + &quot;, newWealth: &quot; + formatDollars(newWeath));</span>
+<span class="fc" id="L86">    }</span>
+
+    /**
+     * Calculate the profit for a user from milking their cows.
+     *
+     * @param userCommons
+     * @return
+     */
+    public static double calculateMilkingProfit(Commons commons, UserCommons userCommons) {
+<span class="fc" id="L95">        double milkPrice = commons.getMilkPrice();</span>
+<span class="fc" id="L96">        double profit = userCommons.getNumOfCows() * (userCommons.getCowHealth() / 100.0) * milkPrice;</span>
+<span class="fc" id="L97">        return profit;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

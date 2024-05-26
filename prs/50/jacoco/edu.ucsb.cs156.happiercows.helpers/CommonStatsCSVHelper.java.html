@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonStatsCSVHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">happycows</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.happiercows.helpers</a> &gt; <span class="el_source">CommonStatsCSVHelper.java</span></div><h1>CommonStatsCSVHelper.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.happiercows.helpers;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import edu.ucsb.cs156.happiercows.entities.CommonStats;
+
+/*
+ * This code is based on 
+ * &lt;a href=&quot;https://bezkoder.com/spring-boot-download-csv-file/&quot;&gt;https://bezkoder.com/spring-boot-download-csv-file/&lt;/a&gt;
+ * and provides a way to serve up a CSV file containing information associated
+ * with an instructor report.
+ */
+
+public class CommonStatsCSVHelper {
+
+  private CommonStatsCSVHelper() {}
+
+  /**
+   * This method is a hack to avoid a pitest issue; it isn't possible to 
+   * exclude an individual method call from jacoco coverage, but we can
+   * exclude the entire method by name in the pom.xml
+   * @param out
+   */
+
+  public static void flush_and_close_noPitest(ByteArrayOutputStream out, CSVPrinter csvPrinter) throws IOException {
+<span class="fc" id="L32">    csvPrinter.flush();</span>
+<span class="fc" id="L33">    csvPrinter.close();</span>
+<span class="fc" id="L34">    out.flush();</span>
+<span class="fc" id="L35">    out.close();</span>
+<span class="fc" id="L36">  }</span>
+  
+  public static ByteArrayInputStream toCSV(Iterable&lt;CommonStats&gt; stats) throws IOException {
+<span class="fc" id="L39">    final CSVFormat format = CSVFormat.DEFAULT;</span>
+
+<span class="fc" id="L41">    List&lt;String&gt; headers = Arrays.asList(</span>
+        &quot;id&quot;,
+        &quot;commonsId&quot;,
+        &quot;numCows&quot;,
+        &quot;avgHealth&quot;,
+        &quot;createDate&quot;);
+
+<span class="fc" id="L48">    ByteArrayOutputStream out = new ByteArrayOutputStream();</span>
+<span class="fc" id="L49">    CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);</span>
+
+<span class="fc" id="L51">    csvPrinter.printRecord(headers);</span>
+
+<span class="fc bfc" id="L53" title="All 2 branches covered.">    for (CommonStats line : stats) {</span>
+<span class="fc" id="L54">      List&lt;String&gt; data = Arrays.asList(</span>
+<span class="fc" id="L55">          String.valueOf(line.getId()),</span>
+<span class="fc" id="L56">          String.valueOf(line.getCommonsId()),</span>
+<span class="fc" id="L57">          String.valueOf(line.getNumCows()),</span>
+<span class="fc" id="L58">          String.valueOf(line.getAvgHealth()),</span>
+<span class="fc" id="L59">          String.valueOf(line.getCreateDate()));</span>
+<span class="fc" id="L60">      csvPrinter.printRecord(data);</span>
+<span class="fc" id="L61">    }</span>
+
+<span class="fc" id="L63">    flush_and_close_noPitest(out, csvPrinter);</span>
+<span class="fc" id="L64">    return new ByteArrayInputStream(out.toByteArray());</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
