@@ -70,7 +70,7 @@ function CommonsForm({initialCommons, submitAction, buttonLabel = "Create"}) {
     
     const testid = "CommonsForm";
     const curr = new Date();
-    const today = curr.toISOString().split('T')[0];
+    const today = curr.toISOString().split('T')[0].substring(0,8) + curr.toString().split(' ')[2];;
     const currMonth = curr.getMonth() % 12;
     const nextMonth = new Date(curr.getFullYear(), currMonth + 1, curr.getDate()).toISOString().substr(0, 10);
     const DefaultVals = {
