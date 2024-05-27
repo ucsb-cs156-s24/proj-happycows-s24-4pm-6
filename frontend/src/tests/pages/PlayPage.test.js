@@ -343,4 +343,187 @@ describe("PlayPage tests", () => {
             expect(screen.getByTestId("playpage-chat-toggle")).toBeInTheDocument();
         });
     })
+    
+    test("user has not joined the commons (single commons joined)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        
+        axiosMock.onGet("/api/currentUser").reply(200, {
+       
+        user: {
+            id : 1,
+            fullName : "Nom Guerre",
+            givenName : "Nom",
+            familyName : "Guerre",
+            emailVerified : true,
+            admin : false,
+            commons : [
+                {
+                    id : 2,
+                    name : "TestCommons",
+                }
+            ]
+        
+        }});
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();    
+        });
+
+        expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();   
+        expect(screen.queryByTestId("commons-card")).not.toBeInTheDocument();    
+
+    })
+    
+    test("user has not joined the commons (multiple commons joined)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        
+        axiosMock.onGet("/api/currentUser").reply(200, {
+       
+        user: {
+            id : 1,
+            fullName : "Nom Guerre",
+            givenName : "Nom",
+            familyName : "Guerre",
+            emailVerified : true,
+            admin : false,
+            commons : [
+                {
+                    id : 2,
+                    name : "TestCommons",
+                },
+                {
+                    id : 3,
+                    name : "OtherTestCommons",
+                }
+            ]
+           
+        }});
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();    
+        });
+
+        expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();   
+        expect(screen.queryByTestId("commons-card")).not.toBeInTheDocument();    
+	
+    })
+    
+    test("user has joined the commons (single commons joined)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        
+        axiosMock.onGet("/api/currentUser").reply(200, {
+       
+        user: {
+            id : 1,
+            fullName : "Nom Guerre",
+            givenName : "Nom",
+            familyName : "Guerre",
+            emailVerified : true,
+            admin : false,
+            commons : [
+                {
+                    id : 1,
+                    name : "TestCommons",
+                }
+            ]
+        
+        }});
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId("commons-card")).toBeInTheDocument();
+
+        });
+        
+        await waitFor(() => {
+            expect(screen.getByText("Announcements")).toBeInTheDocument();
+        });        
+        
+        expect(screen.getByTestId("commons-card")).toBeInTheDocument();
+        expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+        
+    })
+
+    test("user has joined the commons (multiple commons joined)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        
+        axiosMock.onGet("/api/currentUser").reply(200, {
+       
+        user: {
+            id : 1,
+            fullName : "Nom Guerre",
+            givenName : "Nom",
+            familyName : "Guerre",
+            emailVerified : true,
+            admin : false,
+            commons : [
+                {
+                    id : 1,
+                    name : "TestCommons"
+                },
+                {
+                    id : 3,
+                    name : "OtherTestCommons"
+                }
+            ]
+
+        }});
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId("commons-card")).toBeInTheDocument();
+        });
+        
+        await waitFor(() => {
+            expect(screen.getByText("Announcements")).toBeInTheDocument();
+        });        
+        
+        expect(screen.getByTestId("commons-card")).toBeInTheDocument();
+        expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+        
+    })
+
+   
 });

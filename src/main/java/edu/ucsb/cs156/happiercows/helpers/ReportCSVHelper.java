@@ -19,7 +19,7 @@ import edu.ucsb.cs156.happiercows.entities.ReportLine;
 
 public class ReportCSVHelper {
 
-  private ReportCSVHelper() {}
+  public ReportCSVHelper() {}
 
   /**
    * This method is a hack to avoid a jacoco issue; it isn't possible to 

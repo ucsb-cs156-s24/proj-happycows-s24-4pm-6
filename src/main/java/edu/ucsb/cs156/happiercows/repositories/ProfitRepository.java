@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProfitRepository extends CrudRepository<Profit, Long> {
     Iterable<Profit> findAllByUserCommons(UserCommons userCommons);
+    void deleteByUserCommons(UserCommons userCommons);
+
 }
