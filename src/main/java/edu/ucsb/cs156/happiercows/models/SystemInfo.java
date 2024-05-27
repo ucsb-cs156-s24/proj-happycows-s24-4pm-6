@@ -15,4 +15,8 @@ public class SystemInfo {
   private Boolean showSwaggerUILink;
   private String sourceRepo;
   private String oauthLogin;
+  
+  private String commitMessage;
+  private String commitId;
+  private String githubUrl; // URL to the commit in the source repository
 }

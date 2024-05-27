@@ -25,8 +25,19 @@ public class SystemInfoServiceImpl extends SystemInfoService {
   @Value("${app.sourceRepo}")
   private String sourceRepo = "https://github.com/ucsb-cs156/proj-happycows";
 
+   @Value("${git.commit.message.short:unknown}")
+  private String commitMessage;
+
   @Value("${app.oauth.login:/oauth2/authorization/google}")
   private String oauthLogin;
+
+  @Value("${git.commit.id.abbrev:unknown}")
+  private String commitId;
+
+  public static String githubUrl(String repo, String commit) {
+    return commit != null && repo != null ? repo + "/commit/" + commit : null;
+  }
+
 
   public SystemInfo getSystemInfo() {
     SystemInfo si = SystemInfo.builder()
@@ -34,6 +45,9 @@ public class SystemInfoServiceImpl extends SystemInfoService {
     .showSwaggerUILink(this.showSwaggerUILink)
     .sourceRepo(this.sourceRepo)
     .oauthLogin(this.oauthLogin)
+    .commitMessage(this.commitMessage)
+    .commitId(this.commitId)
+    .githubUrl(githubUrl(this.sourceRepo, this.commitId))
     .build();
   log.info("getSystemInfo returns {}",si);
   return si;
