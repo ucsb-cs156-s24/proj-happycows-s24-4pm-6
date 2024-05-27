@@ -104,8 +104,28 @@ describe("UserTable tests", () => {
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Edit-button`)).toHaveClass("btn-primary");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Delete-button`)).toHaveClass("btn-danger");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Leaderboard-button`)).toHaveClass("btn-secondary");
+    expect(screen.getByTestId(`${testId}-cell-row-0-col-Announcements-button`)).toHaveClass("btn-warning");
     expect(screen.getByTestId(`${testId}-cell-row-0-col-Stats CSV-button`)).toHaveClass("btn-success");
 
+  });
+
+  test("Clicking Announcements button navigates to the correct route", async () => {
+    const currentUser = currentUserFixtures.adminUser;
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <CommonsTable commons={commonsPlusFixtures.threeCommonsPlus} currentUser={currentUser} />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    const announcementsButton = screen.getByTestId("CommonsTable-cell-row-0-col-Announcements-button");
+    fireEvent.click(announcementsButton);
+
+    await waitFor(() => {
+      expect(mockedNavigate).toHaveBeenCalledWith(`/admin/announcements/1`);
+    });
   });
 
 });

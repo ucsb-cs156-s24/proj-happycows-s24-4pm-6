@@ -35,9 +35,14 @@ export function useLogout() {
 }
 
 export function hasRole(currentUser, role) {
-  return currentUser
-    && currentUser.loggedIn
-    && currentUser.root
-    && currentUser.root.rolesList
-    && currentUser.root.rolesList.includes(role)
+  if (currentUser == null) return false;
+
+  if ("data" in currentUser &&
+    "root" in currentUser.data &&
+    currentUser.data.root != null &&
+    "rolesList" in currentUser.data.root) {
+    return currentUser.data.root.rolesList.includes(role);
+  }
+
+  return currentUser.root?.rolesList?.includes(role);
 }
