@@ -95,7 +95,7 @@ import java.util.Optional;
 
     @Operation(summary = &quot;Get all announcements&quot;, description = &quot;Get all announcements associated with a specific commons.&quot;)
     @PreAuthorize(&quot;hasAnyRole('ROLE_USER', 'ROLE_ADMIN')&quot;)
-    @GetMapping(&quot;/getbycommonsid&quot;)
+    @GetMapping(&quot;/all&quot;)
     public ResponseEntity&lt;Object&gt; getAnnouncements(@Parameter(description = &quot;The id of the common&quot;) @RequestParam Long commonsId) {
 
         // Make sure the user is part of the commons or is an admin
@@ -113,7 +113,7 @@ import java.util.Optional;
 
 <span class="fc" id="L114">        int MAX_ANNOUNCEMENTS = 1000;</span>
 <span class="fc" id="L115">        Page&lt;Announcement&gt; announcements = announcementRepository.findByCommonsId(commonsId, PageRequest.of(0, MAX_ANNOUNCEMENTS, Sort.by(&quot;startDate&quot;).descending()));</span>
-<span class="fc" id="L116">        return ResponseEntity.ok(announcements);</span>
+<span class="fc" id="L116">        return ResponseEntity.ok(announcements.getContent());</span>
     }
 
     @Operation(summary = &quot;Get announcements by id&quot;, description = &quot;Get announcement by its id.&quot;)

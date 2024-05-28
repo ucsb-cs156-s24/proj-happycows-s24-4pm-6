@@ -13,8 +13,8 @@ happycows,edu.ucsb.cs156.happiercows.strategies,CowHealthUpdateStrategies.new Co
 happycows,edu.ucsb.cs156.happiercows.strategies,CowHealthUpdateStrategies.new CowHealthUpdateStrategies() {...},0,25,0,2,0,4,0,3,0,2
 happycows,edu.ucsb.cs156.happiercows.strategies,CowHealthUpdateStrategies,0,31,0,0,0,6,0,1,0,1
 happycows,edu.ucsb.cs156.happiercows.models,HealthUpdateStrategyList,0,29,0,0,0,12,0,2,0,2
-happycows,edu.ucsb.cs156.happiercows.helpers,CommonStatsCSVHelper,0,108,0,2,0,21,0,3,0,2
-happycows,edu.ucsb.cs156.happiercows.helpers,ReportCSVHelper,0,167,0,2,0,27,0,3,0,2
+happycows,edu.ucsb.cs156.happiercows.helpers,CommonStatsCSVHelper,0,111,0,2,0,22,0,4,0,3
+happycows,edu.ucsb.cs156.happiercows.helpers,ReportCSVHelper,0,170,0,2,0,28,0,4,0,3
 happycows,edu.ucsb.cs156.happiercows.services.jobs,JobContext,0,48,0,4,0,7,0,4,0,2
 happycows,edu.ucsb.cs156.happiercows.services.jobs,JobService,0,55,0,0,0,19,0,3,0,3
 happycows,edu.ucsb.cs156.happiercows.jobs,TestJob,0,31,0,4,0,10,0,3,0,1
@@ -43,15 +43,15 @@ happycows,edu.ucsb.cs156.happiercows.entities,UserCommons,0,15,0,0,0,5,0,4,0,4
 happycows,edu.ucsb.cs156.happiercows.entities,Commons,0,16,0,4,0,4,0,3,0,1
 happycows,edu.ucsb.cs156.happiercows.entities,User,0,16,0,0,0,1,0,1,0,1
 happycows,edu.ucsb.cs156.happiercows.controllers,UserCommonsController,0,259,0,4,0,46,0,14,0,12
-happycows,edu.ucsb.cs156.happiercows.controllers,CommonsController,0,596,0,38,0,136,0,37,0,18
+happycows,edu.ucsb.cs156.happiercows.controllers,CommonsController,0,600,0,38,0,137,0,37,0,18
 happycows,edu.ucsb.cs156.happiercows.controllers,ChatMessageController,0,282,0,22,0,59,0,22,0,11
 happycows,edu.ucsb.cs156.happiercows.controllers,JobsController,0,146,0,8,0,30,0,16,0,12
 happycows,edu.ucsb.cs156.happiercows.controllers,ProfitsController,0,141,0,0,0,23,0,7,0,7
 happycows,edu.ucsb.cs156.happiercows.controllers,UserInfoController,0,24,0,0,0,7,0,3,0,3
 happycows,edu.ucsb.cs156.happiercows.controllers,ApiController,0,29,0,0,0,9,0,5,0,5
 happycows,edu.ucsb.cs156.happiercows.controllers,SystemInfoController,0,7,0,0,0,2,0,2,0,2
-happycows,edu.ucsb.cs156.happiercows.controllers,AnnouncementsController,0,294,0,34,0,72,0,27,0,10
+happycows,edu.ucsb.cs156.happiercows.controllers,AnnouncementsController,0,295,0,34,0,72,0,27,0,10
 happycows,edu.ucsb.cs156.happiercows.controllers,CommonStatsController,0,85,0,0,0,17,0,5,0,5
-happycows,edu.ucsb.cs156.happiercows.controllers,UsersController,0,16,0,0,0,4,0,2,0,2
+happycows,edu.ucsb.cs156.happiercows.controllers,UsersController,0,86,0,0,0,14,0,6,0,6
 happycows,edu.ucsb.cs156.happiercows.controllers,CSRFController,0,5,0,0,0,2,0,2,0,2
 happycows,edu.ucsb.cs156.happiercows.controllers,ReportsController,0,81,0,0,0,18,0,6,0,6
