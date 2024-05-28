@@ -23,6 +23,7 @@ class CurrentUserServiceTests extends ControllerTestCase {
   @Test
   void test_isLoggedIn_returns_true() {
     CurrentUserService currentUserService = mock(CurrentUserService.class, Answers.CALLS_REAL_METHODS);
+    when(currentUserService.getUser()).thenReturn(User.builder().build());
     assertTrue(currentUserService.isLoggedIn());
   }
 

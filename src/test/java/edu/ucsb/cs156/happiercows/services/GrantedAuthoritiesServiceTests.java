@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import edu.ucsb.cs156.happiercows.testconfig.TestConfig;
@@ -26,6 +27,10 @@ class GrantedAuthoritiesServiceTests {
 
   @MockBean
   UserRepository userRepository;
+
+  @MockBean
+  ClientRegistrationRepository clientRegistrationRepository;
+
 
   @Autowired
   GrantedAuthoritiesService grantedAuthoritiesService;
