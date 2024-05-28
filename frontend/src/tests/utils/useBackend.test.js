@@ -4,11 +4,13 @@ import AxiosMockAdapter from "axios-mock-adapter";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { toast } from "react-toastify";
 
-import { useBackend, useBackendMutation } from "main/utils/useBackend";
+import { useBackend, useBackendNoToast, useBackendMutation } from "main/utils/useBackend";
 
 jest.mock('react-router-dom');
 
 const mockToast = jest.spyOn(toast, 'error').mockImplementation();
+const mockConsole = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
 
 describe("utils/useBackend tests", () => {
     describe("utils/useBackend useBackend tests", () => {
@@ -85,6 +87,86 @@ describe("utils/useBackend tests", () => {
             expect(result.current.data).toEqual(["initialData"]);
             await waitFor(() => expect(mockToast).toHaveBeenCalledTimes(1));
             expect(mockToast).toHaveBeenCalledWith("Error communicating with backend via GET on /api/admin/users");
+
+            console.error.mockRestore();
+        });
+
+	test("useBackendNoToast handles 404 error correctly", async () => {
+            jest.spyOn(console, 'error');
+
+            // See: https://react-query.tanstack.com/guides/testing#turn-off-retries
+            const queryClient = new QueryClient({
+                defaultOptions: {
+                    queries: {
+                        // ✅ turns retries off
+                        retry: false,
+                    },
+                },
+            });
+
+            const wrapper = ({ children }) => (
+                <QueryClientProvider client={queryClient}>
+                    {children}
+                </QueryClientProvider>
+            );
+
+            var axiosMock = new AxiosMockAdapter(axios);
+
+            axiosMock.onGet("/api/admin/users").reply(404, { message: "Error: Request failed with status code 404 TEST" });
+
+            const { result, waitFor } = renderHook(() => useBackendNoToast(
+                ["/api/admin/users"],
+                { method: "GET", url: "/api/admin/users" },
+                ["initialData"]
+            ), { wrapper });
+
+            await waitFor(() => result.current.isError);
+
+            expect(result.current.data).toEqual(["initialData"]);
+            await waitFor(() => expect(mockConsole).toHaveBeenCalledTimes(1));
+            expect(mockConsole).toHaveBeenCalledWith(Error("Request failed with status code 404"));
+            await waitFor(() => expect(mockConsoleLog).toHaveBeenCalledTimes(1));
+            expect(mockConsoleLog).toHaveBeenCalledWith("Error: Request failed with status code 404 TEST");
+
+            console.error.mockRestore()
+        });
+       
+        test("useBackendNoToast handles 404 error with no message", async () => {
+            jest.spyOn(console, 'error')
+
+            // See: https://react-query.tanstack.com/guides/testing#turn-off-retries
+            const queryClient = new QueryClient({
+                defaultOptions: {
+                    queries: {
+                        // ✅ turns retries off
+                        retry: false,
+                    },
+                },
+            })
+            const wrapper = ({ children }) => (
+                <QueryClientProvider client={queryClient}>
+                    {children}
+                </QueryClientProvider>
+            );
+
+            var axiosMock = new AxiosMockAdapter(axios);
+
+            axiosMock.onGet("/api/admin/users").reply(404);
+
+            const { result, waitFor } = renderHook(() => useBackendNoToast(
+                ["/api/admin/users"],
+                { method: "GET", url: "/api/admin/users" },
+                ["initialData"]
+            ), { wrapper });
+
+            await waitFor(() => result.current.isError);
+
+            expect(result.current.data).toEqual(["initialData"]);
+            await waitFor(() => expect(mockConsole).toHaveBeenCalledTimes(1));
+            expect(mockConsole).toHaveBeenCalledWith(Error("Request failed with status code 404"));
+            await waitFor(() => expect(mockToast).toHaveBeenCalledTimes(1));
+            expect(mockToast).toHaveBeenCalledWith("Error communicating with backend via GET on /api/admin/users");
+            await waitFor(() => expect(mockConsoleLog).toHaveBeenCalledTimes(0));
 
             console.error.mockRestore();
         });
