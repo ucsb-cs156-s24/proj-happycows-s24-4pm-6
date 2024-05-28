@@ -95,7 +95,7 @@ public class AnnouncementsController extends ApiController{
 
     @Operation(summary = "Get all announcements", description = "Get all announcements associated with a specific commons.")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    @GetMapping("/getbycommonsid")
+    @GetMapping("/all")
     public ResponseEntity<Object> getAnnouncements(@Parameter(description = "The id of the common") @RequestParam Long commonsId) {
 
         // Make sure the user is part of the commons or is an admin
@@ -113,7 +113,7 @@ public class AnnouncementsController extends ApiController{
 
         int MAX_ANNOUNCEMENTS = 1000;
         Page<Announcement> announcements = announcementRepository.findByCommonsId(commonsId, PageRequest.of(0, MAX_ANNOUNCEMENTS, Sort.by("startDate").descending()));
-        return ResponseEntity.ok(announcements);
+        return ResponseEntity.ok(announcements.getContent());
     }
 
     @Operation(summary = "Get announcements by id", description = "Get announcement by its id.")

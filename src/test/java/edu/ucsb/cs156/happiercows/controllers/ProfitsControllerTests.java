@@ -13,8 +13,6 @@ import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
 import edu.ucsb.cs156.happiercows.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
@@ -25,7 +23,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,10 +61,13 @@ public class ProfitsControllerTests extends ControllerTestCase {
             .commons(commons).build();
 
     LocalDateTime t1 = LocalDateTime.parse("2022-03-05T15:50:10");
+    LocalDateTime t2 = LocalDateTime.parse("2022-03-05T16:50:10");
+    LocalDateTime t3 = LocalDateTime.parse("2022-03-05T17:50:10");
 
-    Profit p1 = Profit.builder().id(41).amount(123.45).timestamp(t1).userCommons(uc1).numCows(1).avgCowHealth(80).build();
+
+    Profit p1 = Profit.builder().id(41).amount(123.45).timestamp(t3).userCommons(uc1).numCows(1).avgCowHealth(80).build();
     Profit p2 = Profit.builder().id(42).amount(23.45).timestamp(t1).userCommons(uc1).numCows(1).avgCowHealth(80).build();
-    Profit p3 = Profit.builder().id(43).amount(3.45).timestamp(t1).userCommons(uc1).numCows(1).avgCowHealth(80).build();
+    Profit p3 = Profit.builder().id(43).amount(3.45).timestamp(t2).userCommons(uc1).numCows(1).avgCowHealth(80).build();
 
     List<Profit> profits = List.of(p1);
     List<Profit> profits2 = List.of(p1, p2, p3);
@@ -212,6 +212,6 @@ public class ProfitsControllerTests extends ControllerTestCase {
 
         assertEquals(3, jsonResponse.get("totalElements").asInt());
         assertEquals(2, jsonResponse.get("totalPages").asInt());
-        assertEquals(p3.getAmount(), jsonResponse.get("content").get(0).get("amount").asDouble(), 0.01);
+        assertEquals(p2.getAmount(), jsonResponse.get("content").get(0).get("amount").asDouble(), 0.01);
     }
 }

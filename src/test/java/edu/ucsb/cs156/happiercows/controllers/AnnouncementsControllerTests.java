@@ -318,13 +318,13 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.of(userCommons));
 
         //act 
-        MvcResult response = mockMvc.perform(get("/api/announcements/getbycommonsid?commonsId={commonsId}", commonsId))
+        MvcResult response = mockMvc.perform(get("/api/announcements/all?commonsId={commonsId}", commonsId))
             .andExpect(status().isOk()).andReturn();
 
         // assert
         verify(announcementRepository, atLeastOnce()).findByCommonsId(commonsId, pageable);
         String responseString = response.getResponse().getContentAsString();
-        String expectedResponseString = mapper.writeValueAsString(announcementPage);
+        String expectedResponseString = mapper.writeValueAsString(announcementPage.getContent());
         assertEquals(expectedResponseString, responseString);
     }
 
@@ -358,7 +358,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         when(userCommonsRepository.findByCommonsIdAndUserId(commonsId, userId)).thenReturn(Optional.empty());
 
         //act 
-        MvcResult response = mockMvc.perform(get("/api/announcements/getbycommonsid?commonsId={commonsId}", commonsId))
+        MvcResult response = mockMvc.perform(get("/api/announcements/all?commonsId={commonsId}", commonsId))
             .andExpect(status().isBadRequest()).andReturn();
 
         // assert
@@ -390,13 +390,13 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         when(announcementRepository.findByCommonsId(commonsId, pageable)).thenReturn(announcementPage);
 
         //act 
-        MvcResult response = mockMvc.perform(get("/api/announcements/getbycommonsid?commonsId={commonsId}", commonsId))
+        MvcResult response = mockMvc.perform(get("/api/announcements/all?commonsId={commonsId}", commonsId))
             .andExpect(status().isOk()).andReturn();
 
         // assert
         verify(announcementRepository, atLeastOnce()).findByCommonsId(commonsId, pageable);
         String responseString = response.getResponse().getContentAsString();
-        String expectedResponseString = mapper.writeValueAsString(announcementPage);
+        String expectedResponseString = mapper.writeValueAsString(announcementPage.getContent());
         assertEquals(expectedResponseString, responseString);
     }
 

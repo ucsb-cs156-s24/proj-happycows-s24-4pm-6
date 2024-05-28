@@ -30,6 +30,9 @@ public class User {
   @Builder.Default
   private Instant lastOnline = Instant.now();
 
+  @Builder.Default
+  private Boolean suspended = false;
+
   @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
   @JoinTable(name = "user_commons", 
     joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
