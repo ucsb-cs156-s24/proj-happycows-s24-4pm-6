@@ -4,7 +4,7 @@ import { hasRole } from "main/utils/currentUser";
 import AppNavbarLocalhost from "main/components/Nav/AppNavbarLocalhost"
 
 // Fetch environment variables and add to systemInfo
-const showSwagger = System.getenv("REACT_APP_SHOW_SWAGGER");;
+const showSwagger = true;
 
 export default function AppNavbar({ currentUser, systemInfo = {}, doLogout, currentUrl = window.location.href }) {
   var oauthLogin = systemInfo?.oauthLogin || "/oauth2/authorization/google";
