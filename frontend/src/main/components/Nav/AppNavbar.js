@@ -3,8 +3,12 @@ import { Link } from "react-router-dom";
 import { hasRole } from "main/utils/currentUser";
 import AppNavbarLocalhost from "main/components/Nav/AppNavbarLocalhost"
 
-export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUrl = window.location.href }) {
+// Fetch environment variables and add to systemInfo
+const showSwagger = process.env.REACT_APP_SHOW_SWAGGER === 'true';
+
+export default function AppNavbar({ currentUser, systemInfo = {}, doLogout, currentUrl = window.location.href }) {
   var oauthLogin = systemInfo?.oauthLogin || "/oauth2/authorization/google";
+
   return (
     <>
       {
@@ -30,7 +34,7 @@ export default function AppNavbar({ currentUser, systemInfo, doLogout, currentUr
               )
             }
             {
-              systemInfo?.showSwaggerUILink && (
+              (systemInfo?.showSwaggerUILink || showSwagger) && (
                 <>
                   <Nav.Link href="/swagger-ui/index.html">Swagger</Nav.Link>
                 </>
