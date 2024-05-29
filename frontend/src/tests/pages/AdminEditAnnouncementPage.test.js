@@ -117,8 +117,17 @@ describe("AdminEditAnnouncementPage tests", () => {
 
             fireEvent.click(submitButton);
 
-            expect(announcementTextField).toHaveValue("test updated");
+            await waitFor(() => expect(mockToast).toHaveBeenCalled());
+            expect(mockToast).toBeCalledWith("Announcement Updated - id: 5");
+            expect(mockNavigate).toBeCalledWith({ "to": "/admin/announcements" });
 
+            expect(axiosMock.history.put.length).toBe(1); // times called
+            expect(axiosMock.history.put[0].params).toEqual({ id: 5 });
+            expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
+                "startDate": "2022-03-07T00:00:00.000Z",
+                "endDate": "2023-03-07T00:00:00.000Z",
+                "announcementText": "test updated",
+            })); // posted object
         });
     });
 });
