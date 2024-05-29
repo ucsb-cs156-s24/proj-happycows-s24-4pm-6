@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Commons.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">happycows</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.happiercows.entities</a> &gt; <span class="el_source">Commons.java</span></div><h1>Commons.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.happiercows.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.ucsb.cs156.happiercows.strategies.CowHealthUpdateStrategies;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity(name = &quot;commons&quot;)
+public class Commons {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private String name;
+    private double cowPrice;
+    private double milkPrice;
+    private double startingBalance;
+    private LocalDateTime startingDate;
+    private LocalDateTime lastDate;
+    private boolean showLeaderboard;
+
+    @Builder.Default
+    private boolean showChat = true;
+    
+    private int capacityPerUser;
+    private int carryingCapacity;
+    private double degradationRate;
+
+    // these defaults match old behavior
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private CowHealthUpdateStrategies belowCapacityHealthUpdateStrategy = CowHealthUpdateStrategies.DEFAULT_BELOW_CAPACITY;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private CowHealthUpdateStrategies aboveCapacityHealthUpdateStrategy = CowHealthUpdateStrategies.DEFAULT_ABOVE_CAPACITY;
+
+
+    @OneToMany(mappedBy = &quot;commons&quot;, cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List&lt;UserCommons&gt; joinedUsers;
+
+    public boolean gameInProgress() {
+<span class="fc" id="L55">        LocalDateTime today = LocalDateTime.now();</span>
+<span class="fc bfc" id="L56" title="All 4 branches covered.">        if (startingDate.isBefore(today) &amp;&amp; lastDate.isAfter(today)) {</span>
+<span class="fc" id="L57">            return true;</span>
+        }
+<span class="fc" id="L59">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
