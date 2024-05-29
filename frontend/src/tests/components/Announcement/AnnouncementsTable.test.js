@@ -171,5 +171,7 @@ describe("AnnouncementTable tests", () => {
 
     // act - click the delete button
     fireEvent.click(deleteButton);
+
+    await waitFor(() => expect(mockedNavigate).toHaveBeenCalledWith('/'));
   });
 });
