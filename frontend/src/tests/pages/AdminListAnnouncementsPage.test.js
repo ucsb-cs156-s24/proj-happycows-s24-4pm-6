@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { MemoryRouter, useParams } from "react-router-dom";
 import axios from "axios";
@@ -114,5 +114,41 @@ describe("AdminListAnnouncementsPage tests", () => {
         });
         expect(screen.getByTestId(`${testId}-cell-row-1-col-id`)).toHaveTextContent("2");
         expect(screen.getByTestId(`${testId}-cell-row-2-col-id`)).toHaveTextContent("3");
+    });
+
+    test("what happens when you click delete, admin", async () => {
+        // arrange
+        setupAdminUser();
+        const commonsId = 1;
+        const queryClient = new QueryClient();
+
+        useParams.mockReturnValue({ commonsId });
+
+        axiosMock.onGet("/api/announcements/all", { params: {commonsId} } ).reply(200, announcementFixtures.threeAnnouncements);
+        axiosMock.onDelete("/api/announcements").reply(200, "Announcement with id 2 was deleted");
+
+        // act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <AdminListAnnouncementsPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // assert
+        await waitFor(() => { expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toBeInTheDocument(); });
+
+        expect(screen.getByTestId(`${testId}-cell-row-0-col-id`)).toHaveTextContent("1");
+
+        const deleteButton = screen.getByTestId(`${testId}-cell-row-0-col-Delete-button`);
+        expect(deleteButton).toBeInTheDocument();
+
+        // act
+        fireEvent.click(deleteButton);
+
+        // assert
+        await waitFor(() => { expect(mockToast).toBeCalledWith("Announcement with id 2 was deleted") });
+
     });
 });
