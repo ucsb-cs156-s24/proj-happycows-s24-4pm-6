@@ -237,7 +237,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         when(announcementRepository.findByAnnouncementId(id)).thenReturn(Optional.empty());
 
         //act 
-        mockMvc.perform(delete("/api/announcements/delete?id={id}", id).with(csrf()))
+        mockMvc.perform(delete("/api/announcements?id={id}", id).with(csrf()))
             .andExpect(status().isBadRequest()).andReturn();
 
         // assert
@@ -261,7 +261,7 @@ public class AnnouncementsControllerTests extends ControllerTestCase {
         when(announcementRepository.findByAnnouncementId(id)).thenReturn(Optional.of(announcementObj));
 
         //act 
-        MvcResult response = mockMvc.perform(delete("/api/announcements/delete?id={id}", id).with(csrf()))
+        MvcResult response = mockMvc.perform(delete("/api/announcements?id={id}", id).with(csrf()))
             .andExpect(status().isOk()).andReturn();
 
         // assert
