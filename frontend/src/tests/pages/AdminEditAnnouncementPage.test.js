@@ -49,7 +49,7 @@ describe("AdminEditAnnouncementPage tests", () => {
                 "endDate": "2023-03-05",
                 "announcementText": "test original",
             });
-            axiosMock.onPut('/api/announcements/put', { params: { id: 5 } }).reply(200, {
+            axiosMock.onPut('/api/announcements/put').reply(200, {
                 "id": 5,
                 "commonsId": 1,
                 "startDate": "2022-03-07",
@@ -111,21 +111,23 @@ describe("AdminEditAnnouncementPage tests", () => {
 
             expect(submitButton).toBeInTheDocument();
 
-            fireEvent.change(startDateField, { target: { value: "2022-03-07" } })
-            fireEvent.change(endDateField, { target: { value: "2023-03-07" } })
+            fireEvent.change(startDateField, { target: { value: "2022-03-07T00:00" } })
+            fireEvent.change(endDateField, { target: { value: "2023-03-07T00:00" } })
             fireEvent.change(announcementTextField, { target: { value: "test updated" } })
 
             fireEvent.click(submitButton);
 
             await waitFor(() => expect(mockToast).toHaveBeenCalled());
             expect(mockToast).toBeCalledWith("Announcement Updated - id: 5");
-            expect(mockNavigate).toBeCalledWith({ "to": "/admin/announcements" });
+            expect(mockNavigate).toBeCalledWith({ "to": "/" });
 
             expect(axiosMock.history.put.length).toBe(1); // times called
-            expect(axiosMock.history.put[0].params).toEqual({ id: 5 });
+            expect(axiosMock.history.put[0].params).toEqual({ id: 5, commonsId: 1, startDate: "2022-03-07T00:00", endDate: "2023-03-07T00:00", announcementText: "test updated" });
             expect(axiosMock.history.put[0].data).toBe(JSON.stringify({
-                "startDate": "2022-03-07T00:00:00.000Z",
-                "endDate": "2023-03-07T00:00:00.000Z",
+                "id": 5,
+                "commonsId": 1,
+                "startDate": "2022-03-07T00:00",
+                "endDate": "2023-03-07T00:00",
                 "announcementText": "test updated",
             })); // posted object
         });

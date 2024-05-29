@@ -28,6 +28,8 @@ export default function AnnouncementEditPage() {
     params: {
       id: announcement.id,
       commonsId: announcement.commonsId,
+      startDate: announcement.startDate,
+      endDate: announcement.endDate,
       announcementText: announcement.announcementText
     },
     data: {
