@@ -218,7 +218,7 @@ export default function PlayPage() {
                     )}
                 </Container>
             </BasicLayout>
-            { (hasRole(currentUser, "ROLE_ADMIN") || (!!commonsPlus && commonsPlus.commons.showChat && userJoinedCommons)) &&
+            { ((hasRole(currentUser, "ROLE_ADMIN") && commonsExists) || (!!commonsPlus && commonsPlus.commons.showChat && userJoinedCommons)) &&
                 <div style={chatContainerStyle} data-testid="playpage-chat-div">
                     {!!isChatOpen && <ChatPanel commonsId={commonsId} />}
                     <Button
