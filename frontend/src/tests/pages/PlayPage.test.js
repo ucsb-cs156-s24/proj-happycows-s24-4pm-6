@@ -545,7 +545,7 @@ describe("PlayPage tests", () => {
         
     })
 
-    test("user has entered nonexistant the commons (one commons created)", async () => {
+    test("user has entered nonexistent the commons (one commons created)", async () => {
         
         axiosMock.reset();
         axiosMock.resetHistory();
@@ -574,7 +574,7 @@ describe("PlayPage tests", () => {
   
     })
     
-    test("user has entered nonexistant the commons (two commons created)", async () => {
+    test("user has entered nonexistent the commons (two commons created)", async () => {
         
         axiosMock.reset();
         axiosMock.resetHistory();
@@ -607,7 +607,7 @@ describe("PlayPage tests", () => {
         
     })
     
-    test("user has entered nonexistant the commons (no commons created)", async () => {
+    test("user has entered nonexistent the commons (no commons created)", async () => {
         
         axiosMock.reset();
         axiosMock.resetHistory();
