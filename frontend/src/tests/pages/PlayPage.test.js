@@ -525,5 +525,154 @@ describe("PlayPage tests", () => {
         
     })
 
+    test("user has entered nonexistant the commons (one commons created)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+ 	axiosMock.onGet("/api/commons/all").reply(200, [
+            {
+                id: 5,
+                name: "Sample Commons"
+            }
+        ]);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => {
+            expect(screen.getByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).toBeInTheDocument();
+        });        
+        
+        expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+  
+    })
+    
+    test("user has entered nonexistant the commons (two commons created)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+ 	axiosMock.onGet("/api/commons/all").reply(200, [
+            {
+                id: 5,
+                name: "Sample Commons"
+            },
+            {
+                id: 6,
+                name: "Other Commons"
+            }
+        ]);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => {
+            expect(screen.getByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).toBeInTheDocument();
+        });        
+        
+        expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+        
+    })
+    
+    test("user has entered nonexistant the commons (no commons created)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+ 	axiosMock.onGet("/api/commons/all").reply(200, []);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => {
+            expect(screen.getByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).toBeInTheDocument();
+        });        
+        
+        expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+        
+    })
+    
+    test("user has entered joined and extant commons (one commons created)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/commons/all").reply(200, [
+            {
+                id: 1,
+                name: "Sample Commons"
+            }
+        ]);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => {
+            expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
+        });        
+        
+        expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
+        expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+        
+    })
+    
+    test("user has entered joined and extant commons (two commons created)", async () => {
+        
+        axiosMock.reset();
+        axiosMock.resetHistory();
+        axiosMock.onGet("/api/systemInfo").reply(200, systemInfoFixtures.showingNeither);
+        axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
+        axiosMock.onGet("/api/commons/all").reply(200, [
+            {
+                id: 1,
+                name: "Sample Commons"
+            },
+            {
+                id: 6,
+                name: "Other Commons"
+            }
+        ]);
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <PlayPage />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+        
+        await waitFor(() => {
+            expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
+        });        
+        
+        expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
+        expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+        
+    })
    
 });

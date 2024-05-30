@@ -30,6 +30,14 @@ export default function PlayPage() {
         setIsModalOpen(false);
     };
 
+    // Stryker disable all : it is acceptable to exclude useBackend calls from mutation testing
+    const { data: commons } = useBackendNoToast(
+      ["/api/commons/all"],
+      { url: "/api/commons/all" },
+      []
+    );
+    // Stryker restore all
+
     // Stryker disable all
     const { data: userCommons } = useBackendNoToast(
         [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`],
@@ -150,7 +158,8 @@ export default function PlayPage() {
         fontSize: "30px",
     };
     
-    const commonsLoaded = !(typeof commonsPlus == 'undefined')
+    const commonsLoaded = !(typeof commonsPlus == 'undefined');
+    const commonsExists = (commons.some(com => parseInt(com.id) === parseInt(commonsId)));
     const userJoinedCommons = commonsLoaded && (currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id));
     const userNotJoinedCommons = commonsLoaded && !(currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id));
 
@@ -164,8 +173,9 @@ export default function PlayPage() {
         >
             <BasicLayout>
                 <Container>
+                    {!commonsExists &&  <h1>What are you doing here, friendo? This commons don't exist! You best be headin' back.</h1>}
                     {userJoinedCommons && !!currentUser && <CommonsPlay currentUser={currentUser} />}
-                    {userNotJoinedCommons &&  <h1>Whoa there, parder! You ain't a part of this commons!</h1> }             
+                    {userNotJoinedCommons && commonsExists && <h1>Whoa there, parder! You ain't a part of this commons!</h1> }            
                     {!!commonsPlus && (
                         <CommonsOverview
                             commonsPlus={commonsPlus}
