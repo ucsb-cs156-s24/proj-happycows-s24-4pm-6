@@ -181,7 +181,7 @@ export default function PlayPage() {
             <BasicLayout>
                 <Container>
                     {startDelay()}
-                    {!commonsExists && showAfterDelay &&  <h1>What are you doing here, friendo? This commons don't exist! You best be headin' back.</h1>}
+                    {!commonsExists && showAfterDelay &&  <h1>What are you doing here, friendo? This here commons don't exist! You best be headin' back.</h1>}
                     {userJoinedCommons && !!currentUser && <CommonsPlay currentUser={currentUser} />}
                     {userNotJoinedCommons && commonsExists && <h1>Whoa there, parder! You ain't a part of this commons!</h1> }            
                     {!!commonsPlus && (
