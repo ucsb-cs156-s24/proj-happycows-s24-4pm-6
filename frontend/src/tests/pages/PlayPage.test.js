@@ -379,9 +379,12 @@ describe("PlayPage tests", () => {
         await waitFor(() => {
             expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();    
         });
+        
+        await new Promise((r) => setTimeout(r, 100));
 
         expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();   
         expect(screen.queryByTestId("commons-card")).not.toBeInTheDocument();    
+        expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
 
     })
     
@@ -425,8 +428,11 @@ describe("PlayPage tests", () => {
             expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();    
         });
 
+	await new Promise((r) => setTimeout(r, 100));
+
         expect(screen.getByText("Whoa there, parder! You ain't a part of this commons!")).toBeInTheDocument();   
         expect(screen.queryByTestId("commons-card")).not.toBeInTheDocument();    
+        expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
 	
     })
     
@@ -461,6 +467,10 @@ describe("PlayPage tests", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
+        
+        await waitFor(() => {
+            expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
+        });   
 
         await waitFor(() => {
             expect(screen.getByTestId("commons-card")).toBeInTheDocument();
@@ -471,8 +481,11 @@ describe("PlayPage tests", () => {
             expect(screen.getByText("Announcements")).toBeInTheDocument();
         });        
         
+        await new Promise((r) => setTimeout(r, 100));
+        
         expect(screen.getByTestId("commons-card")).toBeInTheDocument();
         expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+        expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
         
     })
 
@@ -513,6 +526,10 @@ describe("PlayPage tests", () => {
         );
 
         await waitFor(() => {
+            expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
+        });   
+
+        await waitFor(() => {
             expect(screen.getByTestId("commons-card")).toBeInTheDocument();
         });
         
@@ -520,8 +537,11 @@ describe("PlayPage tests", () => {
             expect(screen.getByText("Announcements")).toBeInTheDocument();
         });        
         
+        await new Promise((r) => setTimeout(r, 100));
+        
         expect(screen.getByTestId("commons-card")).toBeInTheDocument();
         expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
+        expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
         
     })
 
@@ -632,9 +652,13 @@ describe("PlayPage tests", () => {
             </QueryClientProvider>
         );
         
+        expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
+        
         await waitFor(() => {
             expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
         });        
+        
+        await new Promise((r) => setTimeout(r, 100));
         
         expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
         expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();
@@ -666,9 +690,13 @@ describe("PlayPage tests", () => {
             </QueryClientProvider>
         );
         
+        expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
+        
         await waitFor(() => {
             expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
         });        
+        
+        await new Promise((r) => setTimeout(r, 100));
         
         expect(screen.queryByText("What are you doing here, friendo? This commons don't exist! You best be headin' back.")).not.toBeInTheDocument();
         expect(screen.queryByText("Whoa there, parder! You ain't a part of this commons!")).not.toBeInTheDocument();

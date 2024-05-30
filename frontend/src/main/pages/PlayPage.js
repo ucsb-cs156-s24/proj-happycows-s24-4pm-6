@@ -21,6 +21,13 @@ export default function PlayPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [message, setMessage] = useState();
     const [numCows, setNumCows] = useState(1);
+    const [showAfterDelay, setShowAfterDelay] = useState(false);
+    
+    const startDelay = () => {
+        setTimeout(() => {
+            setShowAfterDelay(true);
+        }, 100);
+    };
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -159,7 +166,7 @@ export default function PlayPage() {
     };
     
     const commonsLoaded = !(typeof commonsPlus == 'undefined');
-    const commonsExists = (commons.some(com => parseInt(com.id) === parseInt(commonsId)));
+    const commonsExists = commons.some(com => parseInt(com.id) === parseInt(commonsId));
     const userJoinedCommons = commonsLoaded && (currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id));
     const userNotJoinedCommons = commonsLoaded && !(currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id));
 
@@ -173,7 +180,8 @@ export default function PlayPage() {
         >
             <BasicLayout>
                 <Container>
-                    {!commonsExists &&  <h1>What are you doing here, friendo? This commons don't exist! You best be headin' back.</h1>}
+                    {startDelay()}
+                    {!commonsExists && showAfterDelay &&  <h1>What are you doing here, friendo? This commons don't exist! You best be headin' back.</h1>}
                     {userJoinedCommons && !!currentUser && <CommonsPlay currentUser={currentUser} />}
                     {userNotJoinedCommons && commonsExists && <h1>Whoa there, parder! You ain't a part of this commons!</h1> }            
                     {!!commonsPlus && (
@@ -210,7 +218,7 @@ export default function PlayPage() {
                     )}
                 </Container>
             </BasicLayout>
-            { (hasRole(currentUser, "ROLE_ADMIN") || (!!commonsPlus && commonsPlus.commons.showChat)) &&
+            { (hasRole(currentUser, "ROLE_ADMIN") || (!!commonsPlus && commonsPlus.commons.showChat && userJoinedCommons)) &&
                 <div style={chatContainerStyle} data-testid="playpage-chat-div">
                     {!!isChatOpen && <ChatPanel commonsId={commonsId} />}
                     <Button
