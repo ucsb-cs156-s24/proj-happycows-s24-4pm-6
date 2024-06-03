@@ -6,6 +6,7 @@ edu.ucsb.cs156.happiercows.entities
 edu.ucsb.cs156.happiercows.entities.jobs
 edu.ucsb.cs156.happiercows.errors
 edu.ucsb.cs156.happiercows.helpers
+edu.ucsb.cs156.happiercows.interceptors
 edu.ucsb.cs156.happiercows.jobs
 edu.ucsb.cs156.happiercows.models
 edu.ucsb.cs156.happiercows.repositories
