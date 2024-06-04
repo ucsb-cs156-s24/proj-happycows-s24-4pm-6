@@ -20,6 +20,7 @@ import PlayPage from "main/pages/PlayPage";
 import NotFoundPage from "main/pages/NotFoundPage";
 import AdminViewPlayPage from "main/pages/AdminViewPlayPage";
 import AdminListAnnouncementsPage from "main/pages/AdminListAnnouncementsPage";
+import AdminCreateAnnouncementsPage from "main/pages/AdminCreateAnnouncementsPage";
 
 function App() {
     const { data: currentUser } = useCurrentUser();
@@ -52,6 +53,10 @@ function App() {
             <Route
                 path="/admin/announcements/:commonsId"
                 element={<AdminListAnnouncementsPage />}
+            />
+            <Route
+                path="/admin/announcements/:commonsId/create"
+                element={<AdminCreateAnnouncementsPage />}
             />
         </>
     ) : null;
