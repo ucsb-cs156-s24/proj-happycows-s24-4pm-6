@@ -21,6 +21,13 @@ export default function PlayPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [message, setMessage] = useState();
     const [numCows, setNumCows] = useState(1);
+    const [showAfterDelay, setShowAfterDelay] = useState(false);
+    
+    const startDelay = () => {
+        setTimeout(() => {
+            setShowAfterDelay(true);
+        }, 100);
+    };
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -29,6 +36,14 @@ export default function PlayPage() {
     const closeModal = () => {
         setIsModalOpen(false);
     };
+
+    // Stryker disable all : it is acceptable to exclude useBackend calls from mutation testing
+    const { data: commons } = useBackendNoToast(
+      ["/api/commons/all"],
+      { url: "/api/commons/all" },
+      []
+    );
+    // Stryker restore all
 
     // Stryker disable all
     const { data: userCommons } = useBackendNoToast(
@@ -150,7 +165,8 @@ export default function PlayPage() {
         fontSize: "30px",
     };
     
-    const commonsLoaded = !(typeof commonsPlus == 'undefined')
+    const commonsLoaded = !(typeof commonsPlus == 'undefined');
+    const commonsExists = commons.some(com => parseInt(com.id) === parseInt(commonsId));
     const userJoinedCommons = commonsLoaded && (currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id));
     const userNotJoinedCommons = commonsLoaded && !(currentUser.root.user.commons.some(com => com.id === commonsPlus.commons.id));
 
@@ -164,8 +180,10 @@ export default function PlayPage() {
         >
             <BasicLayout>
                 <Container>
+                    {startDelay()}
+                    {!commonsExists && showAfterDelay &&  <h1>What are you doing here, friendo? This here commons don't exist! You best be headin' back.</h1>}
                     {userJoinedCommons && !!currentUser && <CommonsPlay currentUser={currentUser} />}
-                    {userNotJoinedCommons &&  <h1>Whoa there, parder! You ain't a part of this commons!</h1> }             
+                    {userNotJoinedCommons && commonsExists && <h1>Whoa there, parder! You ain't a part of this commons!</h1> }            
                     {!!commonsPlus && (
                         <CommonsOverview
                             commonsPlus={commonsPlus}
@@ -200,7 +218,7 @@ export default function PlayPage() {
                     )}
                 </Container>
             </BasicLayout>
-            { (hasRole(currentUser, "ROLE_ADMIN") || (!!commonsPlus && commonsPlus.commons.showChat)) &&
+            { ((hasRole(currentUser, "ROLE_ADMIN") && commonsExists) || (!!commonsPlus && commonsPlus.commons.showChat && userJoinedCommons)) &&
                 <div style={chatContainerStyle} data-testid="playpage-chat-div">
                     {!!isChatOpen && <ChatPanel commonsId={commonsId} />}
                     <Button
