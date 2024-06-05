@@ -195,7 +195,7 @@ import java.util.TimeZone;
 
     @Operation(summary = &quot;Delete an announcement&quot;, description = &quot;Delete an announcement associated with an id&quot;)
     @PreAuthorize(&quot;hasAnyRole('ROLE_ADMIN')&quot;)
-    @DeleteMapping(&quot;/delete&quot;)
+    @DeleteMapping(&quot;&quot;)
     public ResponseEntity&lt;Object&gt; deleteAnnouncement(@Parameter(description = &quot;The id of the chat message&quot;) @RequestParam Long id) {
 
         // Try to get the chat message
