@@ -51,7 +51,7 @@ describe("CommonsOverview tests", () => {
             </QueryClientProvider>
         );
         await waitFor(() => {
-            expect(axiosMock.history.get.length).toEqual(5);
+            expect(axiosMock.history.get.length).toEqual(6);
         });
         expect(await screen.findByTestId("user-leaderboard-button")).toBeInTheDocument();
         const leaderboardButton = screen.getByTestId("user-leaderboard-button");
