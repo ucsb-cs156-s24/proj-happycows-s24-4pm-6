@@ -9,6 +9,7 @@ import {systemInfoFixtures} from "fixtures/systemInfoFixtures";
 import healthUpdateStrategyListFixtures from "../../fixtures/healthUpdateStrategyListFixtures";
 import AdminCreateAnnouncementsPage from "main/pages/AdminCreateAnnouncementsPage";
 
+
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom');

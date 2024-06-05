@@ -13,7 +13,7 @@ export default function AnnouncementTable({ announcements, currentUser }) {
     const commonsId = announcements.commonsId
 
     const editCallback = (cell) => {
-        navigate(`/announcements/edit/${cell.row.values.id}`)
+        navigate(`/admin/announcements/edit/${cell.row.values.id}`)
     }
 
     // Stryker disable all : hard to test for query caching
