@@ -195,7 +195,7 @@ public class AnnouncementsController extends ApiController{
 
     @Operation(summary = "Delete an announcement", description = "Delete an announcement associated with an id")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @DeleteMapping("/delete")
+    @DeleteMapping("")
     public ResponseEntity<Object> deleteAnnouncement(@Parameter(description = "The id of the chat message") @RequestParam Long id) {
 
         // Try to get the chat message

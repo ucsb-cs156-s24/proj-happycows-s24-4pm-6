@@ -8,7 +8,9 @@ import { hasRole } from "main/utils/currentUser";
 
 export default function AnnouncementTable({ announcements, currentUser }) {
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+
+    const commonsId = announcements.commonsId
 
     const editCallback = (cell) => {
         navigate(`/admin/announcements/edit/${cell.row.values.id}`)
@@ -19,12 +21,15 @@ export default function AnnouncementTable({ announcements, currentUser }) {
     const deleteMutation = useBackendMutation(
         cellToAxiosParamsDelete,
         { onSuccess: onDeleteSuccess },
-        ["/api/announcements/all"]
+        [`/api/announcements/all?commonsId=${commonsId}`]
     );
     // Stryker restore all 
 
     // Stryker disable next-line all : TODO try to make a good test for this
-    const deleteCallback = async (cell) => { deleteMutation.mutate(cell); }
+    const deleteCallback = async (cell) => { 
+        deleteMutation.mutate(cell); 
+        navigate(`/`)
+    }
 
 
     const columns = [
